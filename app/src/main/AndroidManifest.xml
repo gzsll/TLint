@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gzsll.hupu">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:name="com.gzsll.hupu.AppApplication_"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="55f1993be0f55a0fd9004fbc" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="play" />
+
+        <activity
+            android:name=".ui.activity.SplashActivity_"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.MainActivity_"
+            android:theme="@style/AppTheme.NoneTranslucent" />
+        <activity android:name=".ui.activity.LoginActivity_" />
+        <activity android:name=".ui.activity.ContentActivity_" />
+        <activity
+            android:name=".ui.activity.PostActivity_"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".ui.activity.ImagePreviewActivity_"
+            android:theme="@style/AppTheme.Pics" />
+        <activity android:name=".ui.activity.VideoPlayActivity_" />
+        <activity android:name=".ui.activity.SearchActivity_" />
+
+        <activity
+            android:name=".ui.activity.PhotoGalleryActivity_"
+            android:configChanges="orientation|screenSize" />
+        <activity android:name=".ui.activity.BrowserActivity_" />
+
+        <activity android:name=".ui.activity.ThreadActivity_" />
+        <activity android:name=".ui.activity.ReplyDetailActivity_" />
+        <activity android:name=".ui.activity.SettingActivity_" />
+        <activity android:name=".ui.activity.NoticeActivity_" />
+        <activity android:name=".ui.activity.AboutActivity_" />
+        <activity android:name=".ui.activity.UserProfileActivity_" />
+
+        <service android:name="com.gzsll.hupu.service.OffLineService">
+            <intent-filter>
+                <action android:name="com.gzsll.hupu.action.START_DOWNLOAD" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" />
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>

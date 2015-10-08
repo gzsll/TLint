@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_general_settings">
+        <Preference
+            android:key="pTheme"
+            android:title="@string/settings_md_colors" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="true"
+            android:key="pAutoUpdate"
+            android:title="@string/settings_auto_update" />
+        <com.gzsll.hupu.widget.WrapperListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/settings_dt_swipeback_edgemode"
+            android:entries="@array/swipeBackEdgeMode"
+            android:entryValues="@array/prefValues"
+            android:key="pSwipeBackEdgeMode"
+            android:title="@string/settings_swipeback_edgemode" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_read">
+        <com.gzsll.hupu.widget.WrapperListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/settings_thread_sort"
+            android:entries="@array/sortType"
+            android:entryValues="@array/prefValues"
+            android:key="pThreadSort"
+            android:title="@string/settings_thread_sort" />
+
+
+        <com.gzsll.hupu.widget.WrapperListPreference
+            android:defaultValue="4"
+            android:dialogTitle="@string/settings_text_size"
+            android:entries="@array/txtSizeNum"
+            android:entryValues="@array/prefValues"
+            android:key="pTextSize"
+            android:title="@string/settings_text_size" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pSingleLine"
+            android:summary="@string/settings_single_line_summary"
+            android:title="@string/settings_single_line" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pLoadPic"
+            android:summary="@string/settings_load_pic_summary"
+            android:title="@string/settings_load_pic" />
+
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pLoadOriginPic"
+            android:summary="@string/settings_load_ori_pic_summary"
+            android:title="@string/settings_load_ori_pic" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/settings_notification_settings">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="true"
+            android:key="pNotification"
+            android:title="@string/settings_auto_notification" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_other">
+        <Preference
+            android:key="pPicSavePath"
+            android:summary="/sdcard/"
+            android:title="@string/settings_pic_path" />
+
+        <Preference
+            android:key="pClearCache"
+            android:title="@string/settings_clear_cache" />
+    </PreferenceCategory>
+</PreferenceScreen>

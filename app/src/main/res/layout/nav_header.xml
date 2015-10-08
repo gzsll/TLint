@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/ivCover"
+        android:layout_width="match_parent"
+        android:layout_height="160dip"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_banner_dialog" />
+
+    <RelativeLayout
+        android:id="@+id/layProfile"
+        android:layout_width="match_parent"
+        android:layout_height="160dip"
+        android:background="@drawable/bg_menu_profile">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/ivIcon"
+            android:layout_width="80dip"
+            android:layout_height="80dip"
+            android:layout_marginLeft="16dip"
+            android:layout_marginTop="16dip"
+            fresco:roundAsCircle="true" />
+
+        <TextView
+            android:id="@+id/tvNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/ivIcon"
+            android:layout_alignTop="@id/ivIcon"
+            android:background="@drawable/menu_followers_counter"
+            android:gravity="center"
+            android:minWidth="18dip"
+            android:text="10"
+            android:textColor="@color/base_text_white"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/llAccount"
+            android:layout_width="match_parent"
+            android:layout_height="35dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dip"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dip"
+            android:paddingRight="16dip">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textColor="@color/base_text_white"
+                android:textSize="16.0sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/ic_arrow_down_light" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

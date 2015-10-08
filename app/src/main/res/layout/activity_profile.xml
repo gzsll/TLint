@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gzsll.hupu.widget.KitkatProfileViewGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.gzsll.hupu.widget.ProfileScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/layTop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/ivCover"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dip"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/bg_banner_dialog" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="200dip"
+                        android:background="@drawable/top_profile" />
+
+                    <RelativeLayout
+                        android:id="@+id/layDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="120dip"
+                        android:paddingLeft="16dip"
+                        android:paddingRight="16dip">
+
+                        <!--为了适配4.4以下，fuck-->
+                        <View
+                            android:id="@+id/viewBgDes"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="80dip" />
+
+                        <com.facebook.drawee.view.SimpleDraweeView
+                            android:id="@+id/ivPhoto"
+                            android:layout_width="100dip"
+                            android:layout_height="100dip"
+                            fresco:placeholderImage="@drawable/icon_def_head"
+                            fresco:placeholderImageScaleType="fitCenter"
+                            fresco:failureImage="@drawable/icon_def_head"
+                            fresco:failureImageScaleType="centerInside"
+                            android:layout_marginBottom="16dip"
+                            fresco:roundAsCircle="true" />
+
+                        <LinearLayout
+                            android:id="@+id/llName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ivPhoto"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="pursll"
+                                android:textColor="@color/base_text_white"
+                                android:textSize="24sp" />
+
+
+                            <ImageView
+                                android:id="@+id/ivGender"
+                                android:layout_width="20dip"
+                                android:layout_height="20dip"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="8dp"
+                                android:src="@drawable/list_male" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/llName"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <com.facebook.drawee.view.SimpleDraweeView
+                                android:id="@+id/ivPost"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp" />
+
+
+                            <com.facebook.drawee.view.SimpleDraweeView
+                                android:id="@+id/ivReply"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginLeft="8dp" />
+
+
+                            <com.facebook.drawee.view.SimpleDraweeView
+                                android:id="@+id/ivLight"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginLeft="8dp" />
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabs"
+                    style="@style/MyCustomTabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dip" />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dip"
+                    android:background="@color/md_white" />
+            </LinearLayout>
+        </com.gzsll.hupu.widget.ProfileScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:id="@+id/viewToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:alpha="0"
+        android:background="?attr/colorPrimary" />
+
+    <RelativeLayout
+        android:id="@+id/layToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/base_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/abc_action_bar_default_height_material" />
+    </RelativeLayout>
+
+</com.gzsll.hupu.widget.KitkatProfileViewGroup>

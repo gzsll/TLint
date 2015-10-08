@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Styling -->
+    <color name="colorPrimary">#4CAF50</color>
+    <color name="colorPrimaryDark">#388E3C</color>
+
+    <color name="accent">#eeff41</color>
+    <color name="accentLight">#F4FF81</color>
+
+    <!-- Order float button -->
+    <color name="float_button_primary">#00C853</color>
+    <color name="float_button_primary_pressed">#388E3C</color>
+    <color name="float_button_ripple">#2E7D32</color>
+
+    <color name="list_background_color">#f0f0f0</color>
+
+    <color name="list_title_text_color">#424242</color>
+    <color name="list_rating_color">#BDBDBD</color>
+    <color name="list_release_date_text_color">#FBC02D</color>
+
+
+    <color name="listitem_text">#ffaaaaaa</color>
+    <color name="listitem_text_night">#666666</color>
+    <color name="listitem_subject">#ff515151</color>
+    <color name="listitem_summary">#ff666666</color>
+    <color name="listitem_author">#ff5b95d6</color>
+
+    <color name="forum_deliver">#ffdddddd</color>
+    <color name="forum_deliver_night">#ff515151</color>
+
+    <color name="red">#FFC93437</color>
+    <color name="blue">#FF375BF1</color>
+    <color name="yellow">#FFF7D23E</color>
+    <color name="green">#FF34A350</color>
+
+    <drawable name="mid_green">#1abc9c</drawable>
+    <drawable name="mid_green_highlight">#16a085</drawable>
+
+    <drawable name="light_green">#2ecc71</drawable>
+    <drawable name="light_green_highlight">#27ae60</drawable>
+
+    <drawable name="real_blue">#3498db</drawable>
+    <drawable name="real_blue_highlight">#2980b9</drawable>
+
+    <drawable name="light_blue">#21aabd</drawable>
+    <drawable name="light_blue_highlight">#15707c</drawable>
+
+    <drawable name="purple">#654b6b</drawable>
+    <drawable name="purple_highlight">#443248</drawable>
+
+    <drawable name="navy">#34495e</drawable>
+    <drawable name="navy_highlight">#2c3e50</drawable>
+
+    <drawable name="orange">#e67e22</drawable>
+    <drawable name="orange_highlight">#d35400</drawable>
+
+    <drawable name="red">#e74c3c</drawable>
+    <drawable name="red_highlight">#c0392b</drawable>
+
+    <drawable name="gray">#95a5a6</drawable>
+    <drawable name="gray_highlight">#7f8c8d</drawable>
+
+
+    <color name="retry_button_background">#30000000</color>
+    <color name="retry_button_background_stroke">#50000000</color>
+    <color name="window_background">#FFF5F5F5</color>
+
+    <color name="base_text_black">#ff333333</color>
+    <color name="base_text_gray">#ff7f7f7f</color>
+    <color name="base_text_white">#ffffffff</color>
+
+    <color name="transparent">#000000</color>
+
+    <color name="bg_followers_counter">#ff5656</color>
+</resources>
