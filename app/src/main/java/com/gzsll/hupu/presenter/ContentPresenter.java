@@ -10,6 +10,7 @@ import com.gzsll.hupu.storage.bean.ThreadInfo;
 import com.gzsll.hupu.storage.bean.ThreadInfoResult;
 import com.gzsll.hupu.storage.bean.ThreadReply;
 import com.gzsll.hupu.storage.bean.ThreadReplyItems;
+import com.gzsll.hupu.utils.FormatHelper;
 import com.gzsll.hupu.utils.SettingPrefHelper;
 import com.gzsll.hupu.view.ContentView;
 
@@ -38,6 +39,8 @@ public class ContentPresenter extends Presenter<ContentView> {
     HuPuApi huPuApi;
     @Inject
     SettingPrefHelper mSettingPrefHelper;
+    @Inject
+    FormatHelper mFormatHelper;
 
 
     private long groupThreadId;
@@ -62,6 +65,9 @@ public class ContentPresenter extends Presenter<ContentView> {
                     List<ThreadReplyItems> replyItems = new ArrayList<>();
                     if (threadInfoResult.getData().getPage() <= 1) {
                         threadInfo = threadInfoResult.getData().getThreadInfo();
+                        if (!mSettingPrefHelper.getLoadPic()) {
+                            threadInfo.setContent(mFormatHelper.fiterHtmlTag(threadInfo.getContent(), "img"));
+                        }
                         Map map = gson.fromJson(gson.toJson(threadInfo), new TypeToken<Map<Object, Object>>() {
                         }.getType());
                         view.renderContent(map);

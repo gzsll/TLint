@@ -4,11 +4,34 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by sll on 2015/3/7.
  */
 public class FormatHelper {
+
+    /**
+     * 过滤html标签
+     *
+     * @param str html
+     * @param tag 标签
+     * @return 过滤后的html内容
+     */
+    public String fiterHtmlTag(String str, String tag) {
+        String regxp = "<\\s*" + tag + "\\s+([^>]*)\\s*>";
+        Pattern pattern = Pattern.compile(regxp);
+        Matcher matcher = pattern.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        boolean result1 = matcher.find();
+        while (result1) {
+            matcher.appendReplacement(sb, "");
+            result1 = matcher.find();
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
 
     public String dateFormat(long timeIntivalSince1970) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
