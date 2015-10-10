@@ -1,9 +1,9 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.bean.BaseResult;
-import com.gzsll.hupu.storage.bean.GroupThread;
-import com.gzsll.hupu.storage.bean.ThreadsResult;
+import com.gzsll.hupu.support.storage.bean.BaseResult;
+import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.view.ThreadListView;
 import com.squareup.otto.Bus;
 

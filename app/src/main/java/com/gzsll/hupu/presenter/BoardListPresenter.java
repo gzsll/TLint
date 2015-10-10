@@ -1,14 +1,14 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.db.Board;
-import com.gzsll.hupu.db.BoardDao;
 import com.gzsll.hupu.otto.ReceiveNoticeEvent;
-import com.gzsll.hupu.storage.bean.BoardList;
-import com.gzsll.hupu.storage.bean.BoardListResult;
-import com.gzsll.hupu.storage.bean.Boards;
-import com.gzsll.hupu.storage.bean.CategoryList;
-import com.gzsll.hupu.storage.bean.GroupList;
+import com.gzsll.hupu.support.db.Board;
+import com.gzsll.hupu.support.db.BoardDao;
+import com.gzsll.hupu.support.storage.bean.BoardList;
+import com.gzsll.hupu.support.storage.bean.BoardListResult;
+import com.gzsll.hupu.support.storage.bean.Boards;
+import com.gzsll.hupu.support.storage.bean.CategoryList;
+import com.gzsll.hupu.support.storage.bean.GroupList;
 import com.gzsll.hupu.view.BoardListView;
 import com.squareup.otto.Bus;
 

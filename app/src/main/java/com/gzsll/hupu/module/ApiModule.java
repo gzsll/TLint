@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.gzsll.hupu.api.hupu.HuPuApi;
 import com.gzsll.hupu.api.login.LoginAPi;
 import com.gzsll.hupu.api.login.RetrofitLoginApi;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.utils.RequestHelper;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.utils.RequestHelper;
 import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;

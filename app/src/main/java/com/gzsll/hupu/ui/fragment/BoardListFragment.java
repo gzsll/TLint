@@ -5,8 +5,8 @@ import android.view.View;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.BoardListPresenter;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.Boards;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.ui.activity.MainActivity;
 import com.gzsll.hupu.ui.adapter.BoardListAdapter;
 import com.gzsll.hupu.view.BoardListView;

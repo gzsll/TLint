@@ -12,11 +12,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.pref.SettingPref_;
+import com.gzsll.hupu.support.pref.SettingPref_;
+import com.gzsll.hupu.support.utils.CacheHelper;
+import com.gzsll.hupu.support.utils.DataCleanHelper;
+import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
-import com.gzsll.hupu.utils.CacheHelper;
-import com.gzsll.hupu.utils.DataCleanHelper;
-import com.gzsll.hupu.utils.FileHelper;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.sharedpreferences.Pref;

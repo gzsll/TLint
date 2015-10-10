@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.gzsll.hupu.AppApplication_;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.service.OffLineService;
+import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.ui.activity.BrowserActivity_;
 import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
@@ -34,7 +35,6 @@ import com.gzsll.hupu.ui.fragment.PictureItemFragment_;
 import com.gzsll.hupu.ui.fragment.SettingFragment_;
 import com.gzsll.hupu.ui.fragment.ThreadListFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
-import com.gzsll.hupu.utils.FileHelper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 

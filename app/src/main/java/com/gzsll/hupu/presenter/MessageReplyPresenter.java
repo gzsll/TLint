@@ -1,8 +1,8 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.bean.MessageReply;
-import com.gzsll.hupu.storage.bean.MessageReplyResult;
+import com.gzsll.hupu.support.storage.bean.MessageReply;
+import com.gzsll.hupu.support.storage.bean.MessageReplyResult;
 import com.gzsll.hupu.view.MessageReplyView;
 
 import java.util.ArrayList;

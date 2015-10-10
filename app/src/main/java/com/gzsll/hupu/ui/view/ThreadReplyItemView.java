@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.BaseResult;
-import com.gzsll.hupu.storage.bean.MiniReplyListItem;
-import com.gzsll.hupu.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.BaseResult;
+import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.support.utils.ReplyViewHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
-import com.gzsll.hupu.utils.ReplyViewHelper;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;

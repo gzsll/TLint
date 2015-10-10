@@ -18,9 +18,9 @@ import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
-import com.gzsll.hupu.pref.SettingPref_;
+import com.gzsll.hupu.support.pref.SettingPref_;
+import com.gzsll.hupu.support.utils.ThemeHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
-import com.gzsll.hupu.utils.ThemeHelper;
 import com.squareup.otto.Bus;
 
 import org.androidannotations.annotations.EFragment;

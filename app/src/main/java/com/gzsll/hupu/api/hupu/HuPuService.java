@@ -1,17 +1,17 @@
 package com.gzsll.hupu.api.hupu;
 
 import com.gzsll.hupu.api.TypedJsonString;
-import com.gzsll.hupu.storage.bean.AddReplyResult;
-import com.gzsll.hupu.storage.bean.BaseResult;
-import com.gzsll.hupu.storage.bean.BoardListResult;
-import com.gzsll.hupu.storage.bean.FavoriteResult;
-import com.gzsll.hupu.storage.bean.MessageAtResult;
-import com.gzsll.hupu.storage.bean.MessageReplyResult;
-import com.gzsll.hupu.storage.bean.ThreadInfoResult;
-import com.gzsll.hupu.storage.bean.ThreadReplyResult;
-import com.gzsll.hupu.storage.bean.ThreadsResult;
-import com.gzsll.hupu.storage.bean.TopicResult;
-import com.gzsll.hupu.storage.bean.UserResult;
+import com.gzsll.hupu.support.storage.bean.AddReplyResult;
+import com.gzsll.hupu.support.storage.bean.BaseResult;
+import com.gzsll.hupu.support.storage.bean.BoardListResult;
+import com.gzsll.hupu.support.storage.bean.FavoriteResult;
+import com.gzsll.hupu.support.storage.bean.MessageAtResult;
+import com.gzsll.hupu.support.storage.bean.MessageReplyResult;
+import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyResult;
+import com.gzsll.hupu.support.storage.bean.ThreadsResult;
+import com.gzsll.hupu.support.storage.bean.TopicResult;
+import com.gzsll.hupu.support.storage.bean.UserResult;
 
 import java.util.Map;
 

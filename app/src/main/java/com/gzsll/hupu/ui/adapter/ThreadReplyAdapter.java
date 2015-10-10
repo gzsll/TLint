@@ -5,16 +5,16 @@ import android.view.ViewGroup;
 
 import com.gzsll.hupu.api.hupu.HuPuApi;
 import com.gzsll.hupu.otto.ReplyJumpClickEvent;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.ThreadReplyItem;
-import com.gzsll.hupu.storage.bean.ThreadReplyItems;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItems;
+import com.gzsll.hupu.support.utils.ReplyViewHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.ReplyDetailActivity_;
 import com.gzsll.hupu.ui.view.ThreadReplyHeaderView;
 import com.gzsll.hupu.ui.view.ThreadReplyHeaderView_;
 import com.gzsll.hupu.ui.view.ThreadReplyItemView;
 import com.gzsll.hupu.ui.view.ThreadReplyItemView_;
-import com.gzsll.hupu.utils.ReplyViewHelper;
 import com.gzsll.hupu.widget.SectionedBaseAdapter;
 import com.squareup.otto.Bus;
 

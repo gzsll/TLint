@@ -18,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.UserStorage;
+import com.gzsll.hupu.support.storage.UserStorage;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;

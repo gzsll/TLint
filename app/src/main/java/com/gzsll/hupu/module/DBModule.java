@@ -2,10 +2,10 @@ package com.gzsll.hupu.module;
 
 import android.content.Context;
 
-import com.gzsll.hupu.db.BoardDao;
-import com.gzsll.hupu.db.DaoMaster;
-import com.gzsll.hupu.db.DaoSession;
-import com.gzsll.hupu.db.UserDao;
+import com.gzsll.hupu.support.db.BoardDao;
+import com.gzsll.hupu.support.db.DaoMaster;
+import com.gzsll.hupu.support.db.DaoSession;
+import com.gzsll.hupu.support.db.UserDao;
 
 import javax.inject.Singleton;
 

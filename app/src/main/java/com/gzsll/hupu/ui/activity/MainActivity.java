@@ -20,10 +20,10 @@ import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.ReceiveNoticeEvent;
-import com.gzsll.hupu.storage.bean.Notice;
+import com.gzsll.hupu.support.storage.bean.Notice;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.fragment.BoardListFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
-import com.gzsll.hupu.utils.SettingPrefHelper;
 import com.squareup.otto.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;

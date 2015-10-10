@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.db.Board;
+import com.gzsll.hupu.support.db.Board;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;

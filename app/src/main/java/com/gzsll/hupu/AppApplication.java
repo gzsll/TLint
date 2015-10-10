@@ -11,10 +11,10 @@ import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFacto
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
-import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.module.RootModule;
-import com.gzsll.hupu.storage.UserStorage;
+import com.gzsll.hupu.support.db.User;
+import com.gzsll.hupu.support.db.UserDao;
+import com.gzsll.hupu.support.storage.UserStorage;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.androidannotations.annotations.EApplication;

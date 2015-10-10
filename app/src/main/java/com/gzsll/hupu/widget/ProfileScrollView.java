@@ -15,9 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.bean.UserInfo;
+import com.gzsll.hupu.support.storage.bean.UserInfo;
+import com.gzsll.hupu.support.utils.SystemBarTintManager;
 import com.gzsll.hupu.ui.activity.BaseActivity;
-import com.gzsll.hupu.utils.SystemBarTintManager;
 
 /**
  * Created by sll on 2015/9/14.

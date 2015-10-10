@@ -3,9 +3,9 @@ package com.gzsll.hupu.ui.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gzsll.hupu.db.Board;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.Boards;
+import com.gzsll.hupu.support.db.Board;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.LoginActivity_;
 import com.gzsll.hupu.ui.activity.ThreadActivity_;

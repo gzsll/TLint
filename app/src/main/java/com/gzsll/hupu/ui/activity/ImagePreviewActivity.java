@@ -14,12 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.pref.SettingPref_;
+import com.gzsll.hupu.support.pref.SettingPref_;
+import com.gzsll.hupu.support.utils.FileHelper;
+import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.gzsll.hupu.ui.fragment.PictureItemFragment;
 import com.gzsll.hupu.ui.fragment.PictureItemFragment_;
-import com.gzsll.hupu.utils.FileHelper;
-import com.gzsll.hupu.utils.FormatHelper;
-import com.gzsll.hupu.utils.OkHttpHelper;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;

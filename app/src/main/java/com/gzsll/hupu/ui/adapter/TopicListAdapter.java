@@ -3,7 +3,7 @@ package com.gzsll.hupu.ui.adapter;
 import android.content.Context;
 import android.view.View;
 
-import com.gzsll.hupu.storage.bean.Topic;
+import com.gzsll.hupu.support.storage.bean.Topic;
 import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.view.TopicListItem;
 import com.gzsll.hupu.ui.view.TopicListItem_;

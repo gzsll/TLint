@@ -2,18 +2,18 @@ package com.gzsll.hupu.module;
 
 import android.content.Context;
 
-import com.gzsll.hupu.utils.CacheHelper;
-import com.gzsll.hupu.utils.DataCleanHelper;
-import com.gzsll.hupu.utils.FileHelper;
-import com.gzsll.hupu.utils.FormatHelper;
-import com.gzsll.hupu.utils.NetWorkHelper;
-import com.gzsll.hupu.utils.OkHttpHelper;
-import com.gzsll.hupu.utils.ReplyViewHelper;
-import com.gzsll.hupu.utils.RequestHelper;
-import com.gzsll.hupu.utils.ResourceHelper;
-import com.gzsll.hupu.utils.SecurityHelper;
-import com.gzsll.hupu.utils.SettingPrefHelper;
-import com.gzsll.hupu.utils.ThemeHelper;
+import com.gzsll.hupu.support.utils.CacheHelper;
+import com.gzsll.hupu.support.utils.DataCleanHelper;
+import com.gzsll.hupu.support.utils.FileHelper;
+import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.NetWorkHelper;
+import com.gzsll.hupu.support.utils.OkHttpHelper;
+import com.gzsll.hupu.support.utils.ReplyViewHelper;
+import com.gzsll.hupu.support.utils.RequestHelper;
+import com.gzsll.hupu.support.utils.ResourceHelper;
+import com.gzsll.hupu.support.utils.SecurityHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
+import com.gzsll.hupu.support.utils.ThemeHelper;
 import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;

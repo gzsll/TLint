@@ -1,7 +1,7 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.bean.UserResult;
+import com.gzsll.hupu.support.storage.bean.UserResult;
 import com.gzsll.hupu.view.UserProfileView;
 
 import javax.inject.Inject;

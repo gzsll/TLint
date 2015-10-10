@@ -3,7 +3,7 @@ package com.gzsll.hupu.ui.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 
-import com.gzsll.hupu.storage.bean.Folder;
+import com.gzsll.hupu.support.storage.bean.Folder;
 import com.gzsll.hupu.ui.activity.PhotoGalleryActivity;
 import com.gzsll.hupu.ui.view.FolderItemView;
 import com.gzsll.hupu.ui.view.FolderItemView_;

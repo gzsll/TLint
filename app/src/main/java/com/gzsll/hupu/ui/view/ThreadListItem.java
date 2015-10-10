@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.bean.Cover;
-import com.gzsll.hupu.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.Cover;
+import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
-import com.gzsll.hupu.utils.FormatHelper;
-import com.gzsll.hupu.utils.SettingPrefHelper;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;

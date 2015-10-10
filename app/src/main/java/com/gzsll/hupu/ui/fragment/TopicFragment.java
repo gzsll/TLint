@@ -2,7 +2,7 @@ package com.gzsll.hupu.ui.fragment;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.TopicPresenter;
-import com.gzsll.hupu.storage.bean.Topic;
+import com.gzsll.hupu.support.storage.bean.Topic;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.LoginActivity_;
 import com.gzsll.hupu.ui.adapter.BaseListAdapter;

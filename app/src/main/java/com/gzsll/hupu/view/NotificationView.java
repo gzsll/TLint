@@ -1,6 +1,6 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.storage.bean.Notification;
+import com.gzsll.hupu.support.storage.bean.Notification;
 
 import java.util.List;
 

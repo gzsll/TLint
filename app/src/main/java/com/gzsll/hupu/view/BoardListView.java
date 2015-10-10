@@ -1,6 +1,6 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.storage.bean.Boards;
+import com.gzsll.hupu.support.storage.bean.Boards;
 
 import java.util.List;
 

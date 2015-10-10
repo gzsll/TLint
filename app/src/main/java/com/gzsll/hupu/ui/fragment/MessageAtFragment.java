@@ -2,7 +2,7 @@ package com.gzsll.hupu.ui.fragment;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.MessageAtPresenter;
-import com.gzsll.hupu.storage.bean.MessageAt;
+import com.gzsll.hupu.support.storage.bean.MessageAt;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.adapter.BaseListAdapter;
 import com.gzsll.hupu.ui.adapter.MessageAtAdapter;

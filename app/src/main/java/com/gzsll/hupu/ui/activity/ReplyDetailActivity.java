@@ -18,11 +18,11 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.ReplyDetailPresenter;
-import com.gzsll.hupu.storage.bean.MiniReplyListItem;
-import com.gzsll.hupu.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.support.utils.ReplyViewHelper;
+import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.ui.adapter.MiniReplyAdapter;
-import com.gzsll.hupu.utils.ReplyViewHelper;
-import com.gzsll.hupu.utils.ResourceHelper;
 import com.gzsll.hupu.view.ReplyDetailView;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 

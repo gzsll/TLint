@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.PostActivity_;
 import com.gzsll.hupu.ui.activity.ReplyDetailActivity;

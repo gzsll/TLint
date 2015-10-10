@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.SearchPresenter;
-import com.gzsll.hupu.storage.bean.GroupThread;
-import com.gzsll.hupu.storage.bean.Info;
+import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.Info;
 import com.gzsll.hupu.ui.adapter.BaseRecyclerViewAdapter;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.view.ThreadListView;

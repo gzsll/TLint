@@ -25,8 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.bean.Folder;
-import com.gzsll.hupu.storage.bean.Image;
+import com.gzsll.hupu.support.storage.bean.Folder;
+import com.gzsll.hupu.support.storage.bean.Image;
 import com.gzsll.hupu.ui.adapter.FolderAdapter;
 import com.gzsll.hupu.ui.adapter.ImageAdapter;
 

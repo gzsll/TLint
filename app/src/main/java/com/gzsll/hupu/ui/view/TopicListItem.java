@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.bean.Topic;
+import com.gzsll.hupu.support.storage.bean.Topic;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;

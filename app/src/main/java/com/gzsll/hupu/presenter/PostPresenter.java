@@ -12,12 +12,12 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.AddReplyResult;
-import com.gzsll.hupu.storage.bean.BaseResult;
-import com.gzsll.hupu.storage.bean.UploadInfo;
-import com.gzsll.hupu.utils.FileHelper;
-import com.gzsll.hupu.utils.SecurityHelper;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.AddReplyResult;
+import com.gzsll.hupu.support.storage.bean.BaseResult;
+import com.gzsll.hupu.support.storage.bean.UploadInfo;
+import com.gzsll.hupu.support.utils.FileHelper;
+import com.gzsll.hupu.support.utils.SecurityHelper;
 import com.gzsll.hupu.view.PostView;
 
 import org.apache.log4j.Logger;

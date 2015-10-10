@@ -1,7 +1,7 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.bean.ThreadReplyResult;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyResult;
 import com.gzsll.hupu.view.ReplyDetailView;
 
 import javax.inject.Inject;

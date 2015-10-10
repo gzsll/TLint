@@ -2,8 +2,8 @@ package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.bean.Topic;
-import com.gzsll.hupu.storage.bean.TopicResult;
+import com.gzsll.hupu.support.storage.bean.Topic;
+import com.gzsll.hupu.support.storage.bean.TopicResult;
 import com.gzsll.hupu.view.TopicView;
 import com.squareup.otto.Bus;
 

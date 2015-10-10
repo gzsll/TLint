@@ -2,7 +2,7 @@ package com.gzsll.hupu.ui.fragment;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.MessageReplyPresenter;
-import com.gzsll.hupu.storage.bean.MessageReply;
+import com.gzsll.hupu.support.storage.bean.MessageReply;
 import com.gzsll.hupu.ui.activity.NoticeActivity;
 import com.gzsll.hupu.ui.adapter.BaseListAdapter;
 import com.gzsll.hupu.ui.adapter.MessageReplyAdapter;

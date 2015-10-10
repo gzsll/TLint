@@ -22,9 +22,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.UserProfilePresenter;
-import com.gzsll.hupu.storage.bean.UserInfo;
+import com.gzsll.hupu.support.storage.bean.UserInfo;
+import com.gzsll.hupu.support.utils.SystemBarTintManager;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
-import com.gzsll.hupu.utils.SystemBarTintManager;
 import com.gzsll.hupu.view.UserProfileView;
 import com.gzsll.hupu.widget.ProfileScrollView;
 
