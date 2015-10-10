@@ -1,6 +1,6 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.otto.ReceiveNoticeEvent;
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.db.BoardDao;
@@ -37,7 +37,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
 
 
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
     @Inject
     BoardDao mBoardDao;
     @Inject
@@ -57,7 +57,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
         if (!boards.isEmpty() && groupId != 0) {
             sortBoard(boards);
         } else {
-            mHuPuApi.getBoardList(new Callback<BoardListResult>() {
+            mThreadApi.getBoardList(new Callback<BoardListResult>() {
                 @Override
                 public void success(BoardListResult boardListResult, Response response) {
                     if (boardListResult.getStatus() == 200) {

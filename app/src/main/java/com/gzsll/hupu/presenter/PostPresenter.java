@@ -11,7 +11,7 @@ import com.amazonaws.mobileconnectors.s3.transfermanager.Upload;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.gzsll.hupu.Constants;
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.AddReplyResult;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
@@ -43,7 +43,7 @@ public class PostPresenter extends Presenter<PostView> {
     @Inject
     UserStorage mUserStorage;
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
 
 
     private ArrayList<String> paths = new ArrayList<>();
@@ -90,7 +90,7 @@ public class PostPresenter extends Presenter<PostView> {
     }
 
     private void addReply(String groupId, String groupReplyId, String quoteId, String content, List<String> imgs) {
-        mHuPuApi.addReplyByApp(groupId, groupReplyId, quoteId, content, imgs, new Callback<AddReplyResult>() {
+        mThreadApi.addReplyByApp(groupId, groupReplyId, quoteId, content, imgs, new Callback<AddReplyResult>() {
             @Override
             public void success(AddReplyResult result, Response response) {
                 view.hideLoading();
@@ -152,7 +152,7 @@ public class PostPresenter extends Presenter<PostView> {
     }
 
     private void addPost(String groupId, String content, String title, List<String> imgs) {
-        mHuPuApi.addGroupThread(title, content, groupId, imgs, new Callback<BaseResult>() {
+        mThreadApi.addGroupThread(title, content, groupId, imgs, new Callback<BaseResult>() {
             @Override
             public void success(BaseResult result, Response response) {
                 view.hideLoading();

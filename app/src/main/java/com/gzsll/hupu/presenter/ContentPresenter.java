@@ -2,7 +2,7 @@ package com.gzsll.hupu.presenter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.FavoriteResult;
 import com.gzsll.hupu.support.storage.bean.ThreadHotReply;
@@ -36,7 +36,7 @@ public class ContentPresenter extends Presenter<ContentView> {
     @Inject
     Gson gson;
     @Inject
-    HuPuApi huPuApi;
+    ThreadApi threadApi;
     @Inject
     SettingPrefHelper mSettingPrefHelper;
     @Inject
@@ -57,7 +57,7 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     private void loadContent(int page) {
-        huPuApi.getGroupThreadInfo(groupThreadId, 0, page, mSettingPrefHelper.getLoadPic(), new retrofit.Callback<ThreadInfoResult>() {
+        threadApi.getGroupThreadInfo(groupThreadId, 0, page, mSettingPrefHelper.getLoadPic(), new retrofit.Callback<ThreadInfoResult>() {
             @Override
             public void success(ThreadInfoResult threadInfoResult, retrofit.client.Response response) {
                 if (threadInfoResult.getStatus() == 200) {
@@ -124,7 +124,7 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void addArchive() {
-        huPuApi.addSpecial(groupThreadId + "", new Callback<BaseResult>() {
+        threadApi.addSpecial(groupThreadId + "", new Callback<BaseResult>() {
             @Override
             public void success(BaseResult o, Response response) {
 
@@ -140,7 +140,7 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void addFavorite() {
-        huPuApi.addFavorite(groupThreadId, new Callback<FavoriteResult>() {
+        threadApi.addFavorite(groupThreadId, new Callback<FavoriteResult>() {
             @Override
             public void success(FavoriteResult favoriteResult, Response response) {
                 view.showToast(favoriteResult.getMsg());

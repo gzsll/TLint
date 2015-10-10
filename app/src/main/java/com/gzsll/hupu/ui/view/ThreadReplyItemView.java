@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
@@ -57,7 +57,7 @@ public class ThreadReplyItemView extends LinearLayout {
     @ViewById
     RelativeLayout rlLight;
 
-    public HuPuApi mHuPuApi;
+    public ThreadApi mThreadApi;
     public ReplyViewHelper mReplyViewHelper;
     public UserStorage mUserStorage;
     public BaseActivity mActivity;
@@ -104,7 +104,7 @@ public class ThreadReplyItemView extends LinearLayout {
 
     @Click
     void rlLight() {
-        mHuPuApi.lightByApp(item.getGroupThreadId(), item.getId(), new retrofit.Callback<BaseResult>() {
+        mThreadApi.lightByApp(item.getGroupThreadId(), item.getId(), new retrofit.Callback<BaseResult>() {
             @Override
             public void success(BaseResult result, retrofit.client.Response response) {
                 if (result != null && result.getStatus() == 200) {

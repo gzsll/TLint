@@ -3,7 +3,7 @@ package com.gzsll.hupu.ui.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.otto.ReplyJumpClickEvent;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
@@ -29,7 +29,7 @@ import javax.inject.Inject;
 public class ThreadReplyAdapter extends SectionedBaseAdapter {
 
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
     @Inject
     ReplyViewHelper mReplyViewHelper;
     @Inject
@@ -79,7 +79,7 @@ public class ThreadReplyAdapter extends SectionedBaseAdapter {
         ThreadReplyItemView view;
         if (convertView == null) {
             view = ThreadReplyItemView_.build(mActivity);
-            view.mHuPuApi = mHuPuApi;
+            view.mThreadApi = mThreadApi;
             view.mUserStorage = mUserStorage;
             view.mReplyViewHelper = mReplyViewHelper;
             view.mActivity = mActivity;

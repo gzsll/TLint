@@ -31,6 +31,8 @@ import com.gzsll.hupu.ui.fragment.ContentFragment_;
 import com.gzsll.hupu.ui.fragment.MDColorsDialogFragment_;
 import com.gzsll.hupu.ui.fragment.MessageAtFragment_;
 import com.gzsll.hupu.ui.fragment.MessageReplyFragment_;
+import com.gzsll.hupu.ui.fragment.NewsFragment_;
+import com.gzsll.hupu.ui.fragment.NewsListFragment_;
 import com.gzsll.hupu.ui.fragment.PictureItemFragment_;
 import com.gzsll.hupu.ui.fragment.SettingFragment_;
 import com.gzsll.hupu.ui.fragment.ThreadListFragment_;
@@ -59,7 +61,7 @@ import dagger.Provides;
                 PhotoGalleryActivity_.class, ReplyDetailActivity_.class, SettingActivity_.class, NoticeActivity_.class, LoginActivity_.class,
                 SplashActivity_.class, UserProfileActivity_.class,
                 ThreadListFragment_.class, TopicFragment_.class, BoardListFragment_.class, PictureItemFragment_.class, MessageAtFragment_.class, MessageReplyFragment_.class,
-                FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class
+                FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class, NewsFragment_.class, NewsListFragment_.class
 
         },
         library = true

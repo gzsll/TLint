@@ -1,4 +1,4 @@
-package com.gzsll.hupu.api.hupu;
+package com.gzsll.hupu.api.thread;
 
 import com.gzsll.hupu.api.TypedJsonString;
 import com.gzsll.hupu.support.storage.bean.AddReplyResult;
@@ -25,7 +25,7 @@ import retrofit.http.QueryMap;
 /**
  * Created by sll on 2015/9/8 0008.
  */
-public interface HuPuService {
+public interface ThreadService {
 
     @GET("/users/getUserBaseInfo")
     void getUserInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<UserResult> callback);

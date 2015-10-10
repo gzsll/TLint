@@ -1,6 +1,6 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyResult;
 import com.gzsll.hupu.view.ReplyDetailView;
 
@@ -16,12 +16,12 @@ import retrofit.client.Response;
 public class ReplyDetailPresenter extends Presenter<ReplyDetailView> {
 
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
 
 
     public void onMiniReplyReceive(String groupThreadId, String groupReplyId, int page) {
         view.onMiniRepliesLoading();
-        mHuPuApi.getMiniReplyList(groupThreadId, groupReplyId, page, new Callback<ThreadReplyResult>() {
+        mThreadApi.getMiniReplyList(groupThreadId, groupReplyId, page, new Callback<ThreadReplyResult>() {
             @Override
             public void success(ThreadReplyResult result, Response response) {
                 view.loadMiniRepliesFinish();

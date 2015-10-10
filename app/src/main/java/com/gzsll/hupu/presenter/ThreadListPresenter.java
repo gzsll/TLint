@@ -1,6 +1,6 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.GroupThread;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
@@ -27,7 +27,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     @Inject
     Bus bus;
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
 
 
     private List<GroupThread> threads = new ArrayList<GroupThread>();
@@ -79,7 +79,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     private void loadThreadList(String groupId, String last, String type, List<String> list, final boolean clear) {
-        mHuPuApi.getGroupThreadsList(groupId, last, type, list, new Callback<ThreadsResult>() {
+        mThreadApi.getGroupThreadsList(groupId, last, type, list, new Callback<ThreadsResult>() {
             @Override
             public void success(ThreadsResult threadsResult, Response response) {
                 if (clear) {
@@ -133,7 +133,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     public void addAttention() {
-        mHuPuApi.addGroupAttention(groupId, new Callback<BaseResult>() {
+        mThreadApi.addGroupAttention(groupId, new Callback<BaseResult>() {
             @Override
             public void success(BaseResult baseResult, Response response) {
                 if (baseResult != null) {

@@ -1,4 +1,4 @@
-package com.gzsll.hupu.api.hupu;
+package com.gzsll.hupu.api.thread;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,15 +35,15 @@ import retrofit.client.OkClient;
 /**
  * Created by sll on 2015/9/8 0008.
  */
-public class HuPuApi {
+public class ThreadApi {
     static final String BASE_URL = "http://bbs.mobile.hupu.com";
 
-    private HuPuService huPuService;
+    private ThreadService threadService;
     private RequestHelper requestHelper;
     private Gson gson;
     private UserStorage mUserStorage;
 
-    public HuPuApi(final UserStorage mUserStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, Gson gson) {
+    public ThreadApi(final UserStorage mUserStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, Gson gson) {
         this.mUserStorage = mUserStorage;
         this.requestHelper = requestHelper;
         this.gson = gson;
@@ -59,7 +59,7 @@ public class HuPuApi {
         RestAdapter restAdapter = new RestAdapter.Builder().setRequestInterceptor(requestInterceptor)
                 .setEndpoint(BASE_URL).setClient(new OkClient(okHttpClient)).setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
-        huPuService = restAdapter.create(HuPuService.class);
+        threadService = restAdapter.create(ThreadService.class);
     }
 
 
@@ -67,13 +67,13 @@ public class HuPuApi {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("uid", uid);
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getUserInfo(sign, params, callback);
+        threadService.getUserInfo(sign, params, callback);
     }
 
     public void getBoardList(Callback<BoardListResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getBoardList(sign, params, callback);
+        threadService.getBoardList(sign, params, callback);
     }
 
     public void getGroupThreadsList(String groupId, String lastId, String type, List<String> list, Callback<ThreadsResult> callback) {
@@ -92,7 +92,7 @@ public class HuPuApi {
             params.put("gids", jSONArray.toString());
         }
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getGroupThreadsList(sign, params, callback);
+        threadService.getGroupThreadsList(sign, params, callback);
     }
 
     public void addGroupAttention(String groupId, Callback<BaseResult> callback) {
@@ -100,7 +100,7 @@ public class HuPuApi {
         params.put("groupId", groupId);
         params.put("uid", mUserStorage.getUid());
         String sign = requestHelper.getRequestSign(params);
-        huPuService.addGroupAttention(sign, params, callback);
+        threadService.addGroupAttention(sign, params, callback);
     }
 
     public void delGroupAttention(String groupId, Callback<BaseResult> callback) {
@@ -108,21 +108,21 @@ public class HuPuApi {
         params.put("groupId", groupId);
         params.put("uid", mUserStorage.getUid());
         String sign = requestHelper.getRequestSign(params);
-        huPuService.delGroupAttention(sign, params, callback);
+        threadService.delGroupAttention(sign, params, callback);
     }
 
     public void addSpecial(String specialId, Callback<BaseResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("specialId", specialId);
         String sign = requestHelper.getRequestSign(params);
-        huPuService.addSpecial(sign, params, callback);
+        threadService.addSpecial(sign, params, callback);
     }
 
     public void delSpecial(String specialId, Callback<BaseResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("specialId", specialId);
         String sign = requestHelper.getRequestSign(params);
-        huPuService.delSpecial(sign, params, callback);
+        threadService.delSpecial(sign, params, callback);
     }
 
     public void getGroupThreadInfo(long groupThreadId, long lightReplyId, int page, boolean diaplayImgs, Callback<ThreadInfoResult> callback) {
@@ -132,7 +132,7 @@ public class HuPuApi {
         params.put("page", page + "");
         params.put("diaplayImgs", diaplayImgs ? "0" : "1");
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getGroupThreadInfo(sign, params, callback);
+        threadService.getGroupThreadInfo(sign, params, callback);
     }
 
     public void addGroupThread(String title, String content, String groupId, List<String> list, Callback<BaseResult> callback) {
@@ -149,7 +149,7 @@ public class HuPuApi {
         }
         String sign = requestHelper.getRequestSign(params);
         params.put("sign", sign);
-        huPuService.addGroupThread(new TypedJsonString(gson.toJson(params)), callback);
+        threadService.addGroupThread(new TypedJsonString(gson.toJson(params)), callback);
     }
 
     public void addReplyByApp(String groupThreadId, String groupReplyId, String quoteId, String content, List<String> list, Callback<AddReplyResult> callback) {
@@ -178,7 +178,7 @@ public class HuPuApi {
             String sign = requestHelper.getRequestSign(params);
             jsonObject.putOpt("sign", sign);
             Log.d("groupApi", "gson.toJson(params):" + jsonObject.toString());
-            huPuService.addReplyByApp(new TypedJsonString(jsonObject.toString()), callback);
+            threadService.addReplyByApp(new TypedJsonString(jsonObject.toString()), callback);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,7 +191,7 @@ public class HuPuApi {
         params.put("page", page + "");
         params.put("limit", "20");
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getMiniReplyList(sign, params, callback);
+        threadService.getMiniReplyList(sign, params, callback);
     }
 
     public void lightByApp(long groupThreadId, long groupReplyId, Callback<BaseResult> callback) {
@@ -199,21 +199,21 @@ public class HuPuApi {
         params.put("groupThreadId", groupThreadId + "");
         params.put("groupReplyId", groupReplyId + "");
         String sign = requestHelper.getRequestSign(params);
-        huPuService.lightByApp(sign, params, callback);
+        threadService.lightByApp(sign, params, callback);
     }
 
     public void addFavorite(long tid, Callback<FavoriteResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("tid", tid + "");
         String sign = requestHelper.getRequestSign(params);
-        huPuService.addFavorite(sign, params, callback);
+        threadService.addFavorite(sign, params, callback);
     }
 
     public void delFavorite(long tid, Callback callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("tid", tid + "");
         String sign = requestHelper.getRequestSign(params);
-        huPuService.delFavorite(sign, params, callback);
+        threadService.delFavorite(sign, params, callback);
     }
 
     public void getUserThreadList(int page, String uid, Callback<TopicResult> callback) {
@@ -223,7 +223,7 @@ public class HuPuApi {
         params.put("limit", "20");
         params.put("page", page + "");
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getUserThreadList(sign, params, callback);
+        threadService.getUserThreadList(sign, params, callback);
     }
 
     public void getUserThreadFavoriteList(int page, String uid, Callback<TopicResult> callback) {
@@ -233,21 +233,21 @@ public class HuPuApi {
         params.put("limit", "20");
         params.put("page", page + "");
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getUserThreadFavoriteList(sign, params, callback);
+        threadService.getUserThreadFavoriteList(sign, params, callback);
     }
 
     public void getMessageReply(String lastId, Callback<MessageReplyResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("lastId", lastId);
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getMessageReply(sign, params, callback);
+        threadService.getMessageReply(sign, params, callback);
     }
 
     public void getMessageAt(String lastId, Callback<MessageAtResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("lastId", lastId);
         String sign = requestHelper.getRequestSign(params);
-        huPuService.getMessageAt(sign, params, callback);
+        threadService.getMessageAt(sign, params, callback);
     }
 
 }

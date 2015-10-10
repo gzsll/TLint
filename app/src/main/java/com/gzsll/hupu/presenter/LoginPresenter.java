@@ -1,7 +1,7 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
 import com.gzsll.hupu.api.login.LoginAPi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.support.db.User;
 import com.gzsll.hupu.support.db.UserDao;
@@ -28,7 +28,7 @@ public class LoginPresenter extends Presenter<LoginView> {
     @Inject
     LoginAPi loginAPi;
     @Inject
-    HuPuApi huPuApi;
+    ThreadApi threadApi;
     @Inject
     Bus bus;
     @Inject
@@ -67,7 +67,7 @@ public class LoginPresenter extends Presenter<LoginView> {
     }
 
     private void getUserInfo(final User user) {
-        huPuApi.getUserInfo(user.getUid(), new retrofit.Callback<UserResult>() {
+        threadApi.getUserInfo(user.getUid(), new retrofit.Callback<UserResult>() {
             @Override
             public void success(UserResult userResult, retrofit.client.Response response) {
                 view.hideLoading();

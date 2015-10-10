@@ -23,6 +23,7 @@ import com.gzsll.hupu.otto.ReceiveNoticeEvent;
 import com.gzsll.hupu.support.storage.bean.Notice;
 import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.fragment.BoardListFragment_;
+import com.gzsll.hupu.ui.fragment.NewsFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
 import com.squareup.otto.Subscribe;
 
@@ -153,8 +154,8 @@ public class MainActivity extends BaseActivity {
                                 PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).groupThreadId("2869008").start();
 
                             } else {
-                                //TODO  show about me page
-                                AboutActivity_.intent(MainActivity.this).start();
+                                //  AboutActivity_.intent(MainActivity.this).start();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.content, NewsFragment_.builder().build()).commit();
                             }
                             drawerLayout.closeDrawers();
                             return true;

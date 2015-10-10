@@ -1,7 +1,7 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.Constants;
-import com.gzsll.hupu.api.hupu.HuPuApi;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.bean.Topic;
 import com.gzsll.hupu.support.storage.bean.TopicResult;
 import com.gzsll.hupu.view.TopicView;
@@ -26,7 +26,7 @@ public class TopicPresenter extends Presenter<TopicView> {
 
 
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
     @Inject
     Bus bus;
 
@@ -37,7 +37,7 @@ public class TopicPresenter extends Presenter<TopicView> {
 
     private void load(int type, String uid, final boolean isClear) {
         if (type == Constants.NAV_TOPIC_LIST) {
-            mHuPuApi.getUserThreadList(page, uid, new Callback<TopicResult>() {
+            mThreadApi.getUserThreadList(page, uid, new Callback<TopicResult>() {
                 @Override
                 public void success(TopicResult topicResult, Response response) {
                     loadFinish(topicResult, isClear);
@@ -49,7 +49,7 @@ public class TopicPresenter extends Presenter<TopicView> {
                 }
             });
         } else {
-            mHuPuApi.getUserThreadFavoriteList(page, uid, new Callback<TopicResult>() {
+            mThreadApi.getUserThreadFavoriteList(page, uid, new Callback<TopicResult>() {
                 @Override
                 public void success(TopicResult topicResult, Response response) {
                     loadFinish(topicResult, isClear);
