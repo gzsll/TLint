@@ -63,13 +63,6 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService" />
-
-        <activity
-            android:name="com.umeng.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>
