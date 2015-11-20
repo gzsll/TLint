@@ -21,7 +21,7 @@ public class NewsApi {
 
     public NewsApi(OkHttpClient okHttpClient) {
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(BASE_URL).setClient(new OkClient(okHttpClient)).setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(BASE_URL).setClient(new OkClient(okHttpClient)).setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
         mNewsService = restAdapter.create(NewsService.class);
     }

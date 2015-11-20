@@ -7,7 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.support.storage.bean.Image;
 import com.gzsll.hupu.ui.activity.PhotoGalleryActivity;
@@ -152,10 +157,19 @@ public class ImageAdapter extends BaseAdapter {
                 // 未选择
                 check.setImageResource(R.drawable.ap_gallery_normal);
             }
-
-            // 显示图片
             image.setAspectRatio(1);
-            image.setImageURI(Uri.fromFile(new File(data.path)));
+
+            int width = 50, height = 50;
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.fromFile(new File(data.path)))
+                    .setResizeOptions(new ResizeOptions(width, height))
+                    .build();
+            PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+                    .setOldController(image.getController())
+                    .setImageRequest(request)
+                    .build();
+            image.setController(controller);
+
+
         }
     }
 }

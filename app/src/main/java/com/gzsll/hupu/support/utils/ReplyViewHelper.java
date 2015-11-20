@@ -6,18 +6,25 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.util.ArrayMap;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.support.storage.bean.ThreadSpanned;
+import com.gzsll.hupu.ui.activity.BrowserActivity_;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
-import com.gzsll.hupu.widget.JustifyTextView;
+import com.gzsll.hupu.ui.activity.UserProfileActivity_;
+
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,24 +33,27 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 /**
  * Created by sll on 2015/8/25.
  * 格式化回复布局
  */
 public class ReplyViewHelper {
 
+    Logger logger = Logger.getLogger(ReplyViewHelper.class.getSimpleName());
+
     private static final String COMPILE = "(?:<blockquote>([\\s\\S]*)</blockquote>)|(?:<img src=\"(.*?)\".*?>)|(</blockquote>([\\s\\S]*)<img)";
-    private SettingPrefHelper mSettingPrefHelper;
-    private Context mContext;
+    @Inject
+    SettingPrefHelper mSettingPrefHelper;
+    @Inject
+    Context mContext;
+    @Inject
+    FormatHelper mFormatHelper;
     private Set<String> images = new HashSet<>();
     private int index = 0;
     private ArrayMap<String, Spanned> spannedArrayMap = new ArrayMap<>();
 
-
-    public ReplyViewHelper(SettingPrefHelper mSettingPrefHelper, Context mContext) {
-        this.mSettingPrefHelper = mSettingPrefHelper;
-        this.mContext = mContext;
-    }
 
     public void addToView(List<ThreadSpanned> list, LinearLayout linearLayout) {
         for (ThreadSpanned threadSpanned : list) {
@@ -67,7 +77,7 @@ public class ReplyViewHelper {
         int i2 = 0;
         int i3 = 0;
         int i4 = 0;
-        List<ThreadSpanned> arrayList = new ArrayList();
+        List<ThreadSpanned> arrayList = new ArrayList<>();
         while (matcher.find()) {
             String group = matcher.group();
             if (group.startsWith("<blockquote")) {
@@ -154,17 +164,36 @@ public class ReplyViewHelper {
     }
 
     private void addContentView(String str, LinearLayout linearLayout) {
-        JustifyTextView textView = new JustifyTextView(mContext);
+        TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.base_reply_textview_layout, null);
         textView.setTextColor(Color.parseColor("#333333"));
-        textView.setMText(Html.fromHtml(str));
+        CharSequence sequence = Html.fromHtml(str);
+        SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+        URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+        for (URLSpan span : urls) {
+            makeLinkClickable(strBuilder, span);
+        }
+        textView.setText(strBuilder);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTextSize());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int topMargin = DisplayHelper.dip2px(mContext, 10.0f);
-        layoutParams.topMargin = topMargin;
-        layoutParams.bottomMargin = topMargin;
-        textView.setLayoutParams(layoutParams);
         linearLayout.addView(textView);
 
+    }
+
+    protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
+        int start = strBuilder.getSpanStart(span);
+        int end = strBuilder.getSpanEnd(span);
+        int flags = strBuilder.getSpanFlags(span);
+        ClickableSpan clickable = new ClickableSpan() {
+            public void onClick(View view) {
+                String url = span.getURL();
+                if (url.startsWith("http://my.hupu.com")) {
+                    UserProfileActivity_.intent(mContext).flags(Intent.FLAG_ACTIVITY_NEW_TASK).uid(mFormatHelper.getUid(url)).start();
+                } else {
+                    BrowserActivity_.intent(mContext).flags(Intent.FLAG_ACTIVITY_NEW_TASK).url(url).start();
+                }
+            }
+        };
+        strBuilder.setSpan(clickable, start, end, flags);
+        strBuilder.removeSpan(span);
     }
 
 

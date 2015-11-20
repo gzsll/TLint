@@ -1,5 +1,7 @@
 package com.gzsll.hupu.support.utils;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -116,4 +118,16 @@ public class FormatHelper {
         return fileSizeString;
     }
 
+    /**
+     * 根据主页网址获取用户uid
+     *
+     * @param html 用户主页地址  etc:http://my.hupu.com/18786719
+     * @return uid
+     */
+    public String getUid(String html) {
+        if (!TextUtils.isEmpty(html)) {
+            return html.substring(html.lastIndexOf("/") + 1);
+        }
+        return "0";
+    }
 }

@@ -23,7 +23,6 @@ import com.gzsll.hupu.otto.ReceiveNoticeEvent;
 import com.gzsll.hupu.support.storage.bean.Notice;
 import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.fragment.BoardListFragment_;
-import com.gzsll.hupu.ui.fragment.NewsFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
 import com.squareup.otto.Subscribe;
 
@@ -154,11 +153,10 @@ public class MainActivity extends BaseActivity {
                                 PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).groupThreadId("2869008").start();
 
                             } else {
-                                //  AboutActivity_.intent(MainActivity.this).start();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.content, NewsFragment_.builder().build()).commit();
+                                AboutActivity_.intent(MainActivity.this).start();
+                                // getSupportFragmentManager().beginTransaction().replace(R.id.content, NewsFragment_.builder().build()).commit();
                             }
-                            drawerLayout.closeDrawers();
-                            return true;
+
                         } else {
                             if (groupId >= 0) {
                                 fragment = BoardListFragment_.builder().id(groupId).build();
@@ -173,9 +171,9 @@ public class MainActivity extends BaseActivity {
                             }
                             menuItem.setChecked(true);
                             setTitle(menuItem.getTitle());
-                            drawerLayout.closeDrawers();
-                            return true;
                         }
+                        drawerLayout.closeDrawers();
+                        return true;
                     }
                 });
     }

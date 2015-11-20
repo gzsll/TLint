@@ -26,8 +26,10 @@ import com.gzsll.hupu.ui.activity.SettingActivity_;
 import com.gzsll.hupu.ui.activity.SplashActivity_;
 import com.gzsll.hupu.ui.activity.ThreadActivity_;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
+import com.gzsll.hupu.ui.fragment.AccountFragment_;
 import com.gzsll.hupu.ui.fragment.BoardListFragment_;
 import com.gzsll.hupu.ui.fragment.ContentFragment_;
+import com.gzsll.hupu.ui.fragment.LoginFragment_;
 import com.gzsll.hupu.ui.fragment.MDColorsDialogFragment_;
 import com.gzsll.hupu.ui.fragment.MessageAtFragment_;
 import com.gzsll.hupu.ui.fragment.MessageReplyFragment_;
@@ -62,7 +64,7 @@ import dagger.Provides;
                 SplashActivity_.class, UserProfileActivity_.class,
                 ThreadListFragment_.class, TopicFragment_.class, BoardListFragment_.class, PictureItemFragment_.class, MessageAtFragment_.class, MessageReplyFragment_.class,
                 FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class, NewsFragment_.class, NewsListFragment_.class
-
+                , LoginFragment_.class, AccountFragment_.class
         },
         library = true
 )
@@ -77,7 +79,7 @@ public class RootModule {
     @Provides
     @Singleton
     public Context provideApplicationContext() {
-        return context;
+        return context.getApplicationContext();
     }
 
     @Provides

@@ -80,14 +80,16 @@ public class ContentPresenter extends Presenter<ContentView> {
                         replyItems.add(replyItem);
                     }
                     ThreadReply reply = threadInfoResult.getData().getThreadReply();
-                    ThreadReplyItems replyItem = new ThreadReplyItems();
-                    replyItem.setmLists(reply.getLists());
-                    replyItem.setName("全部回帖");
-                    currentPage = reply.getPage();
-                    totalPage = reply.getPagecount();
-                    replyItem.setCurrentPage(currentPage);
-                    replyItem.setTotalPage(totalPage);
-                    replyItems.add(replyItem);
+                    if (reply != null&&!reply.getLists().isEmpty()) {
+                        ThreadReplyItems replyItem = new ThreadReplyItems();
+                        replyItem.setmLists(reply.getLists());
+                        replyItem.setName("全部回帖");
+                        currentPage = reply.getPage();
+                        totalPage = reply.getPagecount();
+                        replyItem.setCurrentPage(currentPage);
+                        replyItem.setTotalPage(totalPage);
+                        replyItems.add(replyItem);
+                    }
                     view.renderReplies(currentPage, totalPage, replyItems);
 
                 } else {

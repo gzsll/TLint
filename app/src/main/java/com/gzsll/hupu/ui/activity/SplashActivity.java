@@ -23,7 +23,7 @@ public class SplashActivity extends BaseActivity {
         if (mUserStorage.isLogin()) {
             toMain();
         } else {
-            LoginActivity_.intent(this).start();
+            LoginActivity_.intent(this).login(true).start();
             finish();
         }
     }

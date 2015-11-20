@@ -43,7 +43,7 @@ public class ThreadReplyItemView extends LinearLayout {
     @ViewById
     TextView tvTime;
     @ViewById
-    public LinearLayout llContent;
+    LinearLayout llContent;
     @ViewById
     TextView tvReplyLight;
     @ViewById

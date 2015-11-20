@@ -21,7 +21,7 @@ public class RetrofitLoginApi implements LoginAPi {
 
     public RetrofitLoginApi(OkHttpClient okHttpClient) {
         RestAdapter restAdapter = new RestAdapter.Builder().setClient(new OkClient(okHttpClient))
-                .setEndpoint(BASE_URL).setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(BASE_URL).setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
         loginService = restAdapter.create(LoginService.class);
     }

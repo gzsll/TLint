@@ -57,7 +57,7 @@ public class ThreadApi {
             }
         };
         RestAdapter restAdapter = new RestAdapter.Builder().setRequestInterceptor(requestInterceptor)
-                .setEndpoint(BASE_URL).setClient(new OkClient(okHttpClient)).setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(BASE_URL).setClient(new OkClient(okHttpClient)).setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
         threadService = restAdapter.create(ThreadService.class);
     }

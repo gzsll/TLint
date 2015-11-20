@@ -7,6 +7,8 @@ import com.gzsll.hupu.support.storage.bean.TopicResult;
 import com.gzsll.hupu.view.TopicView;
 import com.squareup.otto.Bus;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +22,7 @@ import retrofit.client.Response;
  * Created by sll on 2015/5/28.
  */
 public class TopicPresenter extends Presenter<TopicView> {
-
-
-    private int page = 1;
+    Logger logger = Logger.getLogger(TopicPresenter.class.getSimpleName());
 
 
     @Inject
@@ -34,13 +34,15 @@ public class TopicPresenter extends Presenter<TopicView> {
     private List<Topic> topics = new ArrayList<Topic>();
     private int type;
     private String uid;
+    private int page;
 
-    private void load(int type, String uid, final boolean isClear) {
+    private void load(int type, String uid, final int page) {
+        this.page = page;
         if (type == Constants.NAV_TOPIC_LIST) {
             mThreadApi.getUserThreadList(page, uid, new Callback<TopicResult>() {
                 @Override
                 public void success(TopicResult topicResult, Response response) {
-                    loadFinish(topicResult, isClear);
+                    loadFinish(topicResult, page);
                 }
 
                 @Override
@@ -52,7 +54,7 @@ public class TopicPresenter extends Presenter<TopicView> {
             mThreadApi.getUserThreadFavoriteList(page, uid, new Callback<TopicResult>() {
                 @Override
                 public void success(TopicResult topicResult, Response response) {
-                    loadFinish(topicResult, isClear);
+                    loadFinish(topicResult, page);
                 }
 
                 @Override
@@ -64,8 +66,8 @@ public class TopicPresenter extends Presenter<TopicView> {
     }
 
 
-    private void loadFinish(TopicResult result, boolean isClear) {
-        if (isClear) {
+    private void loadFinish(TopicResult result, int page) {
+        if (page == 1) {
             topics.clear();
         }
         if (result.getStatus() == 200) {
@@ -105,21 +107,19 @@ public class TopicPresenter extends Presenter<TopicView> {
         view.showLoading();
         this.type = type;
         this.uid = uid;
-        page = 1;
-        load(type, uid, true);
+        load(type, uid, 1);
     }
 
 
     public void onRefresh() {
         view.onScrollToTop();
-        page = 1;
-        load(type, uid, true);
+        load(type, uid, 1);
 
     }
 
     public void onLoadMore() {
-        page++;
-        load(type, uid, false);
+        page = page + 1;
+        load(type, uid, page);
     }
 
 

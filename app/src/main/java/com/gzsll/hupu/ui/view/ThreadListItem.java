@@ -61,7 +61,7 @@ public class ThreadListItem extends LinearLayout {
     @ViewById
     TextView tvLight;
     @ViewById
-    LinearLayout llThreadItem, llUser;
+    RelativeLayout rlUser;
     @ViewById
     RelativeLayout rlLight;
 
@@ -89,13 +89,13 @@ public class ThreadListItem extends LinearLayout {
         tvReply.setText(String.valueOf(thread.getReply()));
         tvTitle.setText(thread.getTitle());
         if (mSettingPrefHelper.getSingleLine()) {
-            llUser.setVisibility(GONE);
+            rlUser.setVisibility(GONE);
             tvSingleTime.setVisibility(VISIBLE);
             tvSummary.setVisibility(GONE);
             grid.setVisibility(View.GONE);
             tvSingleTime.setText(formatHelper.dateFormat(thread.getCreateAtUnixtime()));
         } else {
-            llUser.setVisibility(VISIBLE);
+            rlUser.setVisibility(VISIBLE);
             tvSingleTime.setVisibility(GONE);
             tvSummary.setVisibility(VISIBLE);
             grid.setVisibility(View.VISIBLE);

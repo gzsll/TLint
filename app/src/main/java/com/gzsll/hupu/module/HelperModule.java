@@ -8,7 +8,6 @@ import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.support.utils.FormatHelper;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.support.utils.OkHttpHelper;
-import com.gzsll.hupu.support.utils.ReplyViewHelper;
 import com.gzsll.hupu.support.utils.RequestHelper;
 import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.support.utils.SecurityHelper;
@@ -82,10 +81,6 @@ public class HelperModule {
         return new SettingPrefHelper(context);
     }
 
-    @Provides
-    ReplyViewHelper provideReplyViewHelper(Context context, SettingPrefHelper settingPrefHelper) {
-        return new ReplyViewHelper(settingPrefHelper, context);
-    }
 
     @Provides
     @Singleton
