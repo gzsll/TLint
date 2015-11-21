@@ -5,12 +5,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import okio.BufferedSink;
 import okio.Okio;
@@ -76,40 +72,7 @@ public class OkHttpHelper {
         }
     }
 
-    private static final String CHARSET_NAME = "UTF-8";
 
-    /**
-     * 这里使用了HttpClinet的API。只是为了方便
-     *
-     * @param params
-     * @return
-     */
-    public String formatParams(List<BasicNameValuePair> params) {
-        return URLEncodedUtils.format(params, CHARSET_NAME);
-    }
-
-    /**
-     * 为HttpGet 的 url 方便的添加多个name value 参数。
-     *
-     * @param url
-     * @param params
-     * @return
-     */
-    public String attachHttpGetParams(String url, List<BasicNameValuePair> params) {
-        return url + "?" + formatParams(params);
-    }
-
-    /**
-     * 为HttpGet 的 url 方便的添加1个name value 参数。
-     *
-     * @param url
-     * @param name
-     * @param value
-     * @return
-     */
-    public String attachHttpGetParam(String url, String name, String value) {
-        return url + "?" + name + "=" + value;
-    }
 
     public void httpDownload(String url, File target) throws Exception {
         Request request = new Request.Builder().url(url).build();
