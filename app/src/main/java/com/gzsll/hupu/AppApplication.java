@@ -1,6 +1,5 @@
 package com.gzsll.hupu;
 
-import android.app.Application;
 import android.os.Environment;
 
 import com.facebook.cache.disk.DiskCacheConfig;
@@ -19,6 +18,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 import org.androidannotations.annotations.EApplication;
 import org.apache.log4j.Level;
+import org.litepal.LitePalApplication;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
  * @author gzsll
  */
 @EApplication
-public class AppApplication extends Application {
+public class AppApplication extends LitePalApplication {
 
 
     @Inject
@@ -51,6 +51,7 @@ public class AppApplication extends Application {
         initLogger();
         initUser();
         initFrescoConfig();
+        LitePalApplication.initialize(this);
     }
 
     private void injectDependencies() {

@@ -65,6 +65,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                             BoardList boardList = boardListResult.getData().getBoardLists().get(i);
                             if (boardList.getId() == groupId) {
                                 List<Boards> boardsList = new ArrayList<Boards>();
+                                List<Board> offlineBoards = new ArrayList<>();
                                 for (int j = 0; j < boardList.getGroupLists().size(); j++) {
                                     GroupList groupList = boardList.getGroupLists().get(j);
                                     Boards boards = new Boards();
@@ -75,9 +76,11 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                                         Board board = saveToBoard(categoryList, k, groupId);
                                         boardArrayList.add(board);
                                     }
+                                    offlineBoards.addAll(boardArrayList);
                                     boards.setBoards(boardArrayList);
                                     boardsList.add(boards);
                                 }
+                                view.renderOfflineBoard(offlineBoards);
                                 view.renderBoardList(boardsList);
                                 view.hideLoading();
                             }
@@ -108,13 +111,16 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                 return item.getCategoryName();
             }
         });
+        List<Board> boardList = new ArrayList<>();
         for (String key : map.keySet()) {
             List<Board> list = map.get(key);
+            boardList.addAll(list);
             Boards boards = new Boards();
             boards.setBoards(list);
             boards.setName(key);
             boardsList.add(boards);
         }
+        view.renderOfflineBoard(boardList);
         view.renderBoardList(boardsList);
         view.hideLoading();
 

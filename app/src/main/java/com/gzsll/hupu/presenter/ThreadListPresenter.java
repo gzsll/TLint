@@ -79,7 +79,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     private void loadThreadList(String groupId, String last, String type, List<String> list, final boolean clear) {
-        mThreadApi.getGroupThreadsList(groupId, last, type, list, new Callback<ThreadsResult>() {
+        mThreadApi.getGroupThreadsList(groupId, last, 20, type, list, new Callback<ThreadsResult>() {
             @Override
             public void success(ThreadsResult threadsResult, Response response) {
                 if (clear) {
@@ -126,6 +126,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                 }
             }
             if (!isContain) {
+                thread.save();
                 threads.add(thread);
             }
         }

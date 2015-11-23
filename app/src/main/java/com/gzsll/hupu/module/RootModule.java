@@ -1,5 +1,6 @@
 package com.gzsll.hupu.module;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 
@@ -56,7 +57,7 @@ import dagger.Provides;
 
 @Module(
         includes = {
-                DBModule.class, PresenterModule.class, ApiModule.class, HelperModule.class
+                DBModule.class, ApiModule.class, HelperModule.class
         },
         injects = {
                 AppApplication_.class, OffLineService.class,
@@ -65,7 +66,7 @@ import dagger.Provides;
                 SplashActivity_.class, UserProfileActivity_.class,
                 ThreadListFragment_.class, TopicFragment_.class, BoardListFragment_.class, PictureItemFragment_.class, MessageAtFragment_.class, MessageReplyFragment_.class,
                 FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class, NewsFragment_.class, NewsListFragment_.class
-                , LoginFragment_.class, AccountFragment_.class
+                , LoginFragment_.class, AccountFragment_.class, OffLineService.class
         },
         library = true
 )
@@ -131,6 +132,12 @@ public class RootModule {
     @Provides
     TransferManager provideTransferManager(AmazonS3Client client) {
         return new TransferManager(client);
+    }
+
+    @Provides
+    @Singleton
+    NotificationManager provideNotificationManager(Context mContext) {
+        return (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
 

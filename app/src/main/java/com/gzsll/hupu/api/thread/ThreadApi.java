@@ -76,11 +76,11 @@ public class ThreadApi {
         threadService.getBoardList(sign, params, callback);
     }
 
-    public void getGroupThreadsList(String groupId, String lastId, String type, List<String> list, Callback<ThreadsResult> callback) {
+    public void getGroupThreadsList(String groupId, String lastId, int limit, String type, List<String> list, Callback<ThreadsResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("groupId", groupId);
         params.put("lastId", lastId);
-        params.put("limit", "20");
+        params.put("limit", String.valueOf(limit));
         if (list == null) {
             params.put("special", "0");
             params.put("type", type);
@@ -93,6 +93,25 @@ public class ThreadApi {
         }
         String sign = requestHelper.getRequestSign(params);
         threadService.getGroupThreadsList(sign, params, callback);
+    }
+
+    public ThreadsResult getGroupThreadsList(String groupId, String lastId, int limit, String type, List<String> list) {
+        Map<String, String> params = requestHelper.getHttpRequestMap();
+        params.put("groupId", groupId);
+        params.put("lastId", lastId);
+        params.put("limit", String.valueOf(limit));
+        if (list == null) {
+            params.put("special", "0");
+            params.put("type", type);
+        } else {
+            JSONArray jSONArray = new JSONArray();
+            for (String str : list) {
+                jSONArray.put(str);
+            }
+            params.put("gids", jSONArray.toString());
+        }
+        String sign = requestHelper.getRequestSign(params);
+        return threadService.getGroupThreadsList(sign, params);
     }
 
     public void addGroupAttention(String groupId, Callback<BaseResult> callback) {

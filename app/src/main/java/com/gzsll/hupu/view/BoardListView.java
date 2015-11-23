@@ -1,5 +1,6 @@
 package com.gzsll.hupu.view;
 
+import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.storage.bean.Boards;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
 public interface BoardListView extends BaseView {
 
     void renderBoardList(List<Boards> boardGroups);
+
+    void renderOfflineBoard(List<Board> boardGroups);
 
     void showLoginView();
 }

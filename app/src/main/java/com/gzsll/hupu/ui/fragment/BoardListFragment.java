@@ -1,10 +1,14 @@
 package com.gzsll.hupu.ui.fragment;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.otto.StartOfflineEvent;
 import com.gzsll.hupu.presenter.BoardListPresenter;
+import com.gzsll.hupu.service.OffLineService;
+import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.ui.activity.MainActivity;
@@ -12,6 +16,7 @@ import com.gzsll.hupu.ui.adapter.BoardListAdapter;
 import com.gzsll.hupu.view.BoardListView;
 import com.gzsll.hupu.widget.PinnedHeaderListView;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
@@ -19,6 +24,7 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,6 +52,8 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     @ViewById
     PinnedHeaderListView listView;
 
+    private ArrayList<Board> boardGroups;
+
 
     @Override
     public View onCreateContentView(LayoutInflater inflater) {
@@ -68,6 +76,11 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     @Override
     public void renderBoardList(List<Boards> boardGroups) {
         mAdapter.bindData(boardGroups);
+    }
+
+    @Override
+    public void renderOfflineBoard(List<Board> boardGroups) {
+        this.boardGroups = (ArrayList) boardGroups;
     }
 
     @Override
@@ -95,5 +108,14 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     public void onDestroy() {
         super.onDestroy();
         bus.unregister(this);
+    }
+
+    @Subscribe
+    public void onStartOfflineEvent(StartOfflineEvent event) {
+        logger.debug("onStartOfflineEvent:" + boardGroups);
+        Intent intent = new Intent(getActivity(), OffLineService.class);
+        intent.putExtra("boards", boardGroups);
+        intent.setAction(OffLineService.START_DOWNLOAD);
+        getActivity().startService(intent);
     }
 }

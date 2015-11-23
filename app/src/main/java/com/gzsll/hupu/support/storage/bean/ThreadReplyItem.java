@@ -38,11 +38,11 @@ public class ThreadReplyItem extends DataSupport implements Serializable {
         this.pid = pid;
     }
 
-    public String getCreate_at() {
+    public String getCreateAt() {
         return create_at;
     }
 
-    public void setCreate_at(String create_at) {
+    public void setCreateAt(String create_at) {
         this.create_at = create_at;
     }
 

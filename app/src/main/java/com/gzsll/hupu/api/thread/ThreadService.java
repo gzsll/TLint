@@ -36,6 +36,9 @@ public interface ThreadService {
     @GET("/group/getGroupThreadsList")
     void getGroupThreadsList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadsResult> callback);
 
+    @GET("/group/getGroupThreadsList")
+    ThreadsResult getGroupThreadsList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params);
+
     @GET("/group/addGroupAttention")
     void addGroupAttention(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
 

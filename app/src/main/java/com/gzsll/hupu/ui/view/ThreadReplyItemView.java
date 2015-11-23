@@ -83,7 +83,7 @@ public class ThreadReplyItemView extends LinearLayout {
         tvUser.setVisibility(VISIBLE);
         tvUser.setText(item.getFloor() + "楼");
         tvReplyLight.setVisibility(VISIBLE);
-        tvReplyLight.setText(String.valueOf(item.getLight()));
+        tvReplyLight.setText(String.valueOf(item.getLights()));
         llContent.removeAllViews();
         mReplyViewHelper.addToView(mReplyViewHelper.compileContent(item.getContent()), llContent);
         if (!item.getMiniReplyList().getLists().isEmpty()) {
@@ -109,7 +109,7 @@ public class ThreadReplyItemView extends LinearLayout {
             public void success(BaseResult result, retrofit.client.Response response) {
                 if (result != null && result.getStatus() == 200) {
                     ivLight.setImageResource(R.drawable.ic_list_light);
-                    tvReplyLight.setText(String.valueOf(item.getLight() + 1));
+                    tvReplyLight.setText(String.valueOf(item.getLights() + 1));
                 }
             }
 

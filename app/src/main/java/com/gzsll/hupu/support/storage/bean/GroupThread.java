@@ -1,5 +1,7 @@
 package com.gzsll.hupu.support.storage.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
@@ -21,7 +23,8 @@ public class GroupThread extends DataSupport {
     private int zan;
     private String username;
     private int type;
-    private long id;
+    @SerializedName("id")
+    private long serverId;
     private int digest;
     private int createAtUnixtime;
     private int replies;
@@ -129,12 +132,12 @@ public class GroupThread extends DataSupport {
         this.type = type;
     }
 
-    public long getId() {
-        return id;
+    public long getServerId() {
+        return serverId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setServerId(long id) {
+        this.serverId = id;
     }
 
     public int getDigest() {

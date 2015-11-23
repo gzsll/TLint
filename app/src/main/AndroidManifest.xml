@@ -87,7 +87,7 @@
             android:name=".ui.activity.AccountActivity_"
             android:screenOrientation="portrait" />
 
-        <service android:name="com.gzsll.hupu.service.OffLineService">
+        <service android:name=".service.OffLineService">
             <intent-filter>
                 <action android:name="com.gzsll.hupu.action.START_DOWNLOAD" />
             </intent-filter>
