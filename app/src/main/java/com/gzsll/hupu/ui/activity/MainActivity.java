@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).groupThreadId("2869008").start();
 
                             } else {
-                                AboutActivity_.intent(MainActivity.this).start();
+                                BrowserActivity_.intent(MainActivity.this).url("http://www.pursll.com/TLint").start();
                                 // getSupportFragmentManager().beginTransaction().replace(R.id.content, NewsFragment_.builder().build()).commit();
                             }
 
