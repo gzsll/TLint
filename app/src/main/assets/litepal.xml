@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <!--
+		Define the database name of your application.
+		By default each database name should be end with .db.
+		If you didn't name your database end with .db,
+		LitePal would plus the suffix automaticly for you.
+		For example:
+    	<dbname value="demo" ></dbname>
+    -->
+    <dbname value="hupu" />
+
+    <!--
+    	Define the version of your database. Each time you want
+    	to upgrade your database, the version tag would helps.
+    	Modify the models you defined in the mapping tag, and just
+    	make the version value plus one, the upgrade of database
+    	will be processed automaticly without concern.
+		For example:
+    	<version value="1" ></version>
+    -->
+    <version value="1" />
+
+    <!--
+    	Define your models in the list with mapping tag, LitePal will
+    	create tables for each mapping class. The supported fields
+    	defined in models will be mapped into columns.
+    	For example:
+    	<list>
+    		<mapping class="com.test.model.Reader"></mapping>
+    		<mapping class="com.test.model.Magazine"></mapping>
+    	</list>
+    -->
+    <list>
+        <mapping class="com.gzsll.hupu.support.storage.bean.GroupThread" />
+        <mapping class="com.gzsll.hupu.support.storage.bean.UserInfo" />
+        <mapping class="com.gzsll.hupu.support.storage.bean.Badge" />
+        <mapping class="com.gzsll.hupu.support.storage.bean.Cover" />
+        <mapping class="com.gzsll.hupu.support.storage.bean.ThreadReplyItem" />
+        <mapping class="com.gzsll.hupu.support.storage.bean.MiniReplyList" />
+        <mapping class="com.gzsll.hupu.support.storage.bean.MiniReplyListItem" />
+
+        <!--      <mapping class="com.litepaltest.model.Classroom"></mapping>
+              <mapping class="com.litepaltest.model.Teacher" ></mapping>
+              <mapping class="com.litepaltest.model.IdCard" ></mapping>
+              <mapping class="com.litepaltest.model.Student" ></mapping>
+              <mapping class="com.litepaltest.model.Cellphone" ></mapping>
+              <mapping class="com.litepaltest.model.Computer"></mapping>
+              <mapping class="com.litepaltest.model.Book"></mapping>
+              <mapping class="com.litepaltest.model.Product"></mapping>-->
+    </list>
+
+    <!--
+    	Define the cases of the tables and columns name. Java is a
+    	case sensitive language, while database is case insensitive.
+    	LitePal will turn all classes names and fields names into lowercase
+    	by default while creating or upgrading database. Developers can change
+    	this behavior into the styles their like. "keep" will keep the
+    	cases of classes and fields. "upper" will turn all classes names
+    	and fields names into uppercase. "lower" will act as default.
+    	Do not change the value after you run your app for the first time,
+    	or it might cause the exception that column can not be found.
+    	value options: keep lower upper
+    	For example:
+    	<cases value="lower" ></cases>
+
+		Note that this tag is optional for developers.
+    -->
+
+</litepal>

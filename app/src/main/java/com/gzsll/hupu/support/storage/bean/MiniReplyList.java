@@ -1,27 +1,19 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
+import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class MiniReplyList implements Serializable {
-
-    private static final String FIELD_COUNT = "count";
-    private static final String FIELD_PAGECOUNT = "pagecount";
-    private static final String FIELD_PAGE = "page";
-    private static final String FIELD_LIST = "list";
+public class MiniReplyList extends DataSupport implements Serializable {
 
 
-    @SerializedName(FIELD_COUNT)
-    private int mCount;
-    @SerializedName(FIELD_PAGECOUNT)
-    private int mPagecount;
-    @SerializedName(FIELD_PAGE)
-    private int mPage;
-    @SerializedName(FIELD_LIST)
-    private List<MiniReplyListItem> mLists;
+    private int count;
+    private int pagecount;
+    private int page;
+    private List<MiniReplyListItem> list = new ArrayList<>();
 
 
     public MiniReplyList() {
@@ -29,35 +21,35 @@ public class MiniReplyList implements Serializable {
     }
 
     public void setCount(int count) {
-        mCount = count;
+        this.count = count;
     }
 
     public int getCount() {
-        return mCount;
+        return count;
     }
 
     public void setPagecount(int pagecount) {
-        mPagecount = pagecount;
+        this.pagecount = pagecount;
     }
 
     public int getPagecount() {
-        return mPagecount;
+        return pagecount;
     }
 
     public void setPage(int page) {
-        mPage = page;
+        this.page = page;
     }
 
     public int getPage() {
-        return mPage;
+        return page;
     }
 
     public void setLists(List<MiniReplyListItem> lists) {
-        mLists = lists;
+        this.list = lists;
     }
 
     public List<MiniReplyListItem> getLists() {
-        return mLists;
+        return list;
     }
 
 

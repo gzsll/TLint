@@ -80,13 +80,13 @@ public class ThreadListItem extends LinearLayout {
         this.thread = thread;
         tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTitleSize());
         rlLight.setVisibility(GONE);
-        if (thread.getLight() > 0) {
-            tvLight.setText(String.valueOf(thread.getLight()));
+        if (thread.getLights() > 0) {
+            tvLight.setText(String.valueOf(thread.getLights()));
             tvLight.setVisibility(View.VISIBLE);
         } else {
             tvLight.setVisibility(View.GONE);
         }
-        tvReply.setText(String.valueOf(thread.getReply()));
+        tvReply.setText(String.valueOf(thread.getReplies()));
         tvTitle.setText(thread.getTitle());
         if (mSettingPrefHelper.getSingleLine()) {
             rlUser.setVisibility(GONE);
@@ -112,12 +112,12 @@ public class ThreadListItem extends LinearLayout {
     protected void buildMultiPic(final GroupThread thread, final GridLayout gridLayout) {
         if (mSettingPrefHelper.getLoadPic()) {
             gridLayout.setVisibility(View.VISIBLE);
-            final int count = thread.getCovers().size();
+            final int count = thread.getCover().size();
             final List<String> pics = new ArrayList<String>();
             for (int i = 0; i < count; i++) {
                 SimpleDraweeView imageView = (SimpleDraweeView) gridLayout.getChildAt(i);
                 imageView.setVisibility(View.VISIBLE);
-                final Cover threadPic = thread.getCovers().get(i);
+                final Cover threadPic = thread.getCover().get(i);
                 pics.add(threadPic.getUrl());
                 imageView.setImageURI(Uri.parse(mSettingPrefHelper.getLoadOriginPic() ? threadPic.getUrl() : threadPic.getUrlSmall()));
                 imageView.setOnClickListener(new OnClickListener() {

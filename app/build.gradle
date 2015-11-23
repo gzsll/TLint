@@ -81,4 +81,5 @@ dependencies {
     compile "com.facebook.fresco:imagepipeline-okhttp:0.8.1"
 
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'org.litepal.android:core:1.3.0'
 }

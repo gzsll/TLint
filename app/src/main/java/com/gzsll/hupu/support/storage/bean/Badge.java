@@ -1,31 +1,23 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
+import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class Badge implements Serializable {
-
-    private static final String FIELD_SMALL = "small";
+public class Badge extends DataSupport implements Serializable {
 
 
-    @SerializedName(FIELD_SMALL)
-    private List<String> mSmalls;
+    private List<String> small = new ArrayList<>();
 
 
-    public Badge() {
-
+    public List<String> getSmall() {
+        return small;
     }
 
-    public void setSmalls(List<String> smalls) {
-        mSmalls = smalls;
+    public void setSmall(List<String> small) {
+        this.small = small;
     }
-
-    public List<String> getSmalls() {
-        return mSmalls;
-    }
-
-
 }

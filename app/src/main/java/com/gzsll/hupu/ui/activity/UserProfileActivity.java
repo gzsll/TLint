@@ -170,9 +170,9 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
         scrollView.setUser(userInfo);
         ivPhoto.setImageURI(Uri.parse(userInfo.getIcon()));
         tvUserName.setText(userInfo.getUsername());
-        ivPost.setImageURI(Uri.parse(userInfo.getBadge().getSmalls().get(0)));
-        ivReply.setImageURI(Uri.parse(userInfo.getBadge().getSmalls().get(1)));
-        ivLight.setImageURI(Uri.parse(userInfo.getBadge().getSmalls().get(2)));
+        ivPost.setImageURI(Uri.parse(userInfo.getBadge().getSmall().get(0)));
+        ivReply.setImageURI(Uri.parse(userInfo.getBadge().getSmall().get(1)));
+        ivLight.setImageURI(Uri.parse(userInfo.getBadge().getSmall().get(2)));
         ivGender.setImageResource(userInfo.getSex() == 0 ? R.drawable.list_male : R.drawable.list_female);
     }
 

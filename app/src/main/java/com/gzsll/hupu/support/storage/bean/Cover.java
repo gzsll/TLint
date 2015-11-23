@@ -1,72 +1,45 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
+import org.litepal.crud.DataSupport;
+
+public class Cover extends DataSupport {
 
 
-public class Cover {
-
-    private static final String FIELD_URL_SMALL = "urlSmall";
-    private static final String FIELD_HEIGHT = "height";
-    private static final String FIELD_URL = "url";
-    private static final String FIELD_WIDTH = "width";
-    private static final String FIELD_BYTE = "byte";
+    private String urlSmall;
+    private int height;
+    private String url;
+    private int width;
 
 
-    @SerializedName(FIELD_URL_SMALL)
-    private String mUrlSmall;
-    @SerializedName(FIELD_HEIGHT)
-    private int mHeight;
-    @SerializedName(FIELD_URL)
-    private String mUrl;
-    @SerializedName(FIELD_WIDTH)
-    private int mWidth;
-    @SerializedName(FIELD_BYTE)
-    private String mByte;
-
-
-    public Cover() {
-
+    public String getUrlSmall() {
+        return urlSmall;
     }
 
     public void setUrlSmall(String urlSmall) {
-        mUrlSmall = urlSmall;
-    }
-
-    public String getUrlSmall() {
-        return mUrlSmall;
-    }
-
-    public void setHeight(int height) {
-        mHeight = height;
+        this.urlSmall = urlSmall;
     }
 
     public int getHeight() {
-        return mHeight;
+        return height;
     }
 
-    public void setUrl(String url) {
-        mUrl = url;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public String getUrl() {
-        return mUrl;
+        return url;
     }
 
-    public void setWidth(int width) {
-        mWidth = width;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getWidth() {
-        return mWidth;
+        return width;
     }
 
-    public void setByte(String mByte) {
-        this.mByte = mByte;
+    public void setWidth(int width) {
+        this.width = width;
     }
-
-    public String getByte() {
-        return mByte;
-    }
-
-
 }

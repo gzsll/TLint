@@ -1,122 +1,86 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
+import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 
 /**
  * Created by sll on 2015/6/23.
  */
-public class MiniReplyListItem implements Serializable {
-    private static final String FIELD_ID = "id";
-    private static final String FIELD_PID = "pid";
-    private static final String FIELD_FORMAT_TIME = "formatTime";
-    private static final String FIELD_IS_LIGHT = "isLight";
-    private static final String FIELD_GROUP_THREAD_ID = "groupThreadId";
-    private static final String FIELD_USER_INFO = "userInfo";
-    private static final String FIELD_ADDTIME = "addtime";
-    private static final String FIELD_CONTENT = "content";
+public class MiniReplyListItem extends DataSupport implements Serializable {
 
 
-    @SerializedName(FIELD_ID)
-    private long mId;
-    @SerializedName(FIELD_PID)
-    private int mPid;
-    @SerializedName(FIELD_FORMAT_TIME)
-    private String mFormatTime;
-    @SerializedName(FIELD_IS_LIGHT)
-    private int mIsLight;
-    @SerializedName(FIELD_GROUP_THREAD_ID)
-    private int mGroupThreadId;
-    @SerializedName(FIELD_USER_INFO)
-    private UserInfo mUserInfo;
-    @SerializedName(FIELD_ADDTIME)
-    private int mAddtime;
-    @SerializedName(FIELD_CONTENT)
-    private String mContent;
+    private long id;
+    private int pid;
+    private String formatTime;
+    private int isLight;
+    private int groupThreadId;
+    private UserInfo userInfo;
+    private int addtime;
+    private String content;
 
 
-    public MiniReplyListItem() {
-
+    public long getId() {
+        return id;
     }
 
     public void setId(long id) {
-        mId = id;
-    }
-
-    public long getId() {
-        return mId;
-    }
-
-    public void setPid(int pid) {
-        mPid = pid;
+        this.id = id;
     }
 
     public int getPid() {
-        return mPid;
+        return pid;
     }
 
-
-    public void setFormatTime(String formatTime) {
-        mFormatTime = formatTime;
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 
     public String getFormatTime() {
-        return mFormatTime;
+        return formatTime;
     }
 
-
-    public void setIsLight(int isLight) {
-        mIsLight = isLight;
+    public void setFormatTime(String formatTime) {
+        this.formatTime = formatTime;
     }
 
     public int getIsLight() {
-        return mIsLight;
+        return isLight;
     }
 
-    public void setGroupThreadId(int groupThreadId) {
-        mGroupThreadId = groupThreadId;
+    public void setIsLight(int isLight) {
+        this.isLight = isLight;
     }
 
     public int getGroupThreadId() {
-        return mGroupThreadId;
+        return groupThreadId;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        mUserInfo = userInfo;
+    public void setGroupThreadId(int groupThreadId) {
+        this.groupThreadId = groupThreadId;
     }
 
     public UserInfo getUserInfo() {
-        return mUserInfo;
+        return userInfo;
     }
 
-    public void setAddtime(int addtime) {
-        mAddtime = addtime;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public int getAddtime() {
-        return mAddtime;
+        return addtime;
     }
 
-
-    public void setContent(String content) {
-        mContent = content;
+    public void setAddtime(int addtime) {
+        this.addtime = addtime;
     }
 
     public String getContent() {
-        return mContent;
+        return content;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ThreadReplyItem) {
-            return ((ThreadReplyItem) obj).getId() == mId;
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return ((Long) mId).hashCode();
+    public void setContent(String content) {
+        this.content = content;
     }
 }
