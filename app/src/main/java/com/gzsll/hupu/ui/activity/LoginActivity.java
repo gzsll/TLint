@@ -6,13 +6,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.ui.fragment.AccountFragment_;
 import com.gzsll.hupu.ui.fragment.LoginFragment;
 import com.gzsll.hupu.ui.fragment.LoginFragment_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 /**
@@ -21,8 +19,6 @@ import org.androidannotations.annotations.ViewById;
 @EActivity(R.layout.base_content_toolbar_layout)
 public class LoginActivity extends BaseSwipeBackActivity {
 
-    @Extra
-    boolean login;
 
     @ViewById
     Toolbar toolbar;
@@ -33,13 +29,10 @@ public class LoginActivity extends BaseSwipeBackActivity {
     @AfterViews
     void init() {
         initToolBar(toolbar);
-        setTitle(login ? "登录" : "账号管理");
+        setTitle("登录");
         if (mFragment == null) {
-            if (login) {
                 mFragment = LoginFragment_.builder().build();
-            } else {
-                mFragment = AccountFragment_.builder().build();
-            }
+
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
 

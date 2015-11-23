@@ -12,6 +12,7 @@ import com.gzsll.hupu.AppApplication_;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.service.OffLineService;
 import com.gzsll.hupu.support.utils.FileHelper;
+import com.gzsll.hupu.ui.activity.AccountActivity_;
 import com.gzsll.hupu.ui.activity.BrowserActivity_;
 import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
@@ -60,7 +61,7 @@ import dagger.Provides;
         injects = {
                 AppApplication_.class, OffLineService.class,
                 MainActivity_.class, ContentActivity_.class, PostActivity_.class, ImagePreviewActivity_.class, SearchActivity_.class, ThreadActivity_.class, BrowserActivity_.class,
-                PhotoGalleryActivity_.class, ReplyDetailActivity_.class, SettingActivity_.class, NoticeActivity_.class, LoginActivity_.class,
+                PhotoGalleryActivity_.class, ReplyDetailActivity_.class, SettingActivity_.class, NoticeActivity_.class, LoginActivity_.class, AccountActivity_.class,
                 SplashActivity_.class, UserProfileActivity_.class,
                 ThreadListFragment_.class, TopicFragment_.class, BoardListFragment_.class, PictureItemFragment_.class, MessageAtFragment_.class, MessageReplyFragment_.class,
                 FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class, NewsFragment_.class, NewsListFragment_.class

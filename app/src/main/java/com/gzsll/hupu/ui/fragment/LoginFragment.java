@@ -4,6 +4,8 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -23,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Created by sll on 2015/11/20.
  */
-@EFragment(R.layout.activity_login)
+@EFragment
 public class LoginFragment extends BaseFragment implements LoginView {
 
     @ViewById
@@ -41,6 +43,11 @@ public class LoginFragment extends BaseFragment implements LoginView {
     @Inject
     LoginPresenter mLoginPresenter;
 
+    @Override
+    public View onCreateContentView(LayoutInflater inflater) {
+        return inflater.inflate(R.layout.fragment_login,null);
+    }
+
     @AfterViews
     void init() {
         dialog = new MaterialDialog.Builder(getActivity())
@@ -51,6 +58,7 @@ public class LoginFragment extends BaseFragment implements LoginView {
         mLoginPresenter.initialize();
         etUserName.addTextChangedListener(new MTextWatcher(textInputUserName));
         etPassWord.addTextChangedListener(new MTextWatcher(textInputPassword));
+        showContent(true);
     }
 
 
@@ -121,4 +129,6 @@ public class LoginFragment extends BaseFragment implements LoginView {
         }
 
     }
+
+
 }

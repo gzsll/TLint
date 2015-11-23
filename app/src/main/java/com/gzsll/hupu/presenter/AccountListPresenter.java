@@ -19,9 +19,17 @@ public class AccountListPresenter extends Presenter<AccountListView> {
     @Override
     public void initialize() {
         view.showLoading();
+        loadUserList();
+        view.hideLoading();
+    }
+
+    private void loadUserList() {
         List<User> users = mUserDao.queryBuilder().list();
         view.renderList(users);
-        view.hideLoading();
+    }
+
+    public void refresh() {
+        loadUserList();
     }
 
     @Override

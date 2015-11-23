@@ -2,6 +2,7 @@ package com.gzsll.hupu.support.storage;
 
 
 import com.gzsll.hupu.support.db.User;
+import com.gzsll.hupu.support.db.UserDao;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,14 +14,22 @@ import javax.inject.Singleton;
 public class UserStorage {
 
     @Inject
-    public UserStorage() {
-    }
+    UserDao mUserDao;
 
 
     private User user;
 
     public User getUser() {
         return user;
+    }
+
+
+    public void login(User user) {
+        this.user.setIsLogin(false);
+        mUserDao.insertOrReplace(this.user);
+        user.setIsLogin(true);
+        this.user = user;
+        mUserDao.insertOrReplace(user);
     }
 
     public void setUser(User user) {

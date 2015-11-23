@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
@@ -20,6 +21,9 @@ import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.ReceiveNoticeEvent;
+import com.gzsll.hupu.support.db.User;
+import com.gzsll.hupu.support.db.UserDao;
+import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Notice;
 import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.fragment.BoardListFragment_;
@@ -27,15 +31,16 @@ import com.gzsll.hupu.ui.fragment.TopicFragment_;
 import com.squareup.otto.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.apache.log4j.Logger;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     Logger logger = Logger.getLogger(MainActivity.class.getSimpleName());
 
@@ -46,9 +51,7 @@ public class MainActivity extends BaseActivity {
     DrawerLayout drawerLayout;
     @ViewById
     Toolbar toolbar;
-    @ViewById
     SimpleDraweeView ivIcon;
-    @ViewById
     TextView tvName, tvNotification;
 
 
@@ -63,20 +66,14 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(getString(R.string.nav_my));
+
+        ivIcon = (SimpleDraweeView) navigationView.getHeaderView(0).findViewById(R.id.ivIcon);
+        tvName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvName);
+        tvNotification = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvNotification);
+        navigationView.getHeaderView(0).findViewById(R.id.ivCover).setOnClickListener(this);
+        navigationView.getHeaderView(0).findViewById(R.id.llAccount).setOnClickListener(this);
         //创建返回键，并实现打开关/闭监听
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-
-            }
-        };
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         mDrawerToggle.syncState();
         drawerLayout.setDrawerListener(mDrawerToggle);
         setupDrawerContent();
@@ -219,17 +216,37 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Inject
+    UserDao mUserDao;
+    @Inject
+    UserStorage mUserStorage;
 
-    @Click
-    void llAccount() {
 
-    }
+    private void showAccountMenu() {
+        final List<User> userList = mUserDao.queryBuilder().list();
+        for (User bean : userList) {
+            if (bean.getUid().equals(mUserStorage.getUid())) {
+                userList.remove(bean);
+                break;
+            }
+        }
 
-
-    @Click
-    void ivCover() {
-        NoticeActivity_.intent(this).start();
-        drawerLayout.closeDrawers();
+        final String[] items = new String[userList.size() + 1];
+        for (int i = 0; i < userList.size(); i++)
+            items[i] = userList.get(i).getUserName();
+        items[items.length - 1] = "账号管理";
+        new MaterialDialog.Builder(this).items(items).itemsCallback(new MaterialDialog.ListCallback() {
+            @Override
+            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                if (which == items.length - 1) {
+                    // 账号管理
+                    AccountActivity_.intent(MainActivity.this).start();
+                } else {
+                    mUserStorage.login(userList.get(which));
+                    bus.post(new LoginSuccessEvent());
+                }
+            }
+        }).show();
     }
 
 
@@ -252,4 +269,16 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ivCover:
+                NoticeActivity_.intent(this).start();
+                drawerLayout.closeDrawers();
+                break;
+            case R.id.llAccount:
+                showAccountMenu();
+                break;
+        }
+    }
 }
