@@ -13,16 +13,30 @@ import de.greenrobot.dao.internal.DaoConfig;
 
 /**
  * {@inheritDoc}
- *
+ * 
  * @see AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
 
     private final DaoConfig boardDaoConfig;
     private final DaoConfig userDaoConfig;
+    private final DaoConfig dBGroupThreadDaoConfig;
+    private final DaoConfig dBCoverDaoConfig;
+    private final DaoConfig dBUserInfoDaoConfig;
+    private final DaoConfig dBThreadInfoDaoConfig;
+    private final DaoConfig dBGroupsDaoConfig;
+    private final DaoConfig dBThreadReplyItemDaoConfig;
+    private final DaoConfig dBMiniReplyListItemDaoConfig;
 
     private final BoardDao boardDao;
     private final UserDao userDao;
+    private final DBGroupThreadDao dBGroupThreadDao;
+    private final DBCoverDao dBCoverDao;
+    private final DBUserInfoDao dBUserInfoDao;
+    private final DBThreadInfoDao dBThreadInfoDao;
+    private final DBGroupsDao dBGroupsDao;
+    private final DBThreadReplyItemDao dBThreadReplyItemDao;
+    private final DBMiniReplyListItemDao dBMiniReplyListItemDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -34,16 +48,58 @@ public class DaoSession extends AbstractDaoSession {
         userDaoConfig = daoConfigMap.get(UserDao.class).clone();
         userDaoConfig.initIdentityScope(type);
 
+        dBGroupThreadDaoConfig = daoConfigMap.get(DBGroupThreadDao.class).clone();
+        dBGroupThreadDaoConfig.initIdentityScope(type);
+
+        dBCoverDaoConfig = daoConfigMap.get(DBCoverDao.class).clone();
+        dBCoverDaoConfig.initIdentityScope(type);
+
+        dBUserInfoDaoConfig = daoConfigMap.get(DBUserInfoDao.class).clone();
+        dBUserInfoDaoConfig.initIdentityScope(type);
+
+        dBThreadInfoDaoConfig = daoConfigMap.get(DBThreadInfoDao.class).clone();
+        dBThreadInfoDaoConfig.initIdentityScope(type);
+
+        dBGroupsDaoConfig = daoConfigMap.get(DBGroupsDao.class).clone();
+        dBGroupsDaoConfig.initIdentityScope(type);
+
+        dBThreadReplyItemDaoConfig = daoConfigMap.get(DBThreadReplyItemDao.class).clone();
+        dBThreadReplyItemDaoConfig.initIdentityScope(type);
+
+        dBMiniReplyListItemDaoConfig = daoConfigMap.get(DBMiniReplyListItemDao.class).clone();
+        dBMiniReplyListItemDaoConfig.initIdentityScope(type);
+
         boardDao = new BoardDao(boardDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
+        dBGroupThreadDao = new DBGroupThreadDao(dBGroupThreadDaoConfig, this);
+        dBCoverDao = new DBCoverDao(dBCoverDaoConfig, this);
+        dBUserInfoDao = new DBUserInfoDao(dBUserInfoDaoConfig, this);
+        dBThreadInfoDao = new DBThreadInfoDao(dBThreadInfoDaoConfig, this);
+        dBGroupsDao = new DBGroupsDao(dBGroupsDaoConfig, this);
+        dBThreadReplyItemDao = new DBThreadReplyItemDao(dBThreadReplyItemDaoConfig, this);
+        dBMiniReplyListItemDao = new DBMiniReplyListItemDao(dBMiniReplyListItemDaoConfig, this);
 
         registerDao(Board.class, boardDao);
         registerDao(User.class, userDao);
+        registerDao(DBGroupThread.class, dBGroupThreadDao);
+        registerDao(DBCover.class, dBCoverDao);
+        registerDao(DBUserInfo.class, dBUserInfoDao);
+        registerDao(DBThreadInfo.class, dBThreadInfoDao);
+        registerDao(DBGroups.class, dBGroupsDao);
+        registerDao(DBThreadReplyItem.class, dBThreadReplyItemDao);
+        registerDao(DBMiniReplyListItem.class, dBMiniReplyListItemDao);
     }
 
     public void clear() {
         boardDaoConfig.getIdentityScope().clear();
         userDaoConfig.getIdentityScope().clear();
+        dBGroupThreadDaoConfig.getIdentityScope().clear();
+        dBCoverDaoConfig.getIdentityScope().clear();
+        dBUserInfoDaoConfig.getIdentityScope().clear();
+        dBThreadInfoDaoConfig.getIdentityScope().clear();
+        dBGroupsDaoConfig.getIdentityScope().clear();
+        dBThreadReplyItemDaoConfig.getIdentityScope().clear();
+        dBMiniReplyListItemDaoConfig.getIdentityScope().clear();
     }
 
     public BoardDao getBoardDao() {
@@ -52,6 +108,34 @@ public class DaoSession extends AbstractDaoSession {
 
     public UserDao getUserDao() {
         return userDao;
+    }
+
+    public DBGroupThreadDao getDBGroupThreadDao() {
+        return dBGroupThreadDao;
+    }
+
+    public DBCoverDao getDBCoverDao() {
+        return dBCoverDao;
+    }
+
+    public DBUserInfoDao getDBUserInfoDao() {
+        return dBUserInfoDao;
+    }
+
+    public DBThreadInfoDao getDBThreadInfoDao() {
+        return dBThreadInfoDao;
+    }
+
+    public DBGroupsDao getDBGroupsDao() {
+        return dBGroupsDao;
+    }
+
+    public DBThreadReplyItemDao getDBThreadReplyItemDao() {
+        return dBThreadReplyItemDao;
+    }
+
+    public DBMiniReplyListItemDao getDBMiniReplyListItemDao() {
+        return dBMiniReplyListItemDao;
     }
 
 }

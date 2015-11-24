@@ -1,11 +1,9 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import org.litepal.crud.DataSupport;
-
 import java.io.Serializable;
 
 
-public class ThreadReplyItem extends DataSupport implements Serializable {
+public class ThreadReplyItem implements Serializable {
 
 
     private long id;

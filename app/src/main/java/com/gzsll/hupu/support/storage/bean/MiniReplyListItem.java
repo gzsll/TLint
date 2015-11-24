@@ -1,13 +1,11 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import org.litepal.crud.DataSupport;
-
 import java.io.Serializable;
 
 /**
  * Created by sll on 2015/6/23.
  */
-public class MiniReplyListItem extends DataSupport implements Serializable {
+public class MiniReplyListItem implements Serializable {
 
 
     private long id;

@@ -3,6 +3,12 @@ package com.gzsll.hupu.module;
 import android.content.Context;
 
 import com.gzsll.hupu.support.db.BoardDao;
+import com.gzsll.hupu.support.db.DBGroupThreadDao;
+import com.gzsll.hupu.support.db.DBGroupsDao;
+import com.gzsll.hupu.support.db.DBMiniReplyListItemDao;
+import com.gzsll.hupu.support.db.DBThreadInfoDao;
+import com.gzsll.hupu.support.db.DBThreadReplyItemDao;
+import com.gzsll.hupu.support.db.DBUserInfoDao;
 import com.gzsll.hupu.support.db.DaoMaster;
 import com.gzsll.hupu.support.db.DaoSession;
 import com.gzsll.hupu.support.db.UserDao;
@@ -49,6 +55,45 @@ public class DBModule {
     @Singleton
     UserDao getUserDao(DaoSession session) {
         return session.getUserDao();
+    }
+
+    @Provides
+    @Singleton
+    DBThreadInfoDao provideDBThreadInfoDao(DaoSession session) {
+        return session.getDBThreadInfoDao();
+    }
+
+
+    @Provides
+    @Singleton
+    DBGroupThreadDao provideDBGroupThreadDao(DaoSession session) {
+        return session.getDBGroupThreadDao();
+    }
+
+
+    @Provides
+    @Singleton
+    DBMiniReplyListItemDao provideDBMiniReplyListItemDao(DaoSession session) {
+        return session.getDBMiniReplyListItemDao();
+    }
+
+
+    @Provides
+    @Singleton
+    DBThreadReplyItemDao provideDBThreadReplyItemDao(DaoSession session) {
+        return session.getDBThreadReplyItemDao();
+    }
+
+    @Provides
+    @Singleton
+    DBUserInfoDao provideDBUserInfoDao(DaoSession session) {
+        return session.getDBUserInfoDao();
+    }
+
+    @Provides
+    @Singleton
+    DBGroupsDao provideDbGroupsDao(DaoSession session) {
+        return session.getDBGroupsDao();
     }
 
 

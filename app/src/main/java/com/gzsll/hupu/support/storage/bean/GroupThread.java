@@ -2,13 +2,11 @@ package com.gzsll.hupu.support.storage.bean;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.litepal.crud.DataSupport;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class GroupThread extends DataSupport {
+public class GroupThread {
 
 
     private int uid;

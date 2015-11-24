@@ -1,13 +1,11 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import org.litepal.crud.DataSupport;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MiniReplyList extends DataSupport implements Serializable {
+public class MiniReplyList implements Serializable {
 
 
     private int count;

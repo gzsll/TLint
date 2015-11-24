@@ -2,9 +2,7 @@ package com.gzsll.hupu.support.storage.bean;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.litepal.crud.DataSupport;
-
-public class ThreadInfo extends DataSupport {
+public class ThreadInfo {
 
 
     public int getUid() {
@@ -113,11 +111,11 @@ public class ThreadInfo extends DataSupport {
         this.digest = digest;
     }
 
-    public int getCreateAtUnixtime() {
+    public long getCreateAtUnixtime() {
         return createAtUnixtime;
     }
 
-    public void setCreateAtUnixtime(int createAtUnixtime) {
+    public void setCreateAtUnixtime(long createAtUnixtime) {
         this.createAtUnixtime = createAtUnixtime;
     }
 
@@ -145,11 +143,11 @@ public class ThreadInfo extends DataSupport {
         this.title = title;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 
@@ -169,11 +167,11 @@ public class ThreadInfo extends DataSupport {
         this.content = content;
     }
 
-    public int getTid() {
+    public long getTid() {
         return tid;
     }
 
-    public void setTid(int tid) {
+    public void setTid(long tid) {
         this.tid = tid;
     }
 
@@ -193,14 +191,14 @@ public class ThreadInfo extends DataSupport {
     @SerializedName("id")
     private long serverId;
     private int digest;
-    private int createAtUnixtime;
+    private long createAtUnixtime;
     private int replies;
     private String createAt;
     private String title;
-    private int groupId;
+    private long groupId;
     private String note;
     private String content;
-    private int tid;
+    private long tid;
 
 
     public long getServerId() {

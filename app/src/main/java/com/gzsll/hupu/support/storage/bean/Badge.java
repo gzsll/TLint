@@ -1,13 +1,11 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import org.litepal.crud.DataSupport;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Badge extends DataSupport implements Serializable {
+public class Badge implements Serializable {
 
 
     private List<String> small = new ArrayList<>();

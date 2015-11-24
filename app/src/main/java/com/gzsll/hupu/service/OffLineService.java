@@ -16,10 +16,15 @@ import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.service.annotation.ActionMethod;
 import com.gzsll.hupu.service.annotation.IntentAnnotationService;
 import com.gzsll.hupu.support.db.Board;
+import com.gzsll.hupu.support.db.DBGroupThread;
+import com.gzsll.hupu.support.db.DBGroupThreadDao;
+import com.gzsll.hupu.support.db.DBThreadInfo;
+import com.gzsll.hupu.support.db.DBThreadInfoDao;
+import com.gzsll.hupu.support.db.DBThreadReplyItem;
+import com.gzsll.hupu.support.db.DBThreadReplyItemDao;
+import com.gzsll.hupu.support.db.DBUserInfoDao;
 import com.gzsll.hupu.support.notifier.OfflineNotifier;
 import com.gzsll.hupu.support.storage.bean.GroupThread;
-import com.gzsll.hupu.support.storage.bean.MiniReplyList;
-import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
 import com.gzsll.hupu.support.storage.bean.ThreadHotReply;
 import com.gzsll.hupu.support.storage.bean.ThreadInfo;
 import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
@@ -27,10 +32,10 @@ import com.gzsll.hupu.support.storage.bean.ThreadReply;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.UserInfo;
+import com.gzsll.hupu.support.utils.DbConverterHelper;
 import com.gzsll.hupu.support.utils.SecurityHelper;
 
 import org.apache.log4j.Logger;
-import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +84,12 @@ public class OffLineService extends IntentAnnotationService {
     OfflineNotifier mOfflineNotifier;
     @Inject
     SecurityHelper mSecurityHelper;
+    @Inject
+    DBGroupThreadDao mGroupThreadDao;
+    @Inject
+    DBUserInfoDao mUserInfoDao;
+    @Inject
+    DbConverterHelper mDbConverterHelper;
 
     @Override
     public void onCreate() {
@@ -174,18 +185,15 @@ public class OffLineService extends IntentAnnotationService {
             prepareReplies();
         }
 
+    }
 
-        private void saveThread(GroupThread thread) {
-            UserInfo userInfo = thread.getUserInfo();
-//            Badge badge = userInfo.getBadge();
-//            if (badge != null) {
-//                badge.save();
-//            }
-            userInfo.save();
-            DataSupport.saveAll(thread.getCover());
-
-            thread.save();
+    private void saveThread(GroupThread thread) {
+        List<DBGroupThread> threads = mGroupThreadDao.queryBuilder().where(DBGroupThreadDao.Properties.ServerId.eq(thread.getServerId())).list();
+        DBGroupThread dbGroupThread = mDbConverterHelper.converGroupThread(thread);
+        if (!threads.isEmpty()) {
+            dbGroupThread.setId(threads.get(0).getId());
         }
+        mGroupThreadDao.insertOrReplace(dbGroupThread);
     }
 
 
@@ -226,10 +234,8 @@ public class OffLineService extends IntentAnnotationService {
         protected Boolean doInBackground(Void... params) {
             ThreadInfoResult result = mThreadApi.getGroupThreadInfo(thread.getServerId(), 0, 1, true);
             if (result != null && result.getStatus() == 200) {
-                ThreadInfo threadInfo = result.getData().getThreadInfo();
-                threadInfo.getUserInfo().save();
-                threadInfo.getGroups().save();
-                threadInfo.save();
+                saveThreadInfo(result.getData().getThreadInfo());
+
                 ThreadHotReply hotReply = result.getData().getThreadHotReply();
                 if (hotReply != null && !hotReply.getList().isEmpty()) {
                     for (ThreadReplyItem replyItem : hotReply.getList()) {
@@ -250,23 +256,28 @@ public class OffLineService extends IntentAnnotationService {
         }
     }
 
+    @Inject
+    DBThreadInfoDao mThreadInfoDao;
+
+    private void saveThreadInfo(ThreadInfo threadInfo) {
+        List<DBThreadInfo> threadInfos = mThreadInfoDao.queryBuilder().where(DBThreadInfoDao.Properties.ServerId.eq(threadInfo.getServerId())).list();
+        DBThreadInfo info = mDbConverterHelper.converThreadInfo(threadInfo);
+        if (!threadInfos.isEmpty()) {
+            info.setId(threadInfos.get(0).getId());
+        }
+        mThreadInfoDao.insertOrReplace(info);
+
+    }
+
+    @Inject
+    DBThreadReplyItemDao mReplyDao;
 
     private void saveReplyItem(ThreadReplyItem replyItem, boolean isHot) {
-        replyItem.setIsHot(isHot);
-        UserInfo userInfo = replyItem.getUserInfo();
-//        Badge badge = userInfo.getBadge();
-//        if (badge != null) {
-//            badge.save();
-//        }
-        userInfo.save();
-        MiniReplyList miniReplyList = replyItem.getMiniReplyList();
-        if (miniReplyList != null && !miniReplyList.getLists().isEmpty()) {
-            for (MiniReplyListItem miniReplyItem : miniReplyList.getLists()) {
-                miniReplyItem.getUserInfo().save();
-                miniReplyItem.save();
-            }
-            miniReplyList.save();
+        List<DBThreadReplyItem> replyItems = mReplyDao.queryBuilder().where(DBThreadReplyItemDao.Properties.ServerId.eq(replyItem.getId())).list();
+        DBThreadReplyItem item = mDbConverterHelper.converThreadReplyItem(replyItem, isHot);
+        if (!replyItems.isEmpty()) {
+            item.setId(replyItems.get(0).getId());
         }
-        replyItem.save();
+        mReplyDao.insertOrReplace(item);
     }
 }

@@ -47,7 +47,7 @@ public class BoardDao extends AbstractDao<Board, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'BOARD' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'BOARD_ID' INTEGER," + // 1: BoardId
@@ -59,73 +59,65 @@ public class BoardDao extends AbstractDao<Board, Long> {
                 "'BOARD_INDEX' INTEGER);"); // 7: BoardIndex
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'BOARD'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, Board entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         Long BoardId = entity.getBoardId();
         if (BoardId != null) {
             stmt.bindLong(2, BoardId);
         }
-
+ 
         String CategoryName = entity.getCategoryName();
         if (CategoryName != null) {
             stmt.bindString(3, CategoryName);
         }
-
+ 
         Long CategoryId = entity.getCategoryId();
         if (CategoryId != null) {
             stmt.bindLong(4, CategoryId);
         }
-
+ 
         String BoardName = entity.getBoardName();
         if (BoardName != null) {
             stmt.bindString(5, BoardName);
         }
-
+ 
         String BoardIcon = entity.getBoardIcon();
         if (BoardIcon != null) {
             stmt.bindString(6, BoardIcon);
         }
-
+ 
         Long GroupId = entity.getGroupId();
         if (GroupId != null) {
             stmt.bindLong(7, GroupId);
         }
-
+ 
         Integer BoardIndex = entity.getBoardIndex();
         if (BoardIndex != null) {
             stmt.bindLong(8, BoardIndex);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Board readEntity(Cursor cursor, int offset) {
         Board entity = new Board( //
@@ -141,9 +133,7 @@ public class BoardDao extends AbstractDao<Board, Long> {
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Board entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -156,18 +146,14 @@ public class BoardDao extends AbstractDao<Board, Long> {
         entity.setBoardIndex(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(Board entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(Board entity) {
         if (entity != null) {
@@ -180,9 +166,9 @@ public class BoardDao extends AbstractDao<Board, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

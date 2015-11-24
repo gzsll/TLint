@@ -126,7 +126,6 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                 }
             }
             if (!isContain) {
-                thread.save();
                 threads.add(thread);
             }
         }

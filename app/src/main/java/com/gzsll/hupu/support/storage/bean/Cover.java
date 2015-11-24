@@ -1,8 +1,6 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import org.litepal.crud.DataSupport;
-
-public class Cover extends DataSupport {
+public class Cover {
 
 
     private String urlSmall;

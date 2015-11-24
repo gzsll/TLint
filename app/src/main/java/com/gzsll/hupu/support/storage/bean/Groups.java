@@ -1,9 +1,9 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import org.litepal.crud.DataSupport;
+import com.amazonaws.com.google.gson.annotations.SerializedName;
 
 
-public class Groups extends DataSupport {
+public class Groups {
 
 
     public int getUid() {
@@ -127,6 +127,8 @@ public class Groups extends DataSupport {
         this.groupCover = groupCover;
     }
 
+    @SerializedName("id")
+    private long serverId;
     private int uid;
     private int orderBy;
     private int categoryId;
@@ -144,4 +146,11 @@ public class Groups extends DataSupport {
     private String groupCover;
 
 
+    public long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
+    }
 }

@@ -48,7 +48,7 @@ public class UserDao extends AbstractDao<User, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'USER' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'USER_NAME' TEXT," + // 1: userName
@@ -61,78 +61,70 @@ public class UserDao extends AbstractDao<User, Long> {
                 "'IS_LOGIN' INTEGER);"); // 8: isLogin
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'USER'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, User entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         String userName = entity.getUserName();
         if (userName != null) {
             stmt.bindString(2, userName);
         }
-
+ 
         String uid = entity.getUid();
         if (uid != null) {
             stmt.bindString(3, uid);
         }
-
+ 
         String token = entity.getToken();
         if (token != null) {
             stmt.bindString(4, token);
         }
-
+ 
         String icon = entity.getIcon();
         if (icon != null) {
             stmt.bindString(5, icon);
         }
-
+ 
         Integer syncTime = entity.getSyncTime();
         if (syncTime != null) {
             stmt.bindLong(6, syncTime);
         }
-
+ 
         Integer sex = entity.getSex();
         if (sex != null) {
             stmt.bindLong(7, sex);
         }
-
+ 
         Integer level = entity.getLevel();
         if (level != null) {
             stmt.bindLong(8, level);
         }
-
+ 
         Boolean isLogin = entity.getIsLogin();
         if (isLogin != null) {
-            stmt.bindLong(9, isLogin ? 1l : 0l);
+            stmt.bindLong(9, isLogin ? 1l: 0l);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
@@ -149,9 +141,7 @@ public class UserDao extends AbstractDao<User, Long> {
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -165,18 +155,14 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setIsLogin(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(User entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(User entity) {
         if (entity != null) {
@@ -189,9 +175,9 @@ public class UserDao extends AbstractDao<User, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }
