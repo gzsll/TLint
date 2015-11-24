@@ -6,7 +6,7 @@ package com.gzsll.hupu.support.storage.bean;
 public class MessageReply {
 
     private ThreadInfo threadInfo;
-    private Group groupInfo;
+    private Groups groupInfo;
     private int num;
     private int isread;
 
@@ -18,11 +18,11 @@ public class MessageReply {
         this.threadInfo = threadInfo;
     }
 
-    public Group getGroupInfo() {
+    public Groups getGroupInfo() {
         return groupInfo;
     }
 
-    public void setGroupInfo(Group groupInfo) {
+    public void setGroupInfo(Groups groupInfo) {
         this.groupInfo = groupInfo;
     }
 

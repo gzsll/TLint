@@ -25,7 +25,7 @@ public class Topic {
     private String title;
     private int replies;
     private UserInfo userInfo;
-    private Group groups;
+    private Groups groups;
 
     public void setLights(int lights) {
         this.lights = lights;
@@ -59,7 +59,7 @@ public class Topic {
         this.userInfo = userInfo;
     }
 
-    public void setGroups(Group groups) {
+    public void setGroups(Groups groups) {
         this.groups = groups;
     }
 
@@ -95,7 +95,7 @@ public class Topic {
         return userInfo;
     }
 
-    public Group getGroups() {
+    public Groups getGroups() {
         return groups;
     }
 

@@ -79,7 +79,7 @@ public class ThreadReplyItemView extends LinearLayout {
         this.item = item;
         ivIcon.setImageURI(Uri.parse(item.getUserInfo().getIcon()));
         tvUserName.setText(item.getUserInfo().getUsername());
-        tvTime.setText(item.getCreateAt());
+        tvTime.setText(item.getCreate_at());
         tvUser.setVisibility(VISIBLE);
         tvUser.setText(item.getFloor() + "楼");
         tvReplyLight.setVisibility(VISIBLE);

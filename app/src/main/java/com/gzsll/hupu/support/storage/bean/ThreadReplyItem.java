@@ -20,6 +20,7 @@ public class ThreadReplyItem extends DataSupport implements Serializable {
     private int addtime;
     private MiniReplyList miniReplyList;
     private String content;
+    private boolean isHot;
 
 
     public long getId() {
@@ -38,13 +39,7 @@ public class ThreadReplyItem extends DataSupport implements Serializable {
         this.pid = pid;
     }
 
-    public String getCreateAt() {
-        return create_at;
-    }
 
-    public void setCreateAt(String create_at) {
-        this.create_at = create_at;
-    }
 
     public String getFormatTime() {
         return formatTime;
@@ -116,5 +111,21 @@ public class ThreadReplyItem extends DataSupport implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isHot() {
+        return isHot;
+    }
+
+    public void setIsHot(boolean isHot) {
+        this.isHot = isHot;
+    }
+
+    public String getCreate_at() {
+        return create_at;
+    }
+
+    public void setCreate_at(String create_at) {
+        this.create_at = create_at;
     }
 }

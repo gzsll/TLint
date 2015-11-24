@@ -19,7 +19,7 @@
 		For example:
     	<version value="1" ></version>
     -->
-    <version value="1" />
+	<version value="4" />
 
     <!--
     	Define your models in the list with mapping tag, LitePal will
@@ -39,8 +39,11 @@
         <mapping class="com.gzsll.hupu.support.storage.bean.ThreadReplyItem" />
         <mapping class="com.gzsll.hupu.support.storage.bean.MiniReplyList" />
         <mapping class="com.gzsll.hupu.support.storage.bean.MiniReplyListItem" />
+		<mapping class="com.gzsll.hupu.support.storage.bean.ThreadInfo" />
+		<mapping class="com.gzsll.hupu.support.storage.bean.Groups" />
 
-        <!--      <mapping class="com.litepaltest.model.Classroom"></mapping>
+
+		<!--      <mapping class="com.litepaltest.model.Classroom"></mapping>
               <mapping class="com.litepaltest.model.Teacher" ></mapping>
               <mapping class="com.litepaltest.model.IdCard" ></mapping>
               <mapping class="com.litepaltest.model.Student" ></mapping>

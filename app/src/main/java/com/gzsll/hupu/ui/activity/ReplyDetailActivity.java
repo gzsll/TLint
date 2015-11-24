@@ -98,7 +98,7 @@ public class ReplyDetailActivity extends BaseSwipeBackActivity implements ReplyD
         mPresenter.initialize();
         ivIcon.setImageURI(Uri.parse(replyItem.getUserInfo().getIcon()));
         tvUserName.setText(replyItem.getUserInfo().getUsername());
-        tvTime.setText(replyItem.getCreateAt());
+        tvTime.setText(replyItem.getCreate_at());
         tvUser.setVisibility(View.GONE);
         rlLight.setVisibility(View.GONE);
         llContent.removeAllViews();

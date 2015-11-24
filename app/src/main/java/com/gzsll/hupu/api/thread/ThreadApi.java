@@ -154,6 +154,16 @@ public class ThreadApi {
         threadService.getGroupThreadInfo(sign, params, callback);
     }
 
+    public ThreadInfoResult getGroupThreadInfo(long groupThreadId, long lightReplyId, int page, boolean diaplayImgs) {
+        Map<String, String> params = requestHelper.getHttpRequestMap();
+        params.put("groupThreadId", groupThreadId + "");
+        params.put("lightReplyId", lightReplyId + "");
+        params.put("page", page + "");
+        params.put("diaplayImgs", diaplayImgs ? "0" : "1");
+        String sign = requestHelper.getRequestSign(params);
+        return threadService.getGroupThreadInfo(sign, params);
+    }
+
     public void addGroupThread(String title, String content, String groupId, List<String> list, Callback<BaseResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMap();
         params.put("title", title);

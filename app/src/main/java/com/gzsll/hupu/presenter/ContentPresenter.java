@@ -73,16 +73,16 @@ public class ContentPresenter extends Presenter<ContentView> {
                         view.renderContent(map);
                     }
                     ThreadHotReply hotReply = threadInfoResult.getData().getThreadHotReply();
-                    if (hotReply != null && !hotReply.getLists().isEmpty()) {
+                    if (hotReply != null && !hotReply.getList().isEmpty()) {
                         ThreadReplyItems replyItem = new ThreadReplyItems();
-                        replyItem.setmLists(hotReply.getLists());
+                        replyItem.setmLists(hotReply.getList());
                         replyItem.setName("这些回帖亮了");
                         replyItems.add(replyItem);
                     }
                     ThreadReply reply = threadInfoResult.getData().getThreadReply();
-                    if (reply != null&&!reply.getLists().isEmpty()) {
+                    if (reply != null && !reply.getList().isEmpty()) {
                         ThreadReplyItems replyItem = new ThreadReplyItems();
-                        replyItem.setmLists(reply.getLists());
+                        replyItem.setmLists(reply.getList());
                         replyItem.setName("全部回帖");
                         currentPage = reply.getPage();
                         totalPage = reply.getPagecount();

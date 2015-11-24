@@ -4,11 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import com.facebook.datasource.BaseDataSubscriber;
-import com.facebook.datasource.DataSource;
-import com.facebook.datasource.DataSubscriber;
+import com.facebook.cache.common.CacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.BuildConfig;
 import com.gzsll.hupu.api.thread.ThreadApi;
@@ -16,9 +17,14 @@ import com.gzsll.hupu.service.annotation.ActionMethod;
 import com.gzsll.hupu.service.annotation.IntentAnnotationService;
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.notifier.OfflineNotifier;
-import com.gzsll.hupu.support.storage.bean.Badge;
 import com.gzsll.hupu.support.storage.bean.GroupThread;
-import com.gzsll.hupu.support.storage.bean.OfflinePicture;
+import com.gzsll.hupu.support.storage.bean.MiniReplyList;
+import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.bean.ThreadHotReply;
+import com.gzsll.hupu.support.storage.bean.ThreadInfo;
+import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
+import com.gzsll.hupu.support.storage.bean.ThreadReply;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.UserInfo;
 import com.gzsll.hupu.support.utils.SecurityHelper;
@@ -27,11 +33,8 @@ import org.apache.log4j.Logger;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -58,11 +61,17 @@ public class OffLineService extends IntentAnnotationService {
 
     private List<Board> boards;
     private List<Board> unOfflineBoards;
+    private int offlineThreadsCount;// 离线的帖子数量
+    private int offlineRepliesCount; //离线的回复数量
 
     private long offlineThreadsLength = 0;// 离线的帖子总流量大小
     private long offlinePictureLength = 0;// 离线的图片总流量大小
-    private Map<String, String> mPictureMap = new HashMap<>();// 用来去重
-    private LinkedBlockingQueue<OfflinePicture> mPictures = new LinkedBlockingQueue<>();// 线程安全队列
+
+    private int offlinePictureSize = 0;
+    private int offlinePictureCount = 0;// 离线的图片数量
+
+    private LinkedBlockingQueue<GroupThread> mThreads = new LinkedBlockingQueue<>();// 线程安全队列
+
 
     @Inject
     ThreadApi mThreadApi;
@@ -115,84 +124,149 @@ public class OffLineService extends IntentAnnotationService {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // 发生异常了重复加载几次
-            int repeat = 3;
-            while (--repeat >= 0) {
+            try {
                 if (isCanceled()) {
-                    break;
+                    return false;
                 }
                 int count = 100; //加载100篇帖子  TODO 加上设置
-                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getGroupId()), "0", count, "", null);
+                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getBoardId()), "0", count, "", null);
                 if (result.getStatus() == 200) {
-                    offlineThreadsLength += result.getData().getGroupThreads().size();
-                    logger.debug("offlineThreadsLength:" + offlineThreadsLength);
-
-                    final List<OfflinePicture> pictureList = new ArrayList<>();
-                    for (GroupThread thread : result.getData().getGroupThreads()) {
+                    List<GroupThread> threads = result.getData().getGroupThreads();
+                    offlineThreadsCount += threads.size();
+                    logger.debug("offlineThreadsCount:" + offlineThreadsCount);
+                    mThreads.addAll(threads);
+                    for (GroupThread thread : threads) {
                         saveThread(thread);
 
-                        final UserInfo userInfo = thread.getUserInfo();
+                        UserInfo userInfo = thread.getUserInfo();
                         if (userInfo != null) {
-                            if (!mPictureMap.containsKey(mSecurityHelper.getMD5(userInfo.getIcon()))) {
+                            if (!isImageDownloaded(Uri.parse(userInfo.getIcon()))) {
                                 ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                                DataSource<Boolean> dataSource = imagePipeline.isInDiskCache(Uri.parse(userInfo.getIcon()));
-                                DataSubscriber<Boolean> subscriber = new BaseDataSubscriber<Boolean>() {
-                                    @Override
-                                    protected void onNewResultImpl(DataSource<Boolean> dataSource) {
-                                        if (!dataSource.isFinished()) {
-                                            return;
-                                        }
-                                        Boolean isInCache = dataSource.getResult();
-                                        if (isInCache != null && isInCache) {
-                                            OfflinePicture picture = new OfflinePicture();
-                                            picture.setUrl(userInfo.getIcon());
-                                            pictureList.add(picture);
-                                            mPictureMap.put(mSecurityHelper.getMD5(userInfo.getIcon()), userInfo.getIcon());
-                                        }
-
-                                    }
-
-                                    @Override
-                                    protected void onFailureImpl(DataSource<Boolean> dataSource) {
-
-                                    }
-                                };
-                                dataSource.subscribe(subscriber, new ScheduledThreadPoolExecutor(1));
+                                ImageRequest request = ImageRequest.fromUri(userInfo.getIcon());
+                                imagePipeline.prefetchToDiskCache(request, this);
+                                offlinePictureLength += request.getSourceFile().length();
+                                offlinePictureCount++;
                             }
+
                         }
-
-
                     }
+
+                    logger.debug(String.format("分组%s新增%d张待下载图片", board.getBoardName(), offlinePictureCount));
                     return true;
                 } else {
                     return false;
                 }
-
-
+            } catch (Exception e) {
+                return false;
             }
 
-
-            return false;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            unOfflineBoards.remove(board);
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            // 更新广播
+            if (result) {
+                mOfflineNotifier.notifyThreads(board, offlineThreadsLength);
+            }
 
+            unOfflineBoards.remove(board);
+            prepareReplies();
         }
+
 
         private void saveThread(GroupThread thread) {
             UserInfo userInfo = thread.getUserInfo();
+//            Badge badge = userInfo.getBadge();
+//            if (badge != null) {
+//                badge.save();
+//            }
             userInfo.save();
-            Badge badge = userInfo.getBadge();
-            if (badge != null) {
-                badge.save();
-            }
             DataSupport.saveAll(thread.getCover());
 
             thread.save();
-
         }
+    }
+
+
+    private boolean isImageDownloaded(Uri loadUri) {
+        if (loadUri == null) {
+            return false;
+        }
+        CacheKey cacheKey = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(ImageRequest.fromUri(loadUri));
+        return ImagePipelineFactory.getInstance().getMainDiskStorageCache().hasKey(cacheKey) || ImagePipelineFactory.getInstance().getSmallImageDiskStorageCache().hasKey(cacheKey);
+    }
+
+    private synchronized void prepareReplies() {
+        if (!unOfflineBoards.isEmpty()) {
+            return;
+        }
+
+        if (mThreads.isEmpty()) {
+            stopSelf();
+        } else {
+            for (GroupThread thread : mThreads) {
+                new LoadRepliesTask(thread).execute();
+            }
+        }
+
+
+    }
+
+
+    class LoadRepliesTask extends AsyncTask<Void, Void, Boolean> {
+
+        private GroupThread thread;
+
+        LoadRepliesTask(GroupThread thread) {
+            this.thread = thread;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            ThreadInfoResult result = mThreadApi.getGroupThreadInfo(thread.getServerId(), 0, 1, true);
+            if (result != null && result.getStatus() == 200) {
+                ThreadInfo threadInfo = result.getData().getThreadInfo();
+                threadInfo.getUserInfo().save();
+                threadInfo.getGroups().save();
+                threadInfo.save();
+                ThreadHotReply hotReply = result.getData().getThreadHotReply();
+                if (hotReply != null && !hotReply.getList().isEmpty()) {
+                    for (ThreadReplyItem replyItem : hotReply.getList()) {
+                        saveReplyItem(replyItem, true);
+
+                    }
+                }
+                ThreadReply reply = result.getData().getThreadReply();
+                if (reply != null && !reply.getList().isEmpty()) {
+                    for (ThreadReplyItem replyItem : reply.getList()) {
+                        saveReplyItem(replyItem, false);
+                    }
+                }
+
+            }
+
+            return null;
+        }
+    }
+
+
+    private void saveReplyItem(ThreadReplyItem replyItem, boolean isHot) {
+        replyItem.setIsHot(isHot);
+        UserInfo userInfo = replyItem.getUserInfo();
+//        Badge badge = userInfo.getBadge();
+//        if (badge != null) {
+//            badge.save();
+//        }
+        userInfo.save();
+        MiniReplyList miniReplyList = replyItem.getMiniReplyList();
+        if (miniReplyList != null && !miniReplyList.getLists().isEmpty()) {
+            for (MiniReplyListItem miniReplyItem : miniReplyList.getLists()) {
+                miniReplyItem.getUserInfo().save();
+                miniReplyItem.save();
+            }
+            miniReplyList.save();
+        }
+        replyItem.save();
     }
 }

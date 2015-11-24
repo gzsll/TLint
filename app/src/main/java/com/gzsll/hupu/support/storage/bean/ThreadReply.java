@@ -1,52 +1,37 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 
 public class ThreadReply {
 
-    private static final String FIELD_PAGECOUNT = "pagecount";
-    private static final String FIELD_PAGE = "page";
-    private static final String FIELD_LIST = "list";
+
+    private int pagecount;
+    private int page;
+    private List<ThreadReplyItem> list;
 
 
-    @SerializedName(FIELD_PAGECOUNT)
-    private int mPagecount;
-    @SerializedName(FIELD_PAGE)
-    private int mPage;
-    @SerializedName(FIELD_LIST)
-    private List<ThreadReplyItem> mLists;
-
-
-    public ThreadReply() {
-
+    public int getPagecount() {
+        return pagecount;
     }
 
     public void setPagecount(int pagecount) {
-        mPagecount = pagecount;
-    }
-
-    public int getPagecount() {
-        return mPagecount;
-    }
-
-    public void setPage(int page) {
-        mPage = page;
+        this.pagecount = pagecount;
     }
 
     public int getPage() {
-        return mPage;
+        return page;
     }
 
-    public void setLists(List<ThreadReplyItem> lists) {
-        mLists = lists;
+    public void setPage(int page) {
+        this.page = page;
     }
 
-    public List<ThreadReplyItem> getLists() {
-        return mLists;
+    public List<ThreadReplyItem> getList() {
+        return list;
     }
 
-
+    public void setList(List<ThreadReplyItem> list) {
+        this.list = list;
+    }
 }

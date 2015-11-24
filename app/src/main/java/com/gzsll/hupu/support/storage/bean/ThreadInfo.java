@@ -2,282 +2,220 @@ package com.gzsll.hupu.support.storage.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.crud.DataSupport;
 
-public class ThreadInfo {
-
-    private static final String FIELD_UID = "uid";
-    private static final String FIELD_LAST_REPLY_TIME = "lastReplyTime";
-    private static final String FIELD_SPECIAL = "special";
-    private static final String FIELD_GROUPS = "groups";
-    private static final String FIELD_SCORE = "score";
-    private static final String FIELD_COLOR = "color";
-    private static final String FIELD_LIGHTS = "lights";
-    private static final String FIELD_SHARED_IMG = "sharedImg";
-    private static final String FIELD_USER_INFO = "userInfo";
-    private static final String FIELD_ATTENTION = "attention";
-    private static final String FIELD_TYPE = "type";
-    private static final String FIELD_ZAN = "zan";
-    private static final String FIELD_USERNAME = "username";
-    private static final String FIELD_ID = "id";
-    private static final String FIELD_DIGEST = "digest";
-    private static final String FIELD_CREATE_AT_UNIXTIME = "createAtUnixtime";
-    private static final String FIELD_REPLIES = "replies";
-    private static final String FIELD_CREATE_AT = "createAt";
-    private static final String FIELD_TITLE = "title";
-    private static final String FIELD_GROUP_ID = "groupId";
-    private static final String FIELD_NOTE = "note";
-    private static final String FIELD_CONTENT = "content";
-    private static final String FIELD_TID = "tid";
+public class ThreadInfo extends DataSupport {
 
 
-    @SerializedName(FIELD_UID)
-    private int mUid;
-    @SerializedName(FIELD_LAST_REPLY_TIME)
-    private int mLastReplyTime;
-    @SerializedName(FIELD_SPECIAL)
-    private int mSpecial;
-    @SerializedName(FIELD_GROUPS)
-    private Group mGroup;
-    @SerializedName(FIELD_SCORE)
-    private double mScore;
-    @SerializedName(FIELD_COLOR)
-    private String mColor;
-    @SerializedName(FIELD_LIGHTS)
-    private int mLight;
-    @SerializedName(FIELD_SHARED_IMG)
-    private String mSharedImg;
-    @SerializedName(FIELD_USER_INFO)
-    private UserInfo mUserInfo;
-    @SerializedName(FIELD_ATTENTION)
-    private int mAttention;
-    @SerializedName(FIELD_TYPE)
-    private int mType;
-    @SerializedName(FIELD_ZAN)
-    private int mZan;
-    @SerializedName(FIELD_USERNAME)
-    private String mUsername;
-    @SerializedName(FIELD_ID)
-    private long mId;
-    @SerializedName(FIELD_DIGEST)
-    private int mDigest;
-    @SerializedName(FIELD_CREATE_AT_UNIXTIME)
-    private int mCreateAtUnixtime;
-    @SerializedName(FIELD_REPLIES)
-    private int mReply;
-    @SerializedName(FIELD_CREATE_AT)
-    private String mCreateAt;
-    @SerializedName(FIELD_TITLE)
-    private String mTitle;
-    @SerializedName(FIELD_GROUP_ID)
-    private int mGroupId;
-    @SerializedName(FIELD_NOTE)
-    private String mNote;
-    @SerializedName(FIELD_CONTENT)
-    private String mContent;
-    @SerializedName(FIELD_TID)
-    private int mTid;
-
-
-    public ThreadInfo() {
-
+    public int getUid() {
+        return uid;
     }
 
     public void setUid(int uid) {
-        mUid = uid;
-    }
-
-    public int getUid() {
-        return mUid;
-    }
-
-    public void setLastReplyTime(int lastReplyTime) {
-        mLastReplyTime = lastReplyTime;
+        this.uid = uid;
     }
 
     public int getLastReplyTime() {
-        return mLastReplyTime;
+        return lastReplyTime;
     }
 
-    public void setSpecial(int special) {
-        mSpecial = special;
+    public void setLastReplyTime(int lastReplyTime) {
+        this.lastReplyTime = lastReplyTime;
     }
 
     public int getSpecial() {
-        return mSpecial;
+        return special;
     }
 
-    public void setGroup(Group group) {
-        mGroup = group;
+    public void setSpecial(int special) {
+        this.special = special;
     }
 
-    public Group getGroup() {
-        return mGroup;
+
+    public double getScore() {
+        return score;
     }
 
     public void setScore(double score) {
-        mScore = score;
-    }
-
-    public double getScore() {
-        return mScore;
-    }
-
-    public void setColor(String color) {
-        mColor = color;
+        this.score = score;
     }
 
     public String getColor() {
-        return mColor;
+        return color;
     }
 
-    public void setLight(int light) {
-        mLight = light;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public int getLight() {
-        return mLight;
+    public int getLights() {
+        return lights;
     }
 
-    public void setSharedImg(String sharedImg) {
-        mSharedImg = sharedImg;
+    public void setLights(int lights) {
+        this.lights = lights;
     }
 
     public String getSharedImg() {
-        return mSharedImg;
+        return sharedImg;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        mUserInfo = userInfo;
+    public void setSharedImg(String sharedImg) {
+        this.sharedImg = sharedImg;
     }
 
     public UserInfo getUserInfo() {
-        return mUserInfo;
+        return userInfo;
     }
 
-    public void setAttention(int attention) {
-        mAttention = attention;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public int getAttention() {
-        return mAttention;
+        return attention;
     }
 
-    public void setType(int type) {
-        mType = type;
+    public void setAttention(int attention) {
+        this.attention = attention;
     }
 
     public int getType() {
-        return mType;
+        return type;
     }
 
-    public void setZan(int zan) {
-        mZan = zan;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getZan() {
-        return mZan;
+        return zan;
     }
 
-    public void setUsername(String username) {
-        mUsername = username;
+    public void setZan(int zan) {
+        this.zan = zan;
     }
 
     public String getUsername() {
-        return mUsername;
+        return username;
     }
 
-    public void setId(long id) {
-        mId = id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public long getId() {
-        return mId;
+
+    public int getDigest() {
+        return digest;
     }
 
     public void setDigest(int digest) {
-        mDigest = digest;
-    }
-
-    public int getDigest() {
-        return mDigest;
-    }
-
-    public void setCreateAtUnixtime(int createAtUnixtime) {
-        mCreateAtUnixtime = createAtUnixtime;
+        this.digest = digest;
     }
 
     public int getCreateAtUnixtime() {
-        return mCreateAtUnixtime;
+        return createAtUnixtime;
     }
 
-    public void setReply(int reply) {
-        mReply = reply;
+    public void setCreateAtUnixtime(int createAtUnixtime) {
+        this.createAtUnixtime = createAtUnixtime;
     }
 
-    public int getReply() {
-        return mReply;
+    public int getReplies() {
+        return replies;
     }
 
-    public void setCreateAt(String createAt) {
-        mCreateAt = createAt;
+    public void setReplies(int replies) {
+        this.replies = replies;
     }
 
     public String getCreateAt() {
-        return mCreateAt;
+        return createAt;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public void setCreateAt(String createAt) {
+        this.createAt = createAt;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
-    public void setGroupId(int groupId) {
-        mGroupId = groupId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getGroupId() {
-        return mGroupId;
+        return groupId;
     }
 
-    public void setNote(String note) {
-        mNote = note;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public String getNote() {
-        return mNote;
+        return note;
     }
 
-    public void setContent(String content) {
-        mContent = content;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getContent() {
-        return mContent;
+        return content;
     }
 
-    public void setTid(int tid) {
-        mTid = tid;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getTid() {
-        return mTid;
+        return tid;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ThreadInfo) {
-            return ((ThreadInfo) obj).getId() == mId;
-        }
-        return false;
+    public void setTid(int tid) {
+        this.tid = tid;
     }
 
-    @Override
-    public int hashCode() {
-        return ((Long) mId).hashCode();
+    private int uid;
+    private int lastReplyTime;
+    private int special;
+    private Groups groups;
+    private double score;
+    private String color;
+    private int lights;
+    private String sharedImg;
+    private UserInfo userInfo;
+    private int attention;
+    private int type;
+    private int zan;
+    private String username;
+    @SerializedName("id")
+    private long serverId;
+    private int digest;
+    private int createAtUnixtime;
+    private int replies;
+    private String createAt;
+    private String title;
+    private int groupId;
+    private String note;
+    private String content;
+    private int tid;
+
+
+    public long getServerId() {
+        return serverId;
     }
 
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
+    }
 
+    public Groups getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Groups groups) {
+        this.groups = groups;
+    }
 }

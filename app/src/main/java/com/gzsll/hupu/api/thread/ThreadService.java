@@ -54,6 +54,9 @@ public interface ThreadService {
     @GET("/group/getGroupThreadInfo")
     void getGroupThreadInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadInfoResult> callback);
 
+    @GET("/group/getGroupThreadInfo")
+    ThreadInfoResult getGroupThreadInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params);
+
     @POST("/group/addGroupThreadByApp")
     void addGroupThread(@Body TypedJsonString json, Callback<BaseResult> callback);
 

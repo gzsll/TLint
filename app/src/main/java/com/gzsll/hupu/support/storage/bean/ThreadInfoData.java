@@ -1,72 +1,52 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
-
 public class ThreadInfoData {
 
-    private static final String FIELD_FAVORITE = "favorite";
-    private static final String FIELD_THREAD_REPLY = "threadReply";
-    private static final String FIELD_THREAD_INFO = "threadInfo";
-    private static final String FIELD_PAGE = "page";
-    private static final String FIELD_THREAD_HOT_REPLY = "threadHotReply";
+
+    private int favorite;
+    private ThreadReply threadReply;
+    private ThreadInfo threadInfo;
+    private int page;
+    private ThreadHotReply threadHotReply;
 
 
-    @SerializedName(FIELD_FAVORITE)
-    private int mFavorite;
-    @SerializedName(FIELD_THREAD_REPLY)
-    private ThreadReply mThreadReply;
-    @SerializedName(FIELD_THREAD_INFO)
-    private ThreadInfo mThreadInfo;
-    @SerializedName(FIELD_PAGE)
-    private int mPage;
-    @SerializedName(FIELD_THREAD_HOT_REPLY)
-    private ThreadHotReply mThreadHotReply;
-
-
-    public ThreadInfoData() {
-
+    public int getFavorite() {
+        return favorite;
     }
 
     public void setFavorite(int favorite) {
-        mFavorite = favorite;
-    }
-
-    public int getFavorite() {
-        return mFavorite;
-    }
-
-    public void setThreadReply(ThreadReply threadReply) {
-        mThreadReply = threadReply;
+        this.favorite = favorite;
     }
 
     public ThreadReply getThreadReply() {
-        return mThreadReply;
+        return threadReply;
     }
 
-    public void setThreadInfo(ThreadInfo threadInfo) {
-        mThreadInfo = threadInfo;
+    public void setThreadReply(ThreadReply threadReply) {
+        this.threadReply = threadReply;
     }
 
     public ThreadInfo getThreadInfo() {
-        return mThreadInfo;
+        return threadInfo;
     }
 
-    public void setPage(int page) {
-        mPage = page;
+    public void setThreadInfo(ThreadInfo threadInfo) {
+        this.threadInfo = threadInfo;
     }
 
     public int getPage() {
-        return mPage;
+        return page;
     }
 
-    public void setThreadHotReply(ThreadHotReply threadHotReply) {
-        mThreadHotReply = threadHotReply;
+    public void setPage(int page) {
+        this.page = page;
     }
 
     public ThreadHotReply getThreadHotReply() {
-        return mThreadHotReply;
+        return threadHotReply;
     }
 
-
+    public void setThreadHotReply(ThreadHotReply threadHotReply) {
+        this.threadHotReply = threadHotReply;
+    }
 }
