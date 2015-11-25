@@ -65,6 +65,7 @@ public class DbConverterHelper {
         groupThread.setTitle(thread.getTitle());
         groupThread.setUsername(thread.getUsername());
         groupThread.setUserInfo(getUserInfo(thread.getUserId()));
+        groupThread.setCreateAtUnixtime(thread.getCreateAtUnixTime());
         return groupThread;
     }
 

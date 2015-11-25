@@ -35,8 +35,10 @@ import com.gzsll.hupu.support.storage.bean.ThreadSpanned;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.UserInfo;
 import com.gzsll.hupu.support.utils.DbConverterHelper;
+import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.support.utils.ReplyViewHelper;
 import com.gzsll.hupu.support.utils.SecurityHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 
 import org.apache.log4j.Logger;
 
@@ -76,7 +78,6 @@ public class OffLineService extends IntentAnnotationService {
     private long offlineRepliesLength = 0;
     private long offlinePictureLength = 0;// 离线的图片总流量大小
 
-    private int offlinePictureSize = 0;
     private int offlinePictureCount = 0;// 离线的图片数量
 
     private LinkedBlockingQueue<GroupThread> mThreads = new LinkedBlockingQueue<>();// 线程安全队列
@@ -94,6 +95,8 @@ public class OffLineService extends IntentAnnotationService {
     DBUserInfoDao mUserInfoDao;
     @Inject
     DbConverterHelper mDbConverterHelper;
+    @Inject
+    SettingPrefHelper mSettingPrefHelper;
 
     @Override
     public void onCreate() {
@@ -147,7 +150,7 @@ public class OffLineService extends IntentAnnotationService {
                     return false;
                 }
                 int count = 5; //加载100篇帖子  TODO 加上设置
-                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getGroupId()), "0", count, "", null);
+                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getGroupId()), "0", count, mSettingPrefHelper.getThreadSort(), null);
                 if (result.getStatus() == 200) {
                     List<GroupThread> threads = result.getData().getGroupThreads();
                     offlineThreadsCount += threads.size();
@@ -227,6 +230,7 @@ public class OffLineService extends IntentAnnotationService {
         mOfflineNotifier.notifyThreadsSuccess(boards.size(), offlineThreadsCount, offlineThreadsLength);
 
         if (mThreads.isEmpty()) {
+            logger.debug("mThreads.isEmpty()");
             stopSelf();
         } else {
             for (GroupThread thread : mThreads) {
@@ -286,8 +290,39 @@ public class OffLineService extends IntentAnnotationService {
             mThreads.remove(thread);
             if (mThreads.isEmpty()) {
                 mOfflineNotifier.notifyRepliesSuccess(offlineThreadsCount, offlineRepliesCount, offlineRepliesLength);
+                logger.debug("mThreads.isEmpty()");
+                stopSelf();
             }
+            stopSelfIfCan();
         }
+    }
+
+    @Inject
+    NetWorkHelper mNetWorkHelper;
+
+    private boolean stopSelfIfCan() {
+        if (isCanceled()) {
+            logger.debug("isCanceled");
+            stopSelf();
+            return true;
+        }
+
+        if (!mNetWorkHelper.isWiFi(this)) {
+            logger.debug("isWiFi");
+            stopSelf();
+            mCurrentStatus = CANCEL;
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        logger.debug("onDestroy");
+        mOfflineNotifier.notifyPictureSuccess(offlinePictureCount, offlinePictureLength);
+        mCurrentStatus = FINISHED;
     }
 
     @Inject

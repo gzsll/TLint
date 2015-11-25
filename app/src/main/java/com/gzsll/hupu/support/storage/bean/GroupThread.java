@@ -21,7 +21,7 @@ public class GroupThread {
     private int type;
     private long id;
     private int digest;
-    private int createAtUnixtime;
+    private long createAtUnixtime;
     private int replies;
     private String createAt;
     private String title;
@@ -136,11 +136,11 @@ public class GroupThread {
         this.digest = digest;
     }
 
-    public int getCreateAtUnixtime() {
+    public long getCreateAtUnixtime() {
         return createAtUnixtime;
     }
 
-    public void setCreateAtUnixtime(int createAtUnixtime) {
+    public void setCreateAtUnixtime(long createAtUnixtime) {
         this.createAtUnixtime = createAtUnixtime;
     }
 
