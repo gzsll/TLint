@@ -8,7 +8,7 @@ import de.greenrobot.daogenerator.Schema;
 
 public class GreenDaoGenerator {
 
-    public static final int VERSION = 44;
+    public static final int VERSION = 45;
     public static final String GREEN_DAO_CODE_PATH = "../TLint/src/main/greendao";
 
     public static void main(String[] args) throws Exception {
@@ -105,6 +105,8 @@ public class GreenDaoGenerator {
         groups.addIdProperty();
         groups.addStringProperty("groupName");
         groups.addLongProperty("serverId");
+        groups.addStringProperty("groupCover");
+
 
         Entity threadReplyItem = schema.addEntity("DBThreadReplyItem");
         threadReplyItem.addIdProperty();
@@ -127,13 +129,6 @@ public class GreenDaoGenerator {
         miniReplyListItem.addLongProperty("userId");
         miniReplyListItem.addStringProperty("content");
         miniReplyListItem.addLongProperty("parentReplyId");
-
-
-
-
-
-
-
 
 
         File f = new File(GREEN_DAO_CODE_PATH);

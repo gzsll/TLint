@@ -10,6 +10,7 @@ import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.google.gson.Gson;
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.BuildConfig;
 import com.gzsll.hupu.api.thread.ThreadApi;
@@ -30,9 +31,11 @@ import com.gzsll.hupu.support.storage.bean.ThreadInfo;
 import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
 import com.gzsll.hupu.support.storage.bean.ThreadReply;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.support.storage.bean.ThreadSpanned;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.UserInfo;
 import com.gzsll.hupu.support.utils.DbConverterHelper;
+import com.gzsll.hupu.support.utils.ReplyViewHelper;
 import com.gzsll.hupu.support.utils.SecurityHelper;
 
 import org.apache.log4j.Logger;
@@ -70,6 +73,7 @@ public class OffLineService extends IntentAnnotationService {
     private int offlineRepliesCount; //离线的回复数量
 
     private long offlineThreadsLength = 0;// 离线的帖子总流量大小
+    private long offlineRepliesLength = 0;
     private long offlinePictureLength = 0;// 离线的图片总流量大小
 
     private int offlinePictureSize = 0;
@@ -123,6 +127,9 @@ public class OffLineService extends IntentAnnotationService {
         return mCurrentStatus == CANCEL || mCurrentStatus == FINISHED;
     }
 
+    @Inject
+    Gson mGson;
+
     class LoadThreadTask extends AsyncTask<Void, Void, Boolean> {
 
         private Board board;
@@ -139,26 +146,21 @@ public class OffLineService extends IntentAnnotationService {
                 if (isCanceled()) {
                     return false;
                 }
-                int count = 100; //加载100篇帖子  TODO 加上设置
+                int count = 5; //加载100篇帖子  TODO 加上设置
                 ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getBoardId()), "0", count, "", null);
                 if (result.getStatus() == 200) {
                     List<GroupThread> threads = result.getData().getGroupThreads();
                     offlineThreadsCount += threads.size();
+                    offlineThreadsLength += mGson.toJson(result).length();
+
                     logger.debug("offlineThreadsCount:" + offlineThreadsCount);
                     mThreads.addAll(threads);
                     for (GroupThread thread : threads) {
-                        saveThread(thread);
+                        saveThread(thread, board.getBoardId());
 
                         UserInfo userInfo = thread.getUserInfo();
                         if (userInfo != null) {
-                            if (!isImageDownloaded(Uri.parse(userInfo.getIcon()))) {
-                                ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                                ImageRequest request = ImageRequest.fromUri(userInfo.getIcon());
-                                imagePipeline.prefetchToDiskCache(request, this);
-                                offlinePictureLength += request.getSourceFile().length();
-                                offlinePictureCount++;
-                            }
-
+                            cacheImage(userInfo.getIcon());
                         }
                     }
 
@@ -187,13 +189,25 @@ public class OffLineService extends IntentAnnotationService {
 
     }
 
-    private void saveThread(GroupThread thread) {
-        List<DBGroupThread> threads = mGroupThreadDao.queryBuilder().where(DBGroupThreadDao.Properties.ServerId.eq(thread.getServerId())).list();
-        DBGroupThread dbGroupThread = mDbConverterHelper.converGroupThread(thread);
+    private void saveThread(GroupThread thread, long groupId) {
+        List<DBGroupThread> threads = mGroupThreadDao.queryBuilder().where(DBGroupThreadDao.Properties.ServerId.eq(thread.getId())).list();
+        DBGroupThread dbGroupThread = mDbConverterHelper.convertGroupThread(thread);
+        dbGroupThread.setGroupId(groupId);
         if (!threads.isEmpty()) {
             dbGroupThread.setId(threads.get(0).getId());
         }
         mGroupThreadDao.insertOrReplace(dbGroupThread);
+    }
+
+
+    private void cacheImage(String url) {
+        if (!isImageDownloaded(Uri.parse(url))) {
+            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+            ImageRequest request = ImageRequest.fromUri(url);
+            imagePipeline.prefetchToDiskCache(request, this);
+            offlinePictureLength += request.getSourceFile().length();
+            offlinePictureCount++;
+        }
     }
 
 
@@ -209,6 +223,8 @@ public class OffLineService extends IntentAnnotationService {
         if (!unOfflineBoards.isEmpty()) {
             return;
         }
+
+        mOfflineNotifier.notifyThreadsSuccess(boards.size(), offlineThreadsCount, offlineThreadsLength);
 
         if (mThreads.isEmpty()) {
             stopSelf();
@@ -228,31 +244,49 @@ public class OffLineService extends IntentAnnotationService {
 
         LoadRepliesTask(GroupThread thread) {
             this.thread = thread;
+            mOfflineNotifier.notifyReplies(thread, offlineRepliesLength);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            ThreadInfoResult result = mThreadApi.getGroupThreadInfo(thread.getServerId(), 0, 1, true);
-            if (result != null && result.getStatus() == 200) {
-                saveThreadInfo(result.getData().getThreadInfo());
+            try {
+                ThreadInfoResult result = mThreadApi.getGroupThreadInfo(thread.getId(), 0, 1, true);
+                if (result != null && result.getStatus() == 200) {
+                    offlineRepliesLength += mGson.toJson(result).length();
 
-                ThreadHotReply hotReply = result.getData().getThreadHotReply();
-                if (hotReply != null && !hotReply.getList().isEmpty()) {
-                    for (ThreadReplyItem replyItem : hotReply.getList()) {
-                        saveReplyItem(replyItem, true);
+                    saveThreadInfo(result.getData().getThreadInfo());
 
+                    ThreadHotReply hotReply = result.getData().getThreadHotReply();
+                    if (hotReply != null && !hotReply.getList().isEmpty()) {
+                        for (ThreadReplyItem replyItem : hotReply.getList()) {
+                            saveReplyItem(replyItem, true);
+
+                        }
                     }
-                }
-                ThreadReply reply = result.getData().getThreadReply();
-                if (reply != null && !reply.getList().isEmpty()) {
-                    for (ThreadReplyItem replyItem : reply.getList()) {
-                        saveReplyItem(replyItem, false);
+                    ThreadReply reply = result.getData().getThreadReply();
+                    if (reply != null && !reply.getList().isEmpty()) {
+                        for (ThreadReplyItem replyItem : reply.getList()) {
+                            saveReplyItem(replyItem, false);
+                        }
                     }
-                }
 
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            return null;
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            mOfflineNotifier.notifyReplies(thread, offlineRepliesLength);
+            mThreads.remove(thread);
+            if (mThreads.isEmpty()) {
+                mOfflineNotifier.notifyRepliesSuccess(offlineThreadsCount, offlineRepliesCount, offlineRepliesLength);
+            }
         }
     }
 
@@ -260,8 +294,8 @@ public class OffLineService extends IntentAnnotationService {
     DBThreadInfoDao mThreadInfoDao;
 
     private void saveThreadInfo(ThreadInfo threadInfo) {
-        List<DBThreadInfo> threadInfos = mThreadInfoDao.queryBuilder().where(DBThreadInfoDao.Properties.ServerId.eq(threadInfo.getServerId())).list();
-        DBThreadInfo info = mDbConverterHelper.converThreadInfo(threadInfo);
+        List<DBThreadInfo> threadInfos = mThreadInfoDao.queryBuilder().where(DBThreadInfoDao.Properties.ServerId.eq(threadInfo.getId())).list();
+        DBThreadInfo info = mDbConverterHelper.convertThreadInfo(threadInfo);
         if (!threadInfos.isEmpty()) {
             info.setId(threadInfos.get(0).getId());
         }
@@ -271,13 +305,23 @@ public class OffLineService extends IntentAnnotationService {
 
     @Inject
     DBThreadReplyItemDao mReplyDao;
+    @Inject
+    ReplyViewHelper mReplyViewHelper;
 
     private void saveReplyItem(ThreadReplyItem replyItem, boolean isHot) {
         List<DBThreadReplyItem> replyItems = mReplyDao.queryBuilder().where(DBThreadReplyItemDao.Properties.ServerId.eq(replyItem.getId())).list();
-        DBThreadReplyItem item = mDbConverterHelper.converThreadReplyItem(replyItem, isHot);
+        DBThreadReplyItem item = mDbConverterHelper.convertThreadReplyItem(replyItem, isHot);
         if (!replyItems.isEmpty()) {
             item.setId(replyItems.get(0).getId());
         }
         mReplyDao.insertOrReplace(item);
+        offlineRepliesCount++;
+
+        List<ThreadSpanned> spanneds = mReplyViewHelper.compileContent(replyItem.getContent());
+        for (ThreadSpanned spanned : spanneds) {
+            if (spanned.type == 2) {
+                cacheImage(spanned.realContent);
+            }
+        }
     }
 }

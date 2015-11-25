@@ -76,7 +76,7 @@ public class MessageReplyPresenter extends Presenter<MessageReplyView> {
         for (MessageReply reply : list) {
             boolean contain = false;
             for (MessageReply messageReply : mReplies) {
-                if (messageReply.getThreadInfo().getServerId() == reply.getThreadInfo().getServerId()) {
+                if (messageReply.getThreadInfo().getId() == reply.getThreadInfo().getId()) {
                     contain = true;
                     break;
                 }

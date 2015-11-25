@@ -86,7 +86,7 @@ public class ThreadReplyItemView extends LinearLayout {
         tvReplyLight.setText(String.valueOf(item.getLights()));
         llContent.removeAllViews();
         mReplyViewHelper.addToView(mReplyViewHelper.compileContent(item.getContent()), llContent);
-        if (!item.getMiniReplyList().getLists().isEmpty()) {
+        if (item.getMiniReplyList() != null && !item.getMiniReplyList().getLists().isEmpty()) {
             llMiniReply.setVisibility(VISIBLE);
             deliver.setVisibility(VISIBLE);
             if (item.getMiniReplyList().getLists().size() >= 20) {

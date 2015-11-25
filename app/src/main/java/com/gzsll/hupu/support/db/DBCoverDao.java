@@ -44,7 +44,7 @@ public class DBCoverDao extends AbstractDao<DBCover, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DBCOVER' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'URL_SMALL' TEXT," + // 1: urlSmall
@@ -53,58 +53,50 @@ public class DBCoverDao extends AbstractDao<DBCover, Long> {
                 "'WIDTH' INTEGER);"); // 4: width
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'DBCOVER'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, DBCover entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         String urlSmall = entity.getUrlSmall();
         if (urlSmall != null) {
             stmt.bindString(2, urlSmall);
         }
-
+ 
         Integer height = entity.getHeight();
         if (height != null) {
             stmt.bindLong(3, height);
         }
-
+ 
         String url = entity.getUrl();
         if (url != null) {
             stmt.bindString(4, url);
         }
-
+ 
         Integer width = entity.getWidth();
         if (width != null) {
             stmt.bindLong(5, width);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public DBCover readEntity(Cursor cursor, int offset) {
         DBCover entity = new DBCover( //
@@ -117,9 +109,7 @@ public class DBCoverDao extends AbstractDao<DBCover, Long> {
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DBCover entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -129,18 +119,14 @@ public class DBCoverDao extends AbstractDao<DBCover, Long> {
         entity.setWidth(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DBCover entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(DBCover entity) {
         if (entity != null) {
@@ -153,9 +139,9 @@ public class DBCoverDao extends AbstractDao<DBCover, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

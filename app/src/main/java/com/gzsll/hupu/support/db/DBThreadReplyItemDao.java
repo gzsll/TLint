@@ -49,7 +49,7 @@ public class DBThreadReplyItemDao extends AbstractDao<DBThreadReplyItem, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DBTHREAD_REPLY_ITEM' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'SERVER_ID' INTEGER," + // 1: serverId
@@ -63,83 +63,75 @@ public class DBThreadReplyItemDao extends AbstractDao<DBThreadReplyItem, Long> {
                 "'IS_HOT' INTEGER);"); // 9: isHot
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'DBTHREAD_REPLY_ITEM'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, DBThreadReplyItem entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         Long serverId = entity.getServerId();
         if (serverId != null) {
             stmt.bindLong(2, serverId);
         }
-
+ 
         Long pid = entity.getPid();
         if (pid != null) {
             stmt.bindLong(3, pid);
         }
-
+ 
         String createAt = entity.getCreateAt();
         if (createAt != null) {
             stmt.bindString(4, createAt);
         }
-
+ 
         Integer lights = entity.getLights();
         if (lights != null) {
             stmt.bindLong(5, lights);
         }
-
+ 
         Integer floor = entity.getFloor();
         if (floor != null) {
             stmt.bindLong(6, floor);
         }
-
+ 
         Long groupThreadId = entity.getGroupThreadId();
         if (groupThreadId != null) {
             stmt.bindLong(7, groupThreadId);
         }
-
+ 
         Long userId = entity.getUserId();
         if (userId != null) {
             stmt.bindLong(8, userId);
         }
-
+ 
         String content = entity.getContent();
         if (content != null) {
             stmt.bindString(9, content);
         }
-
+ 
         Boolean isHot = entity.getIsHot();
         if (isHot != null) {
-            stmt.bindLong(10, isHot ? 1l : 0l);
+            stmt.bindLong(10, isHot ? 1l: 0l);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public DBThreadReplyItem readEntity(Cursor cursor, int offset) {
         DBThreadReplyItem entity = new DBThreadReplyItem( //
@@ -157,9 +149,7 @@ public class DBThreadReplyItemDao extends AbstractDao<DBThreadReplyItem, Long> {
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DBThreadReplyItem entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -174,18 +164,14 @@ public class DBThreadReplyItemDao extends AbstractDao<DBThreadReplyItem, Long> {
         entity.setIsHot(cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DBThreadReplyItem entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(DBThreadReplyItem entity) {
         if (entity != null) {
@@ -198,9 +184,9 @@ public class DBThreadReplyItemDao extends AbstractDao<DBThreadReplyItem, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

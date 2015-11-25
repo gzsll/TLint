@@ -1,7 +1,5 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +19,7 @@ public class GroupThread {
     private int zan;
     private String username;
     private int type;
-    @SerializedName("id")
-    private long serverId;
+    private long id;
     private int digest;
     private int createAtUnixtime;
     private int replies;
@@ -130,13 +127,6 @@ public class GroupThread {
         this.type = type;
     }
 
-    public long getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(long id) {
-        this.serverId = id;
-    }
 
     public int getDigest() {
         return digest;
@@ -208,5 +198,13 @@ public class GroupThread {
 
     public void setTid(int tid) {
         this.tid = tid;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

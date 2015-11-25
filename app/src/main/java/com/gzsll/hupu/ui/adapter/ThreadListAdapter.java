@@ -38,7 +38,7 @@ public class ThreadListAdapter extends BaseRecyclerViewAdapter<GroupThread, Thre
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContentActivity_.intent(mActivity).mThreadId(thread.getServerId()).start();
+                ContentActivity_.intent(mActivity).mThreadId(thread.getId()).start();
             }
         });
 

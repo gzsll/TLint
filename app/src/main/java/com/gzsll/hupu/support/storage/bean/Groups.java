@@ -1,8 +1,5 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.amazonaws.com.google.gson.annotations.SerializedName;
-
-
 public class Groups {
 
 
@@ -127,8 +124,7 @@ public class Groups {
         this.groupCover = groupCover;
     }
 
-    @SerializedName("id")
-    private long serverId;
+    private long id;
     private int uid;
     private int orderBy;
     private int categoryId;
@@ -146,11 +142,11 @@ public class Groups {
     private String groupCover;
 
 
-    public long getServerId() {
-        return serverId;
+    public long getId() {
+        return id;
     }
 
-    public void setServerId(long serverId) {
-        this.serverId = serverId;
+    public void setId(long id) {
+        this.id = id;
     }
 }

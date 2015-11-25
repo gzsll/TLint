@@ -25,6 +25,7 @@ public class DBGroupsDao extends AbstractDao<DBGroups, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property GroupName = new Property(1, String.class, "groupName", false, "GROUP_NAME");
         public final static Property ServerId = new Property(2, Long.class, "serverId", false, "SERVER_ID");
+        public final static Property GroupCover = new Property(3, String.class, "groupCover", false, "GROUP_COVER");
     }
 
     ;
@@ -42,87 +43,81 @@ public class DBGroupsDao extends AbstractDao<DBGroups, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DBGROUPS' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'GROUP_NAME' TEXT," + // 1: groupName
-                "'SERVER_ID' INTEGER);"); // 2: serverId
+                "'SERVER_ID' INTEGER," + // 2: serverId
+                "'GROUP_COVER' TEXT);"); // 3: groupCover
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'DBGROUPS'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, DBGroups entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         String groupName = entity.getGroupName();
         if (groupName != null) {
             stmt.bindString(2, groupName);
         }
-
+ 
         Long serverId = entity.getServerId();
         if (serverId != null) {
             stmt.bindLong(3, serverId);
         }
+
+        String groupCover = entity.getGroupCover();
+        if (groupCover != null) {
+            stmt.bindString(4, groupCover);
+        }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public DBGroups readEntity(Cursor cursor, int offset) {
         DBGroups entity = new DBGroups( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // groupName
-                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // serverId
+                cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // serverId
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // groupCover
         );
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DBGroups entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setGroupName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setServerId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setGroupCover(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DBGroups entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(DBGroups entity) {
         if (entity != null) {
@@ -135,9 +130,9 @@ public class DBGroupsDao extends AbstractDao<DBGroups, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

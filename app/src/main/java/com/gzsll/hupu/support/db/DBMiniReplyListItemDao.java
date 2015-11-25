@@ -47,7 +47,7 @@ public class DBMiniReplyListItemDao extends AbstractDao<DBMiniReplyListItem, Lon
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DBMINI_REPLY_LIST_ITEM' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'SERVER_ID' INTEGER," + // 1: serverId
@@ -59,73 +59,65 @@ public class DBMiniReplyListItemDao extends AbstractDao<DBMiniReplyListItem, Lon
                 "'PARENT_REPLY_ID' INTEGER);"); // 7: parentReplyId
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'DBMINI_REPLY_LIST_ITEM'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, DBMiniReplyListItem entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         Long serverId = entity.getServerId();
         if (serverId != null) {
             stmt.bindLong(2, serverId);
         }
-
+ 
         Long pid = entity.getPid();
         if (pid != null) {
             stmt.bindLong(3, pid);
         }
-
+ 
         String formatTime = entity.getFormatTime();
         if (formatTime != null) {
             stmt.bindString(4, formatTime);
         }
-
+ 
         Long groupThreadId = entity.getGroupThreadId();
         if (groupThreadId != null) {
             stmt.bindLong(5, groupThreadId);
         }
-
+ 
         Long userId = entity.getUserId();
         if (userId != null) {
             stmt.bindLong(6, userId);
         }
-
+ 
         String content = entity.getContent();
         if (content != null) {
             stmt.bindString(7, content);
         }
-
+ 
         Long parentReplyId = entity.getParentReplyId();
         if (parentReplyId != null) {
             stmt.bindLong(8, parentReplyId);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public DBMiniReplyListItem readEntity(Cursor cursor, int offset) {
         DBMiniReplyListItem entity = new DBMiniReplyListItem( //
@@ -141,9 +133,7 @@ public class DBMiniReplyListItemDao extends AbstractDao<DBMiniReplyListItem, Lon
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DBMiniReplyListItem entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -156,18 +146,14 @@ public class DBMiniReplyListItemDao extends AbstractDao<DBMiniReplyListItem, Lon
         entity.setParentReplyId(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DBMiniReplyListItem entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(DBMiniReplyListItem entity) {
         if (entity != null) {
@@ -180,9 +166,9 @@ public class DBMiniReplyListItemDao extends AbstractDao<DBMiniReplyListItem, Lon
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

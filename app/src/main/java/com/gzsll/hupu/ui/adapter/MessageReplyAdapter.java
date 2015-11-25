@@ -30,7 +30,7 @@ public class MessageReplyAdapter extends BaseListAdapter<MessageReply, MessageRe
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentActivity_.intent(mActivity).mThreadId(data.getThreadInfo().getServerId()).start();
+                ContentActivity_.intent(mActivity).mThreadId(data.getThreadInfo().getId()).start();
             }
         });
         view.init(data);

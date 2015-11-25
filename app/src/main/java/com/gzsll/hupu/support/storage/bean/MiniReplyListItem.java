@@ -9,10 +9,10 @@ public class MiniReplyListItem implements Serializable {
 
 
     private long id;
-    private int pid;
+    private long pid;
     private String formatTime;
     private int isLight;
-    private int groupThreadId;
+    private long groupThreadId;
     private UserInfo userInfo;
     private int addtime;
     private String content;
@@ -26,11 +26,11 @@ public class MiniReplyListItem implements Serializable {
         this.id = id;
     }
 
-    public int getPid() {
+    public long getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(long pid) {
         this.pid = pid;
     }
 
@@ -50,11 +50,11 @@ public class MiniReplyListItem implements Serializable {
         this.isLight = isLight;
     }
 
-    public int getGroupThreadId() {
+    public long getGroupThreadId() {
         return groupThreadId;
     }
 
-    public void setGroupThreadId(int groupThreadId) {
+    public void setGroupThreadId(long groupThreadId) {
         this.groupThreadId = groupThreadId;
     }
 

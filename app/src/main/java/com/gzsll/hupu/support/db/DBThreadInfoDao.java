@@ -61,7 +61,7 @@ public class DBThreadInfoDao extends AbstractDao<DBThreadInfo, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DBTHREAD_INFO' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'SERVER_ID' INTEGER," + // 1: serverId
@@ -87,143 +87,135 @@ public class DBThreadInfoDao extends AbstractDao<DBThreadInfo, Long> {
                 "'GROUPS_ID' INTEGER);"); // 21: groupsId
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'DBTHREAD_INFO'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, DBThreadInfo entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         Long serverId = entity.getServerId();
         if (serverId != null) {
             stmt.bindLong(2, serverId);
         }
-
+ 
         Integer uid = entity.getUid();
         if (uid != null) {
             stmt.bindLong(3, uid);
         }
-
+ 
         Integer lastReplyTime = entity.getLastReplyTime();
         if (lastReplyTime != null) {
             stmt.bindLong(4, lastReplyTime);
         }
-
+ 
         Integer special = entity.getSpecial();
         if (special != null) {
             stmt.bindLong(5, special);
         }
-
+ 
         Integer lights = entity.getLights();
         if (lights != null) {
             stmt.bindLong(6, lights);
         }
-
+ 
         Integer attention = entity.getAttention();
         if (attention != null) {
             stmt.bindLong(7, attention);
         }
-
+ 
         Integer type = entity.getType();
         if (type != null) {
             stmt.bindLong(8, type);
         }
-
+ 
         Integer zan = entity.getZan();
         if (zan != null) {
             stmt.bindLong(9, zan);
         }
-
+ 
         Integer digest = entity.getDigest();
         if (digest != null) {
             stmt.bindLong(10, digest);
         }
-
+ 
         Long createAtUnixTime = entity.getCreateAtUnixTime();
         if (createAtUnixTime != null) {
             stmt.bindLong(11, createAtUnixTime);
         }
-
+ 
         Integer replies = entity.getReplies();
         if (replies != null) {
             stmt.bindLong(12, replies);
         }
-
+ 
         Long groupId = entity.getGroupId();
         if (groupId != null) {
             stmt.bindLong(13, groupId);
         }
-
+ 
         Long tid = entity.getTid();
         if (tid != null) {
             stmt.bindLong(14, tid);
         }
-
+ 
         String sharedImg = entity.getSharedImg();
         if (sharedImg != null) {
             stmt.bindString(15, sharedImg);
         }
-
+ 
         String username = entity.getUsername();
         if (username != null) {
             stmt.bindString(16, username);
         }
-
+ 
         String createAt = entity.getCreateAt();
         if (createAt != null) {
             stmt.bindString(17, createAt);
         }
-
+ 
         String title = entity.getTitle();
         if (title != null) {
             stmt.bindString(18, title);
         }
-
+ 
         String note = entity.getNote();
         if (note != null) {
             stmt.bindString(19, note);
         }
-
+ 
         String content = entity.getContent();
         if (content != null) {
             stmt.bindString(20, content);
         }
-
+ 
         Long userId = entity.getUserId();
         if (userId != null) {
             stmt.bindLong(21, userId);
         }
-
+ 
         Long groupsId = entity.getGroupsId();
         if (groupsId != null) {
             stmt.bindLong(22, groupsId);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public DBThreadInfo readEntity(Cursor cursor, int offset) {
         DBThreadInfo entity = new DBThreadInfo( //
@@ -253,9 +245,7 @@ public class DBThreadInfoDao extends AbstractDao<DBThreadInfo, Long> {
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DBThreadInfo entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -282,18 +272,14 @@ public class DBThreadInfoDao extends AbstractDao<DBThreadInfo, Long> {
         entity.setGroupsId(cursor.isNull(offset + 21) ? null : cursor.getLong(offset + 21));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DBThreadInfo entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(DBThreadInfo entity) {
         if (entity != null) {
@@ -306,9 +292,9 @@ public class DBThreadInfoDao extends AbstractDao<DBThreadInfo, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

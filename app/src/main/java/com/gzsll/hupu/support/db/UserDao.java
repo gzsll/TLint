@@ -122,7 +122,7 @@ public class UserDao extends AbstractDao<User, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     /** @inheritdoc */
     @Override
@@ -140,7 +140,7 @@ public class UserDao extends AbstractDao<User, Long> {
         );
         return entity;
     }
-
+     
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
@@ -153,15 +153,15 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setSex(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
         entity.setLevel(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
         entity.setIsLogin(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
-    }
-
+     }
+    
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(User entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     /** @inheritdoc */
     @Override
     public Long getKey(User entity) {
@@ -172,9 +172,7 @@ public class UserDao extends AbstractDao<User, Long> {
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override    
     protected boolean isEntityUpdateable() {
         return true;

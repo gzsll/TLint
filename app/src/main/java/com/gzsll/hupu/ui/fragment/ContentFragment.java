@@ -1,5 +1,6 @@
 package com.gzsll.hupu.ui.fragment;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -43,6 +45,8 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +115,34 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
         mWebView = new JockeyJsWebView(mActivity);
         mWebView.setCallback(this);
         mWebView.initJockey();
-        mWebView.loadUrl("http://bbs.mobile.hupu.com/view/threadInfoView?v=1");
+        loadWebContent();
+    }
+
+    @Background
+    void loadWebContent() {
+        String html = stringFromAssetsFile("hupu_post.html");
+        loadWebFinish(html);
+    }
+
+    @UiThread
+    void loadWebFinish(String html) {
+        mWebView.loadDataWithBaseURL("file:///android_asset/", html, "text/html",
+                "utf-8", null);
+    }
+
+    private String stringFromAssetsFile(String fileName) {
+        AssetManager manager = getActivity().getAssets();
+        InputStream file;
+        try {
+            file = manager.open(fileName);
+            byte[] data = new byte[file.available()];
+            file.read(data);
+            file.close();
+            return new String(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void initRecyclerView() {
@@ -201,6 +232,7 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @Override
     public void onPageFinished(WebView webView, String str) {
+        logger.debug("onPageFinished");
         mContentPresenter.onThreadInfoReceive(mThreadId, 1);
     }
 

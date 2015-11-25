@@ -50,7 +50,7 @@ public class DBUserInfoDao extends AbstractDao<DBUserInfo, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DBUSER_INFO' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'USERNAME' TEXT," + // 1: username
@@ -65,88 +65,80 @@ public class DBUserInfoDao extends AbstractDao<DBUserInfo, Long> {
                 "'LEVEL' INTEGER);"); // 10: level
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'DBUSER_INFO'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, DBUserInfo entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         String username = entity.getUsername();
         if (username != null) {
             stmt.bindString(2, username);
         }
-
+ 
         Integer syncTime = entity.getSyncTime();
         if (syncTime != null) {
             stmt.bindLong(3, syncTime);
         }
-
+ 
         Integer uid = entity.getUid();
         if (uid != null) {
             stmt.bindLong(4, uid);
         }
-
+ 
         String icon = entity.getIcon();
         if (icon != null) {
             stmt.bindString(5, icon);
         }
-
+ 
         Integer replyNum = entity.getReplyNum();
         if (replyNum != null) {
             stmt.bindLong(6, replyNum);
         }
-
+ 
         Integer postNum = entity.getPostNum();
         if (postNum != null) {
             stmt.bindLong(7, postNum);
         }
-
+ 
         String groups = entity.getGroups();
         if (groups != null) {
             stmt.bindString(8, groups);
         }
-
+ 
         Integer sex = entity.getSex();
         if (sex != null) {
             stmt.bindLong(9, sex);
         }
-
+ 
         Integer favoriteNum = entity.getFavoriteNum();
         if (favoriteNum != null) {
             stmt.bindLong(10, favoriteNum);
         }
-
+ 
         Integer level = entity.getLevel();
         if (level != null) {
             stmt.bindLong(11, level);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public DBUserInfo readEntity(Cursor cursor, int offset) {
         DBUserInfo entity = new DBUserInfo( //
@@ -165,9 +157,7 @@ public class DBUserInfoDao extends AbstractDao<DBUserInfo, Long> {
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DBUserInfo entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -183,18 +173,14 @@ public class DBUserInfoDao extends AbstractDao<DBUserInfo, Long> {
         entity.setLevel(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DBUserInfo entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(DBUserInfo entity) {
         if (entity != null) {
@@ -207,9 +193,9 @@ public class DBUserInfoDao extends AbstractDao<DBUserInfo, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

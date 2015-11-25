@@ -33,6 +33,7 @@ public class DBGroupThreadDao extends AbstractDao<DBGroupThread, Long> {
         public final static Property ServerId = new Property(8, Long.class, "serverId", false, "SERVER_ID");
         public final static Property UserId = new Property(9, Long.class, "userId", false, "USER_ID");
         public final static Property CoverId = new Property(10, Long.class, "coverId", false, "COVER_ID");
+        public final static Property GroupId = new Property(11, Long.class, "groupId", false, "GROUP_ID");
     }
 
     ;
@@ -50,7 +51,7 @@ public class DBGroupThreadDao extends AbstractDao<DBGroupThread, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'DBGROUP_THREAD' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'LIGHTS' INTEGER," + // 1: lights
@@ -62,91 +63,89 @@ public class DBGroupThreadDao extends AbstractDao<DBGroupThread, Long> {
                 "'TID' INTEGER," + // 7: tid
                 "'SERVER_ID' INTEGER," + // 8: serverId
                 "'USER_ID' INTEGER," + // 9: userId
-                "'COVER_ID' INTEGER);"); // 10: coverId
+                "'COVER_ID' INTEGER," + // 10: coverId
+                "'GROUP_ID' INTEGER);"); // 11: groupId
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'DBGROUP_THREAD'";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, DBGroupThread entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
-
+ 
         Integer lights = entity.getLights();
         if (lights != null) {
             stmt.bindLong(2, lights);
         }
-
+ 
         String username = entity.getUsername();
         if (username != null) {
             stmt.bindString(3, username);
         }
-
+ 
         Long createAtUnixTime = entity.getCreateAtUnixTime();
         if (createAtUnixTime != null) {
             stmt.bindLong(4, createAtUnixTime);
         }
-
+ 
         String title = entity.getTitle();
         if (title != null) {
             stmt.bindString(5, title);
         }
-
+ 
         String note = entity.getNote();
         if (note != null) {
             stmt.bindString(6, note);
         }
-
+ 
         Integer replies = entity.getReplies();
         if (replies != null) {
             stmt.bindLong(7, replies);
         }
-
+ 
         Integer tid = entity.getTid();
         if (tid != null) {
             stmt.bindLong(8, tid);
         }
-
+ 
         Long serverId = entity.getServerId();
         if (serverId != null) {
             stmt.bindLong(9, serverId);
         }
-
+ 
         Long userId = entity.getUserId();
         if (userId != null) {
             stmt.bindLong(10, userId);
         }
-
+ 
         Long coverId = entity.getCoverId();
         if (coverId != null) {
             stmt.bindLong(11, coverId);
         }
+
+        Long groupId = entity.getGroupId();
+        if (groupId != null) {
+            stmt.bindLong(12, groupId);
+        }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public DBGroupThread readEntity(Cursor cursor, int offset) {
         DBGroupThread entity = new DBGroupThread( //
@@ -160,14 +159,13 @@ public class DBGroupThreadDao extends AbstractDao<DBGroupThread, Long> {
                 cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // tid
                 cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8), // serverId
                 cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9), // userId
-                cursor.isNull(offset + 10) ? null : cursor.getLong(offset + 10) // coverId
+                cursor.isNull(offset + 10) ? null : cursor.getLong(offset + 10), // coverId
+                cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11) // groupId
         );
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, DBGroupThread entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -181,20 +179,17 @@ public class DBGroupThreadDao extends AbstractDao<DBGroupThread, Long> {
         entity.setServerId(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
         entity.setUserId(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
         entity.setCoverId(cursor.isNull(offset + 10) ? null : cursor.getLong(offset + 10));
+        entity.setGroupId(cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(DBGroupThread entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Long getKey(DBGroupThread entity) {
         if (entity != null) {
@@ -207,9 +202,9 @@ public class DBGroupThreadDao extends AbstractDao<DBGroupThread, Long> {
     /**
      * @inheritdoc
      */
-    @Override
+    @Override    
     protected boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

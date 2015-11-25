@@ -1,52 +1,41 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 
 public class ThreadsData {
 
-    private static final String FIELD_LAST_ID = "lastId";
-    private static final String FIELD_INFO = "info";
-    private static final String FIELD_GROUP_THREADS = "groupThreads";
 
-
-    @SerializedName(FIELD_LAST_ID)
-    private String mLastId;
-    @SerializedName(FIELD_INFO)
-    private Info mInfo;
-    @SerializedName(FIELD_GROUP_THREADS)
-    private List<GroupThread> mGroupThreads;
-
-
-    public ThreadsData() {
-
+    public String getLastId() {
+        return lastId;
     }
 
     public void setLastId(String lastId) {
-        mLastId = lastId;
-    }
-
-    public String getLastId() {
-        return mLastId;
-    }
-
-    public void setInfo(Info info) {
-        mInfo = info;
+        this.lastId = lastId;
     }
 
     public Info getInfo() {
-        return mInfo;
+        return info;
     }
 
-    public void setGroupThreads(List<GroupThread> groupThreads) {
-        mGroupThreads = groupThreads;
+    public void setInfo(Info info) {
+        this.info = info;
     }
 
     public List<GroupThread> getGroupThreads() {
-        return mGroupThreads;
+        return groupThreads;
     }
+
+    public void setGroupThreads(List<GroupThread> groupThreads) {
+        this.groupThreads = groupThreads;
+    }
+
+    private String lastId;
+    private Info info;
+    private List<GroupThread> groupThreads;
+
+
+
 
 
 }

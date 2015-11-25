@@ -12,6 +12,8 @@ import com.gzsll.hupu.support.db.DBUserInfo;
 import com.gzsll.hupu.support.db.DBUserInfoDao;
 import com.gzsll.hupu.support.storage.bean.GroupThread;
 import com.gzsll.hupu.support.storage.bean.Groups;
+import com.gzsll.hupu.support.storage.bean.Info;
+import com.gzsll.hupu.support.storage.bean.MiniReplyList;
 import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
 import com.gzsll.hupu.support.storage.bean.ThreadInfo;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
@@ -30,13 +32,13 @@ public class DbConverterHelper {
     @Inject
     DBUserInfoDao mUserInfoDao;
 
-    public DBGroupThread converGroupThread(GroupThread thread) {
+    public DBGroupThread convertGroupThread(GroupThread thread) {
         DBGroupThread dbGroupThread = new DBGroupThread();
         dbGroupThread.setCreateAtUnixTime((long) thread.getCreateAtUnixtime());
         dbGroupThread.setLights(thread.getLights());
         dbGroupThread.setNote(thread.getNote());
         dbGroupThread.setReplies(thread.getReplies());
-        dbGroupThread.setServerId(thread.getServerId());
+        dbGroupThread.setServerId(thread.getId());
         dbGroupThread.setTid(thread.getTid());
         dbGroupThread.setTitle(thread.getTitle());
         dbGroupThread.setUsername(thread.getUsername());
@@ -45,31 +47,44 @@ public class DbConverterHelper {
         return dbGroupThread;
     }
 
-    public List<GroupThread> coverDbGroupThreads(List<DBGroupThread> threads) {
+    public List<GroupThread> covertDbGroupThreads(List<DBGroupThread> threads) {
         List<GroupThread> groupThreads = new ArrayList<>();
         for (DBGroupThread thread : threads) {
-            groupThreads.add(converDbGroupThread(thread));
+            groupThreads.add(convertDbGroupThread(thread));
         }
         return groupThreads;
     }
 
-    public GroupThread converDbGroupThread(DBGroupThread thread) {
+    public GroupThread convertDbGroupThread(DBGroupThread thread) {
         GroupThread groupThread = new GroupThread();
         groupThread.setLights(thread.getLights());
         groupThread.setNote(thread.getNote());
         groupThread.setReplies(thread.getReplies());
-        groupThread.setServerId(thread.getServerId());
+        groupThread.setId(thread.getServerId());
         groupThread.setTid(thread.getTid());
         groupThread.setTitle(thread.getTitle());
         groupThread.setUsername(thread.getUsername());
-        List<DBUserInfo> userInfos = mUserInfoDao.queryBuilder().where(DBUserInfoDao.Properties.Uid.eq(thread.getUserId())).list();
-        if (!userInfos.isEmpty()) {
-            groupThread.setUserInfo(converDbUserInfo(userInfos.get(0)));
-        }
+        groupThread.setUserInfo(getUserInfo(thread.getUserId()));
         return groupThread;
     }
 
-    public DBUserInfo converUserInfo(UserInfo userInfo) {
+    public UserInfo getUserInfo(long uid) {
+        List<DBUserInfo> userInfos = mUserInfoDao.queryBuilder().where(DBUserInfoDao.Properties.Uid.eq(uid)).list();
+        if (!userInfos.isEmpty()) {
+            return convertDbUserInfo(userInfos.get(0));
+        }
+        return null;
+    }
+
+    public Info convertDbGroupsToInfo(DBGroups dbGroups) {
+        Info groups = new Info();
+        groups.setId(dbGroups.getServerId());
+        groups.setGroupName(dbGroups.getGroupName());
+        groups.setGroupCover(dbGroups.getGroupCover());
+        return groups;
+    }
+
+    public DBUserInfo convertUserInfo(UserInfo userInfo) {
         DBUserInfo dbUserInfo = new DBUserInfo();
         dbUserInfo.setUsername(userInfo.getUsername());
         dbUserInfo.setFavoriteNum(userInfo.getFavoriteNum());
@@ -84,7 +99,7 @@ public class DbConverterHelper {
         return dbUserInfo;
     }
 
-    public UserInfo converDbUserInfo(DBUserInfo userInfo) {
+    public UserInfo convertDbUserInfo(DBUserInfo userInfo) {
         UserInfo dbUserInfo = new UserInfo();
         dbUserInfo.setUsername(userInfo.getUsername());
         dbUserInfo.setFavoriteNum(userInfo.getFavoriteNum());
@@ -102,8 +117,9 @@ public class DbConverterHelper {
     @Inject
     DBGroupsDao mGroupsDao;
 
-    public DBThreadInfo converThreadInfo(ThreadInfo info) {
+    public DBThreadInfo convertThreadInfo(ThreadInfo info) {
         DBThreadInfo threadInfo = new DBThreadInfo();
+        threadInfo.setServerId(info.getId());
         threadInfo.setUid(info.getUid());
         threadInfo.setAttention(info.getAttention());
         threadInfo.setContent(info.getContent());
@@ -119,10 +135,11 @@ public class DbConverterHelper {
         threadInfo.setTitle(info.getTitle());
         threadInfo.setZan(info.getZan());
         threadInfo.setNote(info.getNote());
+        threadInfo.setReplies(info.getReplies());
         updateUserInfo(info.getUserInfo());
         threadInfo.setUserId((long) info.getUid());
         List<DBGroups> groupsList = mGroupsDao.queryBuilder().where(DBGroupsDao.Properties.ServerId.eq(info.getGroupId())).list();
-        DBGroups groups = converGroups(info.getGroups());
+        DBGroups groups = convertGroups(info.getGroups());
         if (!groupsList.isEmpty()) {
             groups.setId(groupsList.get(0).getId());
         }
@@ -132,8 +149,9 @@ public class DbConverterHelper {
     }
 
 
-    public ThreadInfo converDbThreadInfo(DBThreadInfo info) {
+    public ThreadInfo convertDbThreadInfo(DBThreadInfo info) {
         ThreadInfo threadInfo = new ThreadInfo();
+        threadInfo.setId(info.getServerId());
         threadInfo.setUid(info.getUid());
         threadInfo.setAttention(info.getAttention());
         threadInfo.setContent(info.getContent());
@@ -149,37 +167,40 @@ public class DbConverterHelper {
         threadInfo.setTitle(info.getTitle());
         threadInfo.setZan(info.getZan());
         threadInfo.setNote(info.getNote());
+        threadInfo.setReplies(info.getReplies());
         List<DBGroups> groupsList = mGroupsDao.queryBuilder().where(DBGroupsDao.Properties.ServerId.eq(info.getGroupId())).list();
         if (!groupsList.isEmpty()) {
-            threadInfo.setGroups(converDbGroups(groupsList.get(0)));
+            threadInfo.setGroups(convertDbGroups(groupsList.get(0)));
         }
         List<DBUserInfo> userInfos = mUserInfoDao.queryBuilder().where(DBUserInfoDao.Properties.Uid.eq(info.getUserId())).list();
         if (!userInfos.isEmpty()) {
-            threadInfo.setUserInfo(converDbUserInfo(userInfos.get(0)));
+            threadInfo.setUserInfo(convertDbUserInfo(userInfos.get(0)));
         }
         return threadInfo;
     }
 
     private void updateUserInfo(UserInfo info) {
         List<DBUserInfo> userInfos = mUserInfoDao.queryBuilder().where(DBUserInfoDao.Properties.Uid.eq(info.getUid())).list();
-        DBUserInfo userInfo = converUserInfo(info);
+        DBUserInfo userInfo = convertUserInfo(info);
         if (!userInfos.isEmpty()) {
             userInfo.setId(userInfos.get(0).getId());
         }
         mUserInfoDao.insertOrReplace(userInfo);
     }
 
-    public DBGroups converGroups(Groups groups) {
+    public DBGroups convertGroups(Groups groups) {
         DBGroups dbGroups = new DBGroups();
         dbGroups.setGroupName(groups.getGroupName());
-        dbGroups.setServerId(groups.getServerId());
+        dbGroups.setServerId(groups.getId());
+        dbGroups.setGroupCover(groups.getGroupCover());
         return dbGroups;
     }
 
-    public Groups converDbGroups(DBGroups dbGroups) {
+    public Groups convertDbGroups(DBGroups dbGroups) {
         Groups groups = new Groups();
-        groups.setServerId(dbGroups.getServerId());
+        groups.setId(dbGroups.getServerId());
         groups.setGroupName(dbGroups.getGroupName());
+        groups.setGroupCover(dbGroups.getGroupCover());
         return groups;
     }
 
@@ -188,19 +209,19 @@ public class DbConverterHelper {
     @Inject
     DBThreadReplyItemDao mReplyDao;
 
-    public DBThreadReplyItem converThreadReplyItem(ThreadReplyItem item, boolean isHot) {
+    public DBThreadReplyItem convertThreadReplyItem(ThreadReplyItem item, boolean isHot) {
         DBThreadReplyItem replyItem = new DBThreadReplyItem();
         replyItem.setServerId(item.getId());
         replyItem.setContent(item.getContent());
         replyItem.setCreateAt(item.getCreate_at());
         replyItem.setFloor(item.getFloor());
-        replyItem.setGroupThreadId((long) item.getGroupThreadId());
+        replyItem.setGroupThreadId(item.getGroupThreadId());
         replyItem.setIsHot(isHot);
         replyItem.setLights(item.getLights());
-        replyItem.setPid((long) item.getPid());
+        replyItem.setPid(item.getPid());
         if (!item.getMiniReplyList().getLists().isEmpty()) {
             for (MiniReplyListItem miniReplyListItem : item.getMiniReplyList().getLists()) {
-                DBMiniReplyListItem dbMiniReplyListItem = converMiniReplyListItem(miniReplyListItem, item.getId());
+                DBMiniReplyListItem dbMiniReplyListItem = convertMiniReplyListItem(miniReplyListItem, item.getId());
                 List<DBMiniReplyListItem> dbMiniReplyListItems = mMiniReplyDao.queryBuilder().where(DBMiniReplyListItemDao.Properties.Id.eq(miniReplyListItem.getId())).list();
                 if (!dbMiniReplyListItems.isEmpty()) {
                     dbMiniReplyListItem.setId(dbMiniReplyListItems.get(0).getId());
@@ -211,19 +232,65 @@ public class DbConverterHelper {
         updateUserInfo(item.getUserInfo());
         replyItem.setUserId((long) item.getUserInfo().getUid());
         return replyItem;
+    }
+
+    public ThreadReplyItem convertDbThreadReplyItem(DBThreadReplyItem item) {
+        ThreadReplyItem replyItem = new ThreadReplyItem();
+        replyItem.setId(item.getServerId());
+        replyItem.setContent(item.getContent());
+        replyItem.setCreate_at(item.getCreateAt());
+        replyItem.setFloor(item.getFloor());
+        replyItem.setGroupThreadId(item.getGroupThreadId());
+        replyItem.setLights(item.getLights());
+        replyItem.setPid(item.getPid());
+        replyItem.setUserInfo(getUserInfo(item.getUserId()));
+        List<DBMiniReplyListItem> miniReplyListItems = mMiniReplyDao.queryBuilder().where(DBMiniReplyListItemDao.Properties.ParentReplyId.eq(item.getServerId())).list();
+        if (!miniReplyListItems.isEmpty()) {
+            replyItem.setMiniReplyList(convertDbMiniReplies(miniReplyListItems));
+        }
+        return replyItem;
 
     }
 
+    public List<ThreadReplyItem> convertDbThreadReplyItems(List<DBThreadReplyItem> items) {
+        List<ThreadReplyItem> replyItems = new ArrayList<>();
+        for (DBThreadReplyItem item : items) {
+            replyItems.add(convertDbThreadReplyItem(item));
+        }
+        return replyItems;
+    }
 
-    public DBMiniReplyListItem converMiniReplyListItem(MiniReplyListItem item, long parentId) {
+    public DBMiniReplyListItem convertMiniReplyListItem(MiniReplyListItem item, long parentId) {
         DBMiniReplyListItem replyListItem = new DBMiniReplyListItem();
-        replyListItem.setPid((long) item.getPid());
-        replyListItem.setGroupThreadId((long) item.getGroupThreadId());
+        replyListItem.setPid(item.getPid());
+        replyListItem.setGroupThreadId(item.getGroupThreadId());
         replyListItem.setContent(item.getContent());
         replyListItem.setFormatTime(item.getFormatTime());
         replyListItem.setServerId(item.getId());
         replyListItem.setUserId((long) item.getUserInfo().getUid());
         replyListItem.setParentReplyId(parentId);
         return replyListItem;
+    }
+
+
+    public MiniReplyListItem convertDbMiniReplyListItem(DBMiniReplyListItem item) {
+        MiniReplyListItem replyListItem = new MiniReplyListItem();
+        replyListItem.setPid(item.getPid());
+        replyListItem.setGroupThreadId(item.getGroupThreadId());
+        replyListItem.setContent(item.getContent());
+        replyListItem.setFormatTime(item.getFormatTime());
+        replyListItem.setId(item.getServerId());
+        replyListItem.setUserInfo(getUserInfo(item.getUserId()));
+        return replyListItem;
+    }
+
+    public MiniReplyList convertDbMiniReplies(List<DBMiniReplyListItem> miniReplyListItems) {
+        MiniReplyList replyList = new MiniReplyList();
+        List<MiniReplyListItem> miniReplyListItemList = new ArrayList<>();
+        for (DBMiniReplyListItem item : miniReplyListItems) {
+            miniReplyListItemList.add(convertDbMiniReplyListItem(item));
+        }
+        replyList.setLists(miniReplyListItemList);
+        return replyList;
     }
 }

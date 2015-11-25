@@ -115,7 +115,7 @@ public class BoardDao extends AbstractDao<Board, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     /** @inheritdoc */
     @Override
@@ -132,7 +132,7 @@ public class BoardDao extends AbstractDao<Board, Long> {
         );
         return entity;
     }
-
+     
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Board entity, int offset) {
@@ -144,15 +144,15 @@ public class BoardDao extends AbstractDao<Board, Long> {
         entity.setBoardIcon(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setGroupId(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
         entity.setBoardIndex(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
-    }
-
+     }
+    
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(Board entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     /** @inheritdoc */
     @Override
     public Long getKey(Board entity) {
@@ -163,9 +163,7 @@ public class BoardDao extends AbstractDao<Board, Long> {
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override    
     protected boolean isEntityUpdateable() {
         return true;
