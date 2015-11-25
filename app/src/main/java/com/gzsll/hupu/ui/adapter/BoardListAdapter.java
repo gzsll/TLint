@@ -7,13 +7,12 @@ import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.ui.activity.BaseActivity;
-import com.gzsll.hupu.ui.activity.LoginActivity_;
-import com.gzsll.hupu.ui.activity.ThreadActivity_;
 import com.gzsll.hupu.ui.view.BoardListItem;
 import com.gzsll.hupu.ui.view.BoardListItem_;
 import com.gzsll.hupu.ui.view.CategoryHeaderView;
 import com.gzsll.hupu.ui.view.CategoryHeaderView_;
 import com.gzsll.hupu.widget.SectionedBaseAdapter;
+import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,8 @@ public class BoardListAdapter extends SectionedBaseAdapter {
 
     @Inject
     UserStorage mUserStorage;
+    @Inject
+    Bus mBus;
 
     private List<Boards> boardsList = new ArrayList<>();
     private BaseActivity mActivity;
@@ -71,20 +72,13 @@ public class BoardListAdapter extends SectionedBaseAdapter {
         BoardListItem view;
         if (convertView == null) {
             view = BoardListItem_.build(mActivity);
+            view.mBus = mBus;
+            view.mActivity = mActivity;
+            view.mUserStorage = mUserStorage;
         } else {
             view = (BoardListItem) convertView;
         }
-        final Board board = getItem(section, position);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mUserStorage.isLogin()) {
-                    ThreadActivity_.intent(mActivity).mGroupId(board.getBoardId()).start();
-                } else {
-                    LoginActivity_.intent(mActivity).start();
-                }
-            }
-        });
+        Board board = getItem(section, position);
         view.init(board);
         return view;
     }

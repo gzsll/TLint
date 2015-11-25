@@ -147,7 +147,7 @@ public class OffLineService extends IntentAnnotationService {
                     return false;
                 }
                 int count = 5; //加载100篇帖子  TODO 加上设置
-                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getBoardId()), "0", count, "", null);
+                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getGroupId()), "0", count, "", null);
                 if (result.getStatus() == 200) {
                     List<GroupThread> threads = result.getData().getGroupThreads();
                     offlineThreadsCount += threads.size();

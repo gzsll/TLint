@@ -1,14 +1,12 @@
 package com.gzsll.hupu.ui.fragment;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.otto.StartOfflineEvent;
 import com.gzsll.hupu.presenter.BoardListPresenter;
-import com.gzsll.hupu.service.OffLineService;
-import com.gzsll.hupu.support.db.Board;
+import com.gzsll.hupu.presenter.DelGroupAttentionEvent;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.ui.activity.MainActivity;
@@ -24,7 +22,6 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,16 +40,15 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     @Inject
     BoardListAdapter mAdapter;
     @Inject
-    BoardListPresenter boardListPresenter;
+    BoardListPresenter mBoardListPresenter;
     @Inject
-    Bus bus;
+    Bus mBus;
     @Inject
     UserStorage mUserStorage;
 
     @ViewById
     PinnedHeaderListView listView;
 
-    private ArrayList<Board> boardGroups;
 
 
     @Override
@@ -62,13 +58,13 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
 
     @AfterViews
     void init() {
-        bus.register(this);
-        boardListPresenter.setView(this);
-        boardListPresenter.initialize();
+        mBus.register(this);
+        mBoardListPresenter.setView(this);
+        mBoardListPresenter.initialize();
 
         mAdapter.setActivity((MainActivity) getActivity());
         listView.setAdapter(mAdapter);
-        boardListPresenter.onBoardListReceive(id);
+        mBoardListPresenter.onBoardListReceive(id);
 
     }
 
@@ -78,10 +74,6 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
         mAdapter.bindData(boardGroups);
     }
 
-    @Override
-    public void renderOfflineBoard(List<Board> boardGroups) {
-        this.boardGroups = (ArrayList) boardGroups;
-    }
 
     @Override
     public void showLoginView() {
@@ -107,15 +99,20 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bus.unregister(this);
+        mBus.unregister(this);
     }
 
     @Subscribe
     public void onStartOfflineEvent(StartOfflineEvent event) {
-        logger.debug("onStartOfflineEvent:" + boardGroups);
-        Intent intent = new Intent(getActivity(), OffLineService.class);
-        intent.putExtra("boards", boardGroups);
-        intent.setAction(OffLineService.START_DOWNLOAD);
-        getActivity().startService(intent);
+        if (event.getBoard() != null) {
+            mBoardListPresenter.offlineGroup(event.getBoard());
+        } else {
+            mBoardListPresenter.offlineGroups();
+        }
+    }
+
+    @Subscribe
+    public void onDelGroupAttentionEvent(DelGroupAttentionEvent event) {
+        mBoardListPresenter.delGroupAttention(event.getGroupId());
     }
 }

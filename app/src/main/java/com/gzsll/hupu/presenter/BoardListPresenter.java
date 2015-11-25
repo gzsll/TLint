@@ -1,9 +1,14 @@
 package com.gzsll.hupu.presenter;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.otto.ReceiveNoticeEvent;
+import com.gzsll.hupu.service.OffLineService;
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.db.BoardDao;
+import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.BoardList;
 import com.gzsll.hupu.support.storage.bean.BoardListResult;
 import com.gzsll.hupu.support.storage.bean.Boards;
@@ -42,19 +47,23 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     BoardDao mBoardDao;
     @Inject
     Bus mBus;
+    @Inject
+    Context mContext;
 
     Logger logger = Logger.getLogger(BoardListPresenter.class.getSimpleName());
 
+    private ArrayList<Board> boards;
 
     /**
      * 通过板块id或者子版块
      *
-     * @param groupId
+     * @param boardId 板块id
      */
-    public void onBoardListReceive(final int groupId) {
+    public void onBoardListReceive(final int boardId) {
         view.showLoading();
-        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.GroupId.eq(groupId)).orderAsc(BoardDao.Properties.CategoryId).orderAsc(BoardDao.Properties.BoardIndex).list();
-        if (!boards.isEmpty() && groupId != 0) {
+        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId)).orderAsc(BoardDao.Properties.CategoryId).orderAsc(BoardDao.Properties.BoardIndex).list();
+        if (!boards.isEmpty() && boardId != 0) {
+            this.boards = (ArrayList) boards;
             sortBoard(boards);
         } else {
             mThreadApi.getBoardList(new Callback<BoardListResult>() {
@@ -63,9 +72,9 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                     if (boardListResult.getStatus() == 200) {
                         for (int i = 0; i < boardListResult.getData().getBoardLists().size(); i++) {
                             BoardList boardList = boardListResult.getData().getBoardLists().get(i);
-                            if (boardList.getId() == groupId) {
+                            if (boardList.getId() == boardId) {
                                 List<Boards> boardsList = new ArrayList<Boards>();
-                                List<Board> offlineBoards = new ArrayList<>();
+                                ArrayList<Board> offlineBoards = new ArrayList<>();
                                 for (int j = 0; j < boardList.getGroupLists().size(); j++) {
                                     GroupList groupList = boardList.getGroupLists().get(j);
                                     Boards boards = new Boards();
@@ -73,14 +82,14 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                                     List<Board> boardArrayList = new ArrayList<Board>();
                                     for (int k = 0; k < groupList.getCategoryLists().size(); k++) {
                                         CategoryList categoryList = groupList.getCategoryLists().get(k);
-                                        Board board = saveToBoard(categoryList, k, groupId);
+                                        Board board = saveToBoard(categoryList, k, boardId);
                                         boardArrayList.add(board);
                                     }
                                     offlineBoards.addAll(boardArrayList);
                                     boards.setBoards(boardArrayList);
                                     boardsList.add(boards);
                                 }
-                                view.renderOfflineBoard(offlineBoards);
+                                BoardListPresenter.this.boards = offlineBoards;
                                 view.renderBoardList(boardsList);
                                 view.hideLoading();
                             }
@@ -120,7 +129,6 @@ public class BoardListPresenter extends Presenter<BoardListView> {
             boards.setName(key);
             boardsList.add(boards);
         }
-        view.renderOfflineBoard(boardList);
         view.renderBoardList(boardsList);
         view.hideLoading();
 
@@ -155,17 +163,51 @@ public class BoardListPresenter extends Presenter<BoardListView> {
         return map;
     }
 
-    private Board saveToBoard(CategoryList categoryList, int index, int groupId) {
+    private Board saveToBoard(CategoryList categoryList, int index, long boardId) {
         Board board = new Board();
-        board.setBoardId(categoryList.getId());
+        board.setBoardId(boardId);
         board.setBoardIcon(categoryList.getGroupAvator());
         board.setBoardName(categoryList.getGroupName());
         board.setCategoryId(Long.valueOf(categoryList.getCategoryId()));
         board.setCategoryName(categoryList.getCategoryName());
-        board.setGroupId(Long.valueOf(groupId));
+        board.setGroupId(categoryList.getId());
         board.setBoardIndex(index);
         mBoardDao.insertOrReplace(board);
         return board;
+    }
+
+
+    public void delGroupAttention(long groupId) {
+        mThreadApi.delGroupAttention(String.valueOf(groupId), new Callback<BaseResult>() {
+            @Override
+            public void success(BaseResult baseResult, Response response) {
+                view.showToast(baseResult.getMsg());
+                if (baseResult.getStatus() == 200) {
+
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    public void offlineGroup(Board board) {
+        Intent intent = new Intent(mContext, OffLineService.class);
+        ArrayList<Board> boards = new ArrayList<>();
+        boards.add(board);
+        intent.putExtra("boards", boards);
+        intent.setAction(OffLineService.START_DOWNLOAD);
+        mContext.startService(intent);
+    }
+
+    public void offlineGroups() {
+        Intent intent = new Intent(mContext, OffLineService.class);
+        intent.putExtra("boards", boards);
+        intent.setAction(OffLineService.START_DOWNLOAD);
+        mContext.startService(intent);
     }
 
 

@@ -81,4 +81,5 @@ dependencies {
     compile "com.facebook.fresco:imagepipeline-okhttp:0.8.1"
 
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile "com.daimajia.swipelayout:library:1.2.0@aar"
 }
