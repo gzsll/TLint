@@ -1,43 +1,23 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
-
 public class ThreadsResult {
 
-    private static final String FIELD_MSG = "msg";
-    private static final String FIELD_STATUS = "status";
-    private static final String FIELD_DATA = "data";
 
-
-    @SerializedName(FIELD_MSG)
-    private String mMsg;
-    @SerializedName(FIELD_STATUS)
-    private int mStatus;
-    @SerializedName(FIELD_DATA)
-    private ThreadsData data;
-
-
-    public ThreadsResult() {
-
+    public String getMsg() {
+        return msg;
     }
 
     public void setMsg(String msg) {
-        mMsg = msg;
-    }
-
-    public String getMsg() {
-        return mMsg;
-    }
-
-    public void setStatus(int status) {
-        mStatus = status;
+        this.msg = msg;
     }
 
     public int getStatus() {
-        return mStatus;
+        return status;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public ThreadsData getData() {
         return data;
@@ -47,13 +27,10 @@ public class ThreadsResult {
         this.data = data;
     }
 
-    private Notice notice;
+    private String msg;
+    private int status;
+    private ThreadsData data;
 
-    public void setNotice(Notice notice) {
-        this.notice = notice;
-    }
 
-    public Notice getNotice() {
-        return notice;
-    }
+
 }

@@ -1,26 +1,19 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 
 public class BoardListData {
 
-    private static final String FIELD_BOARD_LIST = "boardList";
+
+    private List<BoardList> boardList;
 
 
-    @SerializedName(FIELD_BOARD_LIST)
-    private List<BoardList> mBoardLists;
-
-
-    public void setBoardLists(List<BoardList> boardLists) {
-        mBoardLists = boardLists;
+    public List<BoardList> getBoardList() {
+        return boardList;
     }
 
-    public List<BoardList> getBoardLists() {
-        return mBoardLists;
+    public void setBoardList(List<BoardList> boardList) {
+        this.boardList = boardList;
     }
-
-
 }

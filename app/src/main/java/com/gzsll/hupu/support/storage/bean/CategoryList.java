@@ -1,206 +1,152 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
-
 public class CategoryList {
 
-    private static final String FIELD_UID = "uid";
-    private static final String FIELD_ORDER_BY = "orderBy";
-    private static final String FIELD_CATEGORY_ID = "categoryId";
-    private static final String FIELD_GROUP_AVATOR = "groupAvator";
-    private static final String FIELD_COLOR = "color";
-    private static final String FIELD_COLOR_STYLE = "colorStyle";
-    private static final String FIELD_CATEGORY_NAME = "categoryName";
-    private static final String FIELD_GROUP_ARTICLE = "groupArticle";
-    private static final String FIELD_GROUP_BOARD_ID = "groupBoardId";
-    private static final String FIELD_GROUP_NAME = "groupName";
-    private static final String FIELD_ID = "id";
-    private static final String FIELD_PID = "pid";
-    private static final String FIELD_GROUP_NOTE = "groupNote";
-    private static final String FIELD_GROUP_MEMBER = "groupMember";
-    private static final String FIELD_CREATE_AT = "createAt";
-    private static final String FIELD_GROUP_COVER = "groupCover";
 
-
-    @SerializedName(FIELD_UID)
-    private int mUid;
-    @SerializedName(FIELD_ORDER_BY)
-    private int mOrderBy;
-    @SerializedName(FIELD_CATEGORY_ID)
-    private int mCategoryId;
-    @SerializedName(FIELD_GROUP_AVATOR)
-    private String mGroupAvator;
-    @SerializedName(FIELD_COLOR)
-    private String mColor;
-    @SerializedName(FIELD_COLOR_STYLE)
-    private int mColorStyle;
-    @SerializedName(FIELD_CATEGORY_NAME)
-    private String mCategoryName;
-    @SerializedName(FIELD_GROUP_ARTICLE)
-    private int mGroupArticle;
-    @SerializedName(FIELD_GROUP_BOARD_ID)
-    private int mGroupBoardId;
-    @SerializedName(FIELD_GROUP_NAME)
-    private String mGroupName;
-    @SerializedName(FIELD_ID)
-    private long mId;
-    @SerializedName(FIELD_PID)
-    private int mPid;
-    @SerializedName(FIELD_GROUP_NOTE)
-    private String mGroupNote;
-    @SerializedName(FIELD_GROUP_MEMBER)
-    private int mGroupMember;
-    @SerializedName(FIELD_CREATE_AT)
-    private int mCreateAt;
-    @SerializedName(FIELD_GROUP_COVER)
-    private String mGroupCover;
-
-
-    public CategoryList() {
-
+    public int getUid() {
+        return uid;
     }
 
     public void setUid(int uid) {
-        mUid = uid;
-    }
-
-    public int getUid() {
-        return mUid;
-    }
-
-    public void setOrderBy(int orderBy) {
-        mOrderBy = orderBy;
+        this.uid = uid;
     }
 
     public int getOrderBy() {
-        return mOrderBy;
+        return orderBy;
     }
 
-    public void setCategoryId(int categoryId) {
-        mCategoryId = categoryId;
+    public void setOrderBy(int orderBy) {
+        this.orderBy = orderBy;
     }
 
     public int getCategoryId() {
-        return mCategoryId;
+        return categoryId;
     }
 
-    public void setGroupAvator(String groupAvator) {
-        mGroupAvator = groupAvator;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getGroupAvator() {
-        return mGroupAvator;
+        return groupAvator;
     }
 
-    public void setColor(String color) {
-        mColor = color;
+    public void setGroupAvator(String groupAvator) {
+        this.groupAvator = groupAvator;
     }
 
     public String getColor() {
-        return mColor;
+        return color;
     }
 
-    public void setColorStyle(int colorStyle) {
-        mColorStyle = colorStyle;
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public int getColorStyle() {
-        return mColorStyle;
+        return colorStyle;
     }
 
-    public void setCategoryName(String categoryName) {
-        mCategoryName = categoryName;
+    public void setColorStyle(int colorStyle) {
+        this.colorStyle = colorStyle;
     }
 
     public String getCategoryName() {
-        return mCategoryName;
+        return categoryName;
     }
 
-    public void setGroupArticle(int groupArticle) {
-        mGroupArticle = groupArticle;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public int getGroupArticle() {
-        return mGroupArticle;
+        return groupArticle;
     }
 
-    public void setGroupBoardId(int groupBoardId) {
-        mGroupBoardId = groupBoardId;
+    public void setGroupArticle(int groupArticle) {
+        this.groupArticle = groupArticle;
     }
 
     public int getGroupBoardId() {
-        return mGroupBoardId;
+        return groupBoardId;
     }
 
-    public void setGroupName(String groupName) {
-        mGroupName = groupName;
+    public void setGroupBoardId(int groupBoardId) {
+        this.groupBoardId = groupBoardId;
     }
 
     public String getGroupName() {
-        return mGroupName;
+        return groupName;
     }
 
-    public void setId(long id) {
-        mId = id;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public long getId() {
-        return mId;
+        return id;
     }
 
-    public void setPid(int pid) {
-        mPid = pid;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getPid() {
-        return mPid;
+        return pid;
     }
 
-    public void setGroupNote(String groupNote) {
-        mGroupNote = groupNote;
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 
     public String getGroupNote() {
-        return mGroupNote;
+        return groupNote;
     }
 
-    public void setGroupMember(int groupMember) {
-        mGroupMember = groupMember;
+    public void setGroupNote(String groupNote) {
+        this.groupNote = groupNote;
     }
 
     public int getGroupMember() {
-        return mGroupMember;
+        return groupMember;
     }
 
-    public void setCreateAt(int createAt) {
-        mCreateAt = createAt;
+    public void setGroupMember(int groupMember) {
+        this.groupMember = groupMember;
     }
 
     public int getCreateAt() {
-        return mCreateAt;
+        return createAt;
     }
 
-    public void setGroupCover(String groupCover) {
-        mGroupCover = groupCover;
+    public void setCreateAt(int createAt) {
+        this.createAt = createAt;
     }
 
     public String getGroupCover() {
-        return mGroupCover;
+        return groupCover;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof CategoryList) {
-            return ((CategoryList) obj).getId() == mId;
-        }
-        return false;
+    public void setGroupCover(String groupCover) {
+        this.groupCover = groupCover;
     }
 
-    @Override
-    public int hashCode() {
-        return ((Long) mId).hashCode();
-    }
+    private int uid;
+    private int orderBy;
+    private int categoryId;
+    private String groupAvator;
+    private String color;
+    private int colorStyle;
+    private String categoryName;
+    private int groupArticle;
+    private int groupBoardId;
+    private String groupName;
+    private long id;
+    private int pid;
+    private String groupNote;
+    private int groupMember;
+    private int createAt;
+    private String groupCover;
 
 
 }

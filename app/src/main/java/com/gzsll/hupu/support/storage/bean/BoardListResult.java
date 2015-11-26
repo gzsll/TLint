@@ -1,52 +1,31 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import com.google.gson.annotations.SerializedName;
-
-
 public class BoardListResult {
 
-    private static final String FIELD_MSG = "msg";
-    private static final String FIELD_STATUS = "status";
-    private static final String FIELD_DATA = "data";
 
-
-    @SerializedName(FIELD_MSG)
-    private String mMsg;
-    @SerializedName(FIELD_STATUS)
-    private int mStatus;
-    @SerializedName(FIELD_DATA)
-    private BoardListData mDatum;
-    private Notice notice;
-
-
-    public BoardListResult() {
-
+    public String getMsg() {
+        return msg;
     }
 
     public void setMsg(String msg) {
-        mMsg = msg;
-    }
-
-    public String getMsg() {
-        return mMsg;
-    }
-
-    public void setStatus(int status) {
-        mStatus = status;
+        this.msg = msg;
     }
 
     public int getStatus() {
-        return mStatus;
+        return status;
     }
 
-    public void setData(BoardListData datum) {
-        mDatum = datum;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public BoardListData getData() {
-        return mDatum;
+        return data;
     }
 
+    public void setData(BoardListData data) {
+        this.data = data;
+    }
 
     public Notice getNotice() {
         return notice;
@@ -55,4 +34,12 @@ public class BoardListResult {
     public void setNotice(Notice notice) {
         this.notice = notice;
     }
+
+    private String msg;
+    private int status;
+    private BoardListData data;
+    private Notice notice;
+
+
+
 }
