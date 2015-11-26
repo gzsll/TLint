@@ -57,11 +57,11 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
 
     @Inject
-    ThreadListPresenter threadListPresenter;
+    ThreadListPresenter mThreadListPresenter;
     @Inject
-    ThreadListAdapter adapter;
+    ThreadListAdapter mAdapter;
     @Inject
-    ResourceHelper resourceHelper;
+    ResourceHelper mResourceHelper;
     @Inject
     SettingPrefHelper mSettingPrefHelper;
 
@@ -101,26 +101,26 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter.setActivity(activity);
-        recyclerView.setAdapter(adapter);
+        mAdapter.setActivity(activity);
+        recyclerView.setAdapter(mAdapter);
         refreshLayout.setOnRefreshListener(this);
         appbar.addOnOffsetChangedListener(this);
-        threadListPresenter.onThreadReceive(mGroupId + "", mSettingPrefHelper.getThreadSort(), null);
+        mThreadListPresenter.onThreadReceive(mGroupId + "", mSettingPrefHelper.getThreadSort(), null);
 
     }
 
 
     private void initPresenter() {
-        threadListPresenter.setView(this);
-        threadListPresenter.initialize();
+        mThreadListPresenter.setView(this);
+        mThreadListPresenter.initialize();
     }
 
     private void initFloatingButton() {
-        resourceHelper.setFabBtnColor(activity, floatingPost);
-        resourceHelper.setFabBtnColor(activity, floatingSwitch);
-        resourceHelper.setFabBtnColor(activity, floatingRefresh);
-        resourceHelper.setFabBtnColor(activity, floatingAttention);
-        resourceHelper.setFabMenuColor(activity, floatingMenu);
+        mResourceHelper.setFabBtnColor(activity, floatingPost);
+        mResourceHelper.setFabBtnColor(activity, floatingSwitch);
+        mResourceHelper.setFabBtnColor(activity, floatingRefresh);
+        mResourceHelper.setFabBtnColor(activity, floatingAttention);
+        mResourceHelper.setFabMenuColor(activity, floatingMenu);
         if (mSettingPrefHelper.getThreadSort().equals(Constants.THREAD_TYPE_HOT)) {
             floatingSwitch.setLabelText("按发帖时间排序");
         } else {
@@ -181,7 +181,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Override
     public void renderThreads(List<GroupThread> threads) {
         refreshLayout.setRefreshing(false);
-        adapter.updateItems(threads);
+        mAdapter.updateItems(threads);
     }
 
     @Override
@@ -224,7 +224,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @Click
     void floatingRefresh() {
-        threadListPresenter.onRefresh();
+        mThreadListPresenter.onRefresh();
         floatingMenu.toggle(true);
     }
 
@@ -232,10 +232,10 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Click
     void floatingSwitch() {
         if (floatingSwitch.getLabelText().equals("按回帖时间排序")) {
-            threadListPresenter.onThreadReceive(String.valueOf(mGroupId), Constants.THREAD_TYPE_HOT, null);
+            mThreadListPresenter.onThreadReceive(String.valueOf(mGroupId), Constants.THREAD_TYPE_HOT, null);
             floatingSwitch.setLabelText("按发帖时间排序");
         } else {
-            threadListPresenter.onThreadReceive(String.valueOf(mGroupId), Constants.THREAD_TYPE_NEW, null);
+            mThreadListPresenter.onThreadReceive(String.valueOf(mGroupId), Constants.THREAD_TYPE_NEW, null);
             floatingSwitch.setLabelText("按回帖时间排序");
         }
         floatingMenu.toggleMenuButton(true);
@@ -243,7 +243,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @Click
     void floatingAttention() {
-        threadListPresenter.addAttention();
+        mThreadListPresenter.addAttention();
         floatingMenu.toggle(true);
     }
 
@@ -259,9 +259,14 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Override
     public void onRefresh(SwipyRefreshLayoutDirection direction) {
         if (direction == SwipyRefreshLayoutDirection.TOP) {
-            threadListPresenter.onRefresh();
+            mThreadListPresenter.onRefresh();
         } else {
-            threadListPresenter.onLoadMore();
+            mThreadListPresenter.onLoadMore();
         }
+    }
+
+    @Override
+    public void onReloadClicked() {
+        mThreadListPresenter.onReload();
     }
 }

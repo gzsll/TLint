@@ -197,6 +197,10 @@ public class ContentPresenter extends Presenter<ContentView> {
     }
 
 
+    public void onReload() {
+        loadContent(currentPage);
+    }
+
     public void onRefresh() {
         loadContent(currentPage);
     }

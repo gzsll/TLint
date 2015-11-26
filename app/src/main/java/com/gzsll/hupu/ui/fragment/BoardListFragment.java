@@ -50,7 +50,6 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     PinnedHeaderListView listView;
 
 
-
     @Override
     public View onCreateContentView(LayoutInflater inflater) {
         return inflater.inflate(R.layout.fragment_board, null);
@@ -68,6 +67,11 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
 
     }
 
+
+    @Override
+    public void onError() {
+        showError(true);
+    }
 
     @Override
     public void renderBoardList(List<Boards> boardGroups) {
@@ -114,5 +118,10 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     @Subscribe
     public void onDelGroupAttentionEvent(DelGroupAttentionEvent event) {
         mBoardListPresenter.delGroupAttention(event.getGroupId());
+    }
+
+    @Override
+    public void onReloadClicked() {
+        mBoardListPresenter.onReload();
     }
 }

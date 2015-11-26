@@ -35,7 +35,9 @@ public class MessageReplyPresenter extends Presenter<MessageReplyView> {
         loadMessageList(mLastId, false);
     }
 
-
+    public void onReload() {
+        loadMessageList(mLastId, false);
+    }
     @Override
     public void initialize() {
         view.showLoading();

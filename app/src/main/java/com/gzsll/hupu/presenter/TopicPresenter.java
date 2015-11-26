@@ -122,6 +122,10 @@ public class TopicPresenter extends Presenter<TopicView> {
         load(type, uid, page);
     }
 
+    public void onReload() {
+        load(type, uid, page);
+    }
+
 
     @Override
     public void initialize() {

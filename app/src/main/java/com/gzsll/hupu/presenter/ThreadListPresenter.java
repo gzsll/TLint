@@ -96,6 +96,10 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
         loadThreadList("", true);
     }
 
+    public void onReload() {
+        loadThreadList(lastId, false);
+    }
+
 
     public void onLoadMore() {
         loadThreadList(lastId, false);
@@ -189,10 +193,6 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
             }
         });
     }
-
-
-
-
 
 
     private void addThreads(List<GroupThread> threadList) {

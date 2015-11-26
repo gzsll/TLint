@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface BoardListView extends BaseView {
 
+    void onError();
+
     void renderBoardList(List<Boards> boardGroups);
 
     void showLoginView();

@@ -29,7 +29,7 @@ public class TopicFragment extends BaseListFragment<Topic, TopicListItem> implem
 
 
     @Inject
-    TopicPresenter topicPresenter;
+    TopicPresenter mTopicPresenter;
     @Inject
     TopicListAdapter adapter;
 
@@ -41,9 +41,9 @@ public class TopicFragment extends BaseListFragment<Topic, TopicListItem> implem
 
     @AfterViews
     void init() {
-        topicPresenter.setView(this);
-        topicPresenter.initialize();
-        topicPresenter.onTopicReceive(type, uid);
+        mTopicPresenter.setView(this);
+        mTopicPresenter.initialize();
+        mTopicPresenter.onTopicReceive(type, uid);
 
     }
 
@@ -56,7 +56,7 @@ public class TopicFragment extends BaseListFragment<Topic, TopicListItem> implem
 
     @Override
     public void onRefresh() {
-        topicPresenter.onRefresh();
+        mTopicPresenter.onRefresh();
     }
 
     @Override
@@ -67,7 +67,11 @@ public class TopicFragment extends BaseListFragment<Topic, TopicListItem> implem
 
     @Override
     public void onLoadMore() {
-        topicPresenter.onLoadMore();
+        mTopicPresenter.onLoadMore();
     }
 
+    @Override
+    public void onReloadClicked() {
+        mTopicPresenter.onReload();
+    }
 }

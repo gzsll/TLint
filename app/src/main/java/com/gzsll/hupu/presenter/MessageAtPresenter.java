@@ -34,6 +34,10 @@ public class MessageAtPresenter extends Presenter<MessageAtView> {
         loadMessageList(mLastId, false);
     }
 
+    public void onReload() {
+        loadMessageList(mLastId, false);
+    }
+
 
     @Override
     public void initialize() {

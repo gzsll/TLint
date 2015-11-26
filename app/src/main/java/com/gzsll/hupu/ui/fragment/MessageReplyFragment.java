@@ -58,4 +58,9 @@ public class MessageReplyFragment extends BaseListFragment<MessageReply, Message
     protected BaseListAdapter<MessageReply, MessageReplyItem> getAdapter() {
         return mAdapter;
     }
+
+    @Override
+    public void onReloadClicked() {
+        mMessageReplyPresenter.onReload();
+    }
 }

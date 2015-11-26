@@ -102,6 +102,7 @@ public class RootModule {
     OkHttpClient provideOkHttpClient() {
         OkHttpClient mOkHttpClient = new OkHttpClient();
         mOkHttpClient.setConnectTimeout(10, TimeUnit.SECONDS);
+        mOkHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
         return mOkHttpClient;
     }
 

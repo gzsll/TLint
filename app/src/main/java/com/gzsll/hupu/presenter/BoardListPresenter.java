@@ -51,6 +51,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     Logger logger = Logger.getLogger(BoardListPresenter.class.getSimpleName());
 
     private ArrayList<Board> boards;
+    private int boardId;
 
     /**
      * 通过板块id或者子版块
@@ -58,6 +59,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
      * @param boardId 板块id
      */
     public void onBoardListReceive(final int boardId) {
+        this.boardId = boardId;
         view.showLoading();
         List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId)).orderAsc(BoardDao.Properties.CategoryId).orderAsc(BoardDao.Properties.BoardIndex).list();
         if (!boards.isEmpty() && boardId != 0) {
@@ -68,18 +70,18 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                 @Override
                 public void success(BoardListResult boardListResult, Response response) {
                     if (boardListResult.getStatus() == 200) {
-                        for (int i = 0; i < boardListResult.getData().getBoardLists().size(); i++) {
-                            BoardList boardList = boardListResult.getData().getBoardLists().get(i);
+                        for (int i = 0; i < boardListResult.getData().getBoardList().size(); i++) {
+                            BoardList boardList = boardListResult.getData().getBoardList().get(i);
                             if (boardList.getId() == boardId) {
                                 List<Boards> boardsList = new ArrayList<Boards>();
                                 ArrayList<Board> offlineBoards = new ArrayList<>();
-                                for (int j = 0; j < boardList.getGroupLists().size(); j++) {
-                                    GroupList groupList = boardList.getGroupLists().get(j);
+                                for (int j = 0; j < boardList.getGroupList().size(); j++) {
+                                    GroupList groupList = boardList.getGroupList().get(j);
                                     Boards boards = new Boards();
                                     boards.setName(groupList.getCategoryName());
                                     List<Board> boardArrayList = new ArrayList<Board>();
-                                    for (int k = 0; k < groupList.getCategoryLists().size(); k++) {
-                                        CategoryList categoryList = groupList.getCategoryLists().get(k);
+                                    for (int k = 0; k < groupList.getCategoryList().size(); k++) {
+                                        CategoryList categoryList = groupList.getCategoryList().get(k);
                                         Board board = saveToBoard(categoryList, k, boardId);
                                         boardArrayList.add(board);
                                     }
@@ -100,7 +102,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
 
                 @Override
                 public void failure(RetrofitError error) {
-
+                    view.onError();
                 }
             });
         }
@@ -235,5 +237,9 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     @Override
     public void destroy() {
 
+    }
+
+    public void onReload() {
+        onBoardListReceive(boardId);
     }
 }

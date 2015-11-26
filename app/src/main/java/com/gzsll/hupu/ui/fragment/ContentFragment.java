@@ -352,4 +352,9 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
             mContentPresenter.onPageNext();
         }
     }
+
+    @Override
+    public void onReloadClicked() {
+        mContentPresenter.onReload();
+    }
 }

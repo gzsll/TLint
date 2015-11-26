@@ -54,5 +54,8 @@ public class MessageAtFragment extends BaseListFragment<MessageAt, MessageAtItem
         return mAdapter;
     }
 
-
+    @Override
+    public void onReloadClicked() {
+        mMessageAtPresenter.onReload();
+    }
 }
