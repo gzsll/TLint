@@ -4,7 +4,7 @@
 [![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_small.png)](http://play.google.com/store/apps/details?id=com.gzsll.hupu)
 
 你也可以在应用市场下载应用体验
-
+[豌豆荚](http://www.wandoujia.com/apps/com.gzsll.hupu)
 [本地下载](http://www.pursll.com/TLint_1.0.apk)
 
 
