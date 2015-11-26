@@ -73,6 +73,7 @@ public class LoginPresenter extends Presenter<LoginView> {
                 view.hideLoading();
                 if (userResult != null && userResult.getStatus() == 200) {
                     UserInfo userInfo = userResult.getData();
+                    user.setUserName(userInfo.getUsername());
                     user.setIcon(userInfo.getIcon());
                     user.setSex(userInfo.getSex());
                     user.setSyncTime(userInfo.getSynctime());

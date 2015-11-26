@@ -1,5 +1,6 @@
 package com.gzsll.hupu.support.storage.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,15 @@ public class ThreadImage {
     }
 
     public List<String> getImgs() {
-        return imgs;
+        List<String> images = new ArrayList<>();
+        for (String url : imgs) {
+            if (!url.startsWith("http://bbsmobile.hupucdn.com")) {
+                images.add("http://bbsmobile.hupucdn.com/" + url);
+            } else {
+                images.add(url);
+            }
+        }
+        return images;
     }
 
     public double getIndex() {

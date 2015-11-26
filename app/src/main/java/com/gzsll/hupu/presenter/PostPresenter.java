@@ -1,7 +1,6 @@
 package com.gzsll.hupu.presenter;
 
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.amazonaws.event.ProgressEvent;
@@ -16,6 +15,7 @@ import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.AddReplyResult;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.UploadInfo;
+import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.support.utils.SecurityHelper;
 import com.gzsll.hupu.view.PostView;
@@ -181,6 +181,8 @@ public class PostPresenter extends Presenter<PostView> {
     SecurityHelper mSecurityHelper;
     @Inject
     FileHelper mFileHelper;
+    @Inject
+    ConfigHelper mConfigHelper;
 
 
     private List<PutObjectRequest> requests = new ArrayList<>();
@@ -213,9 +215,7 @@ public class PostPresenter extends Presenter<PostView> {
         } else {
             builder.append(".png");
         }
-        File uploadDir = new File(Environment.getExternalStorageDirectory() + "/gzsll/hupu/upload");
-        uploadDir.mkdirs();
-        File uploadFile = new File(uploadDir.getPath() + "/" + builder.toString());
+        File uploadFile = new File(mConfigHelper.getUploadPath() + builder.toString());
         mFileHelper.copy(file, uploadFile);
         PutObjectRequest withGeneralProgressListener = new PutObjectRequest(Constants.BOX_BUCKET_NAME, uploadFile.getName(), uploadFile).withCannedAcl(CannedAccessControlList.PublicRead).withGeneralProgressListener(progressListener);
         uploadInfo.url = Constants.BOX_END_POINT_NEW + uploadFile.getName();

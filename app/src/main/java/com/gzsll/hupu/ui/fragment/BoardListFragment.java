@@ -4,9 +4,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.otto.DelGroupAttentionEvent;
 import com.gzsll.hupu.otto.StartOfflineEvent;
 import com.gzsll.hupu.presenter.BoardListPresenter;
-import com.gzsll.hupu.presenter.DelGroupAttentionEvent;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.ui.activity.MainActivity;

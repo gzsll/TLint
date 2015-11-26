@@ -1,4 +1,4 @@
-package com.gzsll.hupu.presenter;
+package com.gzsll.hupu.otto;
 
 /**
  * Created by sll on 2015/11/25.

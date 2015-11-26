@@ -67,6 +67,36 @@ public class FileHelper {
         return Math.round(((double) length) / 1048576) + "MBbyte";
     }
 
+
+    /**
+     * 复制assets文件到指定目录
+     *
+     * @param fileName 文件名
+     * @param filePath 目录
+     */
+    public void copyAssets(String fileName, String filePath) {
+        InputStream inputStream;
+        try {
+            inputStream = context.getResources().getAssets().open(fileName);// assets文件夹下的文件
+            File file = new File(filePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(filePath + "/" + fileName);// 保存到本地的文件夹下的文件
+            byte[] buffer = new byte[1024];
+            int count = 0;
+            while ((count = inputStream.read(buffer)) > 0) {
+                fileOutputStream.write(buffer, 0, count);
+            }
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public boolean copy(File oldFile, File newFile) {
         if (!oldFile.exists()) {
             return false;
@@ -96,5 +126,10 @@ public class FileHelper {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean exist(String url) {
+        File file = new File(url);
+        return file.exists();
     }
 }

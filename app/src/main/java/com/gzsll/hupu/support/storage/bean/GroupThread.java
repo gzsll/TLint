@@ -25,7 +25,7 @@ public class GroupThread {
     private int replies;
     private String createAt;
     private String title;
-    private int groupId;
+    private long groupId;
     private String note;
     private List<Cover> cover = new ArrayList<>();
     private int tid;
@@ -168,11 +168,11 @@ public class GroupThread {
         this.title = title;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 

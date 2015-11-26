@@ -49,6 +49,14 @@ public class SettingPrefHelper {
 
     }
 
+    public String getPicSavePath() {
+        if (sharedPreferences == null) {
+            sharedPreferences = context.getSharedPreferences("SettingPref", Context.MODE_PRIVATE);
+        }
+
+        return sharedPreferences.getString("PicSavePath", "gzsll");
+    }
+
 
     /**
      * 正文字体大小

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.support.pref.SettingPref_;
+import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.support.utils.FormatHelper;
 import com.gzsll.hupu.support.utils.OkHttpHelper;
@@ -63,6 +64,8 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
     OkHttpHelper okHttpHelper;
     @Inject
     FileHelper mFileHelper;
+    @Inject
+    ConfigHelper mConfigHelper;
 
     private HashMap<Integer, PictureItemFragment> fragmentMap
             = new HashMap<Integer, PictureItemFragment>();
@@ -180,12 +183,7 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
     @Background
     void save(String url) {
         String fileName = formatHelper.getFileNameFromUrl(url);
-        String path = mFileHelper.getSdcardPath() + File.separator + mSettingPref.PicSavePath().get() + File.separator;
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        File target = new File(path, fileName);
+        File target = new File(mConfigHelper.getPicSavePath(), fileName);
         if (!target.exists()) {
             try {
                 okHttpHelper.httpDownload(url, target);

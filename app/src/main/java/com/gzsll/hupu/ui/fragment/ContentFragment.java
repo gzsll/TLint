@@ -18,6 +18,8 @@ import com.gzsll.hupu.otto.ReplyJumpClickEvent;
 import com.gzsll.hupu.presenter.ContentPresenter;
 import com.gzsll.hupu.support.storage.bean.ThreadImage;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyItems;
+import com.gzsll.hupu.support.utils.ConfigHelper;
+import com.gzsll.hupu.support.utils.HtmlHelper;
 import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.ui.activity.BrowserActivity_;
 import com.gzsll.hupu.ui.activity.ContentActivity;
@@ -86,6 +88,10 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     ResourceHelper mResourceHelper;
     @Inject
     Bus mBus;
+    @Inject
+    HtmlHelper mHtmlHelper;
+    @Inject
+    ConfigHelper mConfigHelper;
 
 
     private JockeyJsWebView mWebView;
@@ -120,13 +126,13 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @Background
     void loadWebContent() {
-        String html = stringFromAssetsFile("hupu_post.html");
+        String html = mHtmlHelper.getHtmlString();
         loadWebFinish(html);
     }
 
     @UiThread
     void loadWebFinish(String html) {
-        mWebView.loadDataWithBaseURL("file:///android_asset/", html, "text/html",
+        mWebView.loadDataWithBaseURL(String.format("file://%s", mConfigHelper.getCachePath()), html, "text/html",
                 "utf-8", null);
     }
 
@@ -289,7 +295,6 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @UiThread
     void showImg(ThreadImage threadImage) {
-        logger.debug("showImg");
         ImagePreviewActivity_.intent(this).extraPic(threadImage.getImgs().get((int) threadImage.getIndex())).extraPics(threadImage.getImgs()).start();
     }
 

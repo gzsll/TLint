@@ -1,8 +1,11 @@
 package com.gzsll.hupu.service;
 
+import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.IBinder;
+import android.text.TextUtils;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -14,8 +17,6 @@ import com.google.gson.Gson;
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.BuildConfig;
 import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.service.annotation.ActionMethod;
-import com.gzsll.hupu.service.annotation.IntentAnnotationService;
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.db.DBGroupThread;
 import com.gzsll.hupu.support.db.DBGroupThreadDao;
@@ -35,6 +36,7 @@ import com.gzsll.hupu.support.storage.bean.ThreadSpanned;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.UserInfo;
 import com.gzsll.hupu.support.utils.DbConverterHelper;
+import com.gzsll.hupu.support.utils.HtmlHelper;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.support.utils.ReplyViewHelper;
 import com.gzsll.hupu.support.utils.SecurityHelper;
@@ -51,7 +53,7 @@ import javax.inject.Inject;
 /**
  * Created by gzsll on 2014/9/14 0014.
  */
-public class OffLineService extends IntentAnnotationService {
+public class OffLineService extends Service {
 
     Logger logger = Logger.getLogger("OffLineService");
 
@@ -105,18 +107,29 @@ public class OffLineService extends IntentAnnotationService {
         logger.debug("服务启动");
     }
 
-    @ActionMethod(START_DOWNLOAD)
-    public void startOffline(Intent intent) {
-        if (mCurrentStatus == INIT) {
-            boards = (List<Board>) intent.getSerializableExtra("boards");
-            prepareOffline();
-        } else {
-            //ignore
-            logger.debug("服务已启动，忽略请求");
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null || TextUtils.isEmpty(intent.getAction()))
+            return super.onStartCommand(intent, flags, startId);
+        String action = intent.getAction();
+        if (action.equals(START_DOWNLOAD)) {
+            if (mCurrentStatus == INIT) {
+                boards = (List<Board>) intent.getSerializableExtra("boards");
+                prepareOffline();
+            } else {
+                //ignore
+                logger.debug("服务已启动，忽略请求");
+            }
         }
+        return super.onStartCommand(intent, flags, startId);
+
     }
 
+
     private void prepareOffline() {
+        if (boards == null || boards.isEmpty()) {
+            return;
+        }
         mCurrentStatus = PREPARE;
         unOfflineBoards = new ArrayList<>();
         unOfflineBoards.addAll(boards);
@@ -149,7 +162,7 @@ public class OffLineService extends IntentAnnotationService {
                 if (isCanceled()) {
                     return false;
                 }
-                int count = 5; //加载100篇帖子  TODO 加上设置
+                int count = 100; //加载100篇帖子  TODO 加上设置
                 ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getGroupId()), "0", count, mSettingPrefHelper.getThreadSort(), null);
                 if (result.getStatus() == 200) {
                     List<GroupThread> threads = result.getData().getGroupThreads();
@@ -159,15 +172,13 @@ public class OffLineService extends IntentAnnotationService {
                     logger.debug("offlineThreadsCount:" + offlineThreadsCount);
                     mThreads.addAll(threads);
                     for (GroupThread thread : threads) {
-                        saveThread(thread, board.getBoardId());
-
+                        saveThread(thread);
                         UserInfo userInfo = thread.getUserInfo();
                         if (userInfo != null) {
                             cacheImage(userInfo.getIcon());
                         }
                     }
 
-                    logger.debug(String.format("分组%s新增%d张待下载图片", board.getBoardName(), offlinePictureCount));
                     return true;
                 } else {
                     return false;
@@ -192,10 +203,9 @@ public class OffLineService extends IntentAnnotationService {
 
     }
 
-    private void saveThread(GroupThread thread, long groupId) {
+    private void saveThread(GroupThread thread) {
         List<DBGroupThread> threads = mGroupThreadDao.queryBuilder().where(DBGroupThreadDao.Properties.ServerId.eq(thread.getId())).list();
         DBGroupThread dbGroupThread = mDbConverterHelper.convertGroupThread(thread);
-        dbGroupThread.setGroupId(groupId);
         if (!threads.isEmpty()) {
             dbGroupThread.setId(threads.get(0).getId());
         }
@@ -325,8 +335,15 @@ public class OffLineService extends IntentAnnotationService {
         mCurrentStatus = FINISHED;
     }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     @Inject
     DBThreadInfoDao mThreadInfoDao;
+    @Inject
+    HtmlHelper mHtmlHelper;
 
     private void saveThreadInfo(ThreadInfo threadInfo) {
         List<DBThreadInfo> threadInfos = mThreadInfoDao.queryBuilder().where(DBThreadInfoDao.Properties.ServerId.eq(threadInfo.getId())).list();
@@ -335,7 +352,7 @@ public class OffLineService extends IntentAnnotationService {
             info.setId(threadInfos.get(0).getId());
         }
         mThreadInfoDao.insertOrReplace(info);
-
+        mHtmlHelper.transImgToLocal(threadInfo.getContent(), true);
     }
 
     @Inject

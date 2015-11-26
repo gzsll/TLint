@@ -38,8 +38,6 @@ import retrofit.client.Response;
 @Singleton
 public class BoardListPresenter extends Presenter<BoardListView> {
 
-    private static final int USER_BOARDID = 0;
-
 
     @Inject
     ThreadApi mThreadApi;
@@ -120,10 +118,8 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                 return item.getCategoryName();
             }
         });
-        List<Board> boardList = new ArrayList<>();
         for (String key : map.keySet()) {
             List<Board> list = map.get(key);
-            boardList.addAll(list);
             Boards boards = new Boards();
             boards.setBoards(list);
             boards.setName(key);
@@ -194,16 +190,26 @@ public class BoardListPresenter extends Presenter<BoardListView> {
         });
     }
 
+    /**
+     * offline group
+     *
+     * @param board
+     */
     public void offlineGroup(Board board) {
-        Intent intent = new Intent(mContext, OffLineService.class);
         ArrayList<Board> boards = new ArrayList<>();
         boards.add(board);
-        intent.putExtra("boards", boards);
-        intent.setAction(OffLineService.START_DOWNLOAD);
-        mContext.startService(intent);
+        offlineGroups(boards);
     }
 
+
+    /**
+     * offline all group under current board
+     */
     public void offlineGroups() {
+        offlineGroups(boards);
+    }
+
+    private void offlineGroups(ArrayList<Board> boards) {
         Intent intent = new Intent(mContext, OffLineService.class);
         intent.putExtra("boards", boards);
         intent.setAction(OffLineService.START_DOWNLOAD);

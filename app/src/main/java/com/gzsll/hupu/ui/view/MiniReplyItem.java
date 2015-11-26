@@ -17,6 +17,7 @@ import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.bean.UserInfo;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.PostActivity_;
 import com.gzsll.hupu.ui.activity.ReplyDetailActivity;
@@ -59,9 +60,12 @@ public class MiniReplyItem extends LinearLayout {
     public void initReply(final MiniReplyListItem item, int floorer, int position) {
         deliver.setVisibility(position == 0 ? GONE : VISIBLE);
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(item.getUserInfo().getUsername());
-        if (item.getUserInfo().getUid() == floorer) {
-            stringBuffer.append(STR_FLOORER);
+        UserInfo userInfo = item.getUserInfo();
+        if (userInfo != null) {
+            stringBuffer.append(userInfo.getUsername());
+            if (userInfo.getUid() == floorer) {
+                stringBuffer.append(STR_FLOORER);
+            }
         }
         stringBuffer.append(STR_COLON);
         stringBuffer.append(Html.fromHtml(item.getContent()).toString());
@@ -69,7 +73,6 @@ public class MiniReplyItem extends LinearLayout {
         stringBuffer.append(item.getFormatTime());
         String content = stringBuffer.toString();
         SpannableString spannableString = new SpannableString(content);
-        logger.debug(spannableString);
         spannableString.setSpan(new ClickableSpan() {
             public void onClick(View view) {
                 logger.debug("onClick:" + view);

@@ -1,7 +1,9 @@
 package com.gzsll.hupu.ui.adapter;
 
 import android.content.Context;
+import android.view.View;
 
+import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.support.db.User;
 import com.gzsll.hupu.support.db.UserDao;
 import com.gzsll.hupu.support.storage.UserStorage;
@@ -32,7 +34,14 @@ public class AccountListAdapter extends BaseListAdapter<User, AccountListItem> {
     }
 
     @Override
-    protected void onBindView(AccountListItem view, int position, User data) {
+    protected void onBindView(AccountListItem view, int position, final User data) {
         view.init(data);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUserStorage.login(data);
+                mBus.post(new LoginSuccessEvent());
+            }
+        });
     }
 }

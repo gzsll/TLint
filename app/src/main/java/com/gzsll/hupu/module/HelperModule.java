@@ -3,9 +3,11 @@ package com.gzsll.hupu.module;
 import android.content.Context;
 
 import com.gzsll.hupu.support.utils.CacheHelper;
+import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.DataCleanHelper;
 import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.HtmlHelper;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.gzsll.hupu.support.utils.RequestHelper;
@@ -98,6 +100,18 @@ public class HelperModule {
     @Singleton
     DataCleanHelper provideDataCleanHelper(Context context) {
         return new DataCleanHelper(context);
+    }
+
+    @Provides
+    @Singleton
+    ConfigHelper provideConfigHelper(SettingPrefHelper mSettingPrefHelper) {
+        return new ConfigHelper(mSettingPrefHelper);
+    }
+
+    @Provides
+    @Singleton
+    HtmlHelper provideHtmlHelper(ConfigHelper mConfigHelper, FileHelper mFileHelper, OkHttpHelper mOkHttpHelper) {
+        return new HtmlHelper(mConfigHelper, mFileHelper, mOkHttpHelper);
     }
 
 

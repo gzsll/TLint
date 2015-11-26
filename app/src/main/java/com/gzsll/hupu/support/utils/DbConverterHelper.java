@@ -34,7 +34,7 @@ public class DbConverterHelper {
 
     public DBGroupThread convertGroupThread(GroupThread thread) {
         DBGroupThread dbGroupThread = new DBGroupThread();
-        dbGroupThread.setCreateAtUnixTime((long) thread.getCreateAtUnixtime());
+        dbGroupThread.setCreateAtUnixTime(thread.getCreateAtUnixtime());
         dbGroupThread.setLights(thread.getLights());
         dbGroupThread.setNote(thread.getNote());
         dbGroupThread.setReplies(thread.getReplies());
@@ -42,6 +42,7 @@ public class DbConverterHelper {
         dbGroupThread.setTid(thread.getTid());
         dbGroupThread.setTitle(thread.getTitle());
         dbGroupThread.setUsername(thread.getUsername());
+        dbGroupThread.setGroupId(thread.getGroupId());
         updateUserInfo(thread.getUserInfo());
         dbGroupThread.setUserId((long) thread.getUserInfo().getUid());
         return dbGroupThread;
@@ -149,13 +150,16 @@ public class DbConverterHelper {
         return threadInfo;
     }
 
+    @Inject
+    HtmlHelper mHtmlHelper;
+
 
     public ThreadInfo convertDbThreadInfo(DBThreadInfo info) {
         ThreadInfo threadInfo = new ThreadInfo();
         threadInfo.setId(info.getServerId());
         threadInfo.setUid(info.getUid());
         threadInfo.setAttention(info.getAttention());
-        threadInfo.setContent(info.getContent());
+        threadInfo.setContent(mHtmlHelper.transImgToLocal(info.getContent(), false));
         threadInfo.setCreateAt(info.getCreateAt());
         threadInfo.setCreateAtUnixtime(info.getCreateAtUnixTime());
         threadInfo.setDigest(info.getDigest());
@@ -223,7 +227,7 @@ public class DbConverterHelper {
         if (!item.getMiniReplyList().getLists().isEmpty()) {
             for (MiniReplyListItem miniReplyListItem : item.getMiniReplyList().getLists()) {
                 DBMiniReplyListItem dbMiniReplyListItem = convertMiniReplyListItem(miniReplyListItem, item.getId());
-                List<DBMiniReplyListItem> dbMiniReplyListItems = mMiniReplyDao.queryBuilder().where(DBMiniReplyListItemDao.Properties.Id.eq(miniReplyListItem.getId())).list();
+                List<DBMiniReplyListItem> dbMiniReplyListItems = mMiniReplyDao.queryBuilder().where(DBMiniReplyListItemDao.Properties.ServerId.eq(miniReplyListItem.getId())).list();
                 if (!dbMiniReplyListItems.isEmpty()) {
                     dbMiniReplyListItem.setId(dbMiniReplyListItems.get(0).getId());
                 }
@@ -268,6 +272,7 @@ public class DbConverterHelper {
         replyListItem.setContent(item.getContent());
         replyListItem.setFormatTime(item.getFormatTime());
         replyListItem.setServerId(item.getId());
+        updateUserInfo(item.getUserInfo());
         replyListItem.setUserId((long) item.getUserInfo().getUid());
         replyListItem.setParentReplyId(parentId);
         return replyListItem;
