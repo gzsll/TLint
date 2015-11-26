@@ -3,7 +3,7 @@ package com.gzsll.hupu.ui.adapter;
 import android.content.Context;
 import android.view.View;
 
-import com.gzsll.hupu.storage.bean.MessageAt;
+import com.gzsll.hupu.support.storage.bean.MessageAt;
 import com.gzsll.hupu.ui.activity.ReplyDetailActivity_;
 import com.gzsll.hupu.ui.view.MessageAtItem;
 import com.gzsll.hupu.ui.view.MessageAtItem_;

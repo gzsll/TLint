@@ -1,5 +1,6 @@
 package com.gzsll.hupu.module;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 
@@ -11,6 +12,8 @@ import com.google.gson.Gson;
 import com.gzsll.hupu.AppApplication_;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.service.OffLineService;
+import com.gzsll.hupu.support.utils.FileHelper;
+import com.gzsll.hupu.ui.activity.AccountActivity_;
 import com.gzsll.hupu.ui.activity.BrowserActivity_;
 import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
@@ -25,16 +28,19 @@ import com.gzsll.hupu.ui.activity.SettingActivity_;
 import com.gzsll.hupu.ui.activity.SplashActivity_;
 import com.gzsll.hupu.ui.activity.ThreadActivity_;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
+import com.gzsll.hupu.ui.fragment.AccountFragment_;
 import com.gzsll.hupu.ui.fragment.BoardListFragment_;
 import com.gzsll.hupu.ui.fragment.ContentFragment_;
+import com.gzsll.hupu.ui.fragment.LoginFragment_;
 import com.gzsll.hupu.ui.fragment.MDColorsDialogFragment_;
 import com.gzsll.hupu.ui.fragment.MessageAtFragment_;
 import com.gzsll.hupu.ui.fragment.MessageReplyFragment_;
+import com.gzsll.hupu.ui.fragment.NewsFragment_;
+import com.gzsll.hupu.ui.fragment.NewsListFragment_;
 import com.gzsll.hupu.ui.fragment.PictureItemFragment_;
 import com.gzsll.hupu.ui.fragment.SettingFragment_;
 import com.gzsll.hupu.ui.fragment.ThreadListFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
-import com.gzsll.hupu.utils.FileHelper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -51,16 +57,16 @@ import dagger.Provides;
 
 @Module(
         includes = {
-                DBModule.class, PresenterModule.class, ApiModule.class, HelperModule.class
+                DBModule.class, ApiModule.class, HelperModule.class
         },
         injects = {
-                AppApplication_.class, OffLineService.class,
+                AppApplication_.class,
                 MainActivity_.class, ContentActivity_.class, PostActivity_.class, ImagePreviewActivity_.class, SearchActivity_.class, ThreadActivity_.class, BrowserActivity_.class,
-                PhotoGalleryActivity_.class, ReplyDetailActivity_.class, SettingActivity_.class, NoticeActivity_.class, LoginActivity_.class,
+                PhotoGalleryActivity_.class, ReplyDetailActivity_.class, SettingActivity_.class, NoticeActivity_.class, LoginActivity_.class, AccountActivity_.class,
                 SplashActivity_.class, UserProfileActivity_.class,
                 ThreadListFragment_.class, TopicFragment_.class, BoardListFragment_.class, PictureItemFragment_.class, MessageAtFragment_.class, MessageReplyFragment_.class,
-                FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class
-
+                FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class, NewsFragment_.class, NewsListFragment_.class
+                , LoginFragment_.class, AccountFragment_.class, OffLineService.class
         },
         library = true
 )
@@ -75,7 +81,7 @@ public class RootModule {
     @Provides
     @Singleton
     public Context provideApplicationContext() {
-        return context;
+        return context.getApplicationContext();
     }
 
     @Provides
@@ -96,6 +102,7 @@ public class RootModule {
     OkHttpClient provideOkHttpClient() {
         OkHttpClient mOkHttpClient = new OkHttpClient();
         mOkHttpClient.setConnectTimeout(10, TimeUnit.SECONDS);
+        mOkHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
         return mOkHttpClient;
     }
 
@@ -126,6 +133,12 @@ public class RootModule {
     @Provides
     TransferManager provideTransferManager(AmazonS3Client client) {
         return new TransferManager(client);
+    }
+
+    @Provides
+    @Singleton
+    NotificationManager provideNotificationManager(Context mContext) {
+        return (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
 

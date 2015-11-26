@@ -1,14 +1,20 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.db.Board;
-import com.gzsll.hupu.db.BoardDao;
+import android.content.Context;
+import android.content.Intent;
+
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.otto.ReceiveNoticeEvent;
-import com.gzsll.hupu.storage.bean.BoardList;
-import com.gzsll.hupu.storage.bean.BoardListResult;
-import com.gzsll.hupu.storage.bean.Boards;
-import com.gzsll.hupu.storage.bean.CategoryList;
-import com.gzsll.hupu.storage.bean.GroupList;
+import com.gzsll.hupu.service.OffLineService;
+import com.gzsll.hupu.support.db.Board;
+import com.gzsll.hupu.support.db.BoardDao;
+import com.gzsll.hupu.support.storage.bean.BaseResult;
+import com.gzsll.hupu.support.storage.bean.BoardList;
+import com.gzsll.hupu.support.storage.bean.BoardListResult;
+import com.gzsll.hupu.support.storage.bean.Boards;
+import com.gzsll.hupu.support.storage.bean.CategoryList;
+import com.gzsll.hupu.support.storage.bean.GroupList;
+import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.view.BoardListView;
 import com.squareup.otto.Bus;
 
@@ -33,69 +39,88 @@ import retrofit.client.Response;
 @Singleton
 public class BoardListPresenter extends Presenter<BoardListView> {
 
-    private static final int USER_BOARDID = 0;
-
 
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
     @Inject
     BoardDao mBoardDao;
     @Inject
     Bus mBus;
+    @Inject
+    Context mContext;
+    @Inject
+    NetWorkHelper mNetWorkHelper;
 
     Logger logger = Logger.getLogger(BoardListPresenter.class.getSimpleName());
 
+    private ArrayList<Board> boards;
+    private int boardId;
 
     /**
      * 通过板块id或者子版块
      *
-     * @param groupId
+     * @param boardId 板块id
      */
-    public void onBoardListReceive(final int groupId) {
+    public void onBoardListReceive(final int boardId) {
+        this.boardId = boardId;
         view.showLoading();
-        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.GroupId.eq(groupId)).orderAsc(BoardDao.Properties.CategoryId).orderAsc(BoardDao.Properties.BoardIndex).list();
-        if (!boards.isEmpty() && groupId != 0) {
+        if (boardId != 0 || !mNetWorkHelper.isFast()) {
+            loadFromDb();
+        } else {
+            loadFromNet();
+        }
+    }
+
+    private void loadFromDb() {
+        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId)).orderAsc(BoardDao.Properties.CategoryId).orderAsc(BoardDao.Properties.BoardIndex).list();
+        if (!boards.isEmpty()) {
+            this.boards = (ArrayList) boards;
             sortBoard(boards);
         } else {
-            mHuPuApi.getBoardList(new Callback<BoardListResult>() {
-                @Override
-                public void success(BoardListResult boardListResult, Response response) {
-                    if (boardListResult.getStatus() == 200) {
-                        for (int i = 0; i < boardListResult.getData().getBoardLists().size(); i++) {
-                            BoardList boardList = boardListResult.getData().getBoardLists().get(i);
-                            if (boardList.getId() == groupId) {
-                                List<Boards> boardsList = new ArrayList<Boards>();
-                                for (int j = 0; j < boardList.getGroupLists().size(); j++) {
-                                    GroupList groupList = boardList.getGroupLists().get(j);
-                                    Boards boards = new Boards();
-                                    boards.setName(groupList.getCategoryName());
-                                    List<Board> boardArrayList = new ArrayList<Board>();
-                                    for (int k = 0; k < groupList.getCategoryLists().size(); k++) {
-                                        CategoryList categoryList = groupList.getCategoryLists().get(k);
-                                        Board board = saveToBoard(categoryList, k, groupId);
-                                        boardArrayList.add(board);
-                                    }
-                                    boards.setBoards(boardArrayList);
-                                    boardsList.add(boards);
+            loadFromNet();
+        }
+    }
+
+    private void loadFromNet() {
+        mThreadApi.getBoardList(new Callback<BoardListResult>() {
+            @Override
+            public void success(BoardListResult boardListResult, Response response) {
+                if (boardListResult.getStatus() == 200) {
+                    for (int i = 0; i < boardListResult.getData().getBoardList().size(); i++) {
+                        BoardList boardList = boardListResult.getData().getBoardList().get(i);
+                        if (boardList.getId() == boardId) {
+                            List<Boards> boardsList = new ArrayList<Boards>();
+                            ArrayList<Board> offlineBoards = new ArrayList<>();
+                            for (int j = 0; j < boardList.getGroupList().size(); j++) {
+                                GroupList groupList = boardList.getGroupList().get(j);
+                                Boards boards = new Boards();
+                                boards.setName(groupList.getCategoryName());
+                                List<Board> boardArrayList = new ArrayList<Board>();
+                                for (int k = 0; k < groupList.getCategoryList().size(); k++) {
+                                    CategoryList categoryList = groupList.getCategoryList().get(k);
+                                    Board board = saveToBoard(categoryList, k, boardId);
+                                    boardArrayList.add(board);
                                 }
-                                view.renderBoardList(boardsList);
-                                view.hideLoading();
+                                offlineBoards.addAll(boardArrayList);
+                                boards.setBoards(boardArrayList);
+                                boardsList.add(boards);
                             }
-                        }
-                        if (boardListResult.getNotice() != null) {
-                            mBus.post(new ReceiveNoticeEvent(boardListResult.getNotice()));
+                            BoardListPresenter.this.boards = offlineBoards;
+                            view.renderBoardList(boardsList);
+                            view.hideLoading();
                         }
                     }
+                    if (boardListResult.getNotice() != null) {
+                        mBus.post(new ReceiveNoticeEvent(boardListResult.getNotice()));
+                    }
                 }
+            }
 
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
-        }
-
-
+            @Override
+            public void failure(RetrofitError error) {
+                view.onError();
+            }
+        });
     }
 
 
@@ -149,17 +174,65 @@ public class BoardListPresenter extends Presenter<BoardListView> {
         return map;
     }
 
-    private Board saveToBoard(CategoryList categoryList, int index, int groupId) {
+    private Board saveToBoard(CategoryList categoryList, int index, long boardId) {
         Board board = new Board();
-        board.setBoardId(categoryList.getId());
+        board.setBoardId(boardId);
         board.setBoardIcon(categoryList.getGroupAvator());
         board.setBoardName(categoryList.getGroupName());
-        board.setCategoryId(Long.valueOf(categoryList.getCategoryId()));
+        board.setCategoryId(categoryList.getCategoryId());
         board.setCategoryName(categoryList.getCategoryName());
-        board.setGroupId(Long.valueOf(groupId));
+        board.setGroupId(categoryList.getId());
         board.setBoardIndex(index);
+        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId), BoardDao.Properties.GroupId.eq(categoryList.getId())).list();
+        if (!boards.isEmpty()) {
+            board.setId(boards.get(0).getId());
+        }
         mBoardDao.insertOrReplace(board);
         return board;
+    }
+
+
+    public void delGroupAttention(long groupId) {
+        mThreadApi.delGroupAttention(String.valueOf(groupId), new Callback<BaseResult>() {
+            @Override
+            public void success(BaseResult baseResult, Response response) {
+                view.showToast(baseResult.getMsg());
+                if (baseResult.getStatus() == 200) {
+
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    /**
+     * offline group
+     *
+     * @param board
+     */
+    public void offlineGroup(Board board) {
+        ArrayList<Board> boards = new ArrayList<>();
+        boards.add(board);
+        offlineGroups(boards);
+    }
+
+
+    /**
+     * offline all group under current board
+     */
+    public void offlineGroups() {
+        offlineGroups(boards);
+    }
+
+    private void offlineGroups(ArrayList<Board> boards) {
+        Intent intent = new Intent(mContext, OffLineService.class);
+        intent.putExtra("boards", boards);
+        intent.setAction(OffLineService.START_DOWNLOAD);
+        mContext.startService(intent);
     }
 
 
@@ -181,5 +254,9 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     @Override
     public void destroy() {
 
+    }
+
+    public void onReload() {
+        onBoardListReceive(boardId);
     }
 }

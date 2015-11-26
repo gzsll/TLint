@@ -25,7 +25,8 @@
 
         <activity
             android:name=".ui.activity.SplashActivity_"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,43 +34,65 @@
         </activity>
         <activity
             android:name=".ui.activity.MainActivity_"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoneTranslucent" />
-        <activity android:name=".ui.activity.LoginActivity_" />
-        <activity android:name=".ui.activity.ContentActivity_" />
+        <activity
+            android:name=".ui.activity.LoginActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ContentActivity_"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.PostActivity_"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ui.activity.ImagePreviewActivity_"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Pics" />
-        <activity android:name=".ui.activity.VideoPlayActivity_" />
-        <activity android:name=".ui.activity.SearchActivity_" />
+        <activity
+            android:name=".ui.activity.VideoPlayActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SearchActivity_"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.PhotoGalleryActivity_"
-            android:configChanges="orientation|screenSize" />
-        <activity android:name=".ui.activity.BrowserActivity_" />
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BrowserActivity_"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.activity.ThreadActivity_" />
-        <activity android:name=".ui.activity.ReplyDetailActivity_" />
-        <activity android:name=".ui.activity.SettingActivity_" />
-        <activity android:name=".ui.activity.NoticeActivity_" />
-        <activity android:name=".ui.activity.AboutActivity_" />
-        <activity android:name=".ui.activity.UserProfileActivity_" />
+        <activity
+            android:name=".ui.activity.ThreadActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ReplyDetailActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SettingActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.NoticeActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AboutActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UserProfileActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AccountActivity_"
+            android:screenOrientation="portrait" />
 
-        <service android:name="com.gzsll.hupu.service.OffLineService">
+        <service android:name=".service.OffLineService">
             <intent-filter>
                 <action android:name="com.gzsll.hupu.action.START_DOWNLOAD" />
             </intent-filter>
         </service>
 
-        <service
-            android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService" />
-
-        <activity
-            android:name="com.umeng.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

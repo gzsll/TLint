@@ -1,6 +1,6 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.storage.bean.MessageAt;
+import com.gzsll.hupu.support.storage.bean.MessageAt;
 
 /**
  * Created by sll on 2015/9/8 0008.

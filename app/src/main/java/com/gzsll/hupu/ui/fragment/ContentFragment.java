@@ -1,5 +1,6 @@
 package com.gzsll.hupu.ui.fragment;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,15 +16,17 @@ import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.otto.ReplyJumpClickEvent;
 import com.gzsll.hupu.presenter.ContentPresenter;
-import com.gzsll.hupu.storage.bean.ThreadImage;
-import com.gzsll.hupu.storage.bean.ThreadReplyItems;
+import com.gzsll.hupu.support.storage.bean.ThreadImage;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItems;
+import com.gzsll.hupu.support.utils.ConfigHelper;
+import com.gzsll.hupu.support.utils.HtmlHelper;
+import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.ui.activity.BrowserActivity_;
 import com.gzsll.hupu.ui.activity.ContentActivity;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
 import com.gzsll.hupu.ui.activity.PostActivity_;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
 import com.gzsll.hupu.ui.adapter.ThreadReplyAdapter;
-import com.gzsll.hupu.utils.ResourceHelper;
 import com.gzsll.hupu.view.ContentView;
 import com.gzsll.hupu.widget.H5Callback;
 import com.gzsll.hupu.widget.JockeyJsWebView;
@@ -36,6 +39,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -43,6 +47,8 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +88,10 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     ResourceHelper mResourceHelper;
     @Inject
     Bus mBus;
+    @Inject
+    HtmlHelper mHtmlHelper;
+    @Inject
+    ConfigHelper mConfigHelper;
 
 
     private JockeyJsWebView mWebView;
@@ -111,7 +121,34 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
         mWebView = new JockeyJsWebView(mActivity);
         mWebView.setCallback(this);
         mWebView.initJockey();
-        mWebView.loadUrl("http://bbs.mobile.hupu.com/view/threadInfoView?v=1");
+        loadWebContent();
+    }
+
+    @Background
+    void loadWebContent() {
+        String html = mHtmlHelper.getHtmlString();
+        loadWebFinish(html);
+    }
+
+    @UiThread
+    void loadWebFinish(String html) {
+        mWebView.loadDataWithBaseURL(String.format("file://%s", mConfigHelper.getCachePath()), html, "text/html",
+                "utf-8", null);
+    }
+
+    private String stringFromAssetsFile(String fileName) {
+        AssetManager manager = getActivity().getAssets();
+        InputStream file;
+        try {
+            file = manager.open(fileName);
+            byte[] data = new byte[file.available()];
+            file.read(data);
+            file.close();
+            return new String(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void initRecyclerView() {
@@ -201,6 +238,7 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @Override
     public void onPageFinished(WebView webView, String str) {
+        logger.debug("onPageFinished");
         mContentPresenter.onThreadInfoReceive(mThreadId, 1);
     }
 
@@ -257,7 +295,6 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @UiThread
     void showImg(ThreadImage threadImage) {
-        logger.debug("showImg");
         ImagePreviewActivity_.intent(this).extraPic(threadImage.getImgs().get((int) threadImage.getIndex())).extraPics(threadImage.getImgs()).start();
     }
 
@@ -314,5 +351,10 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
         } else {
             mContentPresenter.onPageNext();
         }
+    }
+
+    @Override
+    public void onReloadClicked() {
+        mContentPresenter.onReload();
     }
 }

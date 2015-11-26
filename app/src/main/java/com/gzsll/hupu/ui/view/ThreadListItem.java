@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.bean.Cover;
-import com.gzsll.hupu.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.Cover;
+import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
-import com.gzsll.hupu.utils.FormatHelper;
-import com.gzsll.hupu.utils.SettingPrefHelper;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -61,7 +61,7 @@ public class ThreadListItem extends LinearLayout {
     @ViewById
     TextView tvLight;
     @ViewById
-    LinearLayout llThreadItem, llUser;
+    RelativeLayout rlUser;
     @ViewById
     RelativeLayout rlLight;
 
@@ -80,22 +80,22 @@ public class ThreadListItem extends LinearLayout {
         this.thread = thread;
         tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTitleSize());
         rlLight.setVisibility(GONE);
-        if (thread.getLight() > 0) {
-            tvLight.setText(String.valueOf(thread.getLight()));
+        if (thread.getLights() > 0) {
+            tvLight.setText(String.valueOf(thread.getLights()));
             tvLight.setVisibility(View.VISIBLE);
         } else {
             tvLight.setVisibility(View.GONE);
         }
-        tvReply.setText(String.valueOf(thread.getReply()));
+        tvReply.setText(String.valueOf(thread.getReplies()));
         tvTitle.setText(thread.getTitle());
         if (mSettingPrefHelper.getSingleLine()) {
-            llUser.setVisibility(GONE);
+            rlUser.setVisibility(GONE);
             tvSingleTime.setVisibility(VISIBLE);
             tvSummary.setVisibility(GONE);
             grid.setVisibility(View.GONE);
             tvSingleTime.setText(formatHelper.dateFormat(thread.getCreateAtUnixtime()));
         } else {
-            llUser.setVisibility(VISIBLE);
+            rlUser.setVisibility(VISIBLE);
             tvSingleTime.setVisibility(GONE);
             tvSummary.setVisibility(VISIBLE);
             grid.setVisibility(View.VISIBLE);
@@ -112,12 +112,12 @@ public class ThreadListItem extends LinearLayout {
     protected void buildMultiPic(final GroupThread thread, final GridLayout gridLayout) {
         if (mSettingPrefHelper.getLoadPic()) {
             gridLayout.setVisibility(View.VISIBLE);
-            final int count = thread.getCovers().size();
+            final int count = thread.getCover().size();
             final List<String> pics = new ArrayList<String>();
             for (int i = 0; i < count; i++) {
                 SimpleDraweeView imageView = (SimpleDraweeView) gridLayout.getChildAt(i);
                 imageView.setVisibility(View.VISIBLE);
-                final Cover threadPic = thread.getCovers().get(i);
+                final Cover threadPic = thread.getCover().get(i);
                 pics.add(threadPic.getUrl());
                 imageView.setImageURI(Uri.parse(mSettingPrefHelper.getLoadOriginPic() ? threadPic.getUrl() : threadPic.getUrlSmall()));
                 imageView.setOnClickListener(new OnClickListener() {

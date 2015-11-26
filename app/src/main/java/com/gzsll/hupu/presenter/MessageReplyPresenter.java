@@ -1,8 +1,8 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.bean.MessageReply;
-import com.gzsll.hupu.storage.bean.MessageReplyResult;
+import com.gzsll.hupu.api.thread.ThreadApi;
+import com.gzsll.hupu.support.storage.bean.MessageReply;
+import com.gzsll.hupu.support.storage.bean.MessageReplyResult;
 import com.gzsll.hupu.view.MessageReplyView;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class MessageReplyPresenter extends Presenter<MessageReplyView> {
     private List<MessageReply> mReplies = new ArrayList<>();
 
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
 
     public void onRefresh() {
         view.onScrollToTop();
@@ -35,7 +35,9 @@ public class MessageReplyPresenter extends Presenter<MessageReplyView> {
         loadMessageList(mLastId, false);
     }
 
-
+    public void onReload() {
+        loadMessageList(mLastId, false);
+    }
     @Override
     public void initialize() {
         view.showLoading();
@@ -43,7 +45,7 @@ public class MessageReplyPresenter extends Presenter<MessageReplyView> {
     }
 
     private void loadMessageList(String lastId, final boolean clear) {
-        mHuPuApi.getMessageReply(lastId, new Callback<MessageReplyResult>() {
+        mThreadApi.getMessageReply(lastId, new Callback<MessageReplyResult>() {
             @Override
             public void success(MessageReplyResult messageReplyResult, Response response) {
                 if (messageReplyResult != null && messageReplyResult.getStatus() == 200) {

@@ -1,6 +1,6 @@
 package com.gzsll.hupu.otto;
 
-import com.gzsll.hupu.storage.bean.Notice;
+import com.gzsll.hupu.support.storage.bean.Notice;
 
 /**
  * Created by sll on 2015/9/13.

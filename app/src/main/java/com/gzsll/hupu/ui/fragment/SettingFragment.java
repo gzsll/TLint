@@ -12,11 +12,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.pref.SettingPref_;
+import com.gzsll.hupu.support.pref.SettingPref_;
+import com.gzsll.hupu.support.utils.CacheHelper;
+import com.gzsll.hupu.support.utils.DataCleanHelper;
+import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
-import com.gzsll.hupu.utils.CacheHelper;
-import com.gzsll.hupu.utils.DataCleanHelper;
-import com.gzsll.hupu.utils.FileHelper;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -40,6 +40,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private Preference pClearCache;
     private ListPreference pThreadSort;
     private ListPreference pSwipeBackEdgeMode;// 手势返回方向
+    private ListPreference pOfflineCount;
 
 
     @Inject
@@ -79,6 +80,10 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         pSwipeBackEdgeMode.setOnPreferenceChangeListener(this);
         setListSetting(Integer.parseInt(prefs.getString("pSwipeBackEdgeMode", "0")), R.array.swipeBackEdgeMode, pSwipeBackEdgeMode);
 
+        pOfflineCount = (ListPreference) findPreference("pOfflineCount");
+        pOfflineCount.setOnPreferenceChangeListener(this);
+        setListSetting(Integer.parseInt(prefs.getString("pOfflineCount", "0")), R.array.offlineCount, pOfflineCount);
+
 
     }
 
@@ -91,6 +96,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         } else if ("pSwipeBackEdgeMode".equals(preference.getKey())) {
             setListSetting(Integer.parseInt(newValue.toString()), R.array.swipeBackEdgeMode, pSwipeBackEdgeMode);
             ((BaseActivity) getActivity()).reload();
+        } else if ("pOfflineCount".equals(preference.getKey())) {
+            setListSetting(Integer.parseInt(newValue.toString()), R.array.offlineCount, pOfflineCount);
         }
         return true;
     }

@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.utils.ResourceHelper;
+import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.ProgressFragment;
 

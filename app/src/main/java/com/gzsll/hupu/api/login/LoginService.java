@@ -1,6 +1,6 @@
 package com.gzsll.hupu.api.login;
 
-import com.gzsll.hupu.storage.bean.LoginResult;
+import com.gzsll.hupu.support.storage.bean.LoginResult;
 
 import retrofit.Callback;
 import retrofit.http.Field;

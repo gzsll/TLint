@@ -1,7 +1,7 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.storage.bean.GroupThread;
-import com.gzsll.hupu.storage.bean.Info;
+import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.Info;
 
 import java.util.List;
 

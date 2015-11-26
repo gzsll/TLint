@@ -14,12 +14,12 @@ import android.widget.RelativeLayout;
 
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.AppManager;
-import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.utils.ResourceHelper;
-import com.gzsll.hupu.utils.SettingPrefHelper;
-import com.gzsll.hupu.utils.SystemBarTintManager;
-import com.gzsll.hupu.utils.ThemeHelper;
+import com.gzsll.hupu.support.db.User;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.utils.ResourceHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
+import com.gzsll.hupu.support.utils.SystemBarTintManager;
+import com.gzsll.hupu.support.utils.ThemeHelper;
 import com.squareup.otto.Bus;
 import com.umeng.analytics.MobclickAgent;
 

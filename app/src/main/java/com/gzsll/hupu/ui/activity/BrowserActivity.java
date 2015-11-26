@@ -12,13 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.UserStorage;
+import com.gzsll.hupu.support.storage.UserStorage;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -50,6 +51,15 @@ public class BrowserActivity extends BaseSwipeBackActivity {
     @AfterViews
     void init() {
         initToolBar(toolbar);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setAppCachePath(getCacheDir().toString());
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webView.setWebViewClient(new WebViewClient() {
 
             @Override

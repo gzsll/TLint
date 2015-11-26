@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
+
+    <LinearLayout
+        android:tag="Bottom2"
+        android:background="#333"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:gravity="center"
+            android:text="取消关注"
+            android:id="@+id/tvDel"
+            android:background="#f7e79c"
+            android:layout_width="70dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:gravity="center"
+            android:text="离线"
+            android:id="@+id/tvOffline"
+            android:background="#4cd964"
+            android:layout_width="70dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,11 +57,5 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#E5e5e5" />
 
-
-</RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>

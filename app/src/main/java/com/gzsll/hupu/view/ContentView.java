@@ -1,6 +1,6 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.storage.bean.ThreadReplyItems;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItems;
 
 import java.util.List;
 import java.util.Map;

@@ -12,14 +12,14 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.BaseResult;
-import com.gzsll.hupu.storage.bean.MiniReplyListItem;
-import com.gzsll.hupu.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.api.thread.ThreadApi;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.BaseResult;
+import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.bean.ThreadReplyItem;
+import com.gzsll.hupu.support.utils.ReplyViewHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
-import com.gzsll.hupu.utils.ReplyViewHelper;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -43,7 +43,7 @@ public class ThreadReplyItemView extends LinearLayout {
     @ViewById
     TextView tvTime;
     @ViewById
-    public LinearLayout llContent;
+    LinearLayout llContent;
     @ViewById
     TextView tvReplyLight;
     @ViewById
@@ -57,7 +57,7 @@ public class ThreadReplyItemView extends LinearLayout {
     @ViewById
     RelativeLayout rlLight;
 
-    public HuPuApi mHuPuApi;
+    public ThreadApi mThreadApi;
     public ReplyViewHelper mReplyViewHelper;
     public UserStorage mUserStorage;
     public BaseActivity mActivity;
@@ -79,14 +79,14 @@ public class ThreadReplyItemView extends LinearLayout {
         this.item = item;
         ivIcon.setImageURI(Uri.parse(item.getUserInfo().getIcon()));
         tvUserName.setText(item.getUserInfo().getUsername());
-        tvTime.setText(item.getCreateAt());
+        tvTime.setText(item.getCreate_at());
         tvUser.setVisibility(VISIBLE);
         tvUser.setText(item.getFloor() + "楼");
         tvReplyLight.setVisibility(VISIBLE);
-        tvReplyLight.setText(String.valueOf(item.getLight()));
+        tvReplyLight.setText(String.valueOf(item.getLights()));
         llContent.removeAllViews();
         mReplyViewHelper.addToView(mReplyViewHelper.compileContent(item.getContent()), llContent);
-        if (!item.getMiniReplyList().getLists().isEmpty()) {
+        if (item.getMiniReplyList() != null && !item.getMiniReplyList().getLists().isEmpty()) {
             llMiniReply.setVisibility(VISIBLE);
             deliver.setVisibility(VISIBLE);
             if (item.getMiniReplyList().getLists().size() >= 20) {
@@ -104,12 +104,12 @@ public class ThreadReplyItemView extends LinearLayout {
 
     @Click
     void rlLight() {
-        mHuPuApi.lightByApp(item.getGroupThreadId(), item.getId(), new retrofit.Callback<BaseResult>() {
+        mThreadApi.lightByApp(item.getGroupThreadId(), item.getId(), new retrofit.Callback<BaseResult>() {
             @Override
             public void success(BaseResult result, retrofit.client.Response response) {
                 if (result != null && result.getStatus() == 200) {
                     ivLight.setImageResource(R.drawable.ic_list_light);
-                    tvReplyLight.setText(String.valueOf(item.getLight() + 1));
+                    tvReplyLight.setText(String.valueOf(item.getLights() + 1));
                 }
             }
 

@@ -11,12 +11,15 @@ import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFacto
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
-import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.module.RootModule;
-import com.gzsll.hupu.storage.UserStorage;
+import com.gzsll.hupu.support.db.User;
+import com.gzsll.hupu.support.db.UserDao;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.utils.ConfigHelper;
+import com.gzsll.hupu.support.utils.FileHelper;
 import com.squareup.okhttp.OkHttpClient;
 
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EApplication;
 import org.apache.log4j.Level;
 
@@ -41,6 +44,10 @@ public class AppApplication extends Application {
     UserStorage mUserStorage;
     @Inject
     UserDao mUserDao;
+    @Inject
+    FileHelper mFileHelper;
+    @Inject
+    ConfigHelper mConfigHelper;
 
     private ObjectGraph objectGraph;
 
@@ -51,6 +58,7 @@ public class AppApplication extends Application {
         initLogger();
         initUser();
         initFrescoConfig();
+        initAssertFile();
     }
 
     private void injectDependencies() {
@@ -71,7 +79,7 @@ public class AppApplication extends Application {
         String path = getLogPath();
         try {
             final LogConfigurator lc = new LogConfigurator();
-            lc.setFileName(getFilesDir().getAbsolutePath() + "/gzsll/log.txt");
+            lc.setFileName(path);
             lc.setFilePattern("%d - [%-6p-%c] - %m%n");
             lc.setMaxBackupSize(2);
             lc.setMaxFileSize(1024 * 1024);
@@ -123,6 +131,14 @@ public class AppApplication extends Application {
                                 .build()).build();
         Fresco.initialize(this, config);
 
+    }
+
+    @Background
+    void initAssertFile() {
+        mFileHelper.copyAssets("hupu_post.html", mConfigHelper.getCachePath());
+        mFileHelper.copyAssets("hupu.js", mConfigHelper.getCachePath());
+        mFileHelper.copyAssets("jockey.js", mConfigHelper.getCachePath());
+        mFileHelper.copyAssets("zepto.js", mConfigHelper.getCachePath());
     }
 
 

@@ -3,12 +3,12 @@ package com.gzsll.hupu.ui.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gzsll.hupu.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.view.ThreadListItem;
 import com.gzsll.hupu.ui.view.ThreadListItem_;
-import com.gzsll.hupu.utils.FormatHelper;
-import com.gzsll.hupu.utils.SettingPrefHelper;
 
 import javax.inject.Inject;
 

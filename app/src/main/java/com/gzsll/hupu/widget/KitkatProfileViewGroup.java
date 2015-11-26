@@ -5,7 +5,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.gzsll.hupu.utils.SystemBarUtils;
+import com.gzsll.hupu.support.utils.SystemBarUtils;
 
 /**
  * Created by wangdan on 15/4/26.

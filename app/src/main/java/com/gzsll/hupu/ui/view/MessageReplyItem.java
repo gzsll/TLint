@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.storage.bean.MessageReply;
+import com.gzsll.hupu.support.storage.bean.MessageReply;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;

@@ -1,7 +1,7 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.utils.FormatHelper;
-import com.gzsll.hupu.utils.OkHttpHelper;
+import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.gzsll.hupu.view.ThreadListView;
 import com.squareup.otto.Bus;
 

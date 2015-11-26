@@ -9,8 +9,8 @@ import android.text.Html;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
-import com.gzsll.hupu.storage.bean.UpdateInfo;
-import com.gzsll.hupu.utils.OkHttpHelper;
+import com.gzsll.hupu.support.storage.bean.UpdateInfo;
+import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.jockeyjs.util.BackgroundExecutor;
 
 import javax.inject.Inject;

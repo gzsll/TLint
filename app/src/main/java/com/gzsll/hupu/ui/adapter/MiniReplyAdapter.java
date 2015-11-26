@@ -2,8 +2,8 @@ package com.gzsll.hupu.ui.adapter;
 
 import android.view.ViewGroup;
 
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
 import com.gzsll.hupu.ui.view.MiniReplyItem;
 import com.gzsll.hupu.ui.view.MiniReplyItem_;
 

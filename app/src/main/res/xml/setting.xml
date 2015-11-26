@@ -18,6 +18,14 @@
             android:key="pSwipeBackEdgeMode"
             android:title="@string/settings_swipeback_edgemode" />
 
+        <com.gzsll.hupu.widget.WrapperListPreference
+            android:defaultValue="0"
+            android:dialogTitle="离线帖子篇数"
+            android:entries="@array/offlineCount"
+            android:entryValues="@array/prefValues"
+            android:key="pOfflineCount"
+            android:title="离线帖子篇数" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/category_read">

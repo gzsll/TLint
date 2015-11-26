@@ -38,7 +38,7 @@ public abstract class BaseListFragment<T, V extends View> extends BaseFragment i
 
     @Override
     public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        if (direction == SwipyRefreshLayoutDirection.TOP) {
+        if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
             onLoadMore();
         } else {
             onRefresh();

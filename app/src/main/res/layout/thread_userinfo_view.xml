@@ -1,61 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/llUser"
+    android:id="@+id/rlUser"
     android:layout_width="match_parent"
     android:layout_height="40dip"
     android:layout_marginTop="12dip"
     android:orientation="horizontal">
 
-    <RelativeLayout
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ivIcon"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:layout_marginLeft="15dip"
+        fresco:failureImage="@drawable/icon_def_head"
+        fresco:placeholderImage="@drawable/icon_def_head"
+        fresco:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/ivIcon"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_marginLeft="15dip"
-            fresco:placeholderImage="@drawable/icon_def_head"
-            fresco:failureImage="@drawable/icon_def_head"
-            fresco:roundAsCircle="true" />
-
-        <TextView
-            android:id="@+id/tvUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:layout_toRightOf="@+id/ivIcon"
-            android:textColor="#666666"
-            android:textSize="15sp" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_toRightOf="@+id/ivIcon"
+        android:textColor="#666666"
+        android:textSize="15sp" />
 
 
-        <TextView
-            android:id="@+id/tvUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dip"
-            android:layout_toRightOf="@+id/ivIcon"
-            android:textColor="#999999"
-            android:textSize="11sp"
-            android:visibility="gone" />
+    <TextView
+        android:id="@+id/tvUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dip"
+        android:layout_toRightOf="@+id/ivIcon"
+        android:textColor="#999999"
+        android:textSize="11sp"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dip"
-            android:layout_toRightOf="@+id/tvUser"
-            android:textColor="#999999"
-            android:textSize="11sp" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dip"
+        android:layout_toRightOf="@+id/tvUser"
+        android:textColor="#999999"
+        android:textSize="11sp" />
 
     <RelativeLayout
         android:id="@+id/rlLight"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true">
 
         <TextView
             android:id="@+id/tvReplyLight"
@@ -81,4 +78,4 @@
     </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

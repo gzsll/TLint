@@ -1,6 +1,6 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.storage.bean.MiniReplyListItem;
+import com.gzsll.hupu.support.storage.bean.MiniReplyListItem;
 
 import java.util.List;
 

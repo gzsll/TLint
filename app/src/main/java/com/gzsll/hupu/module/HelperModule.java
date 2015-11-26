@@ -2,18 +2,19 @@ package com.gzsll.hupu.module;
 
 import android.content.Context;
 
-import com.gzsll.hupu.utils.CacheHelper;
-import com.gzsll.hupu.utils.DataCleanHelper;
-import com.gzsll.hupu.utils.FileHelper;
-import com.gzsll.hupu.utils.FormatHelper;
-import com.gzsll.hupu.utils.NetWorkHelper;
-import com.gzsll.hupu.utils.OkHttpHelper;
-import com.gzsll.hupu.utils.ReplyViewHelper;
-import com.gzsll.hupu.utils.RequestHelper;
-import com.gzsll.hupu.utils.ResourceHelper;
-import com.gzsll.hupu.utils.SecurityHelper;
-import com.gzsll.hupu.utils.SettingPrefHelper;
-import com.gzsll.hupu.utils.ThemeHelper;
+import com.gzsll.hupu.support.utils.CacheHelper;
+import com.gzsll.hupu.support.utils.ConfigHelper;
+import com.gzsll.hupu.support.utils.DataCleanHelper;
+import com.gzsll.hupu.support.utils.FileHelper;
+import com.gzsll.hupu.support.utils.FormatHelper;
+import com.gzsll.hupu.support.utils.HtmlHelper;
+import com.gzsll.hupu.support.utils.NetWorkHelper;
+import com.gzsll.hupu.support.utils.OkHttpHelper;
+import com.gzsll.hupu.support.utils.RequestHelper;
+import com.gzsll.hupu.support.utils.ResourceHelper;
+import com.gzsll.hupu.support.utils.SecurityHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
+import com.gzsll.hupu.support.utils.ThemeHelper;
 import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;
@@ -51,8 +52,8 @@ public class HelperModule {
 
     @Provides
     @Singleton
-    NetWorkHelper provideNetWorkHelper() {
-        return new NetWorkHelper();
+    NetWorkHelper provideNetWorkHelper(Context mContext) {
+        return new NetWorkHelper(mContext);
     }
 
 
@@ -82,10 +83,6 @@ public class HelperModule {
         return new SettingPrefHelper(context);
     }
 
-    @Provides
-    ReplyViewHelper provideReplyViewHelper(Context context, SettingPrefHelper settingPrefHelper) {
-        return new ReplyViewHelper(settingPrefHelper, context);
-    }
 
     @Provides
     @Singleton
@@ -103,6 +100,18 @@ public class HelperModule {
     @Singleton
     DataCleanHelper provideDataCleanHelper(Context context) {
         return new DataCleanHelper(context);
+    }
+
+    @Provides
+    @Singleton
+    ConfigHelper provideConfigHelper(SettingPrefHelper mSettingPrefHelper) {
+        return new ConfigHelper(mSettingPrefHelper);
+    }
+
+    @Provides
+    @Singleton
+    HtmlHelper provideHtmlHelper(ConfigHelper mConfigHelper, FileHelper mFileHelper, OkHttpHelper mOkHttpHelper) {
+        return new HtmlHelper(mConfigHelper, mFileHelper, mOkHttpHelper);
     }
 
 

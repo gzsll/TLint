@@ -1,6 +1,6 @@
 package com.gzsll.hupu.api.login;
 
-import com.gzsll.hupu.storage.bean.LoginResult;
+import com.gzsll.hupu.support.storage.bean.LoginResult;
 
 /**
  * Created by sll on 2015/3/8.

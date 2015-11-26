@@ -6,7 +6,7 @@ import com.amazonaws.mobileconnectors.s3.transfermanager.Upload;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.gzsll.hupu.Constants;
-import com.gzsll.hupu.storage.bean.UploadInfo;
+import com.gzsll.hupu.support.storage.bean.UploadInfo;
 import com.gzsll.hupu.view.UploadView;
 
 import java.io.File;

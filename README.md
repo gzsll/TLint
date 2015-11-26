@@ -1,6 +1,33 @@
 # HuPu-TL
 根据虎扑新版api开发，基于material design，使用mvp模式开发~纯练手之作，由于是从旧版本的修改而来，代码还很乱，有时间会整理，目前基本功能已完成，欢迎jrs来star和fork，有什么问题也可以pull requests
 
+[![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_small.png)](http://play.google.com/store/apps/details?id=com.gzsll.hupu)
+
+你也可以在应用市场下载应用体验
+[豌豆荚](http://www.wandoujia.com/apps/com.gzsll.hupu)
+[本地下载](http://www.pursll.com/TLint_1.0.apk)
+
+
+## 应用截图
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot1.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot2.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot3.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot4.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot5.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot6.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot7.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot8.png) 
+
+![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot9.png) 
+
+
 
 ## api接口文档(相关实现在com.gzsll.hupu.api底下，使用retrofit进行请求)
 
@@ -92,53 +119,10 @@ public void getGroupThreadsList(String groupId, String lastId, String type, List
 > 其他接口请自行查看代码
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## License
 
-Copyright (c) 2014 gzsll
+Copyright (c) 2014 pursll
 
 Licensed under the [Apache License, Version 3.0](http://opensource.org/licenses/GPL-3.0)
+
+

@@ -1,15 +1,15 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
 import com.gzsll.hupu.api.login.LoginAPi;
-import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.db.UserDao;
+import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
-import com.gzsll.hupu.storage.UserStorage;
-import com.gzsll.hupu.storage.bean.LoginResult;
-import com.gzsll.hupu.storage.bean.UserInfo;
-import com.gzsll.hupu.storage.bean.UserResult;
-import com.gzsll.hupu.utils.SecurityHelper;
+import com.gzsll.hupu.support.db.User;
+import com.gzsll.hupu.support.db.UserDao;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.LoginResult;
+import com.gzsll.hupu.support.storage.bean.UserInfo;
+import com.gzsll.hupu.support.storage.bean.UserResult;
+import com.gzsll.hupu.support.utils.SecurityHelper;
 import com.gzsll.hupu.view.LoginView;
 import com.squareup.otto.Bus;
 
@@ -28,7 +28,7 @@ public class LoginPresenter extends Presenter<LoginView> {
     @Inject
     LoginAPi loginAPi;
     @Inject
-    HuPuApi huPuApi;
+    ThreadApi threadApi;
     @Inject
     Bus bus;
     @Inject
@@ -67,12 +67,13 @@ public class LoginPresenter extends Presenter<LoginView> {
     }
 
     private void getUserInfo(final User user) {
-        huPuApi.getUserInfo(user.getUid(), new retrofit.Callback<UserResult>() {
+        threadApi.getUserInfo(user.getUid(), new retrofit.Callback<UserResult>() {
             @Override
             public void success(UserResult userResult, retrofit.client.Response response) {
                 view.hideLoading();
                 if (userResult != null && userResult.getStatus() == 200) {
                     UserInfo userInfo = userResult.getData();
+                    user.setUserName(userInfo.getUsername());
                     user.setIcon(userInfo.getIcon());
                     user.setSex(userInfo.getSex());
                     user.setSyncTime(userInfo.getSynctime());

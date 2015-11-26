@@ -1,7 +1,7 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.hupu.HuPuApi;
-import com.gzsll.hupu.storage.bean.UserResult;
+import com.gzsll.hupu.api.thread.ThreadApi;
+import com.gzsll.hupu.support.storage.bean.UserResult;
 import com.gzsll.hupu.view.UserProfileView;
 
 import javax.inject.Inject;
@@ -35,11 +35,11 @@ public class UserProfilePresenter extends Presenter<UserProfileView> {
     }
 
     @Inject
-    HuPuApi mHuPuApi;
+    ThreadApi mThreadApi;
 
     public void receiveUserInfo(String uid) {
         view.showLoading();
-        mHuPuApi.getUserInfo(uid, new Callback<UserResult>() {
+        mThreadApi.getUserInfo(uid, new Callback<UserResult>() {
             @Override
             public void success(UserResult userResult, Response response) {
                 view.hideLoading();

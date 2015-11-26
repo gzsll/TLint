@@ -1,17 +1,27 @@
 package com.gzsll.hupu.ui.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.db.Board;
+import com.gzsll.hupu.otto.DelGroupAttentionEvent;
+import com.gzsll.hupu.otto.StartOfflineEvent;
+import com.gzsll.hupu.support.db.Board;
+import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.ui.activity.LoginActivity_;
+import com.gzsll.hupu.ui.activity.ThreadActivity_;
+import com.squareup.otto.Bus;
 
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2015/6/16.
@@ -22,6 +32,15 @@ public class BoardListItem extends LinearLayout {
     SimpleDraweeView ivIcon;
     @ViewById
     TextView tvName;
+    @ViewById
+    SwipeLayout swipeLayout;
+
+    public Bus mBus;
+    public UserStorage mUserStorage;
+    public Activity mActivity;
+    private Board board;
+
+    private Logger logger = Logger.getLogger(BoardListItem.class.getSimpleName());
 
     public BoardListItem(Context context) {
         super(context);
@@ -32,7 +51,33 @@ public class BoardListItem extends LinearLayout {
     }
 
     public void init(Board board) {
+        this.board = board;
         ivIcon.setImageURI(Uri.parse(board.getBoardIcon()));
         tvName.setText(board.getBoardName());
+    }
+
+    @Click
+    void tvDel() {
+        swipeLayout.close();
+        mBus.post(new DelGroupAttentionEvent(board.getBoardId()));
+    }
+
+
+    @Click
+    void swipeLayout() {
+        if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close) {
+            if (mUserStorage.isLogin()) {
+                ThreadActivity_.intent(mActivity).mGroupId(board.getGroupId()).start();
+            } else {
+                LoginActivity_.intent(mActivity).start();
+            }
+        }
+    }
+
+
+    @Click
+    void tvOffline() {
+        swipeLayout.close();
+        mBus.post(new StartOfflineEvent(board));
     }
 }

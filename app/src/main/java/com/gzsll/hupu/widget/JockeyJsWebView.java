@@ -165,22 +165,12 @@ public class JockeyJsWebView extends WebView {
         try {
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
             layoutParams.height = convertHeight(i);
-            logger.debug("height:" + layoutParams.height);
             setLayoutParams(layoutParams);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        super.onLayout(z, i, i2, i3, i4);
-        logger.debug("--------onLayout-------,l=" + i + ",t=" + i2 + ",r=" + i3 + ",b=" + i4);
-    }
-
-    protected void onSizeChanged(int i, int i2, int i3, int i4) {
-        super.onSizeChanged(i, i2, i3, i4);
-        logger.debug("--------onSizeChanged-------,w=" + i + ",h=" + i2 + ",ow=" + i3 + ",oh=" + i4);
-    }
 
 
     private int convertHeight(float dpValue) {
