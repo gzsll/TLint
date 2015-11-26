@@ -89,6 +89,13 @@
         <item>20</item>
     </string-array>
 
+    <string-array name="offlineCount">
+        <item>50</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+    </string-array>
+
     <string-array name="prefValues">
         <item>0</item>
         <item>1</item>

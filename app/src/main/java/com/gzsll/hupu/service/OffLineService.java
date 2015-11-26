@@ -162,7 +162,7 @@ public class OffLineService extends Service {
                 if (isCanceled()) {
                     return false;
                 }
-                int count = 100; //加载100篇帖子  TODO 加上设置
+                int count = mSettingPrefHelper.getOfflineCount(); //加载帖子
                 ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getGroupId()), "0", count, mSettingPrefHelper.getThreadSort(), null);
                 if (result.getStatus() == 200) {
                     List<GroupThread> threads = result.getData().getGroupThreads();

@@ -117,4 +117,12 @@ public class SettingPrefHelper {
         return Integer.parseInt(prefs.getString("pSwipeBackEdgeMode", "0"));
     }
 
+
+    public static int[] offlineCountArr = new int[]{50, 100, 150, 200};
+
+    public int getOfflineCount() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return offlineCountArr[Integer.parseInt(prefs.getString("pOfflineCount", "0"))];
+    }
+
 }
