@@ -159,7 +159,7 @@ public class DbConverterHelper {
         threadInfo.setId(info.getServerId());
         threadInfo.setUid(info.getUid());
         threadInfo.setAttention(info.getAttention());
-        threadInfo.setContent(mHtmlHelper.transImgToLocal(info.getContent(), false));
+        threadInfo.setContent(mHtmlHelper.transImgToLocal(info.getContent()));
         threadInfo.setCreateAt(info.getCreateAt());
         threadInfo.setCreateAtUnixtime(info.getCreateAtUnixTime());
         threadInfo.setDigest(info.getDigest());
