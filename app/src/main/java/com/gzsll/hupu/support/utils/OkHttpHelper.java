@@ -72,11 +72,6 @@ public class OkHttpHelper {
         }
     }
 
-<<<<<<< HEAD:app/src/main/java/com/gzsll/hupu/utils/OkHttpHelper.java
-    private static final String CHARSET_NAME = "UTF-8";
-
-=======
->>>>>>> origin/develop:app/src/main/java/com/gzsll/hupu/support/utils/OkHttpHelper.java
 
 
     public void httpDownload(String url, File target) throws Exception {
