@@ -107,7 +107,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     private void loadThreadList(String last, boolean clear) {
-        if (mNetWorkHelper.isWiFi(mContext)) {
+        if (mNetWorkHelper.isFast()) {
             loadFromNet(last, clear);
         } else {
             loadFromDb(clear);

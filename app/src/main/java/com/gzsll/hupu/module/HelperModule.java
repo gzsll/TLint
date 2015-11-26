@@ -52,8 +52,8 @@ public class HelperModule {
 
     @Provides
     @Singleton
-    NetWorkHelper provideNetWorkHelper() {
-        return new NetWorkHelper();
+    NetWorkHelper provideNetWorkHelper(Context mContext) {
+        return new NetWorkHelper(mContext);
     }
 
 

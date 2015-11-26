@@ -81,7 +81,7 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     private void loadContent(int page) {
-        if (mNetWorkHelper.isWiFi(mContext) || page > 1) {
+        if (mNetWorkHelper.isFast() || page > 1) {
             loadFromNet(page);
         } else {
             loadFromDb();

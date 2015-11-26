@@ -14,6 +14,7 @@ import com.gzsll.hupu.support.storage.bean.BoardListResult;
 import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.support.storage.bean.CategoryList;
 import com.gzsll.hupu.support.storage.bean.GroupList;
+import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.view.BoardListView;
 import com.squareup.otto.Bus;
 
@@ -47,6 +48,8 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     Bus mBus;
     @Inject
     Context mContext;
+    @Inject
+    NetWorkHelper mNetWorkHelper;
 
     Logger logger = Logger.getLogger(BoardListPresenter.class.getSimpleName());
 
@@ -61,53 +64,63 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     public void onBoardListReceive(final int boardId) {
         this.boardId = boardId;
         view.showLoading();
+        if (boardId != 0 || !mNetWorkHelper.isFast()) {
+            loadFromDb();
+        } else {
+            loadFromNet();
+        }
+    }
+
+    private void loadFromDb() {
         List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId)).orderAsc(BoardDao.Properties.CategoryId).orderAsc(BoardDao.Properties.BoardIndex).list();
-        if (!boards.isEmpty() && boardId != 0) {
+        if (!boards.isEmpty()) {
             this.boards = (ArrayList) boards;
             sortBoard(boards);
         } else {
-            mThreadApi.getBoardList(new Callback<BoardListResult>() {
-                @Override
-                public void success(BoardListResult boardListResult, Response response) {
-                    if (boardListResult.getStatus() == 200) {
-                        for (int i = 0; i < boardListResult.getData().getBoardList().size(); i++) {
-                            BoardList boardList = boardListResult.getData().getBoardList().get(i);
-                            if (boardList.getId() == boardId) {
-                                List<Boards> boardsList = new ArrayList<Boards>();
-                                ArrayList<Board> offlineBoards = new ArrayList<>();
-                                for (int j = 0; j < boardList.getGroupList().size(); j++) {
-                                    GroupList groupList = boardList.getGroupList().get(j);
-                                    Boards boards = new Boards();
-                                    boards.setName(groupList.getCategoryName());
-                                    List<Board> boardArrayList = new ArrayList<Board>();
-                                    for (int k = 0; k < groupList.getCategoryList().size(); k++) {
-                                        CategoryList categoryList = groupList.getCategoryList().get(k);
-                                        Board board = saveToBoard(categoryList, k, boardId);
-                                        boardArrayList.add(board);
-                                    }
-                                    offlineBoards.addAll(boardArrayList);
-                                    boards.setBoards(boardArrayList);
-                                    boardsList.add(boards);
+            loadFromNet();
+        }
+    }
+
+    private void loadFromNet() {
+        mThreadApi.getBoardList(new Callback<BoardListResult>() {
+            @Override
+            public void success(BoardListResult boardListResult, Response response) {
+                if (boardListResult.getStatus() == 200) {
+                    for (int i = 0; i < boardListResult.getData().getBoardList().size(); i++) {
+                        BoardList boardList = boardListResult.getData().getBoardList().get(i);
+                        if (boardList.getId() == boardId) {
+                            List<Boards> boardsList = new ArrayList<Boards>();
+                            ArrayList<Board> offlineBoards = new ArrayList<>();
+                            for (int j = 0; j < boardList.getGroupList().size(); j++) {
+                                GroupList groupList = boardList.getGroupList().get(j);
+                                Boards boards = new Boards();
+                                boards.setName(groupList.getCategoryName());
+                                List<Board> boardArrayList = new ArrayList<Board>();
+                                for (int k = 0; k < groupList.getCategoryList().size(); k++) {
+                                    CategoryList categoryList = groupList.getCategoryList().get(k);
+                                    Board board = saveToBoard(categoryList, k, boardId);
+                                    boardArrayList.add(board);
                                 }
-                                BoardListPresenter.this.boards = offlineBoards;
-                                view.renderBoardList(boardsList);
-                                view.hideLoading();
+                                offlineBoards.addAll(boardArrayList);
+                                boards.setBoards(boardArrayList);
+                                boardsList.add(boards);
                             }
-                        }
-                        if (boardListResult.getNotice() != null) {
-                            mBus.post(new ReceiveNoticeEvent(boardListResult.getNotice()));
+                            BoardListPresenter.this.boards = offlineBoards;
+                            view.renderBoardList(boardsList);
+                            view.hideLoading();
                         }
                     }
+                    if (boardListResult.getNotice() != null) {
+                        mBus.post(new ReceiveNoticeEvent(boardListResult.getNotice()));
+                    }
                 }
+            }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    view.onError();
-                }
-            });
-        }
-
-
+            @Override
+            public void failure(RetrofitError error) {
+                view.onError();
+            }
+        });
     }
 
 
@@ -166,10 +179,14 @@ public class BoardListPresenter extends Presenter<BoardListView> {
         board.setBoardId(boardId);
         board.setBoardIcon(categoryList.getGroupAvator());
         board.setBoardName(categoryList.getGroupName());
-        board.setCategoryId(Long.valueOf(categoryList.getCategoryId()));
+        board.setCategoryId(categoryList.getCategoryId());
         board.setCategoryName(categoryList.getCategoryName());
         board.setGroupId(categoryList.getId());
         board.setBoardIndex(index);
+        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId), BoardDao.Properties.GroupId.eq(categoryList.getId())).list();
+        if (!boards.isEmpty()) {
+            board.setId(boards.get(0).getId());
+        }
         mBoardDao.insertOrReplace(board);
         return board;
     }

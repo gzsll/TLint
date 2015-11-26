@@ -11,6 +11,8 @@ import android.text.TextUtils;
  */
 public class NetWorkHelper {
 
+    private Context mContext;
+
     /**
      * 没有网络
      */
@@ -32,16 +34,19 @@ public class NetWorkHelper {
      */
     public static final int NETWORKTYPE_WIFI = 4;
 
+    public NetWorkHelper(Context mContext) {
+        this.mContext = mContext;
+    }
+
     /**
      * 获取网络状态，wifi,wap,2g,3g.
      *
-     * @param context 上下文
      * @return int 网络状态 {@link #NETWORKTYPE_2G},{@link #NETWORKTYPE_3G},
      * *{@link #NETWORKTYPE_INVALID},{@link #NETWORKTYPE_WAP}* <p>{@link #NETWORKTYPE_WIFI}
      */
-    public int getNetWorkType(Context context) {
+    public int getNetWorkType() {
         int mNetWorkType = NETWORKTYPE_INVALID;
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             String type = networkInfo.getTypeName();
@@ -50,7 +55,7 @@ public class NetWorkHelper {
             } else if (type.equalsIgnoreCase("MOBILE")) {
                 String proxyHost = android.net.Proxy.getDefaultHost();
                 mNetWorkType = TextUtils.isEmpty(proxyHost)
-                        ? (isFastMobileNetwork(context) ? NETWORKTYPE_3G : NETWORKTYPE_2G)
+                        ? (isFastMobileNetwork() ? NETWORKTYPE_3G : NETWORKTYPE_2G)
                         : NETWORKTYPE_WAP;
             }
         } else {
@@ -59,8 +64,8 @@ public class NetWorkHelper {
         return mNetWorkType;
     }
 
-    private boolean isFastMobileNetwork(Context context) {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    private boolean isFastMobileNetwork() {
+        TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
         switch (telephonyManager.getNetworkType()) {
             case TelephonyManager.NETWORK_TYPE_1xRTT:
                 return false; // ~ 50-100 kbps
@@ -99,11 +104,15 @@ public class NetWorkHelper {
         }
     }
 
-    public boolean isAvailableNetwork(Context context) {
-        return getNetWorkType(context) != NETWORKTYPE_INVALID;
+    public boolean isAvailableNetwork() {
+        return getNetWorkType() != NETWORKTYPE_INVALID;
     }
 
-    public boolean isWiFi(Context context) {
-        return getNetWorkType(context) == NETWORKTYPE_WIFI;
+    public boolean isWiFi() {
+        return getNetWorkType() == NETWORKTYPE_WIFI;
+    }
+
+    public boolean isFast() {
+        return isWiFi() || isFastMobileNetwork();
     }
 }

@@ -19,11 +19,11 @@ public class CategoryList {
         this.orderBy = orderBy;
     }
 
-    public int getCategoryId() {
+    public long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
     }
 
@@ -133,7 +133,7 @@ public class CategoryList {
 
     private int uid;
     private int orderBy;
-    private int categoryId;
+    private long categoryId;
     private String groupAvator;
     private String color;
     private int colorStyle;

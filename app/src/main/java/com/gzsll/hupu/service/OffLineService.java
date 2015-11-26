@@ -317,7 +317,7 @@ public class OffLineService extends Service {
             return true;
         }
 
-        if (!mNetWorkHelper.isWiFi(this)) {
+        if (!mNetWorkHelper.isWiFi()) {
             logger.debug("isWiFi");
             stopSelf();
             mCurrentStatus = CANCEL;
