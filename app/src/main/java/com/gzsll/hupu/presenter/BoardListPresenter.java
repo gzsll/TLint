@@ -4,16 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.otto.ReceiveNoticeEvent;
 import com.gzsll.hupu.service.OffLineService;
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.db.BoardDao;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.BoardList;
+import com.gzsll.hupu.support.storage.bean.BoardListData;
 import com.gzsll.hupu.support.storage.bean.BoardListResult;
 import com.gzsll.hupu.support.storage.bean.Boards;
 import com.gzsll.hupu.support.storage.bean.CategoryList;
-import com.gzsll.hupu.support.storage.bean.GroupList;
+import com.gzsll.hupu.support.storage.bean.MyBoardListData;
+import com.gzsll.hupu.support.storage.bean.MyBoardListResult;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.view.BoardListView;
 import com.squareup.otto.Bus;
@@ -64,11 +65,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     public void onBoardListReceive(final int boardId) {
         this.boardId = boardId;
         view.showLoading();
-        if (boardId != 0 || !mNetWorkHelper.isFast()) {
-            loadFromDb();
-        } else {
-            loadFromNet();
-        }
+        loadFromNet();
     }
 
     private void loadFromDb() {
@@ -82,45 +79,49 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     }
 
     private void loadFromNet() {
-        mThreadApi.getBoardList(new Callback<BoardListResult>() {
-            @Override
-            public void success(BoardListResult boardListResult, Response response) {
-                if (boardListResult.getStatus() == 200) {
-                    for (int i = 0; i < boardListResult.getData().getBoardList().size(); i++) {
-                        BoardList boardList = boardListResult.getData().getBoardList().get(i);
-                        if (boardList.getId() == boardId) {
-                            List<Boards> boardsList = new ArrayList<Boards>();
-                            ArrayList<Board> offlineBoards = new ArrayList<>();
-                            for (int j = 0; j < boardList.getGroupList().size(); j++) {
-                                GroupList groupList = boardList.getGroupList().get(j);
-                                Boards boards = new Boards();
-                                boards.setName(groupList.getCategoryName());
-                                List<Board> boardArrayList = new ArrayList<Board>();
-                                for (int k = 0; k < groupList.getCategoryList().size(); k++) {
-                                    CategoryList categoryList = groupList.getCategoryList().get(k);
-                                    Board board = saveToBoard(categoryList, k, boardId);
-                                    boardArrayList.add(board);
-                                }
-                                offlineBoards.addAll(boardArrayList);
-                                boards.setBoards(boardArrayList);
-                                boardsList.add(boards);
-                            }
-                            BoardListPresenter.this.boards = offlineBoards;
-                            view.renderBoardList(boardsList);
+        if (boardId == 0) {
+            mThreadApi.getMyBoardList(new Callback<MyBoardListResult>() {
+                @Override
+                public void success(MyBoardListResult boardListResult, Response response) {
+                    if (boardListResult.data != null) {
+                        ArrayList<BoardList> boardLists = new ArrayList<BoardList>();
+                        boardLists.add(convertMyBoardListData(boardListResult.data));
+                        view.renderBoardList(boardLists);
+                        view.hideLoading();
+                    }
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    view.onError();
+                }
+            });
+        } else {
+            mThreadApi.getBoardList(new Callback<BoardListResult>() {
+                @Override
+                public void success(BoardListResult boardListResult, Response response) {
+                    for (BoardListData data : boardListResult.data) {
+                        if (data.fid.equals(String.valueOf(boardId))) {
+                            view.renderBoardList(data.sub);
                             view.hideLoading();
                         }
                     }
-                    if (boardListResult.getNotice() != null) {
-                        mBus.post(new ReceiveNoticeEvent(boardListResult.getNotice()));
-                    }
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                view.onError();
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    view.onError();
+                }
+            });
+        }
+    }
+
+    private BoardList convertMyBoardListData(MyBoardListData data) {
+        BoardList boardList = new BoardList();
+        boardList.data = data.sub;
+        boardList.name = data.name;
+        return boardList;
     }
 
 
@@ -140,7 +141,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
             boards.setName(key);
             boardsList.add(boards);
         }
-        view.renderBoardList(boardsList);
+        // view.renderBoardList(boardsList);
         view.hideLoading();
 
     }
@@ -192,8 +193,8 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     }
 
 
-    public void delGroupAttention(long groupId) {
-        mThreadApi.delGroupAttention(String.valueOf(groupId), new Callback<BaseResult>() {
+    public void delGroupAttention(String fid) {
+        mThreadApi.delGroupAttention(fid, new Callback<BaseResult>() {
             @Override
             public void success(BaseResult baseResult, Response response) {
                 view.showToast(baseResult.getMsg());

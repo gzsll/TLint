@@ -41,6 +41,7 @@ import com.gzsll.hupu.ui.fragment.PictureItemFragment_;
 import com.gzsll.hupu.ui.fragment.SettingFragment_;
 import com.gzsll.hupu.ui.fragment.ThreadListFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
+import com.gzsll.hupu.widget.HuPuWebView;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -66,7 +67,7 @@ import dagger.Provides;
                 SplashActivity_.class, UserProfileActivity_.class,
                 ThreadListFragment_.class, TopicFragment_.class, BoardListFragment_.class, PictureItemFragment_.class, MessageAtFragment_.class, MessageReplyFragment_.class,
                 FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class, NewsFragment_.class, NewsListFragment_.class
-                , LoginFragment_.class, AccountFragment_.class, OffLineService.class
+                , LoginFragment_.class, AccountFragment_.class, OffLineService.class, HuPuWebView.class
         },
         library = true
 )

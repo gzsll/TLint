@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             if (groupId == Constants.NAV_SETTING) {
                                 SettingActivity_.intent(MainActivity.this).start();
                             } else if (groupId == Constants.NAV_FEEDBACK) {
-                                PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).groupThreadId("2869008").start();
+                                PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).tid("2869008").start();
 
                             } else {
                                 BrowserActivity_.intent(MainActivity.this).url("http://www.pursll.com/TLint").start();

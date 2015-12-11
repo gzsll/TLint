@@ -56,7 +56,7 @@ public class PostPresenter extends Presenter<PostView> {
      *
      * @param content 内容
      */
-    public void comment(final String groupId, final String groupReplyId, final String quoteId, final String content) {
+    public void comment(final String tid, final String fid, final String pid, final String content) {
         view.showLoading();
         if (paths != null && !paths.isEmpty()) {
             uploadCount = 0;
@@ -76,21 +76,21 @@ public class PostPresenter extends Presenter<PostView> {
                             images.add(uploadInfo.url);
                         }
                         if (uploadCount == paths.size()) {
-                            addReply(groupId, groupReplyId, quoteId, content, images);
+                            addReply(tid, fid, pid, content, images);
                         }
                     }
                 });
             }
 
         } else {
-            addReply(groupId, groupReplyId, quoteId, content, null);
+            addReply(tid, fid, pid, content, null);
         }
 
 
     }
 
-    private void addReply(String groupId, String groupReplyId, String quoteId, String content, List<String> imgs) {
-        mThreadApi.addReplyByApp(groupId, groupReplyId, quoteId, content, imgs, new Callback<AddReplyResult>() {
+    private void addReply(String tid, String fid, String pid, String content, List<String> imgs) {
+        mThreadApi.addReplyByApp(tid, fid, pid, content, imgs, new Callback<AddReplyResult>() {
             @Override
             public void success(AddReplyResult result, Response response) {
                 view.hideLoading();
@@ -113,14 +113,7 @@ public class PostPresenter extends Presenter<PostView> {
     }
 
 
-    /**
-     * 发表新的帖子
-     *
-     * @param groupId 论坛id
-     * @param content 内容
-     * @param title   标题
-     */
-    public void post(final String groupId, final String content, final String title) {
+    public void post(final String fid, final String content, final String title) {
         view.showLoading();
         if (paths != null && !paths.isEmpty()) {
             uploadCount = 0;
@@ -140,19 +133,19 @@ public class PostPresenter extends Presenter<PostView> {
                             images.add(uploadInfo.url);
                         }
                         if (uploadCount == paths.size()) {
-                            addPost(groupId, content, title, images);
+                            addPost(fid, content, title, images);
                         }
                     }
                 });
             }
 
         } else {
-            addPost(groupId, content, title, null);
+            addPost(fid, content, title, null);
         }
     }
 
-    private void addPost(String groupId, String content, String title, List<String> imgs) {
-        mThreadApi.addGroupThread(title, content, groupId, imgs, new Callback<BaseResult>() {
+    private void addPost(String fid, String content, String title, List<String> imgs) {
+        mThreadApi.addGroupThread(title, content, fid, imgs, new Callback<BaseResult>() {
             @Override
             public void success(BaseResult result, Response response) {
                 view.hideLoading();

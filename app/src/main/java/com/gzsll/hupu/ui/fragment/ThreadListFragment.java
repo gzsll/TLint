@@ -23,8 +23,8 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.ThreadListPresenter;
-import com.gzsll.hupu.support.storage.bean.GroupThread;
-import com.gzsll.hupu.support.storage.bean.Info;
+import com.gzsll.hupu.support.storage.bean.Board;
+import com.gzsll.hupu.support.storage.bean.Thread;
 import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.activity.PostActivity_;
@@ -53,7 +53,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     Logger logger = Logger.getLogger(ThreadListFragment.class.getSimpleName());
 
     @FragmentArg
-    long mGroupId;
+    String fid;
 
 
     @Inject
@@ -105,8 +105,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         recyclerView.setAdapter(mAdapter);
         refreshLayout.setOnRefreshListener(this);
         appbar.addOnOffsetChangedListener(this);
-        mThreadListPresenter.onThreadReceive(mGroupId + "", mSettingPrefHelper.getThreadSort(), null);
-
+        mThreadListPresenter.onThreadReceive(fid, mSettingPrefHelper.getThreadSort(), null);
     }
 
 
@@ -163,9 +162,10 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     }
 
 
+
     @Override
-    public void renderThreadInfo(Info info) {
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(info.getGroupCover()))
+    public void renderThreadInfo(Board board) {
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(board.backImg))
                 .setResizeOptions(
                         new ResizeOptions(500, 500))
                 .build();
@@ -175,13 +175,18 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
                 .setAutoPlayAnimations(true)
                 .build();
         backdrop.setController(draweeController);
-        collapsingToolbar.setTitle(info.getGroupName());
+        collapsingToolbar.setTitle(board.name);
     }
 
     @Override
-    public void renderThreads(List<GroupThread> threads) {
+    public void renderThreads(List<Thread> threads) {
         refreshLayout.setRefreshing(false);
         mAdapter.updateItems(threads);
+    }
+
+    @Override
+    public void attendStatus(int status) {
+
     }
 
     @Override
@@ -200,10 +205,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         recyclerView.smoothScrollToPosition(0);
     }
 
-    @Override
-    public void showLoginView() {
 
-    }
 
 
     @Override
@@ -218,7 +220,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @Click
     void floatingPost() {
-        PostActivity_.intent(getActivity()).type(Constants.TYPE_POST).groupThreadId(String.valueOf(mGroupId)).start();
+        PostActivity_.intent(getActivity()).type(Constants.TYPE_POST).fid(fid).start();
         floatingMenu.toggle(true);
     }
 
@@ -232,10 +234,10 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Click
     void floatingSwitch() {
         if (floatingSwitch.getLabelText().equals("按回帖时间排序")) {
-            mThreadListPresenter.onThreadReceive(String.valueOf(mGroupId), Constants.THREAD_TYPE_HOT, null);
+            mThreadListPresenter.onThreadReceive(fid, Constants.THREAD_TYPE_HOT, null);
             floatingSwitch.setLabelText("按发帖时间排序");
         } else {
-            mThreadListPresenter.onThreadReceive(String.valueOf(mGroupId), Constants.THREAD_TYPE_NEW, null);
+            mThreadListPresenter.onThreadReceive(fid, Constants.THREAD_TYPE_NEW, null);
             floatingSwitch.setLabelText("按回帖时间排序");
         }
         floatingMenu.toggleMenuButton(true);

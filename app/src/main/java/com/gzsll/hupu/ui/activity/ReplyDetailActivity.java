@@ -169,13 +169,13 @@ public class ReplyDetailActivity extends BaseSwipeBackActivity implements ReplyD
 
     @Click
     void floatingComment() {
-        PostActivity_.intent(this).type(Constants.TYPE_REPLY).title(replyItem.getContent()).groupThreadId(replyItem.getGroupThreadId() + "").groupReplyId(replyItem.getId() + "").start();
+        PostActivity_.intent(this).type(Constants.TYPE_REPLY).title(replyItem.getContent()).tid(replyItem.getGroupThreadId() + "").pid(replyItem.getId() + "").start();
         floatingMenu.toggle(true);
     }
 
     @Click
     void floatingQuote() {
-        PostActivity_.intent(this).type(Constants.TYPE_QUOTE).title(replyItem.getContent()).groupThreadId(replyItem.getGroupThreadId() + "").quoteId(replyItem.getId() + "").start();
+        PostActivity_.intent(this).type(Constants.TYPE_QUOTE).title(replyItem.getContent()).tid(replyItem.getGroupThreadId() + "").pid(replyItem.getId() + "").start();
         floatingMenu.toggle(true);
     }
 

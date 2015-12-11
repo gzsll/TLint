@@ -99,7 +99,7 @@ public class MiniReplyItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (mActivity instanceof ReplyDetailActivity) {
-                    PostActivity_.intent(mActivity).type(Constants.TYPE_AT).mTo(item.getUserInfo().getUsername()).groupThreadId(item.getGroupThreadId() + "").groupReplyId(item.getId() + "").start();
+                    PostActivity_.intent(mActivity).type(Constants.TYPE_AT).mTo(item.getUserInfo().getUsername()).tid(item.getGroupThreadId() + "").pid(item.getId() + "").start();
                 }
             }
         });

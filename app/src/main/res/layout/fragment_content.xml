@@ -14,8 +14,8 @@
         android:layout_height="match_parent"
         app:direction="both">
 
-        <com.gzsll.hupu.widget.PinnedHeaderListView
-            android:id="@+id/recyclerView"
+        <com.gzsll.hupu.widget.HuPuWebView
+            android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="true"

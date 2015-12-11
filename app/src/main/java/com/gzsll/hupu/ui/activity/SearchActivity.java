@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.SearchPresenter;
-import com.gzsll.hupu.support.storage.bean.GroupThread;
-import com.gzsll.hupu.support.storage.bean.Info;
+import com.gzsll.hupu.support.storage.bean.Board;
+import com.gzsll.hupu.support.storage.bean.Thread;
 import com.gzsll.hupu.ui.adapter.BaseRecyclerViewAdapter;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.view.ThreadListView;
@@ -69,12 +69,17 @@ public class SearchActivity extends BaseActivity implements ThreadListView, Swip
 
 
     @Override
-    public void renderThreadInfo(Info info) {
+    public void renderThreadInfo(Board info) {
 
     }
 
     @Override
-    public void renderThreads(List<GroupThread> threads) {
+    public void renderThreads(List<Thread> threads) {
+
+    }
+
+    @Override
+    public void attendStatus(int status) {
 
     }
 
@@ -97,10 +102,6 @@ public class SearchActivity extends BaseActivity implements ThreadListView, Swip
         recyclerView.smoothScrollToPosition(0);
     }
 
-    @Override
-    public void showLoginView() {
-
-    }
 
     @Override
     @UiThread

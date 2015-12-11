@@ -11,9 +11,8 @@ import com.daimajia.swipe.SwipeLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.otto.DelGroupAttentionEvent;
-import com.gzsll.hupu.otto.StartOfflineEvent;
-import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.storage.bean.Board;
 import com.gzsll.hupu.ui.activity.LoginActivity_;
 import com.gzsll.hupu.ui.activity.ThreadActivity_;
 import com.squareup.otto.Bus;
@@ -52,14 +51,14 @@ public class BoardListItem extends LinearLayout {
 
     public void init(Board board) {
         this.board = board;
-        ivIcon.setImageURI(Uri.parse(board.getBoardIcon()));
-        tvName.setText(board.getBoardName());
+        ivIcon.setImageURI(Uri.parse(board.logo));
+        tvName.setText(board.name);
     }
 
     @Click
     void tvDel() {
         swipeLayout.close();
-        mBus.post(new DelGroupAttentionEvent(board.getBoardId()));
+        mBus.post(new DelGroupAttentionEvent(board.fid));
     }
 
 
@@ -67,7 +66,7 @@ public class BoardListItem extends LinearLayout {
     void swipeLayout() {
         if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close) {
             if (mUserStorage.isLogin()) {
-                ThreadActivity_.intent(mActivity).mGroupId(board.getGroupId()).start();
+                ThreadActivity_.intent(mActivity).fid(board.fid).start();
             } else {
                 LoginActivity_.intent(mActivity).start();
             }
@@ -78,6 +77,6 @@ public class BoardListItem extends LinearLayout {
     @Click
     void tvOffline() {
         swipeLayout.close();
-        mBus.post(new StartOfflineEvent(board));
+        // mBus.post(new StartOfflineEvent(board));
     }
 }

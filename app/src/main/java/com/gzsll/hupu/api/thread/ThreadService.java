@@ -2,13 +2,17 @@ package com.gzsll.hupu.api.thread;
 
 import com.gzsll.hupu.api.TypedJsonString;
 import com.gzsll.hupu.support.storage.bean.AddReplyResult;
+import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.BoardListResult;
 import com.gzsll.hupu.support.storage.bean.FavoriteResult;
 import com.gzsll.hupu.support.storage.bean.MessageAtResult;
 import com.gzsll.hupu.support.storage.bean.MessageReplyResult;
+import com.gzsll.hupu.support.storage.bean.MyBoardListResult;
 import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
+import com.gzsll.hupu.support.storage.bean.ThreadListResult;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyResult;
+import com.gzsll.hupu.support.storage.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.TopicResult;
 import com.gzsll.hupu.support.storage.bean.UserResult;
@@ -30,20 +34,26 @@ public interface ThreadService {
     @GET("/users/getUserBaseInfo")
     void getUserInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<UserResult> callback);
 
-    @GET("/group/getBoardList")
+    @GET("/forums/getForums")
     void getBoardList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BoardListResult> callback);
 
-    @GET("/group/getGroupThreadsList")
-    void getGroupThreadsList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadsResult> callback);
+    @GET("/forums/getUserForumsList")
+    void getMyBoardList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<MyBoardListResult> callback);
+
+    @GET("/forums/getForumsInfoList")
+    void getGroupThreadsList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadListResult> callback);
 
     @GET("/group/getGroupThreadsList")
     ThreadsResult getGroupThreadsList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params);
 
-    @GET("/group/addGroupAttention")
+    @GET("/forums/attentionForumAdd")
     void addGroupAttention(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
 
-    @GET("/group/delGroupAttention")
+    @GET("/forums/attentionForumRemove")
     void delGroupAttention(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
+
+    @GET("/forums/getForumsAttendStatus")
+    void getGroupAttentionStatus(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<AttendStatusResult> callback);
 
     @GET("/group/addSpecial")
     void addSpecial(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
@@ -51,16 +61,16 @@ public interface ThreadService {
     @GET("/group/delSpecial")
     void delSpecial(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
 
-    @GET("/group/getGroupThreadInfo")
-    void getGroupThreadInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadInfoResult> callback);
+    @GET("/threads/getThreadsSchemaInfo")
+    void getGroupThreadInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadSchemaInfo> callback);
 
     @GET("/group/getGroupThreadInfo")
     ThreadInfoResult getGroupThreadInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params);
 
-    @POST("/group/addGroupThreadByApp")
+    @POST("/threads/threadPublish")
     void addGroupThread(@Body TypedJsonString json, Callback<BaseResult> callback);
 
-    @POST("/group/addReplyByApp")
+    @POST("/threads/threadReply")
     void addReplyByApp(@Body TypedJsonString json, Callback<AddReplyResult> callback);
 
     @GET("/group/getMiniReplyList")
@@ -86,5 +96,8 @@ public interface ThreadService {
 
     @GET("/notice/getMessageAt")
     void getMessageAt(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<MessageAtResult> callback);
+
+    @GET("/threads/threadReport")
+    void submitReports(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<MessageAtResult> callback);
 
 }

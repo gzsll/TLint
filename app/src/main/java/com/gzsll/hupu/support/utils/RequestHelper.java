@@ -4,6 +4,8 @@ import android.content.Context;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
+import com.gzsll.hupu.support.storage.UserStorage;
+
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -21,10 +23,12 @@ public class RequestHelper {
 
     private SecurityHelper securityHelper;
     private Context context;
+    private UserStorage mUserStorage;
 
-    public RequestHelper(SecurityHelper securityHelper, Context context) {
+    public RequestHelper(SecurityHelper securityHelper, Context context, UserStorage mUserStorage) {
         this.securityHelper = securityHelper;
         this.context = context;
+        this.mUserStorage = mUserStorage;
     }
 
 
@@ -36,6 +40,20 @@ public class RequestHelper {
         //   map.put("timestamp", String.valueOf(System.currentTimeMillis()).substring(0, 10));
         map.put("platform", "android");
         map.put("version", "1.1");
+        return map;
+    }
+
+    public Map<String, String> getHttpRequestMapV2() {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("client", getDeviceId());
+        map.put("night", "0");
+        //  map.put("mode", "0");
+        //   map.put("timestamp", String.valueOf(System.currentTimeMillis()).substring(0, 10));
+//        map.put("platform", "android");
+//        map.put("version", "1.1");
+        if (mUserStorage.isLogin()) {
+            map.put("token", mUserStorage.getToken());
+        }
         return map;
     }
 
@@ -87,6 +105,27 @@ public class RequestHelper {
             builder.append(map1.getKey()).append(map1.getValue());
         }
         builder.append("3542e676b4c80983f6131cdfe577ac9b");
+        logger.debug("builder:" + builder.toString());
+        return securityHelper.getMD5(builder.toString());
+    }
+
+    public String getRequestSignV2(Map<String, String> map) {
+        ArrayList<Map.Entry<String, String>> list = new ArrayList<Map.Entry<String, String>>(map.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, String>>() {
+            @Override
+            public int compare(Map.Entry<String, String> lhs, Map.Entry<String, String> rhs) {
+                return lhs.getKey().compareTo(rhs.getKey());
+            }
+        });
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < list.size(); i = i + 1) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            Map.Entry<String, String> map1 = list.get(i);
+            builder.append(map1.getKey()).append("=").append(map1.getValue());
+        }
+        builder.append("HUPU_SALT_AKJfoiwer394Jeiow4u309");
         logger.debug("builder:" + builder.toString());
         return securityHelper.getMD5(builder.toString());
     }

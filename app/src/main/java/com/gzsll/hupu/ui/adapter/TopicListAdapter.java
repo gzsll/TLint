@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.gzsll.hupu.support.storage.bean.Topic;
-import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.view.TopicListItem;
 import com.gzsll.hupu.ui.view.TopicListItem_;
 
@@ -30,7 +29,7 @@ public class TopicListAdapter extends BaseListAdapter<Topic, TopicListItem> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContentActivity_.intent(mActivity).mThreadId(data.getId()).start();
+                //    ContentActivity_.intent(mActivity).mThreadId(data.getId()).start();
             }
         });
         view.bind(data);

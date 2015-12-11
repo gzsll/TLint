@@ -12,8 +12,8 @@ public class Constants {
     public static final int TYPE_REPLY = 1005;
     public static final int TYPE_QUOTE = 1006;
 
-    public static final String THREAD_TYPE_HOT = "hot";  //热帖
-    public static final String THREAD_TYPE_NEW = "";//最新的帖子
+    public static final String THREAD_TYPE_HOT = "2";  //热帖
+    public static final String THREAD_TYPE_NEW = "1";//最新的帖子
 
 
     public static final int NAV_SETTING = 1000;

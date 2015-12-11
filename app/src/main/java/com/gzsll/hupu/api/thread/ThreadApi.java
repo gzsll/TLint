@@ -7,13 +7,17 @@ import com.google.gson.Gson;
 import com.gzsll.hupu.api.TypedJsonString;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.AddReplyResult;
+import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.BoardListResult;
 import com.gzsll.hupu.support.storage.bean.FavoriteResult;
 import com.gzsll.hupu.support.storage.bean.MessageAtResult;
 import com.gzsll.hupu.support.storage.bean.MessageReplyResult;
+import com.gzsll.hupu.support.storage.bean.MyBoardListResult;
 import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
+import com.gzsll.hupu.support.storage.bean.ThreadListResult;
 import com.gzsll.hupu.support.storage.bean.ThreadReplyResult;
+import com.gzsll.hupu.support.storage.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.TopicResult;
 import com.gzsll.hupu.support.storage.bean.UserResult;
@@ -37,8 +41,9 @@ import retrofit.client.OkClient;
  */
 public class ThreadApi {
     static final String BASE_URL = "http://bbs.mobile.hupu.com";
-
+    static final String BASE_URL_V2 = "http://bbs.mobileapi.hupu.com/1/7.0.5";
     private ThreadService threadService;
+    private ThreadService threadServiceV2;
     private RequestHelper requestHelper;
     private Gson gson;
     private UserStorage mUserStorage;
@@ -60,6 +65,11 @@ public class ThreadApi {
                 .setEndpoint(BASE_URL).setClient(new OkClient(okHttpClient)).setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
         threadService = restAdapter.create(ThreadService.class);
+
+        RestAdapter restAdapterV2 = new RestAdapter.Builder().setRequestInterceptor(requestInterceptor)
+                .setEndpoint(BASE_URL_V2).setClient(new OkClient(okHttpClient)).setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        threadServiceV2 = restAdapterV2.create(ThreadService.class);
     }
 
 
@@ -71,16 +81,25 @@ public class ThreadApi {
     }
 
     public void getBoardList(Callback<BoardListResult> callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
-        String sign = requestHelper.getRequestSign(params);
-        threadService.getBoardList(sign, params, callback);
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.getBoardList(sign, params, callback);
     }
 
-    public void getGroupThreadsList(String groupId, String lastId, int limit, String type, List<String> list, Callback<ThreadsResult> callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
-        params.put("groupId", groupId);
-        params.put("lastId", lastId);
+    public void getMyBoardList(Callback<MyBoardListResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.getMyBoardList(sign, params, callback);
+    }
+
+    public void getGroupThreadsList(String fid, String lastTid, int limit, String type, List<String> list, Callback<ThreadListResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("fid", fid);
+        params.put("lastTid", lastTid);
         params.put("limit", String.valueOf(limit));
+        params.put("isHome", "1");
+        params.put("stamp", "");
+        params.put("password", "0");
         if (list == null) {
             params.put("special", "0");
             params.put("type", type);
@@ -91,8 +110,8 @@ public class ThreadApi {
             }
             params.put("gids", jSONArray.toString());
         }
-        String sign = requestHelper.getRequestSign(params);
-        threadService.getGroupThreadsList(sign, params, callback);
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.getGroupThreadsList(sign, params, callback);
     }
 
     public ThreadsResult getGroupThreadsList(String groupId, String lastId, int limit, String type, List<String> list) {
@@ -114,20 +133,28 @@ public class ThreadApi {
         return threadService.getGroupThreadsList(sign, params);
     }
 
-    public void addGroupAttention(String groupId, Callback<BaseResult> callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
-        params.put("groupId", groupId);
+    public void addGroupAttention(String fid, Callback<BaseResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("fid", fid);
         params.put("uid", mUserStorage.getUid());
-        String sign = requestHelper.getRequestSign(params);
-        threadService.addGroupAttention(sign, params, callback);
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.addGroupAttention(sign, params, callback);
     }
 
-    public void delGroupAttention(String groupId, Callback<BaseResult> callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
-        params.put("groupId", groupId);
+    public void delGroupAttention(String fid, Callback<BaseResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("fid", fid);
         params.put("uid", mUserStorage.getUid());
-        String sign = requestHelper.getRequestSign(params);
-        threadService.delGroupAttention(sign, params, callback);
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.delGroupAttention(sign, params, callback);
+    }
+
+    public void getGroupAttentionStatus(String fid, Callback<AttendStatusResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("fid", fid);
+        params.put("uid", mUserStorage.getUid());
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.getGroupAttentionStatus(sign, params, callback);
     }
 
     public void addSpecial(String specialId, Callback<BaseResult> callback) {
@@ -144,14 +171,15 @@ public class ThreadApi {
         threadService.delSpecial(sign, params, callback);
     }
 
-    public void getGroupThreadInfo(long groupThreadId, long lightReplyId, int page, boolean diaplayImgs, Callback<ThreadInfoResult> callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
-        params.put("groupThreadId", groupThreadId + "");
-        params.put("lightReplyId", lightReplyId + "");
+    public void getGroupThreadInfo(String tid, String fid, int page, String pid, Callback<ThreadSchemaInfo> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("tid", tid);
+        params.put("fid", fid);
         params.put("page", page + "");
-        params.put("diaplayImgs", diaplayImgs ? "0" : "1");
-        String sign = requestHelper.getRequestSign(params);
-        threadService.getGroupThreadInfo(sign, params, callback);
+        params.put("pid", "0");
+        params.put("nopic", "");
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.getGroupThreadInfo(sign, params, callback);
     }
 
     public ThreadInfoResult getGroupThreadInfo(long groupThreadId, long lightReplyId, int page, boolean diaplayImgs) {
@@ -164,11 +192,11 @@ public class ThreadApi {
         return threadService.getGroupThreadInfo(sign, params);
     }
 
-    public void addGroupThread(String title, String content, String groupId, List<String> list, Callback<BaseResult> callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
+    public void addGroupThread(String title, String content, String fid, List<String> list, Callback<BaseResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
         params.put("title", title);
         params.put("content", content);
-        params.put("groupId", groupId);
+        params.put("fid", fid);
         if (list != null && !list.isEmpty()) {
             JSONArray jSONArray = new JSONArray();
             for (String put : list) {
@@ -176,24 +204,21 @@ public class ThreadApi {
             }
             params.put("imgs", jSONArray.toString());
         }
-        String sign = requestHelper.getRequestSign(params);
+        String sign = requestHelper.getRequestSignV2(params);
         params.put("sign", sign);
-        threadService.addGroupThread(new TypedJsonString(gson.toJson(params)), callback);
+        threadServiceV2.addGroupThread(new TypedJsonString(gson.toJson(params)), callback);
     }
 
-    public void addReplyByApp(String groupThreadId, String groupReplyId, String quoteId, String content, List<String> list, Callback<AddReplyResult> callback) {
+    public void addReplyByApp(String tid, String fid, String pid, String content, List<String> list, Callback<AddReplyResult> callback) {
         try {
 
-            Map<String, String> params = requestHelper.getHttpRequestMap();
-            params.put("groupThreadId", groupThreadId + "");
+            Map<String, String> params = requestHelper.getHttpRequestMapV2();
+            params.put("tid", tid);
             params.put("content", content);
-            params.put("groupReplyId", groupReplyId + "");
-            if (Long.valueOf(quoteId) > 0) {
-                params.put("quoteId", quoteId + "");
-            }
-
-            if (Long.valueOf(groupReplyId) > 0) {
-                params.put("replyId", groupReplyId + "");
+            params.put("fid", fid);
+            if (!TextUtils.isEmpty(pid)) {
+                params.put("quotepid", pid);
+                params.put("boardpw", "");
             }
             JSONObject jsonObject = new JSONObject(gson.toJson(params));
             if (list != null && !list.isEmpty()) {
@@ -204,10 +229,10 @@ public class ThreadApi {
                 params.put("imgs", jSONArray.toString());
                 jsonObject.putOpt("imgs", jSONArray);
             }
-            String sign = requestHelper.getRequestSign(params);
+            String sign = requestHelper.getRequestSignV2(params);
             jsonObject.putOpt("sign", sign);
             Log.d("groupApi", "gson.toJson(params):" + jsonObject.toString());
-            threadService.addReplyByApp(new TypedJsonString(jsonObject.toString()), callback);
+            threadServiceV2.addReplyByApp(new TypedJsonString(jsonObject.toString()), callback);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -277,6 +302,33 @@ public class ThreadApi {
         params.put("lastId", lastId);
         String sign = requestHelper.getRequestSign(params);
         threadService.getMessageAt(sign, params, callback);
+    }
+
+
+    /**
+     * (1, "广告或垃圾内容");
+     * (2, "色情暴露内容");
+     * (3, "政治敏感话题");
+     * (4, "人身攻击等恶意行为");
+     *
+     * @param tid
+     * @param pid
+     * @param type
+     * @param content
+     * @param callback
+     */
+    public void submitReports(String tid, String pid, String type, String content, Callback<MessageAtResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        if (!TextUtils.isEmpty(tid)) {
+            params.put("tid", tid);
+        }
+        if (!TextUtils.isEmpty(pid)) {
+            params.put("pid", pid);
+        }
+        params.put("type", type);
+        params.put("content", content);
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.getMessageAt(sign, params, callback);
     }
 
 }

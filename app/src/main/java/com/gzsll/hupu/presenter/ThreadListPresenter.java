@@ -5,18 +5,15 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.support.db.DBGroupThread;
 import com.gzsll.hupu.support.db.DBGroupThreadDao;
-import com.gzsll.hupu.support.db.DBGroups;
 import com.gzsll.hupu.support.db.DBGroupsDao;
+import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
-import com.gzsll.hupu.support.storage.bean.GroupThread;
-import com.gzsll.hupu.support.storage.bean.Info;
-import com.gzsll.hupu.support.storage.bean.ThreadsResult;
+import com.gzsll.hupu.support.storage.bean.Thread;
+import com.gzsll.hupu.support.storage.bean.ThreadListResult;
 import com.gzsll.hupu.support.utils.DbConverterHelper;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.view.ThreadListView;
-import com.jockeyjs.util.BackgroundExecutor;
 import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
@@ -54,11 +51,11 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     private Handler handler = new Handler(Looper.getMainLooper());
 
 
-    private List<GroupThread> threads = new ArrayList<GroupThread>();
+    private List<Thread> threads = new ArrayList<Thread>();
 
 
-    private String groupId;
-    private String lastId;
+    private String fid;
+    private String lastTid;
     private String type;
     private List<String> list;
 
@@ -83,12 +80,31 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
     }
 
-    public void onThreadReceive(String groupId, String type, List<String> list) {
+    public void onThreadReceive(String fid, String type, List<String> list) {
         view.showLoading();
         this.type = type;
-        this.groupId = groupId;
+        this.fid = fid;
         this.list = list;
         loadThreadList("", true);
+        getAttendStatus();
+    }
+
+
+    private void getAttendStatus() {
+        mThreadApi.getGroupAttentionStatus(fid, new Callback<AttendStatusResult>() {
+            @Override
+            public void success(AttendStatusResult baseResult, Response response) {
+                if (baseResult.status == 200) {
+                    view.renderThreadInfo(baseResult.forumInfo);
+                    view.attendStatus(baseResult.status);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     public void onRefresh() {
@@ -97,12 +113,12 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     }
 
     public void onReload() {
-        loadThreadList(lastId, false);
+        loadThreadList(lastTid, false);
     }
 
 
     public void onLoadMore() {
-        loadThreadList(lastId, false);
+        loadThreadList(lastTid, false);
     }
 
 
@@ -115,20 +131,16 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     }
 
     private void loadFromNet(String last, final boolean clear) {
-        mThreadApi.getGroupThreadsList(groupId, last, 20, type, list, new Callback<ThreadsResult>() {
+        mThreadApi.getGroupThreadsList(fid, last, 20, type, list, new Callback<ThreadListResult>() {
             @Override
-            public void success(ThreadsResult threadsResult, Response response) {
+            public void success(ThreadListResult result, Response response) {
                 if (clear) {
                     threads.clear();
                     view.onScrollToTop();
                 }
-                if (threadsResult.getStatus() == 200) {
-                    if (threadsResult.getData().getInfo() != null) {
-                        view.renderThreadInfo(threadsResult.getData().getInfo());
-                    }
-                    lastId = threadsResult.getData().getLastId();
-                    addThreads(threadsResult.getData().getGroupThreads());
-                    // threads.addAll(threadsResult.getData().getGroupThreads());
+
+                if (result.result != null && !result.result.data.isEmpty()) {
+                    addThreads(result.result.data);
                     view.renderThreads(threads);
                     view.hideLoading();
                 } else {
@@ -138,8 +150,6 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                         view.showToast("数据加载失败");
                     }
                 }
-
-
             }
 
             @Override
@@ -151,33 +161,33 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     }
 
     private void loadFromDb(final boolean clear) {
-        BackgroundExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                if (clear) {
-                    threads.clear();
-                }
-                List<DBGroups> groupsList = mGroupsDao.queryBuilder().where(DBGroupsDao.Properties.ServerId.eq(groupId)).list();
-                if (!groupsList.isEmpty()) {
-                    renderInfo(mDbConverterHelper.convertDbGroupsToInfo(groupsList.get(0)));
-                }
-                List<DBGroupThread> threads = mThreadDao.queryBuilder().where(DBGroupThreadDao.Properties.GroupId.eq(groupId)).orderDesc(DBGroupThreadDao.Properties.CreateAtUnixTime).list();
-                addThreads(mDbConverterHelper.covertDbGroupThreads(threads));
-                renderThreads(threads.isEmpty());
-            }
-        });
+//        BackgroundExecutor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (clear) {
+//                    threads.clear();
+//                }
+//                List<DBGroups> groupsList = mGroupsDao.queryBuilder().where(DBGroupsDao.Properties.ServerId.eq(groupId)).list();
+//                if (!groupsList.isEmpty()) {
+//                    renderInfo(mDbConverterHelper.convertDbGroupsToInfo(groupsList.get(0)));
+//                }
+//                List<DBGroupThread> threads = mThreadDao.queryBuilder().where(DBGroupThreadDao.Properties.GroupId.eq(groupId)).orderDesc(DBGroupThreadDao.Properties.CreateAtUnixTime).list();
+//                addThreads(mDbConverterHelper.covertDbGroupThreads(threads));
+//                renderThreads(threads.isEmpty());
+//            }
+//        });
     }
 
 
-    private void renderInfo(final Info info) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                view.renderThreadInfo(info);
-            }
-        });
-
-    }
+//    private void renderInfo(final Info info) {
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                view.renderThreadInfo(info);
+//            }
+//        });
+//
+//    }
 
 
     private void renderThreads(final boolean empty) {
@@ -195,11 +205,11 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     }
 
 
-    private void addThreads(List<GroupThread> threadList) {
-        for (GroupThread thread : threadList) {
+    private void addThreads(List<Thread> threadList) {
+        for (Thread thread : threadList) {
             boolean isContain = false;
-            for (GroupThread thread1 : threads) {
-                if (thread.getTid() == thread1.getTid()) {
+            for (Thread thread1 : threads) {
+                if (thread.tid.equals(thread1.tid)) {
                     isContain = true;
                     break;
                 }
@@ -212,7 +222,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     public void addAttention() {
-        mThreadApi.addGroupAttention(groupId, new Callback<BaseResult>() {
+        mThreadApi.addGroupAttention(fid, new Callback<BaseResult>() {
             @Override
             public void success(BaseResult baseResult, Response response) {
                 if (baseResult != null) {
