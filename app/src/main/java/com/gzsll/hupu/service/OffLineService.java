@@ -27,6 +27,7 @@ import com.gzsll.hupu.support.db.DBThreadReplyItemDao;
 import com.gzsll.hupu.support.db.DBUserInfoDao;
 import com.gzsll.hupu.support.notifier.OfflineNotifier;
 import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.OfflinePictureInfo;
 import com.gzsll.hupu.support.storage.bean.ThreadHotReply;
 import com.gzsll.hupu.support.storage.bean.ThreadInfo;
 import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
@@ -352,7 +353,9 @@ public class OffLineService extends Service {
             info.setId(threadInfos.get(0).getId());
         }
         mThreadInfoDao.insertOrReplace(info);
-        mHtmlHelper.transImgToLocal(threadInfo.getContent(), true);
+        OfflinePictureInfo pictureInfo = mHtmlHelper.downloadImgToLocal(threadInfo.getContent());
+        offlinePictureCount += pictureInfo.getOfflineCount();
+        offlinePictureLength += pictureInfo.getOfflineLength();
     }
 
     @Inject

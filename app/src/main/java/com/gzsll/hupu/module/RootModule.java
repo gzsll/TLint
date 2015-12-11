@@ -61,7 +61,7 @@ import dagger.Provides;
                 DBModule.class, ApiModule.class, HelperModule.class
         },
         injects = {
-                AppApplication_.class, OffLineService.class,
+                AppApplication_.class,
                 MainActivity_.class, ContentActivity_.class, PostActivity_.class, ImagePreviewActivity_.class, SearchActivity_.class, ThreadActivity_.class, BrowserActivity_.class,
                 PhotoGalleryActivity_.class, ReplyDetailActivity_.class, SettingActivity_.class, NoticeActivity_.class, LoginActivity_.class, AccountActivity_.class,
                 SplashActivity_.class, UserProfileActivity_.class,

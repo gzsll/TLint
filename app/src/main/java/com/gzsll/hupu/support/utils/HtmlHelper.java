@@ -2,6 +2,8 @@ package com.gzsll.hupu.support.utils;
 
 import android.text.TextUtils;
 
+import com.gzsll.hupu.support.storage.bean.OfflinePictureInfo;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -36,21 +38,48 @@ public class HtmlHelper {
         return htmlString;
     }
 
-
-    public String transImgToLocal(String content, boolean download) {
+    public OfflinePictureInfo downloadImgToLocal(String content) {
+        OfflinePictureInfo info = new OfflinePictureInfo();
+        int offlineCount = 0;
+        long offlineLength = 0;
         Pattern patternImgSrc = Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)>");
         Matcher localMatcher = patternImgSrc.matcher(content);
         while (localMatcher.find()) {
             String imageUrl = localMatcher.group(2);
             String localUrl = transToLocal(imageUrl);
             String localPath = mConfigHelper.getCachePath() + File.separator + localUrl;
-            if (!mFileHelper.exist(localPath) && download) {
+            if (!mFileHelper.exist(localPath)) {
                 try {
-                    mOkHttpHelper.httpDownload(imageUrl, new File(localPath));
+                    File local = new File(localPath);
+                    mOkHttpHelper.httpDownload(imageUrl, local);
+                    offlineCount++;
+                    offlineLength += local.length();
                 } catch (Exception e) {
                     logger.debug("图片下载失败:" + imageUrl);
                 }
-            } else {
+            }
+        }
+        localMatcher.reset();
+        info.setOfflineCount(offlineCount);
+        info.setOfflineLength(offlineLength);
+        return info;
+    }
+
+
+    /**
+     * 替换网页图片地址为本地地址
+     *
+     * @param content 网页内容
+     * @return 替换后的内容
+     */
+    public String transImgToLocal(String content) {
+        Pattern patternImgSrc = Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)>");
+        Matcher localMatcher = patternImgSrc.matcher(content);
+        while (localMatcher.find()) {
+            String imageUrl = localMatcher.group(2);
+            String localUrl = transToLocal(imageUrl);
+            String localPath = mConfigHelper.getCachePath() + File.separator + localUrl;
+            if (mFileHelper.exist(localPath)) {
                 content = content.replace(imageUrl, localUrl);
             }
         }

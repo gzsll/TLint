@@ -35,7 +35,7 @@ public class DaoMaster extends AbstractDaoMaster {
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
         BoardDao.dropTable(db, ifExists);
-        UserDao.dropTable(db, ifExists);
+        UserDao.dropTable(db, false);
         DBGroupThreadDao.dropTable(db, ifExists);
         DBCoverDao.dropTable(db, ifExists);
         DBUserInfoDao.dropTable(db, ifExists);
