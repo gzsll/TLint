@@ -8,7 +8,7 @@ import de.greenrobot.daogenerator.Schema;
 
 public class GreenDaoGenerator {
 
-    public static final int VERSION = 45;
+    public static final int VERSION = 46;
     public static final String GREEN_DAO_CODE_PATH = "../TLint/src/main/greendao";
 
     public static void main(String[] args) throws Exception {
@@ -18,13 +18,13 @@ public class GreenDaoGenerator {
         Entity board = schema.addEntity("Board");
 
         board.addIdProperty();
-        board.addLongProperty("BoardId");
-        board.addStringProperty("CategoryName");
-        board.addLongProperty("CategoryId");
-        board.addStringProperty("BoardName");
-        board.addStringProperty("BoardIcon");
-        board.addLongProperty("GroupId");
-        board.addIntProperty("BoardIndex");
+        board.addStringProperty("fid");
+        board.addStringProperty("name");
+        board.addStringProperty("logo");
+        board.addStringProperty("description");
+        board.addStringProperty("backImg");
+        board.addStringProperty("boardId");
+        board.addStringProperty("categoryName");
 
 
         Entity user = schema.addEntity("User");

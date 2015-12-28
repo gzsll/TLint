@@ -115,7 +115,7 @@ public class DBMiniReplyListItemDao extends AbstractDao<DBMiniReplyListItem, Lon
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     /** @inheritdoc */
     @Override

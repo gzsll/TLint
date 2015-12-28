@@ -30,7 +30,7 @@ public class TopicListAdapter extends BaseListAdapter<Topic, TopicListItem> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContentActivity_.intent(mActivity).mThreadId(data.getId()).start();
+                ContentActivity_.intent(mActivity).tid(data.tid).start();
             }
         });
         view.bind(data);

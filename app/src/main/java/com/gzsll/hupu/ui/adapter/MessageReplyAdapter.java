@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.gzsll.hupu.support.storage.bean.MessageReply;
-import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.view.MessageReplyItem;
 import com.gzsll.hupu.ui.view.MessageReplyItem_;
 
@@ -30,7 +29,7 @@ public class MessageReplyAdapter extends BaseListAdapter<MessageReply, MessageRe
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentActivity_.intent(mActivity).mThreadId(data.getThreadInfo().getId()).start();
+                //   ContentActivity_.intent(mActivity).mThreadId(data.getThreadInfo().getId()).start();
             }
         });
         view.init(data);

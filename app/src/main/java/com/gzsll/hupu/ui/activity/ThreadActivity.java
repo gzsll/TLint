@@ -17,14 +17,14 @@ public class ThreadActivity extends BaseSwipeBackActivity {
     Logger logger = Logger.getLogger(ThreadActivity.class.getSimpleName());
 
     @Extra
-    long mGroupId;
+    String fid;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_content_empty);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, ThreadListFragment_.builder().mGroupId(mGroupId).build()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, ThreadListFragment_.builder().fid(fid).build()).commit();
     }
 
 

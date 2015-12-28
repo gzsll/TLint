@@ -16,13 +16,19 @@ public class ContentActivity extends BaseSwipeBackActivity {
     Logger logger = Logger.getLogger(ContentActivity.class.getSimpleName());
 
     @Extra
-    long mThreadId;
+    String fid;
     @Extra
-    int mPage;
+    String tid;
+    @Extra
+    int page;
+    @Extra
+    String pid;
+    @Extra
+    String title;
 
     @AfterViews
     void init() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, ContentFragment_.builder().mThreadId(mThreadId).mPage(mPage).build()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, ContentFragment_.builder().fid(fid).tid(tid).page(page).build()).commit();
     }
 
 

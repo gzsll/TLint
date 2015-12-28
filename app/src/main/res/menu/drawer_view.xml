@@ -16,16 +16,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-<group android:checkableBehavior="single">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_topic"
             android:title="@string/nav_topic" />
         <item
             android:id="@+id/nav_fav"
             android:title="@string/nav_fav" />
+
+        <item
+            android:id="@+id/nav_recommend"
+            android:title="帖子推荐" />
+
         <item
             android:id="@+id/nav_my"
             android:title="@string/nav_my" />
+
+
         <item
             android:id="@+id/nav_nba"
             android:title="@string/nav_nba" />
@@ -38,9 +45,13 @@
         <item
             android:id="@+id/nav_equipment"
             android:title="@string/nav_equipment" />
+
+        <item
+            android:id="@+id/nav_intel_football"
+            android:title="国际足球论坛" />
         <item
             android:id="@+id/nav_football"
-            android:title="@string/nav_football" />
+            android:title="国内足球论坛" />
         <item
             android:id="@+id/nav_race"
             android:title="@string/nav_race" />

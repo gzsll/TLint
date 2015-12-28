@@ -4,13 +4,13 @@ package com.gzsll.hupu.otto;
  * Created by sll on 2015/11/25.
  */
 public class DelGroupAttentionEvent {
-    private long groupId;
+    private String fid;
 
-    public DelGroupAttentionEvent(long groupId) {
-        this.groupId = groupId;
+    public DelGroupAttentionEvent(String fid) {
+        this.fid = fid;
     }
 
-    public long getGroupId() {
-        return groupId;
+    public String getFid() {
+        return fid;
     }
 }

@@ -12,10 +12,11 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/rlPage"
         app:direction="both">
 
-        <com.gzsll.hupu.widget.PinnedHeaderListView
-            android:id="@+id/recyclerView"
+        <com.gzsll.hupu.widget.HuPuWebView
+            android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="true"
@@ -35,7 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_margin="16dp">
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="50dp">
+
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/floatingComment"
@@ -43,6 +46,14 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_menu_comment"
                 app:fab_label="回复"
+                app:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/floatingReport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_report"
+                app:fab_label="举报"
                 app:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -62,6 +73,64 @@
                 app:fab_size="mini" />
         </com.github.clans.fab.FloatingActionMenu>
     </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlPage"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/md_white">
+
+        <View
+            android:id="@+id/deliver"
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:layout_alignParentTop="true"
+            android:background="#e5e5e5" />
+
+        <TextView
+            android:id="@+id/tvPre"
+            android:layout_width="60.0dip"
+            android:layout_height="52.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dip"
+            android:layout_toLeftOf="@+id/tvPageNum"
+            android:gravity="center"
+            android:text="上一页"
+            android:textColor="@color/base_text_gray"
+            android:textSize="15.0sp" />
+
+        <TextView
+            android:id="@+id/tvPageNum"
+            android:layout_width="wrap_content"
+            android:layout_height="52.0dip"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:minWidth="60.0dip"
+            android:text="1/1"
+            android:textColor="@color/blue"
+            android:textSize="14.0sp" />
+
+        <TextView
+            android:id="@+id/tvNext"
+            android:layout_width="60.0dip"
+            android:layout_height="52.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:layout_toRightOf="@+id/tvPageNum"
+            android:gravity="center"
+            android:text="下一页"
+            android:textColor="@color/blue"
+            android:textSize="15.0sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:layout_alignParentBottom="true"
+            android:background="#e5e5e5" />
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

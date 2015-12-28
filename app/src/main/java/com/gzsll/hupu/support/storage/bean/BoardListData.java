@@ -1,19 +1,10 @@
 package com.gzsll.hupu.support.storage.bean;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-
-public class BoardListData {
-
-
-    private List<BoardList> boardList;
-
-
-    public List<BoardList> getBoardList() {
-        return boardList;
-    }
-
-    public void setBoardList(List<BoardList> boardList) {
-        this.boardList = boardList;
-    }
+public class BoardListData implements Serializable {
+    public String fid;
+    public String name;
+    public ArrayList<BoardList> sub;
 }

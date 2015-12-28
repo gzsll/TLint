@@ -1,7 +1,6 @@
 package com.gzsll.hupu.ui.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -15,11 +14,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.support.storage.bean.Cover;
 import com.gzsll.hupu.support.storage.bean.GroupThread;
+import com.gzsll.hupu.support.storage.bean.Thread;
 import com.gzsll.hupu.support.utils.FormatHelper;
 import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
-import com.gzsll.hupu.ui.activity.UserProfileActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -65,7 +64,7 @@ public class ThreadListItem extends LinearLayout {
     @ViewById
     RelativeLayout rlLight;
 
-    private GroupThread thread;
+    private Thread thread;
 
 
     public ThreadListItem(Context context) {
@@ -76,36 +75,36 @@ public class ThreadListItem extends LinearLayout {
         super(context, attrs);
     }
 
-    public void bind(GroupThread thread) {
+    public void bind(Thread thread) {
         this.thread = thread;
         tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTitleSize());
         rlLight.setVisibility(GONE);
-        if (thread.getLights() > 0) {
-            tvLight.setText(String.valueOf(thread.getLights()));
+        if (thread.lightReply > 0) {
+            tvLight.setText(String.valueOf(thread.lightReply));
             tvLight.setVisibility(View.VISIBLE);
         } else {
             tvLight.setVisibility(View.GONE);
         }
-        tvReply.setText(String.valueOf(thread.getReplies()));
-        tvTitle.setText(thread.getTitle());
-        if (mSettingPrefHelper.getSingleLine()) {
+        tvReply.setText(thread.replies);
+        tvTitle.setText(thread.title);
+        //    if (mSettingPrefHelper.getSingleLine()) {
             rlUser.setVisibility(GONE);
             tvSingleTime.setVisibility(VISIBLE);
             tvSummary.setVisibility(GONE);
             grid.setVisibility(View.GONE);
-            tvSingleTime.setText(formatHelper.dateFormat(thread.getCreateAtUnixtime()));
-        } else {
-            rlUser.setVisibility(VISIBLE);
-            tvSingleTime.setVisibility(GONE);
-            tvSummary.setVisibility(VISIBLE);
-            grid.setVisibility(View.VISIBLE);
-            ivIcon.setImageURI(Uri.parse(thread.getUserInfo().getIcon()));
-            tvUserName.setText(thread.getUsername());
-            tvTime.setText(formatHelper.dateFormat(thread.getCreateAtUnixtime()));
-            tvSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTextSize());
-            tvSummary.setText(thread.getNote());
-            buildMultiPic(thread, grid);
-        }
+        tvSingleTime.setText(thread.time);
+//        } else {
+//            rlUser.setVisibility(VISIBLE);
+//            tvSingleTime.setVisibility(GONE);
+//            tvSummary.setVisibility(VISIBLE);
+//            grid.setVisibility(View.VISIBLE);
+//            ivIcon.setImageURI(Uri.parse(thread.getUserInfo().getIcon()));
+//            tvUserName.setText(thread.getUsername());
+//            tvTime.setText(formatHelper.dateFormat(thread.getCreateAtUnixtime()));
+//            tvSummary.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTextSize());
+//            tvSummary.setText(thread.getNote());
+//            buildMultiPic(thread, grid);
+//        }
 
     }
 
@@ -141,7 +140,7 @@ public class ThreadListItem extends LinearLayout {
 
     @Click
     void ivIcon() {
-        UserProfileActivity_.intent(getContext()).flags(Intent.FLAG_ACTIVITY_NEW_TASK).uid(String.valueOf(thread.getUserInfo().getUid())).start();
+        //   UserProfileActivity_.intent(getContext()).flags(Intent.FLAG_ACTIVITY_NEW_TASK).uid(String.valueOf(thread.getUserInfo().getUid())).start();
     }
 
 

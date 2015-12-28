@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.storage.UserStorage;
-import com.gzsll.hupu.support.storage.bean.Boards;
+import com.gzsll.hupu.support.storage.bean.BoardList;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.view.BoardListItem;
 import com.gzsll.hupu.ui.view.BoardListItem_;
@@ -30,10 +30,10 @@ public class BoardListAdapter extends SectionedBaseAdapter {
     @Inject
     Bus mBus;
 
-    private List<Boards> boardsList = new ArrayList<>();
+    private List<BoardList> boardsList = new ArrayList<>();
     private BaseActivity mActivity;
 
-    public void bindData(List<Boards> boardsList) {
+    public void bindData(List<BoardList> boardsList) {
         this.boardsList = boardsList;
         notifyDataSetChanged();
     }
@@ -44,7 +44,7 @@ public class BoardListAdapter extends SectionedBaseAdapter {
         if (boardsList.isEmpty()) {
             return null;
         } else {
-            return boardsList.get(section).getBoards().get(position);
+            return boardsList.get(section).data.get(position);
         }
     }
 
@@ -63,7 +63,7 @@ public class BoardListAdapter extends SectionedBaseAdapter {
         if (boardsList.isEmpty()) {
             return 0;
         } else {
-            return boardsList.get(section).getBoards().size();
+            return boardsList.get(section).data.size();
         }
     }
 
@@ -86,7 +86,7 @@ public class BoardListAdapter extends SectionedBaseAdapter {
     @Override
     public View getSectionHeaderView(int section, View convertView, ViewGroup parent) {
         CategoryHeaderView view = CategoryHeaderView_.build(mActivity);
-        view.setTitleText(boardsList.get(section).getName());
+        view.setTitleText(boardsList.get(section).name);
         return view;
     }
 

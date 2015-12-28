@@ -1,7 +1,7 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.support.storage.bean.GroupThread;
-import com.gzsll.hupu.support.storage.bean.Info;
+import com.gzsll.hupu.support.db.Board;
+import com.gzsll.hupu.support.storage.bean.Thread;
 
 import java.util.List;
 
@@ -10,9 +10,11 @@ import java.util.List;
  */
 public interface ThreadListView extends BaseView {
 
-    void renderThreadInfo(Info info);
+    void renderThreadInfo(Board info);
 
-    void renderThreads(final List<GroupThread> threads);
+    void renderThreads(List<Thread> threads);
+
+    void attendStatus(int status);
 
     void onError(String error);
 
@@ -20,5 +22,9 @@ public interface ThreadListView extends BaseView {
 
     void onScrollToTop();
 
-    void showLoginView();
+    void onFloatingVisibility(int visibility);
+
+    void onRefreshing(boolean refresh);
+
+
 }

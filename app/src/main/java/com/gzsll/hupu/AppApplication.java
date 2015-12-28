@@ -19,7 +19,6 @@ import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.FileHelper;
 import com.squareup.okhttp.OkHttpClient;
 
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EApplication;
 import org.apache.log4j.Level;
 
@@ -58,7 +57,6 @@ public class AppApplication extends Application {
         initLogger();
         initUser();
         initFrescoConfig();
-        initAssertFile();
     }
 
     private void injectDependencies() {
@@ -133,13 +131,6 @@ public class AppApplication extends Application {
 
     }
 
-    @Background
-    void initAssertFile() {
-        mFileHelper.copyAssets("hupu_post.html", mConfigHelper.getCachePath());
-        mFileHelper.copyAssets("hupu.js", mConfigHelper.getCachePath());
-        mFileHelper.copyAssets("jockey.js", mConfigHelper.getCachePath());
-        mFileHelper.copyAssets("zepto.js", mConfigHelper.getCachePath());
-    }
 
 
 }

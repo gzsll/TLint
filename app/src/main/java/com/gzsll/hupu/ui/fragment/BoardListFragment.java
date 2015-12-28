@@ -2,13 +2,14 @@ package com.gzsll.hupu.ui.fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.otto.DelGroupAttentionEvent;
 import com.gzsll.hupu.otto.StartOfflineEvent;
 import com.gzsll.hupu.presenter.BoardListPresenter;
 import com.gzsll.hupu.support.storage.UserStorage;
-import com.gzsll.hupu.support.storage.bean.Boards;
+import com.gzsll.hupu.support.storage.bean.BoardList;
 import com.gzsll.hupu.ui.activity.MainActivity;
 import com.gzsll.hupu.ui.adapter.BoardListAdapter;
 import com.gzsll.hupu.view.BoardListView;
@@ -74,7 +75,7 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
     }
 
     @Override
-    public void renderBoardList(List<Boards> boardGroups) {
+    public void renderBoardList(List<BoardList> boardGroups) {
         mAdapter.bindData(boardGroups);
     }
 
@@ -96,7 +97,7 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
 
     @Override
     public void showToast(String msg) {
-
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -117,7 +118,7 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
 
     @Subscribe
     public void onDelGroupAttentionEvent(DelGroupAttentionEvent event) {
-        mBoardListPresenter.delGroupAttention(event.getGroupId());
+        mBoardListPresenter.delGroupAttention(event.getFid());
     }
 
     @Override

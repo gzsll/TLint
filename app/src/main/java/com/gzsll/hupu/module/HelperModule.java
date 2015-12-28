@@ -2,6 +2,7 @@ package com.gzsll.hupu.module;
 
 import android.content.Context;
 
+import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.utils.CacheHelper;
 import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.DataCleanHelper;
@@ -59,8 +60,8 @@ public class HelperModule {
 
     @Provides
     @Singleton
-    RequestHelper provideRequestUtil(SecurityHelper securityHelper, Context context) {
-        return new RequestHelper(securityHelper, context);
+    RequestHelper provideRequestUtil(SecurityHelper securityHelper, Context context, UserStorage mUserStorage) {
+        return new RequestHelper(securityHelper, context, mUserStorage);
     }
 
     @Provides

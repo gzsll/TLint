@@ -1,11 +1,17 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
+
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.support.storage.UserStorage;
+import com.gzsll.hupu.support.utils.ChannelUtil;
+import com.umeng.analytics.AnalyticsConfig;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
 
 import javax.inject.Inject;
 
@@ -17,9 +23,16 @@ public class SplashActivity extends BaseActivity {
 
     @Inject
     UserStorage mUserStorage;
+    @ViewById
+    FrameLayout splash;
 
-    @AfterViews
-    void init() {
+    View view;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AnalyticsConfig.setAppkey(this, "55f1993be0f55a0fd9004fbc");
+        AnalyticsConfig.setChannel(ChannelUtil.getChannel(this));
         if (mUserStorage.isLogin()) {
             toMain();
         } else {
@@ -27,6 +40,7 @@ public class SplashActivity extends BaseActivity {
             finish();
         }
     }
+
 
     @UiThread(delay = 2000)
     void toMain() {

@@ -40,7 +40,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private Preference pClearCache;
     private ListPreference pThreadSort;
     private ListPreference pSwipeBackEdgeMode;// 手势返回方向
-    private ListPreference pOfflineCount;
+    //   private ListPreference pOfflineCount;
 
 
     @Inject
@@ -80,9 +80,9 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         pSwipeBackEdgeMode.setOnPreferenceChangeListener(this);
         setListSetting(Integer.parseInt(prefs.getString("pSwipeBackEdgeMode", "0")), R.array.swipeBackEdgeMode, pSwipeBackEdgeMode);
 
-        pOfflineCount = (ListPreference) findPreference("pOfflineCount");
-        pOfflineCount.setOnPreferenceChangeListener(this);
-        setListSetting(Integer.parseInt(prefs.getString("pOfflineCount", "0")), R.array.offlineCount, pOfflineCount);
+//        pOfflineCount = (ListPreference) findPreference("pOfflineCount");
+//        pOfflineCount.setOnPreferenceChangeListener(this);
+//        setListSetting(Integer.parseInt(prefs.getString("pOfflineCount", "0")), R.array.offlineCount, pOfflineCount);
 
 
     }
@@ -97,7 +97,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             setListSetting(Integer.parseInt(newValue.toString()), R.array.swipeBackEdgeMode, pSwipeBackEdgeMode);
             ((BaseActivity) getActivity()).reload();
         } else if ("pOfflineCount".equals(preference.getKey())) {
-            setListSetting(Integer.parseInt(newValue.toString()), R.array.offlineCount, pOfflineCount);
+            //  setListSetting(Integer.parseInt(newValue.toString()), R.array.offlineCount, pOfflineCount);
         }
         return true;
     }

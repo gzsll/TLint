@@ -23,7 +23,7 @@ public class OfflineNotifier extends Notifier {
 
 
     public void notifyThreads(Board board, long offlineLength) {
-        String title = String.format("正在离线板块[%s]", board.getBoardName());
+        String title = String.format("正在离线板块[%s]", board.getName());
         String content = String.format("节省流量%s", mFormatHelper.formatFileSize(offlineLength));
 
 

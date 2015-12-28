@@ -45,13 +45,13 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
     @Extra
     int type;
     @Extra
-    String groupReplyId = "0";
+    String fid;
     @Extra
-    String quoteId = "0";
+    String tid;
     @Extra
     String title;
     @Extra
-    String groupThreadId;
+    String pid;
     @Extra
     String mTo;
 
@@ -158,9 +158,9 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
         String content = etContent.getText().toString();
         if (type == Constants.TYPE_POST) {
             String title = etSubject.getText().toString();
-            postPresenter.post(groupThreadId, content, title);
+            postPresenter.post(fid, content, title);
         } else {
-            postPresenter.comment(groupThreadId, groupReplyId, quoteId, content);
+            postPresenter.comment(tid, fid, pid, content);
         }
 
     }

@@ -1,12 +1,11 @@
 package com.gzsll.hupu.module;
 
-import com.google.gson.Gson;
-import com.gzsll.hupu.api.login.LoginAPi;
-import com.gzsll.hupu.api.login.RetrofitLoginApi;
+import com.gzsll.hupu.api.login.LoginApi;
 import com.gzsll.hupu.api.news.NewsApi;
 import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.utils.RequestHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;
@@ -26,15 +25,15 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public LoginAPi providesLoginApi(OkHttpClient okHttpClient) {
-        return new RetrofitLoginApi(okHttpClient);
+    public LoginApi providesLoginApi(OkHttpClient okHttpClient, RequestHelper requestHelper) {
+        return new LoginApi(okHttpClient, requestHelper);
     }
 
 
     @Provides
     @Singleton
-    public ThreadApi provideHuPuApi(UserStorage userStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, Gson gson) {
-        return new ThreadApi(userStorage, okHttpClient, requestHelper, gson);
+    public ThreadApi provideHuPuApi(UserStorage userStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, SettingPrefHelper settingPrefHelper) {
+        return new ThreadApi(userStorage, okHttpClient, requestHelper, settingPrefHelper);
     }
 
     @Provides

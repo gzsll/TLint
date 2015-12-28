@@ -7,7 +7,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -21,14 +20,16 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
+import com.gzsll.hupu.otto.NotificationEvent;
 import com.gzsll.hupu.otto.ReceiveNoticeEvent;
-import com.gzsll.hupu.otto.StartOfflineEvent;
+import com.gzsll.hupu.presenter.NotificationPresenter;
 import com.gzsll.hupu.support.db.User;
 import com.gzsll.hupu.support.db.UserDao;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Notice;
 import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.ui.fragment.BoardListFragment_;
+import com.gzsll.hupu.ui.fragment.ThreadRecommendFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
 import com.squareup.otto.Subscribe;
 
@@ -61,13 +62,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     SettingPrefHelper mSettingPrefHelper;
     @Inject
     UpdateAgent mUpdateAgent;
+    @Inject
+    NotificationPresenter mNotificationPresenter;
 
     @AfterViews
     void init() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle(getString(R.string.nav_my));
+        setTitle("帖子推荐");
 
         ivIcon = (SimpleDraweeView) navigationView.getHeaderView(0).findViewById(R.id.ivIcon);
         tvName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvName);
@@ -79,17 +82,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mDrawerToggle.syncState();
         drawerLayout.setDrawerListener(mDrawerToggle);
         setupDrawerContent();
-        Fragment fragment = BoardListFragment_.builder().id(0).build();
+        Fragment fragment = ThreadRecommendFragment_.builder().build();
         getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
 
         initUserInfo();
         if (mSettingPrefHelper.getAutoUpdate()) {
             mUpdateAgent.checkUpdate(this);
         }
+
     }
 
     private void initUserInfo() {
-        ivIcon.setImageURI(Uri.parse(getUser().getIcon()));
+        ivIcon.setImageURI(Uri.parse("placeholder"));
         tvName.setText(getUser().getUserName());
     }
 
@@ -114,25 +118,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 groupId = Constants.NAV_TOPIC_FAV;
                                 break;
                             case R.id.nav_cba:
-                                groupId = 2;
+                                groupId = 232;
                                 break;
                             case R.id.nav_gambia:
-                                groupId = 7;
+                                groupId = 174;
                                 break;
                             case R.id.nav_equipment:
-                                groupId = 3;
+                                groupId = 233;
                                 break;
                             case R.id.nav_fitness:
-                                groupId = 8;
+                                groupId = 234;
                                 break;
                             case R.id.nav_football:
-                                groupId = 4;
+                                groupId = 4596;
+                                break;
+                            case R.id.nav_intel_football:
+                                groupId = 198;
                                 break;
                             case R.id.nav_sport:
-                                groupId = 6;
-                                break;
-                            case R.id.nav_race:
-                                groupId = 5;
+                                groupId = 41;
                                 break;
                             case R.id.nav_setting:
                                 groupId = Constants.NAV_SETTING;
@@ -143,31 +147,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             case R.id.nav_about:
                                 groupId = Constants.NAV_ABOUT;
                                 break;
+                            case R.id.nav_recommend:
+                                groupId = Constants.NAV_THREAD_RECOMMEND;
+                                break;
                         }
                         Fragment fragment;
-                        if (groupId >= 1000) {
+                        if (groupId >= 10000) {
                             if (groupId == Constants.NAV_SETTING) {
                                 SettingActivity_.intent(MainActivity.this).start();
                             } else if (groupId == Constants.NAV_FEEDBACK) {
-                                PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).groupThreadId("2869008").start();
+                                PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).tid("2869008").start();
 
                             } else {
                                 BrowserActivity_.intent(MainActivity.this).url("http://www.pursll.com/TLint").start();
-                                // getSupportFragmentManager().beginTransaction().replace(R.id.content, NewsFragment_.builder().build()).commit();
                             }
 
                         } else {
                             if (groupId >= 0) {
                                 fragment = BoardListFragment_.builder().id(groupId).build();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
                             } else {
-                                if (isLogin()) {
+                                if (groupId != Constants.NAV_THREAD_RECOMMEND) {
                                     fragment = TopicFragment_.builder().type(groupId).uid(getUser().getUid()).build();
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
                                 } else {
-                                    LoginActivity_.intent(MainActivity.this).start();
+                                    fragment = ThreadRecommendFragment_.builder().build();
                                 }
                             }
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
                             menuItem.setChecked(true);
                             setTitle(menuItem.getTitle());
                         }
@@ -178,20 +183,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_offline:
-                bus.post(new StartOfflineEvent());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -225,6 +227,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tvNotification.setText(String.valueOf(notice.getNewNum()));
         Toast.makeText(this, notice.getNewMsg(), Toast.LENGTH_SHORT).show();
 
+    }
+
+    private int toastCount = 1;
+
+    @Subscribe
+    public void onNotificationEvent(NotificationEvent event) {
+        int count = event.getCount();
+        if (count > 0) {
+            tvNotification.setVisibility(View.VISIBLE);
+            tvNotification.setText(String.valueOf(count));
+            if (toastCount <= 3) {
+                Toast.makeText(this, String.format("有%d条新消息", count), Toast.LENGTH_SHORT).show();
+                toastCount++;
+            }
+        } else {
+            tvNotification.setVisibility(View.GONE);
+        }
     }
 
     @Inject
@@ -284,12 +303,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivCover:
-                NoticeActivity_.intent(this).start();
+                NotificationActivity_.intent(this).start();
                 drawerLayout.closeDrawers();
                 break;
             case R.id.llAccount:
                 showAccountMenu();
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mNotificationPresenter.loadNotification();
     }
 }
