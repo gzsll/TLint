@@ -1,5 +1,7 @@
 package com.gzsll.hupu.support.storage.bean;
 
+import com.gzsll.hupu.support.db.Board;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 

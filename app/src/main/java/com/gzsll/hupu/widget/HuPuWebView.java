@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import com.gzsll.hupu.AppApplication;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -37,6 +38,8 @@ public class HuPuWebView extends WebView {
     UserStorage mUserStorage;
     @Inject
     NetWorkHelper mNetWorkHelper;
+    @Inject
+    SettingPrefHelper mSettingPrefHelper;
 
 
     public HuPuWebView(Context context) {
@@ -252,6 +255,35 @@ public class HuPuWebView extends WebView {
         void onOpenBoard(String boardId);
 
 
+    }
+
+
+    private OnScrollChangedCallback mOnScrollChangedCallback;
+
+    @Override
+    protected void onScrollChanged(final int l, final int t, final int oldl,
+                                   final int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+
+        if (mOnScrollChangedCallback != null) {
+            mOnScrollChangedCallback.onScroll(l - oldl, t - oldt);
+        }
+    }
+
+    public OnScrollChangedCallback getOnScrollChangedCallback() {
+        return mOnScrollChangedCallback;
+    }
+
+    public void setOnScrollChangedCallback(
+            final OnScrollChangedCallback onScrollChangedCallback) {
+        mOnScrollChangedCallback = onScrollChangedCallback;
+    }
+
+    /**
+     * Impliment in the activity/fragment/view that you want to listen to the webview
+     */
+    public interface OnScrollChangedCallback {
+        void onScroll(int dx, int dy);
     }
 
 

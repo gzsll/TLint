@@ -8,5 +8,5 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"
         android:inputType="textCapWords"
-        android:imeOptions="actionSearch"   />
+        android:imeOptions="actionSearch" />
 </menu>

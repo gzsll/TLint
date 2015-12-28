@@ -47,10 +47,6 @@ public class RequestHelper {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("client", getDeviceId());
         map.put("night", "0");
-        //  map.put("mode", "0");
-        //   map.put("timestamp", String.valueOf(System.currentTimeMillis()).substring(0, 10));
-//        map.put("platform", "android");
-//        map.put("version", "1.1");
         if (mUserStorage.isLogin()) {
             map.put("token", mUserStorage.getToken());
         }

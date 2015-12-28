@@ -1,13 +1,12 @@
 package com.gzsll.hupu.presenter;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.google.gson.Gson;
 import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.db.DBThreadInfoDao;
 import com.gzsll.hupu.support.db.DBThreadReplyItemDao;
+import com.gzsll.hupu.support.storage.bean.FavoriteResult;
 import com.gzsll.hupu.support.storage.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.support.utils.DbConverterHelper;
 import com.gzsll.hupu.support.utils.FormatHelper;
@@ -19,7 +18,9 @@ import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by sll on 2015/3/7.
@@ -48,39 +49,33 @@ public class ContentPresenter extends Presenter<ContentView> {
     DbConverterHelper mDbConverterHelper;
 
 
-    private Handler mHandler = new Handler(Looper.getMainLooper());
-
-
     private String tid;
     private String fid;
+    private String pid;
     public int totalPage;
     public int currentPage = 1;
 
 
-    public void onThreadInfoReceive(String tid, String fid, int page) {
+    public void onThreadInfoReceive(String tid, String fid, String pid, int page) {
         this.tid = tid;
         this.fid = fid;
+        this.pid = pid;
         view.showLoading();
         loadContent(page);
     }
 
 
     private void loadContent(int page) {
-        currentPage = page;
-        if (mNetWorkHelper.isFast() || page > 1) {
-            loadFromNet(page);
-        } else {
-            loadFromDb();
-        }
-    }
-
-
-    private void loadFromNet(int page) {
-        threadApi.getGroupThreadInfo(tid, fid, page, "0", new retrofit.Callback<ThreadSchemaInfo>() {
+        threadApi.getGroupThreadInfo(tid, fid, page, pid, new retrofit.Callback<ThreadSchemaInfo>() {
             @Override
             public void success(ThreadSchemaInfo threadInfoResult, retrofit.client.Response response) {
                 if (threadInfoResult != null) {
-                    view.renderContent(threadInfoResult.url, threadInfoResult.page, threadInfoResult.pageSize);
+                    if (threadInfoResult.error != null) {
+                        view.onError(threadInfoResult.error.text);
+                    } else {
+                        totalPage = threadInfoResult.pageSize;
+                        view.renderContent(threadInfoResult.url, threadInfoResult.page, threadInfoResult.pageSize);
+                    }
                 }
             }
 
@@ -92,63 +87,6 @@ public class ContentPresenter extends Presenter<ContentView> {
     }
 
 
-    private void loadFromDb() {
-//
-//        BackgroundExecutor.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<DBThreadInfo> threadInfoList = mThreadInfoDao.queryBuilder().where(DBThreadInfoDao.Properties.ServerId.eq(groupThreadId)).list();
-//                if (!threadInfoList.isEmpty()) {
-//                    threadInfo = mDbConverterHelper.convertDbThreadInfo(threadInfoList.get(0));
-//                    Map map = gson.fromJson(gson.toJson(threadInfo), new TypeToken<Map<Object, Object>>() {
-//                    }.getType());
-//                    renderContent(map);
-//                }
-//
-//                List<ThreadReplyItems> replyItems = new ArrayList<>();
-//                List<DBThreadReplyItem> hotReplies = mReplyDao.queryBuilder().where(DBThreadReplyItemDao.Properties.GroupThreadId.eq(groupThreadId), DBThreadReplyItemDao.Properties.IsHot.eq(true)).orderDesc(DBThreadReplyItemDao.Properties.Lights).list();
-//                if (!hotReplies.isEmpty()) {
-//                    ThreadReplyItems replyItem = new ThreadReplyItems();
-//                    replyItem.setmLists(mDbConverterHelper.convertDbThreadReplyItems(hotReplies));
-//                    replyItem.setName("这些回帖亮了");
-//                    replyItems.add(replyItem);
-//                }
-//
-//                List<DBThreadReplyItem> replies = mReplyDao.queryBuilder().where(DBThreadReplyItemDao.Properties.GroupThreadId.eq(groupThreadId), DBThreadReplyItemDao.Properties.IsHot.eq(false)).orderAsc(DBThreadReplyItemDao.Properties.Floor).list();
-//                if (!replies.isEmpty()) {
-//                    ThreadReplyItems replyItem = new ThreadReplyItems();
-//                    replyItem.setmLists(mDbConverterHelper.convertDbThreadReplyItems(replies));
-//                    replyItem.setName("全部回帖");
-//                    currentPage = 1;
-//                    totalPage = (threadInfo.getReplies() / 20) + 1;
-//                    replyItem.setCurrentPage(currentPage);
-//                    replyItem.setTotalPage(totalPage);
-//                    replyItems.add(replyItem);
-//                }
-//                renderReplies(currentPage, totalPage, replyItems);
-//
-//            }
-//        });
-    }
-
-//    private void renderContent(final Map map) {
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                view.hideLoading();
-//                view.renderContent(map);
-//            }
-//        });
-//    }
-//
-//    private void renderReplies(final int currentPage, final int totalPage, final List<ThreadReplyItems> replyItems) {
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                view.renderReplies(currentPage, totalPage, replyItems);
-//            }
-//        });
-//    }
 
 
     public void onReload() {
@@ -164,6 +102,14 @@ public class ContentPresenter extends Presenter<ContentView> {
         currentPage++;
         if (currentPage >= totalPage) {
             currentPage = totalPage;
+        }
+        loadContent(currentPage);
+    }
+
+    public void onPagePre() {
+        currentPage--;
+        if (currentPage <= 1) {
+            currentPage = 1;
         }
         loadContent(currentPage);
     }
@@ -190,22 +136,24 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void addFavorite() {
-//        threadApi.addFavorite(groupThreadId, new Callback<FavoriteResult>() {
-//            @Override
-//            public void success(FavoriteResult favoriteResult, Response response) {
-//                view.showToast(favoriteResult.getMsg());
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                view.showToast("收藏失败");
-//            }
-//        });
+        threadApi.addFavorite(tid, new Callback<FavoriteResult>() {
+            @Override
+            public void success(FavoriteResult favoriteResult, Response response) {
+                if (favoriteResult.result != null) {
+                    view.showToast(favoriteResult.result.msg);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                view.showToast("收藏失败");
+            }
+        });
     }
 
 
-    public void reply() {
-        view.reply("");
+    public void reply(String title) {
+        view.reply(title);
     }
 
     public void copy(String stripped) {

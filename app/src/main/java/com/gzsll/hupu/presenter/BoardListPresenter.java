@@ -7,12 +7,10 @@ import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.service.OffLineService;
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.db.BoardDao;
-import com.gzsll.hupu.support.storage.bean.BaseResult;
+import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
 import com.gzsll.hupu.support.storage.bean.BoardList;
 import com.gzsll.hupu.support.storage.bean.BoardListData;
 import com.gzsll.hupu.support.storage.bean.BoardListResult;
-import com.gzsll.hupu.support.storage.bean.Boards;
-import com.gzsll.hupu.support.storage.bean.CategoryList;
 import com.gzsll.hupu.support.storage.bean.MyBoardListData;
 import com.gzsll.hupu.support.storage.bean.MyBoardListResult;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
@@ -62,14 +60,10 @@ public class BoardListPresenter extends Presenter<BoardListView> {
      *
      * @param boardId 板块id
      */
-    public void onBoardListReceive(final int boardId) {
+    public void onBoardListReceive(int boardId) {
         this.boardId = boardId;
         view.showLoading();
-        loadFromNet();
-    }
-
-    private void loadFromDb() {
-        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId)).orderAsc(BoardDao.Properties.CategoryId).orderAsc(BoardDao.Properties.BoardIndex).list();
+        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId)).list();
         if (!boards.isEmpty()) {
             this.boards = (ArrayList) boards;
             sortBoard(boards);
@@ -77,6 +71,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
             loadFromNet();
         }
     }
+
 
     private void loadFromNet() {
         if (boardId == 0) {
@@ -105,6 +100,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                         if (data.fid.equals(String.valueOf(boardId))) {
                             view.renderBoardList(data.sub);
                             view.hideLoading();
+                            saveToBoard(data.sub, data.fid);
                         }
                     }
                 }
@@ -126,7 +122,7 @@ public class BoardListPresenter extends Presenter<BoardListView> {
 
 
     private void sortBoard(List<Board> items) {
-        List<Boards> boardsList = new ArrayList<>();
+        List<BoardList> boardsList = new ArrayList<>();
         LinkedHashMap<String, List<Board>> map = group(items, new GroupBy<String>() {
             @Override
             public String groupby(Object obj) {
@@ -136,12 +132,12 @@ public class BoardListPresenter extends Presenter<BoardListView> {
         });
         for (String key : map.keySet()) {
             List<Board> list = map.get(key);
-            Boards boards = new Boards();
-            boards.setBoards(list);
-            boards.setName(key);
-            boardsList.add(boards);
+            BoardList board = new BoardList();
+            board.data = (ArrayList) map.get(key);
+            board.name = key;
+            boardsList.add(board);
         }
-        // view.renderBoardList(boardsList);
+        view.renderBoardList(boardsList);
         view.hideLoading();
 
     }
@@ -175,37 +171,35 @@ public class BoardListPresenter extends Presenter<BoardListView> {
         return map;
     }
 
-    private Board saveToBoard(CategoryList categoryList, int index, long boardId) {
-        Board board = new Board();
-        board.setBoardId(boardId);
-        board.setBoardIcon(categoryList.getGroupAvator());
-        board.setBoardName(categoryList.getGroupName());
-        board.setCategoryId(categoryList.getCategoryId());
-        board.setCategoryName(categoryList.getCategoryName());
-        board.setGroupId(categoryList.getId());
-        board.setBoardIndex(index);
-        List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId), BoardDao.Properties.GroupId.eq(categoryList.getId())).list();
-        if (!boards.isEmpty()) {
-            board.setId(boards.get(0).getId());
+    private void saveToBoard(ArrayList<BoardList> boardLists, String boardId) {
+        for (BoardList boardList : boardLists) {
+            for (Board board : boardList.data) {
+                List<Board> boards = mBoardDao.queryBuilder().where(BoardDao.Properties.BoardId.eq(boardId), BoardDao.Properties.Fid.eq(board.getFid())).list();
+                if (!boards.isEmpty()) {
+                    board.setId(boards.get(0).getId());
+                }
+                board.setBoardId(boardId);
+                board.setCategoryName(boardList.name);
+                mBoardDao.insertOrReplace(board);
+            }
         }
-        mBoardDao.insertOrReplace(board);
-        return board;
     }
 
 
     public void delGroupAttention(String fid) {
-        mThreadApi.delGroupAttention(fid, new Callback<BaseResult>() {
+        mThreadApi.delGroupAttention(fid, new Callback<AttendStatusResult>() {
             @Override
-            public void success(BaseResult baseResult, Response response) {
-                view.showToast(baseResult.getMsg());
-                if (baseResult.getStatus() == 200) {
-
+            public void success(AttendStatusResult result, Response response) {
+                if (result.status == 200 && result.result == 1) {
+                    view.showToast("取消关注成功");
+                    onReload();
                 }
+
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                view.showToast("取消关注失败，请检查网络后重试");
             }
         });
     }

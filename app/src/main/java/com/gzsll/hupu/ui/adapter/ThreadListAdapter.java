@@ -1,7 +1,7 @@
 package com.gzsll.hupu.ui.adapter;
 
+import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.gzsll.hupu.support.storage.bean.Thread;
 import com.gzsll.hupu.support.utils.FormatHelper;
@@ -15,7 +15,7 @@ import javax.inject.Inject;
 /**
  * Created by sll on 2015/3/7.
  */
-public class ThreadListAdapter extends BaseRecyclerViewAdapter<Thread, ThreadListItem> {
+public class ThreadListAdapter extends BaseListAdapter<Thread, ThreadListItem> {
 
 
     @Inject
@@ -25,23 +25,21 @@ public class ThreadListAdapter extends BaseRecyclerViewAdapter<Thread, ThreadLis
 
 
     @Override
-    protected ThreadListItem onCreateItemView(ViewGroup parent, int viewType) {
+    protected ThreadListItem onCreateItemView(Context context) {
         return ThreadListItem_.build(mActivity);
     }
 
     @Override
-    public void onBindViewHolder(ViewWrapper<ThreadListItem> forumListItemViewWrapper, final int i) {
-        ThreadListItem view = forumListItemViewWrapper.getView();
-        final Thread thread = items.get(i);
+    protected void onBindView(ThreadListItem view, int position, final Thread data) {
         view.formatHelper = formatHelper;
         view.mSettingPrefHelper = mSettingPrefHelper;
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContentActivity_.intent(mActivity).tid(thread.tid).fid(thread.fid).start();
+                ContentActivity_.intent(mActivity).tid(data.tid).fid(data.fid).start();
             }
         });
 
-        view.bind(thread);
+        view.bind(data);
     }
 }

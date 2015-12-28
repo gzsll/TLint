@@ -1,6 +1,6 @@
 package com.gzsll.hupu.view;
 
-import com.gzsll.hupu.support.storage.bean.Board;
+import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.storage.bean.Thread;
 
 import java.util.List;
@@ -21,6 +21,10 @@ public interface ThreadListView extends BaseView {
     void onEmpty();
 
     void onScrollToTop();
+
+    void onFloatingVisibility(int visibility);
+
+    void onRefreshing(boolean refresh);
 
 
 }

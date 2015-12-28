@@ -16,12 +16,13 @@ public class Constants {
     public static final String THREAD_TYPE_NEW = "1";//最新的帖子
 
 
-    public static final int NAV_SETTING = 1000;
-    public static final int NAV_FEEDBACK = 1001;
-    public static final int NAV_ABOUT = 1002;
+    public static final int NAV_SETTING = 10000;
+    public static final int NAV_FEEDBACK = 10001;
+    public static final int NAV_ABOUT = 10002;
 
     public static int NAV_TOPIC_LIST = -2;
     public static int NAV_TOPIC_FAV = -1;
+    public static int NAV_THREAD_RECOMMEND = -3;
 
 
     public static final String BOX_APP_KEY = "U8DCMNBEFLP1E9W60BIP";

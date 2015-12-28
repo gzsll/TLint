@@ -2,6 +2,7 @@ package com.gzsll.hupu.ui.fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.otto.DelGroupAttentionEvent;
@@ -96,7 +97,7 @@ public class BoardListFragment extends BaseFragment implements BoardListView {
 
     @Override
     public void showToast(String msg) {
-
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
 

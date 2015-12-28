@@ -23,13 +23,13 @@ public class BoardDao extends AbstractDao<Board, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property BoardId = new Property(1, Long.class, "BoardId", false, "BOARD_ID");
-        public final static Property CategoryName = new Property(2, String.class, "CategoryName", false, "CATEGORY_NAME");
-        public final static Property CategoryId = new Property(3, Long.class, "CategoryId", false, "CATEGORY_ID");
-        public final static Property BoardName = new Property(4, String.class, "BoardName", false, "BOARD_NAME");
-        public final static Property BoardIcon = new Property(5, String.class, "BoardIcon", false, "BOARD_ICON");
-        public final static Property GroupId = new Property(6, Long.class, "GroupId", false, "GROUP_ID");
-        public final static Property BoardIndex = new Property(7, Integer.class, "BoardIndex", false, "BOARD_INDEX");
+        public final static Property Fid = new Property(1, String.class, "fid", false, "FID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Logo = new Property(3, String.class, "logo", false, "LOGO");
+        public final static Property Description = new Property(4, String.class, "description", false, "DESCRIPTION");
+        public final static Property BackImg = new Property(5, String.class, "backImg", false, "BACK_IMG");
+        public final static Property BoardId = new Property(6, String.class, "boardId", false, "BOARD_ID");
+        public final static Property CategoryName = new Property(7, String.class, "categoryName", false, "CATEGORY_NAME");
     }
 
     ;
@@ -50,13 +50,13 @@ public class BoardDao extends AbstractDao<Board, Long> {
         String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'BOARD' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'BOARD_ID' INTEGER," + // 1: BoardId
-                "'CATEGORY_NAME' TEXT," + // 2: CategoryName
-                "'CATEGORY_ID' INTEGER," + // 3: CategoryId
-                "'BOARD_NAME' TEXT," + // 4: BoardName
-                "'BOARD_ICON' TEXT," + // 5: BoardIcon
-                "'GROUP_ID' INTEGER," + // 6: GroupId
-                "'BOARD_INDEX' INTEGER);"); // 7: BoardIndex
+                "'FID' TEXT," + // 1: fid
+                "'NAME' TEXT," + // 2: name
+                "'LOGO' TEXT," + // 3: logo
+                "'DESCRIPTION' TEXT," + // 4: description
+                "'BACK_IMG' TEXT," + // 5: backImg
+                "'BOARD_ID' TEXT," + // 6: boardId
+                "'CATEGORY_NAME' TEXT);"); // 7: categoryName
     }
 
     /** Drops the underlying database table. */
@@ -74,40 +74,40 @@ public class BoardDao extends AbstractDao<Board, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        Long BoardId = entity.getBoardId();
-        if (BoardId != null) {
-            stmt.bindLong(2, BoardId);
+
+        String fid = entity.getFid();
+        if (fid != null) {
+            stmt.bindString(2, fid);
         }
- 
-        String CategoryName = entity.getCategoryName();
-        if (CategoryName != null) {
-            stmt.bindString(3, CategoryName);
+
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(3, name);
         }
- 
-        Long CategoryId = entity.getCategoryId();
-        if (CategoryId != null) {
-            stmt.bindLong(4, CategoryId);
+
+        String logo = entity.getLogo();
+        if (logo != null) {
+            stmt.bindString(4, logo);
         }
- 
-        String BoardName = entity.getBoardName();
-        if (BoardName != null) {
-            stmt.bindString(5, BoardName);
+
+        String description = entity.getDescription();
+        if (description != null) {
+            stmt.bindString(5, description);
         }
- 
-        String BoardIcon = entity.getBoardIcon();
-        if (BoardIcon != null) {
-            stmt.bindString(6, BoardIcon);
+
+        String backImg = entity.getBackImg();
+        if (backImg != null) {
+            stmt.bindString(6, backImg);
         }
- 
-        Long GroupId = entity.getGroupId();
-        if (GroupId != null) {
-            stmt.bindLong(7, GroupId);
+
+        String boardId = entity.getBoardId();
+        if (boardId != null) {
+            stmt.bindString(7, boardId);
         }
- 
-        Integer BoardIndex = entity.getBoardIndex();
-        if (BoardIndex != null) {
-            stmt.bindLong(8, BoardIndex);
+
+        String categoryName = entity.getCategoryName();
+        if (categoryName != null) {
+            stmt.bindString(8, categoryName);
         }
     }
 
@@ -122,13 +122,13 @@ public class BoardDao extends AbstractDao<Board, Long> {
     public Board readEntity(Cursor cursor, int offset) {
         Board entity = new Board( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-                cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // BoardId
-                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // CategoryName
-                cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // CategoryId
-                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // BoardName
-                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // BoardIcon
-                cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // GroupId
-                cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7) // BoardIndex
+                cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // fid
+                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // logo
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // description
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // backImg
+                cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // boardId
+                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // categoryName
         );
         return entity;
     }
@@ -137,13 +137,13 @@ public class BoardDao extends AbstractDao<Board, Long> {
     @Override
     public void readEntity(Cursor cursor, Board entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setBoardId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
-        entity.setCategoryName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setCategoryId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setBoardName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setBoardIcon(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setGroupId(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
-        entity.setBoardIndex(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
+        entity.setFid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setLogo(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setDescription(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setBackImg(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setBoardId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setCategoryName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
      }
     
     /** @inheritdoc */

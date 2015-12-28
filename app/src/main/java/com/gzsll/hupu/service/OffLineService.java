@@ -164,7 +164,7 @@ public class OffLineService extends Service {
                     return false;
                 }
                 int count = mSettingPrefHelper.getOfflineCount(); //加载帖子
-                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getGroupId()), "0", count, mSettingPrefHelper.getThreadSort(), null);
+                ThreadsResult result = mThreadApi.getGroupThreadsList(String.valueOf(board.getFid()), "0", count, mSettingPrefHelper.getThreadSort(), null);
                 if (result.getStatus() == 200) {
                     List<GroupThread> threads = result.getData().getGroupThreads();
                     offlineThreadsCount += threads.size();

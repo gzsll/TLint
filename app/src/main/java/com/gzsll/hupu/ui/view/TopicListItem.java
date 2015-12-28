@@ -29,9 +29,9 @@ public class TopicListItem extends LinearLayout {
 
     public void bind(Topic topic) {
         if (topic != null) {
-            tvTitle.setText(topic.getTitle());
-            tvBoard.setText(topic.getGroupName());
-            tvReply.setText("回复:" + topic.getReplies());
+            tvTitle.setText(topic.title);
+            tvBoard.setText(topic.boardName);
+            tvReply.setText("回复:" + topic.replies);
         }
     }
 

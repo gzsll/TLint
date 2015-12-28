@@ -19,8 +19,8 @@ import java.util.List;
 public abstract class BaseListFragment<T, V extends View> extends BaseFragment implements SwipyRefreshLayout.OnRefreshListener, BaseListView<T> {
 
 
-    private SwipyRefreshLayout refreshLayout;
-    private ListView listView;
+    public SwipyRefreshLayout refreshLayout;
+    public ListView listView;
 
     @Override
     public View onCreateContentView(LayoutInflater inflater) {

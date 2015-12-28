@@ -4,6 +4,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -11,7 +12,6 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.otto.ReplyJumpClickEvent;
 import com.gzsll.hupu.presenter.ContentPresenter;
 import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.HtmlHelper;
@@ -21,6 +21,7 @@ import com.gzsll.hupu.ui.activity.ContentActivity;
 import com.gzsll.hupu.ui.activity.ContentActivity_;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity_;
 import com.gzsll.hupu.ui.activity.PostActivity_;
+import com.gzsll.hupu.ui.activity.ReportActivity_;
 import com.gzsll.hupu.ui.activity.UserProfileActivity_;
 import com.gzsll.hupu.ui.adapter.ThreadReplyAdapter;
 import com.gzsll.hupu.view.ContentView;
@@ -29,7 +30,6 @@ import com.gzsll.hupu.widget.PagePicker;
 import com.gzsll.hupu.widget.SwipyRefreshLayout;
 import com.gzsll.hupu.widget.SwipyRefreshLayoutDirection;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -47,7 +47,7 @@ import javax.inject.Inject;
  * Created by sll on 2015/9/14.
  */
 @EFragment
-public class ContentFragment extends BaseFragment implements ContentView, SwipyRefreshLayout.OnRefreshListener, HuPuWebView.HuPuWebViewCallBack, PagePicker.OnJumpListener {
+public class ContentFragment extends BaseFragment implements ContentView, SwipyRefreshLayout.OnRefreshListener, HuPuWebView.HuPuWebViewCallBack, HuPuWebView.OnScrollChangedCallback, PagePicker.OnJumpListener {
 
     private Logger logger = Logger.getLogger(ContentFragment.class.getSimpleName());
 
@@ -56,7 +56,11 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     @FragmentArg
     String tid;
     @FragmentArg
-    int mPage;
+    int page;
+    @FragmentArg
+    String pid;
+    @FragmentArg
+    String title;
 
 
     @ViewById
@@ -66,7 +70,9 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     @ViewById
     FloatingActionMenu floatingMenu;
     @ViewById
-    FloatingActionButton floatingComment, floatingFav, floatingShare;
+    FloatingActionButton floatingComment, floatingFav, floatingShare, floatingReport;
+    @ViewById
+    TextView tvPre, tvPageNum, tvNext;
 
 
     @Inject
@@ -103,8 +109,9 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
         initPicker();
         initFloatingButton();
         webView.setCallBack(this);
+        webView.setOnScrollChangedCallback(this);
         refreshLayout.setOnRefreshListener(this);
-        mContentPresenter.onThreadInfoReceive(tid, fid, 1);
+        mContentPresenter.onThreadInfoReceive(tid, fid, pid, 1);
     }
 
 
@@ -118,6 +125,7 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
         mResourceHelper.setFabBtnColor(mActivity, floatingComment);
         mResourceHelper.setFabBtnColor(mActivity, floatingFav);
         mResourceHelper.setFabBtnColor(mActivity, floatingShare);
+        mResourceHelper.setFabBtnColor(mActivity, floatingReport);
     }
 
 
@@ -125,7 +133,25 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     public void renderContent(String url, int page, int totalPage) {
         mPagePicker.setMin(1);
         mPagePicker.setMax(totalPage);
+        mPagePicker.setValue(page);
+        tvPageNum.setText(page + "/" + totalPage);
+        if (page == 1) {
+            tvPre.setTextColor(getResources().getColor(R.color.base_text_gray));
+            tvPre.setClickable(false);
+        } else {
+            tvPre.setTextColor(getResources().getColor(R.color.blue));
+            tvPre.setClickable(true);
+        }
+
+        if (page == totalPage) {
+            tvNext.setTextColor(getResources().getColor(R.color.base_text_gray));
+            tvNext.setClickable(false);
+        } else {
+            tvNext.setTextColor(getResources().getColor(R.color.blue));
+            tvNext.setClickable(true);
+        }
         webView.loadUrl(url);
+
     }
 
     @Override
@@ -181,18 +207,11 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     @ViewById
     FrameLayout frameLayout;
 
-    @Subscribe
-    @UiThread
-    public void onReplyJumpClickEvent(ReplyJumpClickEvent event) {
-        logger.debug("onReplyJumpClickEvent");
-        mPagePicker.setValue(event.getCurrentPage());
-        mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, 0);
-    }
 
 
     @Click
     void floatingComment() {
-        mContentPresenter.reply();
+        mContentPresenter.reply(title);
         floatingMenu.toggle(true);
     }
 
@@ -207,6 +226,30 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
         floatingMenu.toggle(true);
     }
 
+    @Click
+    void floatingReport() {
+        ReportActivity_.intent(this).tid(tid).start();
+    }
+
+
+    @Click
+    void tvPre() {
+        mContentPresenter.onPagePre();
+    }
+
+
+    @Click
+    void tvNext() {
+        mContentPresenter.onPageNext();
+    }
+
+    @Click
+    void tvPageNum() {
+        mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, 0);
+    }
+
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -215,7 +258,7 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @Override
     public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
+        if (direction == SwipyRefreshLayoutDirection.TOP) {
             mContentPresenter.onRefresh();
         } else {
             mContentPresenter.onPageNext();
@@ -256,7 +299,7 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @Override
     public void onReport(String tid, long pid) {
-
+        ReportActivity_.intent(this).tid(tid).pid(String.valueOf(pid)).start();
     }
 
     @Override
@@ -266,7 +309,7 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     @Override
     public void onOpenContent(String tid) {
-        ContentActivity_.intent(this).fid(fid).tid(tid).mPage(1).start();
+        ContentActivity_.intent(this).fid(fid).tid(tid).page(1).start();
     }
 
     @Override
@@ -274,4 +317,14 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
 
     }
 
+    @Override
+    public void onScroll(int dx, int dy) {
+        if (Math.abs(dy) > 4) {
+            if (dy > 0) {
+                floatingMenu.hideMenuButton(true);
+            } else {
+                floatingMenu.showMenuButton(true);
+            }
+        }
+    }
 }

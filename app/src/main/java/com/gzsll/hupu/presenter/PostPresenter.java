@@ -90,7 +90,13 @@ public class PostPresenter extends Presenter<PostView> {
     }
 
     private void addReply(String tid, String fid, String pid, String content, List<String> imgs) {
-        mThreadApi.addReplyByApp(tid, fid, pid, content, imgs, new Callback<AddReplyResult>() {
+        StringBuffer buffer = new StringBuffer(content);
+        if (imgs != null) {
+            for (String url : imgs) {
+                buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
+            }
+        }
+        mThreadApi.addReplyByApp(tid, fid, pid, buffer.toString(), new Callback<AddReplyResult>() {
             @Override
             public void success(AddReplyResult result, Response response) {
                 view.hideLoading();
@@ -145,7 +151,13 @@ public class PostPresenter extends Presenter<PostView> {
     }
 
     private void addPost(String fid, String content, String title, List<String> imgs) {
-        mThreadApi.addGroupThread(title, content, fid, imgs, new Callback<BaseResult>() {
+        StringBuffer buffer = new StringBuffer(content);
+        if (imgs != null) {
+            for (String url : imgs) {
+                buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
+            }
+        }
+        mThreadApi.addGroupThread(title, buffer.toString(), fid, new Callback<BaseResult>() {
             @Override
             public void success(BaseResult result, Response response) {
                 view.hideLoading();

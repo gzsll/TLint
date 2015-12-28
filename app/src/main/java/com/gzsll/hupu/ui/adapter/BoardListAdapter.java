@@ -3,8 +3,8 @@ package com.gzsll.hupu.ui.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.storage.UserStorage;
-import com.gzsll.hupu.support.storage.bean.Board;
 import com.gzsll.hupu.support.storage.bean.BoardList;
 import com.gzsll.hupu.ui.activity.BaseActivity;
 import com.gzsll.hupu.ui.view.BoardListItem;

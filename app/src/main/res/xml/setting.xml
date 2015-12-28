@@ -18,13 +18,13 @@
             android:key="pSwipeBackEdgeMode"
             android:title="@string/settings_swipeback_edgemode" />
 
-        <com.gzsll.hupu.widget.WrapperListPreference
-            android:defaultValue="0"
-            android:dialogTitle="离线帖子篇数"
-            android:entries="@array/offlineCount"
-            android:entryValues="@array/prefValues"
-            android:key="pOfflineCount"
-            android:title="离线帖子篇数" />
+        <!--   <com.gzsll.hupu.widget.WrapperListPreference
+               android:defaultValue="0"
+               android:dialogTitle="离线帖子篇数"
+               android:entries="@array/offlineCount"
+               android:entryValues="@array/prefValues"
+               android:key="pOfflineCount"
+               android:title="离线帖子篇数" />-->
 
     </PreferenceCategory>
 
@@ -46,11 +46,11 @@
             android:key="pTextSize"
             android:title="@string/settings_text_size" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pSingleLine"
-            android:summary="@string/settings_single_line_summary"
-            android:title="@string/settings_single_line" />
+        <!--        <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="pSingleLine"
+                    android:summary="@string/settings_single_line_summary"
+                    android:title="@string/settings_single_line" />-->
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pLoadPic"
@@ -58,11 +58,11 @@
             android:title="@string/settings_load_pic" />
 
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pLoadOriginPic"
-            android:summary="@string/settings_load_ori_pic_summary"
-            android:title="@string/settings_load_ori_pic" />
+        <!--<CheckBoxPreference-->
+        <!--android:defaultValue="false"-->
+        <!--android:key="pLoadOriginPic"-->
+        <!--android:summary="@string/settings_load_ori_pic_summary"-->
+        <!--android:title="@string/settings_load_ori_pic" />-->
 
     </PreferenceCategory>
 

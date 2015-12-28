@@ -136,7 +136,7 @@ public class DBUserInfoDao extends AbstractDao<DBUserInfo, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     /** @inheritdoc */
     @Override

@@ -32,16 +32,18 @@ android {
         applicationId "com.gzsll.hupu"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 31
-        versionName "1.1"
+        versionCode 36
+        versionName "1.5"
     }
+
+
 
 
 
 
     buildTypes {
         release {
-            //  signingConfig signingConfigs.myConfig
+            signingConfig signingConfigs.myConfig
             minifyEnabled false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -78,10 +80,11 @@ dependencies {
     }
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'com.timehop.stickyheadersrecyclerview:library:0.4.2@aar'
-    compile 'com.github.clans:fab:1.5.5'
-    compile "com.facebook.fresco:fresco:0.8.1"
-    compile "com.facebook.fresco:imagepipeline-okhttp:0.8.1"
-
+    compile 'com.github.clans:fab:1.6.2'
+    compile 'com.facebook.fresco:fresco:0.8.1'
+    compile 'com.facebook.fresco:imagepipeline-okhttp:0.8.1'
     compile 'com.umeng.analytics:analytics:latest.integration'
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'org.jsoup:jsoup:1.8.3'
+    compile 'com.google.android.gms:play-services-ads:8.3.0'
 }

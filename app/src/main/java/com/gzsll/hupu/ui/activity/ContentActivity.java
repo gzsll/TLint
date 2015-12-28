@@ -20,11 +20,15 @@ public class ContentActivity extends BaseSwipeBackActivity {
     @Extra
     String tid;
     @Extra
-    int mPage;
+    int page;
+    @Extra
+    String pid;
+    @Extra
+    String title;
 
     @AfterViews
     void init() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, ContentFragment_.builder().fid(fid).tid(tid).mPage(mPage).build()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, ContentFragment_.builder().fid(fid).tid(tid).page(page).build()).commit();
     }
 
 

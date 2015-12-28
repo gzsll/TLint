@@ -9,5 +9,6 @@ public class ThreadSchemaInfo {
     public String client;
     public int isCollected;
     public String url;
+    public BaseError error;
 
 }

@@ -3,21 +3,30 @@ package com.gzsll.hupu.presenter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.view.View;
 
 import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.db.DBGroupThreadDao;
 import com.gzsll.hupu.support.db.DBGroupsDao;
 import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
-import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.Thread;
 import com.gzsll.hupu.support.storage.bean.ThreadListResult;
 import com.gzsll.hupu.support.utils.DbConverterHelper;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
+import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.gzsll.hupu.view.ThreadListView;
+import com.squareup.okhttp.Request;
 import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +56,9 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     DBGroupsDao mGroupsDao;
     @Inject
     DbConverterHelper mDbConverterHelper;
+    @Inject
+    OkHttpHelper mOkHttpHelper;
+
 
     private Handler handler = new Handler(Looper.getMainLooper());
 
@@ -56,8 +68,17 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
     private String fid;
     private String lastTid;
+    private String lastTamp = "";
     private String type;
+    private int pageIndex;
     private List<String> list;
+    private int loadType = TYPE_LIST;
+    private boolean clear;
+    private String key;
+
+
+    private static final int TYPE_LIST = 1;
+    private static final int TYPE_SEARCH = 2;
 
 
     @Override
@@ -82,11 +103,52 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
     public void onThreadReceive(String fid, String type, List<String> list) {
         view.showLoading();
+        view.onFloatingVisibility(View.VISIBLE);
         this.type = type;
         this.fid = fid;
         this.list = list;
-        loadThreadList("", true);
+        clear = true;
+        loadType = TYPE_LIST;
+        loadThreadList("");
         getAttendStatus();
+    }
+
+
+    public void onStartSearch(String key, int page) {
+        if (TextUtils.isEmpty(key)) {
+            view.showToast("搜索词不能为空");
+            return;
+        }
+        view.showLoading();
+        view.onFloatingVisibility(View.GONE);
+        pageIndex = page;
+        this.key = key;
+        clear = true;
+        loadSearchList();
+    }
+
+
+    private void loadSearchList() {
+        loadType = TYPE_SEARCH;
+        String url = String
+                .format("http://my.hupu.com/search?type=topic&sortby=datedesc&q=%s&fid=%s&page=%s",
+                        URLEncoder.encode(key), fid, pageIndex);
+        Request request = new Request.Builder().url(url).build();
+        mOkHttpHelper.enqueue(request, new com.squareup.okhttp.Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                view.onError("搜索失败，请检查网络后重试");
+            }
+
+            @Override
+            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    parse(new String(response.body().bytes(), "gb2312"));
+                } else {
+                    searchError();
+                }
+            }
+        });
     }
 
 
@@ -96,7 +158,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
             public void success(AttendStatusResult baseResult, Response response) {
                 if (baseResult.status == 200) {
                     view.renderThreadInfo(baseResult.forumInfo);
-                    view.attendStatus(baseResult.status);
+                    view.attendStatus(baseResult.attendStatus);
                 }
             }
 
@@ -107,39 +169,17 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
         });
     }
 
-    public void onRefresh() {
-        view.onScrollToTop();
-        loadThreadList("", true);
-    }
 
-    public void onReload() {
-        loadThreadList(lastTid, false);
-    }
-
-
-    public void onLoadMore() {
-        loadThreadList(lastTid, false);
-    }
-
-
-    private void loadThreadList(String last, boolean clear) {
-        if (mNetWorkHelper.isFast()) {
-            loadFromNet(last, clear);
-        } else {
-            loadFromDb(clear);
-        }
-    }
-
-    private void loadFromNet(String last, final boolean clear) {
-        mThreadApi.getGroupThreadsList(fid, last, 20, type, list, new Callback<ThreadListResult>() {
+    private void loadThreadList(String last) {
+        mThreadApi.getGroupThreadsList(fid, last, 20, lastTamp, type, list, new Callback<ThreadListResult>() {
             @Override
             public void success(ThreadListResult result, Response response) {
                 if (clear) {
                     threads.clear();
                     view.onScrollToTop();
                 }
-
-                if (result.result != null && !result.result.data.isEmpty()) {
+                if (result.result != null) {
+                    lastTamp = result.result.stamp;
                     addThreads(result.result.data);
                     view.renderThreads(threads);
                     view.hideLoading();
@@ -147,6 +187,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                     if (threads.isEmpty()) {
                         view.onError("数据加载失败");
                     } else {
+                        view.onRefreshing(false);
                         view.showToast("数据加载失败");
                     }
                 }
@@ -154,52 +195,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
             @Override
             public void failure(RetrofitError error) {
-                logger.debug(error.getMessage());
                 view.onError(error.getMessage());
-            }
-        });
-    }
-
-    private void loadFromDb(final boolean clear) {
-//        BackgroundExecutor.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (clear) {
-//                    threads.clear();
-//                }
-//                List<DBGroups> groupsList = mGroupsDao.queryBuilder().where(DBGroupsDao.Properties.ServerId.eq(groupId)).list();
-//                if (!groupsList.isEmpty()) {
-//                    renderInfo(mDbConverterHelper.convertDbGroupsToInfo(groupsList.get(0)));
-//                }
-//                List<DBGroupThread> threads = mThreadDao.queryBuilder().where(DBGroupThreadDao.Properties.GroupId.eq(groupId)).orderDesc(DBGroupThreadDao.Properties.CreateAtUnixTime).list();
-//                addThreads(mDbConverterHelper.covertDbGroupThreads(threads));
-//                renderThreads(threads.isEmpty());
-//            }
-//        });
-    }
-
-
-//    private void renderInfo(final Info info) {
-//        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                view.renderThreadInfo(info);
-//            }
-//        });
-//
-//    }
-
-
-    private void renderThreads(final boolean empty) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!empty) {
-                    view.renderThreads(threads);
-                    view.hideLoading();
-                } else {
-                    view.onEmpty();
-                }
             }
         });
     }
@@ -207,26 +203,144 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
     private void addThreads(List<Thread> threadList) {
         for (Thread thread : threadList) {
-            boolean isContain = false;
-            for (Thread thread1 : threads) {
-                if (thread.tid.equals(thread1.tid)) {
-                    isContain = true;
-                    break;
-                }
-            }
-            if (!isContain) {
+            if (!contains(thread)) {
                 threads.add(thread);
             }
+        }
+        lastTid = threads.get(threads.size() - 1).tid;
+    }
+
+
+    private boolean contains(Thread thread) {
+        boolean isContain = false;
+        for (Thread thread1 : threads) {
+            if (thread.tid.equals(thread1.tid)) {
+                isContain = true;
+                break;
+            }
+        }
+        return isContain;
+    }
+
+
+    private void parse(String response) {
+        Document document = Jsoup.parse(response);
+        Elements eles = document.select("tbody tr");
+        if (eles != null) {
+            if (clear) {
+                threads.clear();
+                view.onScrollToTop();
+            }
+            for (int i = 0; i < eles.size(); i++) {
+                Element element = eles.get(i);
+                Elements attrs = element.select("td");
+                if (attrs != null) {
+                    Thread thread = new Thread();
+                    thread.fid = fid;
+                    for (int j = 0; j < attrs.size(); j++) {
+                        Element td = attrs.get(j);
+                        if (j == 0) {
+                            Element a = td.select("a").first();
+                            if (a != null) {
+                                String url = a.attr("href");
+                                int k = url.lastIndexOf("/") + 1;
+                                String str = url.substring(k);
+                                thread.tid = str.split(".html")[0];
+                            }
+                            thread.title = td.text();
+                        }
+                        if (j == 2) {
+                            thread.userName = td.text();
+                        }
+                        if (j == 3) {
+                            thread.time = td.text();
+                        }
+                        if (j == 4) {
+                            thread.replies = td.text();
+                        }
+
+                    }
+                    if ((thread != null) && (thread.tid != null) && (!contains(thread))) {
+                        threads.add(thread);
+                    }
+                }
+
+            }
+            if (!threads.isEmpty()) {
+                view.renderThreads(threads);
+                view.hideLoading();
+            } else {
+                view.onEmpty();
+            }
+        } else {
+            searchError();
+        }
+    }
+
+    private void searchError() {
+        if (threads.isEmpty()) {
+            view.onError("搜索失败，请重试");
+        } else {
+            view.onRefreshing(false);
+            view.showToast("数据加载失败");
+        }
+    }
+
+
+    public void onRefresh() {
+        view.onScrollToTop();
+        clear = true;
+        if (loadType == TYPE_LIST) {
+            loadThreadList("");
+        } else {
+            pageIndex = 1;
+            loadSearchList();
+        }
+    }
+
+    public void onReload() {
+        clear = false;
+        if (loadType == TYPE_LIST) {
+            loadThreadList(lastTid);
+        } else {
+            loadSearchList();
+        }
+    }
+
+
+    public void onLoadMore() {
+        clear = false;
+        if (loadType == TYPE_LIST) {
+            loadThreadList(lastTid);
+        } else {
+            pageIndex++;
+            loadSearchList();
         }
     }
 
 
     public void addAttention() {
-        mThreadApi.addGroupAttention(fid, new Callback<BaseResult>() {
+        mThreadApi.addGroupAttention(fid, new Callback<AttendStatusResult>() {
             @Override
-            public void success(BaseResult baseResult, Response response) {
-                if (baseResult != null) {
-                    view.showToast(baseResult.getMsg());
+            public void success(AttendStatusResult result, Response response) {
+                if (result.status == 200 && result.result == 1) {
+                    view.showToast("添加关注成功");
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    public void delAttention() {
+        mThreadApi.delGroupAttention(fid, new Callback<AttendStatusResult>() {
+            @Override
+            public void success(AttendStatusResult result, Response response) {
+                if (result.status == 200 && result.result == 1) {
+                    view.showToast("取消关注成功");
                 }
             }
 

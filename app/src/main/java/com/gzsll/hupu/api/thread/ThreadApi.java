@@ -3,8 +3,6 @@ package com.gzsll.hupu.api.thread;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.gzsll.hupu.api.TypedJsonString;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.AddReplyResult;
 import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
@@ -22,10 +20,10 @@ import com.gzsll.hupu.support.storage.bean.ThreadsResult;
 import com.gzsll.hupu.support.storage.bean.TopicResult;
 import com.gzsll.hupu.support.storage.bean.UserResult;
 import com.gzsll.hupu.support.utils.RequestHelper;
+import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.List;
@@ -45,13 +43,13 @@ public class ThreadApi {
     private ThreadService threadService;
     private ThreadService threadServiceV2;
     private RequestHelper requestHelper;
-    private Gson gson;
+    private SettingPrefHelper mSettingPrefHelper;
     private UserStorage mUserStorage;
 
-    public ThreadApi(final UserStorage mUserStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, Gson gson) {
+    public ThreadApi(final UserStorage mUserStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, SettingPrefHelper mSettingPrefHelper) {
         this.mUserStorage = mUserStorage;
         this.requestHelper = requestHelper;
-        this.gson = gson;
+        this.mSettingPrefHelper = mSettingPrefHelper;
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
@@ -92,13 +90,13 @@ public class ThreadApi {
         threadServiceV2.getMyBoardList(sign, params, callback);
     }
 
-    public void getGroupThreadsList(String fid, String lastTid, int limit, String type, List<String> list, Callback<ThreadListResult> callback) {
+    public void getGroupThreadsList(String fid, String lastTid, int limit, String lastTamp, String type, List<String> list, Callback<ThreadListResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMapV2();
         params.put("fid", fid);
         params.put("lastTid", lastTid);
         params.put("limit", String.valueOf(limit));
         params.put("isHome", "1");
-        params.put("stamp", "");
+        params.put("stamp", lastTamp);
         params.put("password", "0");
         if (list == null) {
             params.put("special", "0");
@@ -133,7 +131,7 @@ public class ThreadApi {
         return threadService.getGroupThreadsList(sign, params);
     }
 
-    public void addGroupAttention(String fid, Callback<BaseResult> callback) {
+    public void addGroupAttention(String fid, Callback<AttendStatusResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMapV2();
         params.put("fid", fid);
         params.put("uid", mUserStorage.getUid());
@@ -141,7 +139,7 @@ public class ThreadApi {
         threadServiceV2.addGroupAttention(sign, params, callback);
     }
 
-    public void delGroupAttention(String fid, Callback<BaseResult> callback) {
+    public void delGroupAttention(String fid, Callback<AttendStatusResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMapV2();
         params.put("fid", fid);
         params.put("uid", mUserStorage.getUid());
@@ -173,11 +171,17 @@ public class ThreadApi {
 
     public void getGroupThreadInfo(String tid, String fid, int page, String pid, Callback<ThreadSchemaInfo> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMapV2();
-        params.put("tid", tid);
-        params.put("fid", fid);
+        if (!TextUtils.isEmpty(tid)) {
+            params.put("tid", tid);
+        }
+        if (!TextUtils.isEmpty(fid)) {
+            params.put("fid", fid);
+        }
         params.put("page", page + "");
-        params.put("pid", "0");
-        params.put("nopic", "");
+        if (!TextUtils.isEmpty(pid)) {
+            params.put("pid", pid);
+        }
+        params.put("nopic", mSettingPrefHelper.getLoadPic() ? "0" : "1");
         String sign = requestHelper.getRequestSignV2(params);
         threadServiceV2.getGroupThreadInfo(sign, params, callback);
     }
@@ -192,24 +196,17 @@ public class ThreadApi {
         return threadService.getGroupThreadInfo(sign, params);
     }
 
-    public void addGroupThread(String title, String content, String fid, List<String> list, Callback<BaseResult> callback) {
+    public void addGroupThread(String title, String content, String fid, Callback<BaseResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMapV2();
         params.put("title", title);
         params.put("content", content);
         params.put("fid", fid);
-        if (list != null && !list.isEmpty()) {
-            JSONArray jSONArray = new JSONArray();
-            for (String put : list) {
-                jSONArray.put(put);
-            }
-            params.put("imgs", jSONArray.toString());
-        }
         String sign = requestHelper.getRequestSignV2(params);
         params.put("sign", sign);
-        threadServiceV2.addGroupThread(new TypedJsonString(gson.toJson(params)), callback);
+        threadServiceV2.addGroupThread(params, callback);
     }
 
-    public void addReplyByApp(String tid, String fid, String pid, String content, List<String> list, Callback<AddReplyResult> callback) {
+    public void addReplyByApp(String tid, String fid, String pid, String content, Callback<AddReplyResult> callback) {
         try {
 
             Map<String, String> params = requestHelper.getHttpRequestMapV2();
@@ -220,19 +217,10 @@ public class ThreadApi {
                 params.put("quotepid", pid);
                 params.put("boardpw", "");
             }
-            JSONObject jsonObject = new JSONObject(gson.toJson(params));
-            if (list != null && !list.isEmpty()) {
-                JSONArray jSONArray = new JSONArray();
-                for (String put : list) {
-                    jSONArray.put(put);
-                }
-                params.put("imgs", jSONArray.toString());
-                jsonObject.putOpt("imgs", jSONArray);
-            }
             String sign = requestHelper.getRequestSignV2(params);
-            jsonObject.putOpt("sign", sign);
-            Log.d("groupApi", "gson.toJson(params):" + jsonObject.toString());
-            threadServiceV2.addReplyByApp(new TypedJsonString(jsonObject.toString()), callback);
+            params.put("sign", sign);
+            Log.d("groupApi", "gson.toJson(params):" + params);
+            threadServiceV2.addReplyByApp(params, callback);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -256,18 +244,18 @@ public class ThreadApi {
         threadService.lightByApp(sign, params, callback);
     }
 
-    public void addFavorite(long tid, Callback<FavoriteResult> callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
-        params.put("tid", tid + "");
-        String sign = requestHelper.getRequestSign(params);
-        threadService.addFavorite(sign, params, callback);
+    public void addFavorite(String tid, Callback<FavoriteResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("tid", tid);
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.addFavorite(sign, params, callback);
     }
 
-    public void delFavorite(long tid, Callback callback) {
-        Map<String, String> params = requestHelper.getHttpRequestMap();
-        params.put("tid", tid + "");
-        String sign = requestHelper.getRequestSign(params);
-        threadService.delFavorite(sign, params, callback);
+    public void delFavorite(String tid, Callback callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("tid", tid);
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.delFavorite(sign, params, callback);
     }
 
     public void getUserThreadList(int page, String uid, Callback<TopicResult> callback) {
@@ -317,7 +305,7 @@ public class ThreadApi {
      * @param content
      * @param callback
      */
-    public void submitReports(String tid, String pid, String type, String content, Callback<MessageAtResult> callback) {
+    public void submitReports(String tid, String pid, String type, String content, Callback<BaseResult> callback) {
         Map<String, String> params = requestHelper.getHttpRequestMapV2();
         if (!TextUtils.isEmpty(tid)) {
             params.put("tid", tid);
@@ -328,7 +316,16 @@ public class ThreadApi {
         params.put("type", type);
         params.put("content", content);
         String sign = requestHelper.getRequestSignV2(params);
-        threadServiceV2.getMessageAt(sign, params, callback);
+        threadServiceV2.submitReports(sign, params, callback);
+    }
+
+    public void getRecommendThreadList(String lastTid, String lastTamp, Callback<ThreadListResult> callback) {
+        Map<String, String> params = requestHelper.getHttpRequestMapV2();
+        params.put("lastTid", lastTid);
+        params.put("isHome", "1");
+        params.put("stamp", lastTamp);
+        String sign = requestHelper.getRequestSignV2(params);
+        threadServiceV2.getRecommendThreadList(sign, params, callback);
     }
 
 }

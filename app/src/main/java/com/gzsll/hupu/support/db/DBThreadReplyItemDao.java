@@ -129,7 +129,7 @@ public class DBThreadReplyItemDao extends AbstractDao<DBThreadReplyItem, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     /** @inheritdoc */
     @Override
