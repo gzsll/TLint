@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -96,6 +97,8 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     FloatingActionButton floatingPost, floatingSwitch, floatingRefresh, floatingAttention;
     @ViewById
     FrameLayout frameLayout;
+    @ViewById
+    TextView tvSubTitle;
 
     ThreadActivity activity;
     private AdView mAdView;
@@ -205,6 +208,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
                 .build();
         backdrop.setController(draweeController);
         collapsingToolbar.setTitle(board.getName());
+        tvSubTitle.setText(board.getDescription());
     }
 
 
