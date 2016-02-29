@@ -15,6 +15,7 @@ public class User {
     private Integer sex;
     private Integer level;
     private Boolean isLogin;
+    private String cookie;
 
     public User() {
     }
@@ -23,7 +24,7 @@ public class User {
         this.id = id;
     }
 
-    public User(Long id, String userName, String uid, String token, String icon, Integer syncTime, Integer sex, Integer level, Boolean isLogin) {
+    public User(Long id, String userName, String uid, String token, String icon, Integer syncTime, Integer sex, Integer level, Boolean isLogin, String cookie) {
         this.id = id;
         this.userName = userName;
         this.uid = uid;
@@ -33,6 +34,7 @@ public class User {
         this.sex = sex;
         this.level = level;
         this.isLogin = isLogin;
+        this.cookie = cookie;
     }
 
     public Long getId() {
@@ -105,6 +107,14 @@ public class User {
 
     public void setIsLogin(Boolean isLogin) {
         this.isLogin = isLogin;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
     }
 
 }

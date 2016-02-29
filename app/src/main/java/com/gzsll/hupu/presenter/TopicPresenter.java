@@ -9,9 +9,6 @@ import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Topic;
 import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.gzsll.hupu.view.TopicView;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
@@ -27,6 +24,11 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by sll on 2015/5/28.
@@ -68,16 +70,16 @@ public class TopicPresenter extends Presenter<TopicView> {
             url = String
                     .format(Locale.getDefault(), FAV_URL, uid, page);
         }
-        String token = mUserStorage.getToken();
-        Request request = new Request.Builder().url(url).header("Cookie", "u=" + URLEncoder.encode(token)).build();
+        String cookie = mUserStorage.getCookie();
+        Request request = new Request.Builder().url(url).header("Cookie", "u=" + URLEncoder.encode(cookie)).build();
         mOkHttpHelper.enqueue(request, new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 loadError();
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     parser(new String(response.body().bytes(), "gb2312"), page == 1);
                 }

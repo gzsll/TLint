@@ -10,9 +10,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by sll on 2015/12/12.
@@ -36,9 +35,9 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
     }
 
     private void loadRecommendList() {
-        mThreadApi.getRecommendThreadList(lastTid, lastTamp, new Callback<ThreadListResult>() {
+        mThreadApi.getRecommendThreadList(lastTid,lastTamp).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadListResult>() {
             @Override
-            public void success(ThreadListResult result, Response response) {
+            public void call(ThreadListResult result) {
                 if (clear) {
                     threads.clear();
                     view.onScrollToTop();
@@ -57,9 +56,9 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
                     }
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 if (threads.isEmpty()) {
                     view.onError("数据加载失败");
                 } else {

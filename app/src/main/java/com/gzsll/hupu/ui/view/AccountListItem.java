@@ -2,6 +2,7 @@ package com.gzsll.hupu.ui.view;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,9 +46,11 @@ public class AccountListItem extends LinearLayout {
 
     public void init(User user) {
         this.user = user;
-        ivIcon.setImageURI(Uri.parse(user.getIcon()));
+        if(!TextUtils.isEmpty(user.getIcon())){
+            ivIcon.setImageURI(Uri.parse(user.getIcon()));
+        }
         tvName.setText(user.getUserName());
-        tvDesc.setText(String.format("%1s,%2d级", user.getSex() == 0 ? "男" : "女", user.getLevel()));
+//        tvDesc.setText(String.format("%1s,%2d级", user.getSex() == 0 ? "男" : "女", user.getLevel()));
     }
 
 

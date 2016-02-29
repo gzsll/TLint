@@ -11,7 +11,9 @@ import com.amazonaws.services.s3.S3ClientOptions;
 import com.google.gson.Gson;
 import com.gzsll.hupu.AppApplication_;
 import com.gzsll.hupu.Constants;
-import com.gzsll.hupu.service.OffLineService;
+import com.gzsll.hupu.support.okhttp.CookieInterceptor;
+import com.gzsll.hupu.support.okhttp.HttpLoggingInterceptor;
+import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.utils.FileHelper;
 import com.gzsll.hupu.ui.activity.AccountActivity_;
 import com.gzsll.hupu.ui.activity.BrowserActivity_;
@@ -45,15 +47,16 @@ import com.gzsll.hupu.ui.fragment.ThreadListFragment_;
 import com.gzsll.hupu.ui.fragment.ThreadRecommendFragment_;
 import com.gzsll.hupu.ui.fragment.TopicFragment_;
 import com.gzsll.hupu.widget.HuPuWebView;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
  * @author gzsll
@@ -70,7 +73,7 @@ import dagger.Provides;
                 SplashActivity_.class, UserProfileActivity_.class, NotificationActivity_.class, NotificationFragment_.class,
                 ThreadListFragment_.class, TopicFragment_.class, BoardListFragment_.class, PictureItemFragment_.class, MessageAtFragment_.class, MessageReplyFragment_.class,
                 FileHelper.class, MDColorsDialogFragment_.class, SettingFragment_.class, ContentFragment_.class, NewsFragment_.class, NewsListFragment_.class
-                , LoginFragment_.class, AccountFragment_.class, OffLineService.class, HuPuWebView.class, ReportActivity_.class, ThreadRecommendFragment_.class
+                , LoginFragment_.class, AccountFragment_.class, HuPuWebView.class, ReportActivity_.class, ThreadRecommendFragment_.class
         },
         library = true
 )
@@ -103,12 +106,23 @@ public class RootModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient() {
-        OkHttpClient mOkHttpClient = new OkHttpClient();
-        mOkHttpClient.setConnectTimeout(10, TimeUnit.SECONDS);
-        mOkHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
-        return mOkHttpClient;
+    OkHttpClient provideOkHttpClient(CookieInterceptor mCookieInterceptor) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(20 * 1000, TimeUnit.MILLISECONDS).readTimeout(20 * 1000, TimeUnit.MILLISECONDS);
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addInterceptor(logging);
+        builder.addInterceptor(mCookieInterceptor);
+        return builder.build();
     }
+
+    @Provides
+    @Singleton
+    @Named("fresco")
+    OkHttpClient provideFrescoOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(20 * 1000, TimeUnit.MILLISECONDS).readTimeout(20 * 1000, TimeUnit.MILLISECONDS);
+        return builder.build();
+    }
+
 
     @Provides
     @Singleton
@@ -145,5 +159,11 @@ public class RootModule {
         return (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
+
+    @Provides
+    @Singleton
+    CookieInterceptor provideCookieInterceptor(UserStorage mUserStorage) {
+        return new CookieInterceptor(mUserStorage);
+    }
 
 }

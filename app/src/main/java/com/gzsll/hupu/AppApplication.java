@@ -1,23 +1,22 @@
 package com.gzsll.hupu;
 
-import android.app.Application;
 import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
 
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.gzsll.hupu.module.RootModule;
 import com.gzsll.hupu.support.db.User;
 import com.gzsll.hupu.support.db.UserDao;
+import com.gzsll.hupu.support.okhttp.OkHttpImagePipelineConfigFactory;
 import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.FileHelper;
-import com.squareup.okhttp.OkHttpClient;
 
 import org.androidannotations.annotations.EApplication;
 import org.apache.log4j.Level;
@@ -25,19 +24,22 @@ import org.apache.log4j.Level;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dagger.ObjectGraph;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
+import okhttp3.OkHttpClient;
 
 
 /**
  * @author gzsll
  */
 @EApplication
-public class AppApplication extends Application {
+public class AppApplication extends MultiDexApplication {
 
 
     @Inject
+    @Named("fresco")
     OkHttpClient mOkHttpClient;
     @Inject
     UserStorage mUserStorage;
@@ -122,7 +124,7 @@ public class AppApplication extends Application {
                             }
                         })
                 .setMainDiskCacheConfig(
-                        DiskCacheConfig.newBuilder()
+                        DiskCacheConfig.newBuilder(this)
                                 .setBaseDirectoryPath(getCacheDir())
                                 .setBaseDirectoryName("imageCache")
                                 .setMaxCacheSize(MAX_DISK_CACHE_SIZE)
@@ -130,7 +132,6 @@ public class AppApplication extends Application {
         Fresco.initialize(this, config);
 
     }
-
 
 
 }

@@ -16,7 +16,6 @@ import com.gzsll.hupu.support.utils.DbConverterHelper;
 import com.gzsll.hupu.support.utils.NetWorkHelper;
 import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.gzsll.hupu.view.ThreadListView;
-import com.squareup.okhttp.Request;
 import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
@@ -32,9 +31,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+
 
 /**
  * Created by sll on 2015/3/4.
@@ -134,14 +137,14 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                 .format("http://my.hupu.com/search?type=topic&sortby=datedesc&q=%s&fid=%s&page=%s",
                         URLEncoder.encode(key), fid, pageIndex);
         Request request = new Request.Builder().url(url).build();
-        mOkHttpHelper.enqueue(request, new com.squareup.okhttp.Callback() {
+        mOkHttpHelper.enqueue(request, new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 view.onError("搜索失败，请检查网络后重试");
             }
 
             @Override
-            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     parse(new String(response.body().bytes(), "gb2312"));
                 } else {
@@ -153,17 +156,17 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     private void getAttendStatus() {
-        mThreadApi.getGroupAttentionStatus(fid, new Callback<AttendStatusResult>() {
+        mThreadApi.getGroupAttentionStatus(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
             @Override
-            public void success(AttendStatusResult baseResult, Response response) {
-                if (baseResult.status == 200) {
-                    view.renderThreadInfo(baseResult.forumInfo);
-                    view.attendStatus(baseResult.attendStatus);
+            public void call(AttendStatusResult attendStatusResult) {
+                if (attendStatusResult.status == 200) {
+                    view.renderThreadInfo(attendStatusResult.forumInfo);
+                    view.attendStatus(attendStatusResult.attendStatus);
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
 
             }
         });
@@ -171,9 +174,9 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     private void loadThreadList(String last) {
-        mThreadApi.getGroupThreadsList(fid, last, 20, lastTamp, type, list, new Callback<ThreadListResult>() {
+        mThreadApi.getGroupThreadsList(fid, last, 20, lastTamp, type, list).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadListResult>() {
             @Override
-            public void success(ThreadListResult result, Response response) {
+            public void call(ThreadListResult result) {
                 if (clear) {
                     threads.clear();
                     view.onScrollToTop();
@@ -192,10 +195,10 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                     }
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
-                view.onError(error.getMessage());
+            public void call(Throwable throwable) {
+                view.onError("数据加载失败");
             }
         });
     }
@@ -320,33 +323,33 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     public void addAttention() {
-        mThreadApi.addGroupAttention(fid, new Callback<AttendStatusResult>() {
+        mThreadApi.addGroupAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
             @Override
-            public void success(AttendStatusResult result, Response response) {
+            public void call(AttendStatusResult result) {
                 if (result.status == 200 && result.result == 1) {
                     view.showToast("添加关注成功");
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
-
+            public void call(Throwable throwable) {
+                view.showToast("添加关注失败，请检查网络后重试");
             }
         });
     }
 
     public void delAttention() {
-        mThreadApi.delGroupAttention(fid, new Callback<AttendStatusResult>() {
+        mThreadApi.delGroupAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
             @Override
-            public void success(AttendStatusResult result, Response response) {
+            public void call(AttendStatusResult result) {
                 if (result.status == 200 && result.result == 1) {
                     view.showToast("取消关注成功");
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
-
+            public void call(Throwable throwable) {
+                view.showToast("取消关注失败，请检查网络后重试");
             }
         });
     }

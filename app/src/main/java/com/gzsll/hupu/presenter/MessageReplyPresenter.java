@@ -2,17 +2,12 @@ package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.thread.ThreadApi;
 import com.gzsll.hupu.support.storage.bean.MessageReply;
-import com.gzsll.hupu.support.storage.bean.MessageReplyResult;
 import com.gzsll.hupu.view.MessageReplyView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by sll on 2015/9/8 0008.
@@ -45,33 +40,7 @@ public class MessageReplyPresenter extends Presenter<MessageReplyView> {
     }
 
     private void loadMessageList(String lastId, final boolean clear) {
-        mThreadApi.getMessageReply(lastId, new Callback<MessageReplyResult>() {
-            @Override
-            public void success(MessageReplyResult messageReplyResult, Response response) {
-                if (messageReplyResult != null && messageReplyResult.getStatus() == 200) {
-                    if (clear) {
-                        mReplies.clear();
-                        view.onScrollToTop();
-                    }
-                    mLastId = messageReplyResult.getData().getLastId();
-                    addMessages(messageReplyResult.getData().getList());
-                    view.renderList(mReplies);
-                    view.hideLoading();
-                } else {
-                    if (mReplies.isEmpty()) {
-                        view.onError("数据加载失败");
-                    } else {
-                        view.showToast("数据加载失败");
-                    }
-                }
 
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                view.onError("数据加载失败");
-            }
-        });
     }
 
     private void addMessages(List<MessageReply> list) {

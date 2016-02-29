@@ -16,6 +16,7 @@ public class UserStorage {
     @Inject
     UserDao mUserDao;
 
+    private String cookie;
 
     private User user;
 
@@ -59,4 +60,14 @@ public class UserStorage {
     }
 
 
+    public String getCookie() {
+        if (isLogin()) {
+            return user.getCookie();
+        }
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
 }

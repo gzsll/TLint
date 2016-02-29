@@ -8,9 +8,6 @@ import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.storage.bean.Notification;
 import com.gzsll.hupu.support.utils.OkHttpHelper;
 import com.gzsll.hupu.view.NotificationView;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.squareup.otto.Bus;
 
 import org.json.JSONArray;
@@ -26,6 +23,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by sll on 2015/12/12.
@@ -53,23 +55,24 @@ public class NotificationPresenter extends Presenter<NotificationView> {
         if (view != null) {
             view.showLoading();
         }
-        String token = URLEncoder.encode(mUserStorage.getToken());
+        String cookie = URLEncoder.encode(mUserStorage.getCookie());
         Request request = new Request.Builder().url(NOTIFICATION_URL).header("Host", "my.hupu.com").header("Accept-Encoding", "utf-8")
                 .header("Cookie",
-                        "u=" + token + ";").build();
+                        "u=" + cookie + ";").build();
         mOkHttpHelper.enqueue(request, new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
 
-            }
+                    }
 
-            @Override
-            public void onResponse(Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    parser(response.body().string());
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            parser(response.body().string());
+                        }
+                    }
                 }
-            }
-        });
+        );
     }
 
 
@@ -148,22 +151,12 @@ public class NotificationPresenter extends Presenter<NotificationView> {
     }
 
     public void ignore(String nid) {
-        String token = URLEncoder.encode(mUserStorage.getToken());
+        String cookie = URLEncoder.encode(mUserStorage.getCookie());
         String url = IGNORE_URL + timestamp() + "&id=" + nid;
         Request request = new Request.Builder().url(url)
                 .header("Cookie",
-                        "u=" + token + ";").build();
-        mOkHttpHelper.enqueue(request, new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-
-            }
-        });
+                        "u=" + cookie + ";").build();
+        mOkHttpHelper.enqueue(request);
     }
 
     public String timestamp() {

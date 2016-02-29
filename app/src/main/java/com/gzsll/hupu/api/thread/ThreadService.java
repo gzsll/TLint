@@ -1,129 +1,82 @@
 package com.gzsll.hupu.api.thread;
 
-import com.gzsll.hupu.api.TypedJsonString;
 import com.gzsll.hupu.support.storage.bean.AddReplyResult;
 import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
 import com.gzsll.hupu.support.storage.bean.BaseResult;
 import com.gzsll.hupu.support.storage.bean.BoardListResult;
 import com.gzsll.hupu.support.storage.bean.FavoriteResult;
-import com.gzsll.hupu.support.storage.bean.MessageAtResult;
-import com.gzsll.hupu.support.storage.bean.MessageReplyResult;
 import com.gzsll.hupu.support.storage.bean.MyBoardListResult;
-import com.gzsll.hupu.support.storage.bean.ThreadInfoResult;
 import com.gzsll.hupu.support.storage.bean.ThreadListResult;
-import com.gzsll.hupu.support.storage.bean.ThreadReplyResult;
 import com.gzsll.hupu.support.storage.bean.ThreadSchemaInfo;
-import com.gzsll.hupu.support.storage.bean.ThreadsResult;
-import com.gzsll.hupu.support.storage.bean.TopicResult;
 import com.gzsll.hupu.support.storage.bean.UserResult;
 
 import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FieldMap;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Query;
-import retrofit.http.QueryMap;
+import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+import rx.Observable;
+
 
 /**
  * Created by sll on 2015/9/8 0008.
  */
 public interface ThreadService {
 
-    @GET("/users/getUserBaseInfo")
-    void getUserInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<UserResult> callback);
+    @GET("users/getUserBaseInfo")
+    Observable<UserResult> getUserInfo(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @GET("/forums/getForums")
-    void getBoardList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BoardListResult> callback);
 
-    @GET("/forums/getUserForumsList")
-    void getMyBoardList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<MyBoardListResult> callback);
+    @GET("forums/getForums")
+    Observable<BoardListResult> getBoardList(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @GET("/forums/getForumsInfoList")
-    void getGroupThreadsList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadListResult> callback);
+    @GET("forums/getUserForumsList")
+    Observable<MyBoardListResult> getMyBoardList(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @GET("/group/getGroupThreadsList")
-    ThreadsResult getGroupThreadsList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params);
+    @GET("forums/getForumsInfoList")
+    Observable<ThreadListResult> getGroupThreadsList(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @POST("/forums/attentionForumAdd")
+    @POST("forums/attentionForumAdd")
     @FormUrlEncoded
-    void addGroupAttention(@Query("sign") String sign, @FieldMap(encodeNames = true) Map<String, String> params, Callback<AttendStatusResult> callback);
+    Observable<AttendStatusResult> addGroupAttention(@Query("sign") String sign, @FieldMap Map<String, String> params);
 
-    @POST("/forums/attentionForumRemove")
+    @POST("forums/attentionForumRemove")
     @FormUrlEncoded
-    void delGroupAttention(@Query("sign") String sign, @FieldMap(encodeNames = true) Map<String, String> params, Callback<AttendStatusResult> callback);
+    Observable<AttendStatusResult> delGroupAttention(@Query("sign") String sign, @FieldMap Map<String, String> params);
 
-    @GET("/forums/getForumsAttendStatus")
-    void getGroupAttentionStatus(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<AttendStatusResult> callback);
+    @GET("forums/getForumsAttendStatus")
+    Observable<AttendStatusResult> getGroupAttentionStatus(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @GET("/group/addSpecial")
-    void addSpecial(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
 
-    @GET("/group/delSpecial")
-    void delSpecial(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
+    @GET("threads/getThreadsSchemaInfo")
+    Observable<ThreadSchemaInfo> getThreadInfo(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @GET("/threads/getThreadsSchemaInfo")
-    void getGroupThreadInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadSchemaInfo> callback);
-
-    @GET("/group/getGroupThreadInfo")
-    ThreadInfoResult getGroupThreadInfo(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params);
-
-    @POST("/threads/threadPublish")
-    void addGroupThread(@Body TypedJsonString json, Callback<BaseResult> callback);
-
-    @POST("/threads/threadPublish")
+    @POST("threads/threadPublish")
     @FormUrlEncoded
-    void addGroupThread(@FieldMap Map<String, String> params, Callback<BaseResult> callback);
+    Observable<BaseResult> addGroupThread(@FieldMap Map<String, String> params);
 
-    @POST("/threads/threadReply")
-    void addReplyByApp(@Body TypedJsonString json, Callback<AddReplyResult> callback);
-
-    @POST("/threads/threadReply")
+    @POST("threads/threadReply")
     @FormUrlEncoded
-    void addReplyByApp(@FieldMap Map<String, String> params, Callback<AddReplyResult> callback);
+    Observable<AddReplyResult> addReplyByApp(@FieldMap Map<String, String> params);
 
-    @GET("/group/getMiniReplyList")
-    void getMiniReplyList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadReplyResult> callback);
-
-    @GET("/group/lightByApp")
-    void lightByApp(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
-
-    @POST("/threads/threadCollectAdd")
+    @POST("threads/threadCollectAdd")
     @FormUrlEncoded
-    void addFavorite(@Field("sign") String sign, @FieldMap(encodeNames = true) Map<String, String> params, Callback<FavoriteResult> callback);
+    Observable<FavoriteResult> addFavorite(@Field("sign") String sign, @FieldMap Map<String, String> params);
 
-    @POST("/threads/threadCollectRemove")
+    @POST("threads/threadCollectRemove")
     @FormUrlEncoded
-    void delFavorite(@Field("sign") String sign, @FieldMap(encodeNames = true) Map<String, String> params, Callback<BoardListResult> callback);
+    Observable<BoardListResult> delFavorite(@Field("sign") String sign, @FieldMap Map<String, String> params);
 
-    @GET("/group/getUserThreadList")
-    void getUserThreadList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<TopicResult> callback);
 
-    @GET("/group/getUserThreadFavoriteList")
-    void getUserThreadFavoriteList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<TopicResult> callback);
-
-    @GET("/notice/getMessageReply")
-    void getMessageReply(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<MessageReplyResult> callback);
-
-    @GET("/notice/getMessageAt")
-    void getMessageAt(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<MessageAtResult> callback);
-
-    @POST("/threads/threadReport")
+    @POST("threads/threadReport")
     @FormUrlEncoded
-    void submitReports(@Field("sign") String sign, @FieldMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
+    Observable<BaseResult> submitReports(@Field("sign") String sign, @FieldMap Map<String, String> params);
 
-    @GET("/recommend/getThreadsList")
-    void getRecommendThreadList(@Query("sign") String sign, @QueryMap(encodeNames = true) Map<String, String> params, Callback<ThreadListResult> callback);
+    @GET("recommend/getThreadsList")
+    Observable<ThreadListResult> getRecommendThreadList(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @POST("/user/getUserMessageList")
-    @FormUrlEncoded
-    void getUserMessageList(@Field("sign") String sign, @FieldMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
-
-    @POST("/user/delUserMessageList")
-    @FormUrlEncoded
-    void delUserMessageList(@Field("sign") String sign, @FieldMap(encodeNames = true) Map<String, String> params, Callback<BaseResult> callback);
 }

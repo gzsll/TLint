@@ -5,8 +5,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,8 +21,9 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -33,6 +35,7 @@ public class HuPuWebView extends WebView {
     private Logger logger = Logger.getLogger(HuPuWebView.class.getSimpleName());
 
     private String basicUA;
+    private Map<String, String> header;
 
     @Inject
     UserStorage mUserStorage;
@@ -86,24 +89,26 @@ public class HuPuWebView extends WebView {
         settings.setGeolocationEnabled(true);
         settings.setGeolocationDatabasePath(path);
         settings.setDomStorageEnabled(true);
-        this.basicUA = settings.getUserAgentString() + " kanqiu/0.7.5/1";
+        this.basicUA = settings.getUserAgentString() + " kanqiu/7.05.6303/7059";
 
         initWebViewClient();
 
-        try {
-
-            if (mUserStorage.isLogin()) {
-                String token = mUserStorage.getToken();
-                CookieManager cookieManager = CookieManager.getInstance();
-                cookieManager.setCookie("http://www.hupu.com", "u="
-                        + URLEncoder.encode(token, "utf-8") + ";"
-                        + " path=/; domain=.hupu.com;");
-                CookieSyncManager.getInstance().sync();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//
+//            if (mUserStorage.isLogin()) {
+//                String token = mUserStorage.getToken();
+//                CookieManager cookieManager = CookieManager.getInstance();
+//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "u="
+//                        + URLEncoder.encode(mUserStorage.getCookie(), "utf-8"));
+//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_gamesu=" + URLEncoder.encode(token, "utf-8"));
+//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_inKanqiuApp=1");
+//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_kanqiu=1");
+//                CookieSyncManager.getInstance().sync();
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -116,6 +121,9 @@ public class HuPuWebView extends WebView {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             logger.debug(Uri.decode(url));
+            if(!url.startsWith("hupu")){
+                return super.shouldOverrideUrlLoading(view,url);
+            }
             Uri uri = Uri.parse(url);
             String scheme = uri.getScheme();
             logger.debug("scheme:" + scheme);
@@ -132,6 +140,18 @@ public class HuPuWebView extends WebView {
                 view.getSettings().setLoadsImagesAutomatically(true);
             }
 
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+
+            return super.shouldInterceptRequest(view, request);
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            logger.debug("shouldInterceptRequest url:"+url);
+            return super.shouldInterceptRequest(view, url);
         }
     }
 
@@ -227,7 +247,11 @@ public class HuPuWebView extends WebView {
 
     public void loadUrl(String url) {
         setUA(-1);
-        super.loadUrl(url);
+        if (header == null) {
+            header = new HashMap<>();
+            header.put("Accept-Encoding", "gzip");
+        }
+        super.loadUrl(url, header);
     }
 
 

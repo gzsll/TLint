@@ -13,8 +13,10 @@ import com.google.gson.Gson;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.ContentPresenter;
+import com.gzsll.hupu.support.storage.UserStorage;
 import com.gzsll.hupu.support.utils.ConfigHelper;
 import com.gzsll.hupu.support.utils.HtmlHelper;
+import com.gzsll.hupu.support.utils.RequestHelper;
 import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.ui.activity.BrowserActivity_;
 import com.gzsll.hupu.ui.activity.ContentActivity;
@@ -89,6 +91,10 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     HtmlHelper mHtmlHelper;
     @Inject
     ConfigHelper mConfigHelper;
+    @Inject
+    UserStorage mUserStorage;
+    @Inject
+    RequestHelper mRequestHelper;
 
 
     private PagePicker mPagePicker;
@@ -208,7 +214,6 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     FrameLayout frameLayout;
 
 
-
     @Click
     void floatingComment() {
         mContentPresenter.reply(title);
@@ -247,7 +252,6 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     void tvPageNum() {
         mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, 0);
     }
-
 
 
     @Override

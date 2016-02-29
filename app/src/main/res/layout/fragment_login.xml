@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:hint="用户名"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:text="pursll"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -34,7 +35,8 @@
             android:hint="密码"
             android:inputType="textPassword"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:text="sll564297,"/>
     </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

@@ -16,12 +16,12 @@ import com.gzsll.hupu.support.utils.ResourceHelper;
 import com.gzsll.hupu.support.utils.SecurityHelper;
 import com.gzsll.hupu.support.utils.SettingPrefHelper;
 import com.gzsll.hupu.support.utils.ThemeHelper;
-import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by sll on 2015/3/7.

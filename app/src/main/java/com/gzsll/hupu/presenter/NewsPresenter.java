@@ -1,6 +1,5 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.news.NewsApi;
 import com.gzsll.hupu.support.storage.bean.News;
 import com.gzsll.hupu.support.storage.bean.NewsResult;
 import com.gzsll.hupu.view.NewsView;
@@ -10,18 +9,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 /**
  * Created by sll on 2015/10/10.
  */
 public class NewsPresenter extends Presenter<NewsView> {
 
 
-    @Inject
-    NewsApi mNewsApi;
+@Inject
+public NewsPresenter(){}
 
     private List<News> newsList = new ArrayList<>();
     private int type;
@@ -46,17 +41,7 @@ public class NewsPresenter extends Presenter<NewsView> {
 
 
     private void loadNews(int type, String nid, final boolean isClear) {
-        mNewsApi.getNbaNews(nid, new Callback<NewsResult>() {
-            @Override
-            public void success(NewsResult newsResult, Response response) {
-                loadFinish(newsResult, isClear);
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                view.onError("数据加载失败");
-            }
-        });
     }
 
     private void loadFinish(NewsResult newsResult, boolean isClear) {

@@ -8,7 +8,7 @@ import de.greenrobot.daogenerator.Schema;
 
 public class GreenDaoGenerator {
 
-    public static final int VERSION = 46;
+    public static final int VERSION = 47;
     public static final String GREEN_DAO_CODE_PATH = "../TLint/src/main/greendao";
 
     public static void main(String[] args) throws Exception {
@@ -37,6 +37,7 @@ public class GreenDaoGenerator {
         user.addIntProperty("sex");
         user.addIntProperty("level");
         user.addBooleanProperty("isLogin");
+        user.addStringProperty("cookie");
 
 
         Entity groupThread = schema.addEntity("DBGroupThread");

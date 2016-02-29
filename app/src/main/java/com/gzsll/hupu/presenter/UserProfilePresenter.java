@@ -1,14 +1,9 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.support.storage.bean.UserResult;
 import com.gzsll.hupu.view.UserProfileView;
 
 import javax.inject.Inject;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by sll on 2015/9/14.
@@ -39,19 +34,6 @@ public class UserProfilePresenter extends Presenter<UserProfileView> {
 
     public void receiveUserInfo(String uid) {
         view.showLoading();
-        mThreadApi.getUserInfo(uid, new Callback<UserResult>() {
-            @Override
-            public void success(UserResult userResult, Response response) {
-                view.hideLoading();
-                if (userResult != null && userResult.getStatus() == 200) {
-                    view.renderUserInfo(userResult.getData());
-                }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
     }
 }

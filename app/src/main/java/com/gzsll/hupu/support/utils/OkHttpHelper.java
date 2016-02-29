@@ -1,13 +1,14 @@
 package com.gzsll.hupu.support.utils;
 
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.File;
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okio.BufferedSink;
 import okio.Okio;
 
@@ -50,13 +51,14 @@ public class OkHttpHelper {
     public void enqueue(Request request) {
         mOkHttpClient.newCall(request).enqueue(new Callback() {
 
+
             @Override
-            public void onResponse(Response arg0) throws IOException {
+            public void onFailure(Call call, IOException e) {
 
             }
 
             @Override
-            public void onFailure(Request arg0, IOException arg1) {
+            public void onResponse(Call call, Response response) throws IOException {
 
             }
         });

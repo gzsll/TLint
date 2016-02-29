@@ -18,9 +18,8 @@ import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by sll on 2015/3/7.
@@ -32,7 +31,7 @@ public class ContentPresenter extends Presenter<ContentView> {
     @Inject
     Gson gson;
     @Inject
-    ThreadApi threadApi;
+    ThreadApi mThreadApi;
     @Inject
     SettingPrefHelper mSettingPrefHelper;
     @Inject
@@ -66,21 +65,21 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     private void loadContent(int page) {
-        threadApi.getGroupThreadInfo(tid, fid, page, pid, new retrofit.Callback<ThreadSchemaInfo>() {
+        mThreadApi.getThreadInfo(tid,fid,page,pid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadSchemaInfo>() {
             @Override
-            public void success(ThreadSchemaInfo threadInfoResult, retrofit.client.Response response) {
-                if (threadInfoResult != null) {
-                    if (threadInfoResult.error != null) {
-                        view.onError(threadInfoResult.error.text);
+            public void call(ThreadSchemaInfo threadSchemaInfo) {
+                if (threadSchemaInfo != null) {
+                    if (threadSchemaInfo.error != null) {
+                        view.onError(threadSchemaInfo.error.text);
                     } else {
-                        totalPage = threadInfoResult.pageSize;
-                        view.renderContent(threadInfoResult.url, threadInfoResult.page, threadInfoResult.pageSize);
+                        totalPage = threadSchemaInfo.pageSize;
+                        view.renderContent(threadSchemaInfo.url, threadSchemaInfo.page, threadSchemaInfo.pageSize);
                     }
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 view.onError("加载失败");
             }
         });
@@ -120,7 +119,7 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void addArchive() {
-//        threadApi.addSpecial(groupThreadId + "", new Callback<BaseResult>() {
+//        mThreadApi.addSpecial(groupThreadId + "", new Callback<BaseResult>() {
 //            @Override
 //            public void success(BaseResult o, Response response) {
 //
@@ -136,16 +135,16 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void addFavorite() {
-        threadApi.addFavorite(tid, new Callback<FavoriteResult>() {
+        mThreadApi.addFavorite(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<FavoriteResult>() {
             @Override
-            public void success(FavoriteResult favoriteResult, Response response) {
+            public void call(FavoriteResult favoriteResult) {
                 if (favoriteResult.result != null) {
                     view.showToast(favoriteResult.result.msg);
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 view.showToast("收藏失败");
             }
         });

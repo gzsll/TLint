@@ -96,11 +96,7 @@
             android:name=".ui.activity.NotificationActivity_"
             android:screenOrientation="portrait" />
 
-        <service android:name=".service.OffLineService">
-            <intent-filter>
-                <action android:name="com.gzsll.hupu.action.START_DOWNLOAD" />
-            </intent-filter>
-        </service>
+
 
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

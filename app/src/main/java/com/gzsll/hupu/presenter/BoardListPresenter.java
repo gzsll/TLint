@@ -1,10 +1,8 @@
 package com.gzsll.hupu.presenter;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.service.OffLineService;
 import com.gzsll.hupu.support.db.Board;
 import com.gzsll.hupu.support.db.BoardDao;
 import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
@@ -28,9 +26,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by sll on 2015/5/27.
@@ -75,27 +73,31 @@ public class BoardListPresenter extends Presenter<BoardListView> {
 
     private void loadFromNet() {
         if (boardId == 0) {
-            mThreadApi.getMyBoardList(new Callback<MyBoardListResult>() {
+            mThreadApi.getMyBoardList().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<MyBoardListResult>() {
                 @Override
-                public void success(MyBoardListResult boardListResult, Response response) {
-                    if (boardListResult.data != null) {
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    view.onError();
+                }
+
+                @Override
+                public void onNext(MyBoardListResult result) {
+                    if (result.data != null) {
                         ArrayList<BoardList> boardLists = new ArrayList<BoardList>();
-                        boardLists.add(convertMyBoardListData(boardListResult.data));
+                        boardLists.add(convertMyBoardListData(result.data));
                         view.renderBoardList(boardLists);
                         view.hideLoading();
                     }
-
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    view.onError();
                 }
             });
         } else {
-            mThreadApi.getBoardList(new Callback<BoardListResult>() {
+            mThreadApi.getBoardList().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BoardListResult>() {
                 @Override
-                public void success(BoardListResult boardListResult, Response response) {
+                public void call(BoardListResult boardListResult) {
                     for (BoardListData data : boardListResult.data) {
                         if (data.fid.equals(String.valueOf(boardId))) {
                             view.renderBoardList(data.sub);
@@ -104,9 +106,9 @@ public class BoardListPresenter extends Presenter<BoardListView> {
                         }
                     }
                 }
-
+            }, new Action1<Throwable>() {
                 @Override
-                public void failure(RetrofitError error) {
+                public void call(Throwable throwable) {
                     view.onError();
                 }
             });
@@ -187,18 +189,17 @@ public class BoardListPresenter extends Presenter<BoardListView> {
 
 
     public void delGroupAttention(String fid) {
-        mThreadApi.delGroupAttention(fid, new Callback<AttendStatusResult>() {
+        mThreadApi.delGroupAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
             @Override
-            public void success(AttendStatusResult result, Response response) {
+            public void call(AttendStatusResult result) {
                 if (result.status == 200 && result.result == 1) {
                     view.showToast("取消关注成功");
                     onReload();
                 }
-
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 view.showToast("取消关注失败，请检查网络后重试");
             }
         });
@@ -224,10 +225,10 @@ public class BoardListPresenter extends Presenter<BoardListView> {
     }
 
     private void offlineGroups(ArrayList<Board> boards) {
-        Intent intent = new Intent(mContext, OffLineService.class);
-        intent.putExtra("boards", boards);
-        intent.setAction(OffLineService.START_DOWNLOAD);
-        mContext.startService(intent);
+//        Intent intent = new Intent(mContext, OffLineService.class);
+//        intent.putExtra("boards", boards);
+//        intent.setAction(OffLineService.START_DOWNLOAD);
+//        mContext.startService(intent);
     }
 
 

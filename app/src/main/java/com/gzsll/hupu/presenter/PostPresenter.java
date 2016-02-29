@@ -28,9 +28,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by sll on 2015/3/10.
@@ -96,9 +95,9 @@ public class PostPresenter extends Presenter<PostView> {
                 buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
             }
         }
-        mThreadApi.addReplyByApp(tid, fid, pid, buffer.toString(), new Callback<AddReplyResult>() {
+        mThreadApi.addReplyByApp(tid,fid,pid,buffer.toString()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AddReplyResult>() {
             @Override
-            public void success(AddReplyResult result, Response response) {
+            public void call(AddReplyResult result) {
                 view.hideLoading();
                 if (result != null) {
                     view.showToast(result.getMsg());
@@ -109,9 +108,9 @@ public class PostPresenter extends Presenter<PostView> {
                     view.showToast("您的网络有问题，请检查后重试");
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 view.hideLoading();
                 view.showToast("您的网络有问题，请检查后重试");
             }
@@ -157,9 +156,9 @@ public class PostPresenter extends Presenter<PostView> {
                 buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
             }
         }
-        mThreadApi.addGroupThread(title, buffer.toString(), fid, new Callback<BaseResult>() {
+        mThreadApi.addGroupThread(title,buffer.toString(),fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseResult>() {
             @Override
-            public void success(BaseResult result, Response response) {
+            public void call(BaseResult result) {
                 view.hideLoading();
                 if (result != null) {
                     view.showToast(result.getMsg());
@@ -170,9 +169,9 @@ public class PostPresenter extends Presenter<PostView> {
                     view.showToast("您的网络有问题，请检查后重试");
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 view.hideLoading();
                 view.showToast("您的网络有问题，请检查后重试");
             }
