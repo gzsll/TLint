@@ -1,5 +1,6 @@
 package com.gzsll.hupu.ui.fragment;
 
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,8 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -275,8 +278,26 @@ public class ContentFragment extends BaseFragment implements ContentView, SwipyR
     }
 
     @Override
-    public void onReady() {
+    public void onReady(String successcb) {
         hideLoading();
+        JSONObject jSONObject = new JSONObject();
+        try {
+            jSONObject.put("hybridVer", "1.0");
+            jSONObject.put("supportAjax", true);
+            jSONObject.put("appVer", "7.0.5.6303");
+            jSONObject.put("appName", "com.hupu.games");
+            jSONObject.put("lowDevice", false);
+            jSONObject.put("scheme", "hupu");
+            jSONObject.put("did", mRequestHelper.getDeviceId());
+            jSONObject.put("platform", "Android");
+            jSONObject.put("device", Build.PRODUCT);
+            jSONObject.put("osVer", Build.VERSION.RELEASE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String js = "javascript:HupuBridge._handle_('" + successcb + "','" + jSONObject.toString() + "','null','null');";
+        logger.debug("js:" + js);
+        webView.loadUrl(js);
     }
 
     @Override

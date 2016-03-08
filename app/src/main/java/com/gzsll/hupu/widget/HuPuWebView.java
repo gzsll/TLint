@@ -4,10 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +63,11 @@ public class HuPuWebView extends WebView {
 
     public class HuPuChromeClient extends WebChromeClient {
 
+        @Override
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            logger.debug("onConsoleMessage:" + consoleMessage.message() + ":" + consoleMessage.lineNumber());
+            return true;
+        }
     }
 
     private void init() {
@@ -92,23 +98,23 @@ public class HuPuWebView extends WebView {
         this.basicUA = settings.getUserAgentString() + " kanqiu/7.05.6303/7059";
 
         initWebViewClient();
+        setWebChromeClient(new HuPuChromeClient());
+        try {
 
-//        try {
-//
-//            if (mUserStorage.isLogin()) {
-//                String token = mUserStorage.getToken();
-//                CookieManager cookieManager = CookieManager.getInstance();
-//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "u="
-//                        + URLEncoder.encode(mUserStorage.getCookie(), "utf-8"));
-//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_gamesu=" + URLEncoder.encode(token, "utf-8"));
-//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_inKanqiuApp=1");
-//                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_kanqiu=1");
-//                CookieSyncManager.getInstance().sync();
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+            if (mUserStorage.isLogin()) {
+                String token = mUserStorage.getToken();
+                CookieManager cookieManager = CookieManager.getInstance();
+                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "u="
+                        + URLEncoder.encode(mUserStorage.getCookie(), "utf-8"));
+                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_gamesu=" + URLEncoder.encode(token, "utf-8"));
+                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_inKanqiuApp=1");
+                cookieManager.setCookie("http://bbs.mobileapi.hupu.com", "_kanqiu=1");
+                CookieSyncManager.getInstance().sync();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -121,12 +127,13 @@ public class HuPuWebView extends WebView {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             logger.debug(Uri.decode(url));
-            if(!url.startsWith("hupu")){
-                return super.shouldOverrideUrlLoading(view,url);
-            }
             Uri uri = Uri.parse(url);
             String scheme = uri.getScheme();
             logger.debug("scheme:" + scheme);
+            if (!url.startsWith("hupu")) {
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
             if (scheme != null) {
                 handleScheme(scheme, url);
             }
@@ -140,18 +147,6 @@ public class HuPuWebView extends WebView {
                 view.getSettings().setLoadsImagesAutomatically(true);
             }
 
-        }
-
-        @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-
-            return super.shouldInterceptRequest(view, request);
-        }
-
-        @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            logger.debug("shouldInterceptRequest url:"+url);
-            return super.shouldInterceptRequest(view, url);
         }
     }
 
@@ -173,8 +168,9 @@ public class HuPuWebView extends WebView {
             } else if (scheme.equalsIgnoreCase("hupu")) {
                 try {
                     JSONObject object = new JSONObject(Uri.decode(url.substring("hupu".length() + 3)));
-                    String method = object.getString("method");
-                    handleHuPu(method, object.getJSONObject("data"));
+                    String method = object.optString("method");
+                    String successcb = object.optString("successcb");
+                    handleHuPu(method, object.getJSONObject("data"), successcb);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -196,10 +192,10 @@ public class HuPuWebView extends WebView {
     }
 
 
-    private void handleHuPu(String method, JSONObject data) throws Exception {
+    private void handleHuPu(String method, JSONObject data, String successcb) throws Exception {
         switch (method) {
             case "bridgeReady":
-                callBack.onReady();
+                callBack.onReady(successcb);
                 break;
             case "hupu.ui.updatebbspager":
                 int page = data.getInt("page");
@@ -250,6 +246,7 @@ public class HuPuWebView extends WebView {
         if (header == null) {
             header = new HashMap<>();
             header.put("Accept-Encoding", "gzip");
+            header.put("X-Requested-With", "com.hupu.games");
         }
         super.loadUrl(url, header);
     }
@@ -260,7 +257,7 @@ public class HuPuWebView extends WebView {
 
     public interface HuPuWebViewCallBack {
 
-        void onReady();
+        void onReady(String successcb);
 
         void onUpdatePager(int page, int total);
 

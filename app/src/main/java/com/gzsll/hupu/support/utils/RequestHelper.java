@@ -8,6 +8,7 @@ import com.gzsll.hupu.support.storage.UserStorage;
 
 import org.apache.log4j.Logger;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,7 +37,7 @@ public class RequestHelper {
         map.put("client", getDeviceId());
         map.put("night", "0");
         if (mUserStorage.isLogin()) {
-            map.put("token", mUserStorage.getToken());
+            map.put("token", URLEncoder.encode(mUserStorage.getCookie()));
         }
         return map;
     }

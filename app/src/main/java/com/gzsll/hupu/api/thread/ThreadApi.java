@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
 public class ThreadApi {
 
 
-    static final String BASE_URL = "http://bbs.mobileapi.hupu.com/1/7.0.5/";
+    static final String BASE_URL = "http://bbs.mobileapi.hupu.com/1/7.0.6/";
 
     private ThreadService mThreadService;
     private RequestHelper mRequestHelper;

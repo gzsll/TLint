@@ -7,6 +7,7 @@ import com.gzsll.hupu.support.storage.UserStorage;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -30,7 +31,7 @@ public class CookieInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
         if (!TextUtils.isEmpty(mUserStorage.getCookie())) {
-            Request request = original.newBuilder().addHeader("Cookie", "u=" + mUserStorage.getCookie() + ";").build();
+            Request request = original.newBuilder().addHeader("Cookie", "u=" + URLEncoder.encode(mUserStorage.getCookie()) + ";").build();
             return chain.proceed(request);
         } else {
             for (String header : chain.proceed(original).headers("Set-Cookie")) {
