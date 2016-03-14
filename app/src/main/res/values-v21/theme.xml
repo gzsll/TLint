@@ -2,7 +2,6 @@
 <resources>
 
     <style name="AppBaseTheme" parent="BaseTheme.Light">
-        <item name="android:navigationBarColor">?attr/theme_color</item>
         <!--Translucent system bars-->
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowTranslucentStatus">false</item>

@@ -1,22 +1,18 @@
 package com.gzsll.hupu.presenter;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.support.db.DBGroupThreadDao;
-import com.gzsll.hupu.support.db.DBGroupsDao;
-import com.gzsll.hupu.support.storage.bean.AttendStatusResult;
-import com.gzsll.hupu.support.storage.bean.Thread;
-import com.gzsll.hupu.support.storage.bean.ThreadListResult;
-import com.gzsll.hupu.support.utils.DbConverterHelper;
-import com.gzsll.hupu.support.utils.NetWorkHelper;
-import com.gzsll.hupu.support.utils.OkHttpHelper;
-import com.gzsll.hupu.view.ThreadListView;
-import com.squareup.okhttp.Request;
+import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.AttendStatusResult;
+import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.bean.ThreadListData;
+import com.gzsll.hupu.bean.ThreadListResult;
+import com.gzsll.hupu.helper.NetWorkHelper;
+import com.gzsll.hupu.helper.OkHttpHelper;
+import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.ui.view.ThreadListView;
 import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
@@ -25,19 +21,25 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
- * Created by sll on 2015/3/4.
+ * Created by sll on 2016/3/9.
  */
 public class ThreadListPresenter extends Presenter<ThreadListView> {
 
@@ -45,61 +47,42 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     @Inject
     Bus bus;
     @Inject
-    ThreadApi mThreadApi;
+    ForumApi mForumApi;
     @Inject
     NetWorkHelper mNetWorkHelper;
     @Inject
     Context mContext;
     @Inject
-    DBGroupThreadDao mThreadDao;
-    @Inject
-    DBGroupsDao mGroupsDao;
-    @Inject
-    DbConverterHelper mDbConverterHelper;
-    @Inject
     OkHttpHelper mOkHttpHelper;
+    @Inject
+    ToastHelper mToastHelper;
+    @Inject
+    OkHttpClient mOkHttpClient;
 
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+    @Singleton
+    @Inject
+    public ThreadListPresenter() {
+    }
 
 
-    private List<Thread> threads = new ArrayList<Thread>();
-
+    private List<Thread> threads = new ArrayList<>();
 
     private String fid;
-    private String lastTid;
+    private String lastTid = "";
     private String lastTamp = "";
     private String type;
     private int pageIndex;
     private List<String> list;
     private int loadType = TYPE_LIST;
-    private boolean clear;
     private String key;
 
 
     private static final int TYPE_LIST = 1;
     private static final int TYPE_SEARCH = 2;
 
+    private Subscription mSubscription;
 
-    @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void pause() {
-        //for onPause()
-    }
-
-    @Override
-    public void destroy() {
-
-    }
 
     public void onThreadReceive(String fid, String type, List<String> list) {
         view.showLoading();
@@ -107,24 +90,55 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
         this.type = type;
         this.fid = fid;
         this.list = list;
-        clear = true;
         loadType = TYPE_LIST;
-        loadThreadList("");
+        loadThreadList("", true);
         getAttendStatus();
     }
 
 
     public void onStartSearch(String key, int page) {
         if (TextUtils.isEmpty(key)) {
-            view.showToast("搜索词不能为空");
+            mToastHelper.showToast("搜索词不能为空");
             return;
         }
         view.showLoading();
         view.onFloatingVisibility(View.GONE);
         pageIndex = page;
         this.key = key;
-        clear = true;
         loadSearchList();
+    }
+
+
+    private void loadThreadList(String last, final boolean clear) {
+        mSubscription = mForumApi.getThreadsList(fid, last, 20, lastTamp, type, list).map(new Func1<ThreadListResult, List<Thread>>() {
+            @Override
+            public List<Thread> call(ThreadListResult result) {
+                if (clear) {
+                    threads.clear();
+                }
+                if (result != null && result.result != null) {
+                    ThreadListData data = result.result;
+                    lastTamp = data.stamp;
+                    return addThreads(data.data);
+                }
+                return null;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Thread>>() {
+            @Override
+            public void call(List<Thread> threads) {
+                if (threads != null) {
+                    view.hideLoading();
+                    view.renderThreads(threads);
+                } else {
+                    loadThreadError();
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                loadThreadError();
+            }
+        });
     }
 
 
@@ -133,101 +147,42 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
         String url = String
                 .format("http://my.hupu.com/search?type=topic&sortby=datedesc&q=%s&fid=%s&page=%s",
                         URLEncoder.encode(key), fid, pageIndex);
-        Request request = new Request.Builder().url(url).build();
-        mOkHttpHelper.enqueue(request, new com.squareup.okhttp.Callback() {
+        Observable.just(url).subscribeOn(Schedulers.io()).map(new Func1<String, List<Thread>>() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                view.onError("搜索失败，请检查网络后重试");
+            public List<Thread> call(String s) {
+                try {
+                    Request request = new Request.Builder().url(s).build();
+                    Response response = mOkHttpClient.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        return parse(new String(response.body().bytes(), "gb2312"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
-
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Thread>>() {
             @Override
-            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    parse(new String(response.body().bytes(), "gb2312"));
+            public void call(List<Thread> list) {
+                if (list == null) {
+                    loadThreadError();
                 } else {
-                    searchError();
-                }
-            }
-        });
-    }
-
-
-    private void getAttendStatus() {
-        mThreadApi.getGroupAttentionStatus(fid, new Callback<AttendStatusResult>() {
-            @Override
-            public void success(AttendStatusResult baseResult, Response response) {
-                if (baseResult.status == 200) {
-                    view.renderThreadInfo(baseResult.forumInfo);
-                    view.attendStatus(baseResult.attendStatus);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
-    }
-
-
-    private void loadThreadList(String last) {
-        mThreadApi.getGroupThreadsList(fid, last, 20, lastTamp, type, list, new Callback<ThreadListResult>() {
-            @Override
-            public void success(ThreadListResult result, Response response) {
-                if (clear) {
-                    threads.clear();
-                    view.onScrollToTop();
-                }
-                if (result.result != null) {
-                    lastTamp = result.result.stamp;
-                    addThreads(result.result.data);
-                    view.renderThreads(threads);
-                    view.hideLoading();
-                } else {
-                    if (threads.isEmpty()) {
-                        view.onError("数据加载失败");
+                    if (list.isEmpty()) {
+                        view.onEmpty();
                     } else {
-                        view.onRefreshing(false);
-                        view.showToast("数据加载失败");
+                        view.hideLoading();
+                        view.renderThreads(list);
                     }
                 }
             }
-
-            @Override
-            public void failure(RetrofitError error) {
-                view.onError(error.getMessage());
-            }
         });
     }
 
-
-    private void addThreads(List<Thread> threadList) {
-        for (Thread thread : threadList) {
-            if (!contains(thread)) {
-                threads.add(thread);
-            }
-        }
-        lastTid = threads.get(threads.size() - 1).tid;
-    }
-
-
-    private boolean contains(Thread thread) {
-        boolean isContain = false;
-        for (Thread thread1 : threads) {
-            if (thread.tid.equals(thread1.tid)) {
-                isContain = true;
-                break;
-            }
-        }
-        return isContain;
-    }
-
-
-    private void parse(String response) {
+    private List<Thread> parse(String response) {
         Document document = Jsoup.parse(response);
         Elements eles = document.select("tbody tr");
         if (eles != null) {
-            if (clear) {
+            if (pageIndex == 1) {
                 threads.clear();
                 view.onScrollToTop();
             }
@@ -260,58 +215,124 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                         }
 
                     }
-                    if ((thread != null) && (thread.tid != null) && (!contains(thread))) {
+                    if ((thread.tid != null) && (!contains(thread))) {
                         threads.add(thread);
                     }
                 }
 
             }
-            if (!threads.isEmpty()) {
-                view.renderThreads(threads);
-                view.hideLoading();
-            } else {
-                view.onEmpty();
-            }
+
+        }
+        return threads;
+    }
+
+    private void loadThreadError() {
+        if (threads.isEmpty()) {
+            view.onError("数据加载失败");
         } else {
-            searchError();
+            view.hideLoading();
+            view.onRefreshing(false);
+            mToastHelper.showToast("数据加载失败");
         }
     }
 
-    private void searchError() {
-        if (threads.isEmpty()) {
-            view.onError("搜索失败，请重试");
-        } else {
-            view.onRefreshing(false);
-            view.showToast("数据加载失败");
+    private List<Thread> addThreads(List<Thread> threadList) {
+        for (Thread thread : threadList) {
+            if (!contains(thread)) {
+                threads.add(thread);
+            }
         }
+        lastTid = threads.get(threads.size() - 1).tid;
+        return threads;
+    }
+
+
+    private boolean contains(Thread thread) {
+        boolean isContain = false;
+        for (Thread thread1 : threads) {
+            if (thread.tid.equals(thread1.tid)) {
+                isContain = true;
+                break;
+            }
+        }
+        return isContain;
+    }
+
+
+    private void getAttendStatus() {
+        mForumApi.getAttentionStatus(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+            @Override
+            public void call(AttendStatusResult attendStatusResult) {
+                if (attendStatusResult != null && attendStatusResult.status == 200) {
+                    view.renderThreadInfo(attendStatusResult.forumInfo);
+                    view.attendStatus(attendStatusResult.attendStatus);
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+
+            }
+        });
+    }
+
+
+    public void addAttention() {
+        mForumApi.addAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+            @Override
+            public void call(AttendStatusResult result) {
+                if (result.status == 200 && result.result == 1) {
+                    mToastHelper.showToast("添加关注成功");
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                mToastHelper.showToast("添加关注失败，请检查网络后重试");
+            }
+        });
+    }
+
+    public void delAttention() {
+        mForumApi.delAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+            @Override
+            public void call(AttendStatusResult result) {
+                if (result.status == 200 && result.result == 1) {
+                    mToastHelper.showToast("取消关注成功");
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                mToastHelper.showToast("取消关注失败，请检查网络后重试");
+            }
+        });
     }
 
 
     public void onRefresh() {
         view.onScrollToTop();
-        clear = true;
         if (loadType == TYPE_LIST) {
-            loadThreadList("");
+            loadThreadList("", true);
         } else {
             pageIndex = 1;
             loadSearchList();
         }
     }
 
+
     public void onReload() {
-        clear = false;
+        view.showLoading();
         if (loadType == TYPE_LIST) {
-            loadThreadList(lastTid);
+            loadThreadList(lastTid, false);
         } else {
             loadSearchList();
         }
     }
 
-
     public void onLoadMore() {
-        clear = false;
         if (loadType == TYPE_LIST) {
-            loadThreadList(lastTid);
+            loadThreadList(lastTid, false);
         } else {
             pageIndex++;
             loadSearchList();
@@ -319,37 +340,13 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     }
 
 
-    public void addAttention() {
-        mThreadApi.addGroupAttention(fid, new Callback<AttendStatusResult>() {
-            @Override
-            public void success(AttendStatusResult result, Response response) {
-                if (result.status == 200 && result.result == 1) {
-                    view.showToast("添加关注成功");
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
+    @Override
+    public void detachView() {
+        if (mSubscription != null) {
+            mSubscription.unsubscribe();
+        }
+        threads.clear();
+        lastTid = "";
+        lastTamp = "";
     }
-
-    public void delAttention() {
-        mThreadApi.delGroupAttention(fid, new Callback<AttendStatusResult>() {
-            @Override
-            public void success(AttendStatusResult result, Response response) {
-                if (result.status == 200 && result.result == 1) {
-                    view.showToast("取消关注成功");
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
-    }
-
-
 }

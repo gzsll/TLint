@@ -1,5 +1,6 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,82 +12,88 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.support.pref.SettingPref_;
-import com.gzsll.hupu.support.utils.ConfigHelper;
-import com.gzsll.hupu.support.utils.FileHelper;
-import com.gzsll.hupu.support.utils.FormatHelper;
-import com.gzsll.hupu.support.utils.OkHttpHelper;
+import com.gzsll.hupu.helper.ConfigHelper;
+import com.gzsll.hupu.helper.FileHelper;
+import com.gzsll.hupu.helper.FormatHelper;
+import com.gzsll.hupu.helper.OkHttpHelper;
+import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.fragment.PictureItemFragment;
-import com.gzsll.hupu.ui.fragment.PictureItemFragment_;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
 /**
- * Created by sll on 2015/5/4.
+ * Created by sll on 2016/3/10.
  */
-@EActivity(R.layout.activity_preview)
 public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewPager.OnPageChangeListener {
 
-    Logger logger = Logger.getLogger(ImagePreviewActivity.class.getSimpleName());
 
-    @Extra
-    List<String> extraPics;
-    @Extra
-    String extraPic;
-
-    @Pref
-    SettingPref_ mSettingPref;
-
-    @ViewById
-    ViewPager viewPager;
-    @ViewById
-    Toolbar toolbar;
+    public static void startActivity(Context mContext, String extraPic, ArrayList<String> extraPics) {
+        Intent intent = new Intent(mContext, ImagePreviewActivity.class);
+        intent.putExtra("extraPic", extraPic);
+        intent.putExtra("extraPics", extraPics);
+        mContext.startActivity(intent);
+    }
 
     @Inject
-    FormatHelper formatHelper;
+    FormatHelper mFormatHelper;
     @Inject
-    OkHttpHelper okHttpHelper;
+    OkHttpHelper mOkHttpHelper;
     @Inject
     FileHelper mFileHelper;
     @Inject
     ConfigHelper mConfigHelper;
+    @Inject
+    ToastHelper mToastHelper;
+
+
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     private HashMap<Integer, PictureItemFragment> fragmentMap
-            = new HashMap<Integer, PictureItemFragment>();
+            = new HashMap<>();
     private ImageViewAdapter mImageViewAdapter;
     private int mCurrentItem = 0;
+    private List<String> extraPics;
+    private String extraPic;
 
-
-    @AfterViews
-    void init() {
-        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-        toolbar.setBackgroundColor(Color.TRANSPARENT);
-        initToolBar(toolbar);
-        initViewPager();
-        initCurrentItem();
-
-
+    @Override
+    public int initContentView() {
+        return R.layout.activity_preview;
     }
 
     @Override
-    protected int configTheme() {
-        return R.style.AppTheme_Pics;
+    public void initInjector() {
+        mActivityComponent.inject(this);
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
+        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        toolbar.setBackgroundColor(Color.TRANSPARENT);
+        initToolBar(toolbar);
+        extraPics = getIntent().getStringArrayListExtra("extraPics");
+        extraPic = getIntent().getStringExtra("extraPic");
+        initViewPager();
+        initCurrentItem();
     }
 
     private void initViewPager() {
@@ -104,6 +111,36 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
         getSupportActionBar().setTitle((mCurrentItem + 1) + "/" + extraPics.size());
     }
 
+    @Override
+    protected boolean isApplyStatusBarTranslucency() {
+        return true;
+    }
+
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return true;
+    }
+
+    @Override
+    protected int configTheme() {
+        return R.style.AppTheme_Pics;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mCurrentItem = position;
+        getSupportActionBar().setTitle((position + 1) + "/" + mImageViewAdapter.getCount());
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 
     public class ImageViewAdapter extends FragmentPagerAdapter {
 
@@ -116,7 +153,7 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
         public Fragment getItem(int position) {
             PictureItemFragment fragment = fragmentMap.get(position);
             if (fragment == null) {
-                fragment = PictureItemFragment_.builder().url(extraPics.get(position)).build();
+                fragment = PictureItemFragment.newInstance(extraPics.get(position));
                 fragmentMap.put(position, fragment);
             }
             return fragment;
@@ -135,7 +172,6 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
             }
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,16 +197,33 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
         return true;
     }
 
-    @Override
-    protected boolean isApplyKitKatTranslucency() {
-        return false;
-    }
+    private void save(String url) {
+        Observable.just(url).subscribeOn(Schedulers.io()).map(new Func1<String, String>() {
+            @Override
+            public String call(String s) {
+                String fileName = mFormatHelper.getFileNameFromUrl(s);
+                File target = new File(mConfigHelper.getPicSavePath(), fileName);
+                if (!target.exists()) {
+                    try {
+                        mOkHttpHelper.httpDownload(s, target);
+                        scanPhoto(target);
+                        return "保存成功";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return "保存失败";
+                    }
+                } else {
+                    return "图片已存在";
+                }
 
-    @Override
-    protected boolean isApplyStatusBarTranslucency() {
-        return true;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
+            @Override
+            public void call(String s) {
+                mToastHelper.showToast(s);
+            }
+        });
     }
-
 
     private void scanPhoto(File file) {
         Intent mediaScanIntent = new Intent(
@@ -180,45 +233,5 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
         sendBroadcast(mediaScanIntent);
     }
 
-    @Background
-    void save(String url) {
-        String fileName = formatHelper.getFileNameFromUrl(url);
-        File target = new File(mConfigHelper.getPicSavePath(), fileName);
-        if (!target.exists()) {
-            try {
-                okHttpHelper.httpDownload(url, target);
-                scanPhoto(target);
-                showToast("保存成功");
-            } catch (Exception e) {
-                e.printStackTrace();
-                showToast("保存失败");
-            }
-        } else {
-            showToast("图片已存在");
-        }
 
-
-    }
-
-    @UiThread
-    void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        mCurrentItem = position;
-        getSupportActionBar().setTitle((position + 1) + "/" + mImageViewAdapter.getCount());
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 }

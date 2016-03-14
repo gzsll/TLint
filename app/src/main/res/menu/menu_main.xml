@@ -16,7 +16,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_offline"
-        android:title="离线"
-        app:showAsAction="always" />
+        android:title="消息"
+        android:id="@+id/action_notification"
+        app:showAsAction="always"></item>
 </menu>

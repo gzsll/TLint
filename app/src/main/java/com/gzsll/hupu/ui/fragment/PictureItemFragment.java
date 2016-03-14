@@ -2,7 +2,7 @@ package com.gzsll.hupu.ui.fragment;
 
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.view.View;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -16,33 +16,58 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.photodraweeview.OnPhotoTapListener;
 import com.gzsll.hupu.widget.photodraweeview.PhotoDraweeView;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.FragmentArg;
-import org.androidannotations.annotations.ViewById;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
- * Created by sll on 2015/6/12.
+ * Created by sll on 2016/3/10.
  */
-@EFragment(R.layout.preview_item_layout)
-public class PictureItemFragment extends Fragment {
+public class PictureItemFragment extends BaseFragment {
 
-
-    @FragmentArg
-    String url;
-    @ViewById
+    @Bind(R.id.image)
     PhotoDraweeView image;
-    @ViewById
+    @Bind(R.id.progressBar)
     ProgressBarCircularIndeterminate progressBar;
 
+    public static PictureItemFragment newInstance(String url) {
+        PictureItemFragment mFragment = new PictureItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("url", url);
+        mFragment.setArguments(bundle);
+        return mFragment;
+    }
 
-    @AfterViews
-    void init() {
+    private String url;
+
+
+    @Override
+    public void initInjector() {
+
+    }
+
+    @Override
+    public int initContentView() {
+        return R.layout.preview_item_layout;
+    }
+
+    @Override
+    public void getBundle(Bundle bundle) {
+        url = bundle.getString("url");
+    }
+
+    @Override
+    public void initUI(View view) {
+        ButterKnife.bind(this, view);
+    }
+
+    @Override
+    public void initData() {
+        showContent(true);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
                 .setProgressiveRenderingEnabled(true)
                 .build();
@@ -76,7 +101,6 @@ public class PictureItemFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
     }
 
 

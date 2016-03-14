@@ -10,52 +10,61 @@ import com.amazonaws.mobileconnectors.s3.transfermanager.Upload;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.gzsll.hupu.Constants;
-import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.support.storage.UserStorage;
-import com.gzsll.hupu.support.storage.bean.AddReplyResult;
-import com.gzsll.hupu.support.storage.bean.BaseResult;
-import com.gzsll.hupu.support.storage.bean.UploadInfo;
-import com.gzsll.hupu.support.utils.ConfigHelper;
-import com.gzsll.hupu.support.utils.FileHelper;
-import com.gzsll.hupu.support.utils.SecurityHelper;
-import com.gzsll.hupu.view.PostView;
-
-import org.apache.log4j.Logger;
+import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.BaseResult;
+import com.gzsll.hupu.bean.UploadInfo;
+import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.helper.ConfigHelper;
+import com.gzsll.hupu.helper.FileHelper;
+import com.gzsll.hupu.helper.SecurityHelper;
+import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.ui.view.PostView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
- * Created by sll on 2015/3/10.
+ * Created by sll on 2016/3/9.
  */
 public class PostPresenter extends Presenter<PostView> {
-
-    Logger logger = Logger.getLogger("PostPresenterImpl");
-
 
     @Inject
     UserStorage mUserStorage;
     @Inject
-    ThreadApi mThreadApi;
+    ForumApi mForumApi;
+    @Inject
+    TransferManager mTransferManager;
+    @Inject
+    SecurityHelper mSecurityHelper;
+    @Inject
+    FileHelper mFileHelper;
+    @Inject
+    ConfigHelper mConfigHelper;
+    @Inject
+    ToastHelper mToastHelper;
+
+
+    @Inject
+    @Singleton
+    public PostPresenter() {
+    }
 
 
     private ArrayList<String> paths = new ArrayList<>();
-
-
     int uploadCount = 0;
 
-    /**
-     * 评论或者引用
-     *
-     * @param content 内容
-     */
+
+    public void parse(ArrayList<String> paths) {
+        this.paths = paths;
+    }
+
     public void comment(final String tid, final String fid, final String pid, final String content) {
         view.showLoading();
         if (paths != null && !paths.isEmpty()) {
@@ -96,24 +105,24 @@ public class PostPresenter extends Presenter<PostView> {
                 buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
             }
         }
-        mThreadApi.addReplyByApp(tid, fid, pid, buffer.toString(), new Callback<AddReplyResult>() {
+        mForumApi.addReplyByApp(tid, fid, pid, buffer.toString()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseResult>() {
             @Override
-            public void success(AddReplyResult result, Response response) {
+            public void call(BaseResult result) {
                 view.hideLoading();
                 if (result != null) {
-                    view.showToast(result.getMsg());
-                    if (result.getStatus() == 200) {
+                    mToastHelper.showToast(result.msg);
+                    if (result.status == 200) {
                         view.postSuccess();
                     }
                 } else {
-                    view.showToast("您的网络有问题，请检查后重试");
+                    mToastHelper.showToast("您的网络有问题，请检查后重试");
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 view.hideLoading();
-                view.showToast("您的网络有问题，请检查后重试");
+                mToastHelper.showToast("您的网络有问题，请检查后重试");
             }
         });
     }
@@ -157,37 +166,27 @@ public class PostPresenter extends Presenter<PostView> {
                 buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
             }
         }
-        mThreadApi.addGroupThread(title, buffer.toString(), fid, new Callback<BaseResult>() {
+        mForumApi.addThread(title, buffer.toString(), fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseResult>() {
             @Override
-            public void success(BaseResult result, Response response) {
+            public void call(BaseResult result) {
                 view.hideLoading();
                 if (result != null) {
-                    view.showToast(result.getMsg());
-                    if (result.getStatus() == 200) {
+                    mToastHelper.showToast(result.msg);
+                    if (result.status == 200) {
                         view.postSuccess();
                     }
                 } else {
-                    view.showToast("您的网络有问题，请检查后重试");
+                    mToastHelper.showToast("您的网络有问题，请检查后重试");
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void call(Throwable throwable) {
                 view.hideLoading();
-                view.showToast("您的网络有问题，请检查后重试");
+                mToastHelper.showToast("您的网络有问题，请检查后重试");
             }
         });
     }
-
-
-    @Inject
-    TransferManager mTransferManager;
-    @Inject
-    SecurityHelper mSecurityHelper;
-    @Inject
-    FileHelper mFileHelper;
-    @Inject
-    ConfigHelper mConfigHelper;
 
 
     private List<PutObjectRequest> requests = new ArrayList<>();
@@ -230,28 +229,8 @@ public class PostPresenter extends Presenter<PostView> {
     }
 
 
-    public void parse(ArrayList<String> paths) {
-        this.paths = paths;
-    }
-
-
     @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void destroy() {
+    public void detachView() {
         paths.clear();
     }
 }

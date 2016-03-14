@@ -1,19 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="tool_bar_height">56dp</dimen>
-    <dimen name="tab_height">48dp</dimen>
 
 
-    <dimen name="text_size_31">31.0sp</dimen>
-    <dimen name="text_size_30">30.0sp</dimen>
-    <dimen name="text_size_29">29.0sp</dimen>
-    <dimen name="text_size_28">28.0sp</dimen>
-    <dimen name="text_size_27">27.0sp</dimen>
-    <dimen name="text_size_26">26.0sp</dimen>
-    <dimen name="text_size_25">25.0sp</dimen>
-    <dimen name="text_size_24">24.0sp</dimen>
     <dimen name="text_size_23">23.0sp</dimen>
     <dimen name="text_size_22">22.0sp</dimen>
     <dimen name="text_size_21">21.0sp</dimen>
@@ -26,9 +14,10 @@
     <dimen name="text_size_14">14.0sp</dimen>
     <dimen name="text_size_13">13.0sp</dimen>
     <dimen name="text_size_12">12.0sp</dimen>
-    <dimen name="text_size_11">11.0sp</dimen>
-    <dimen name="text_size_10">10.0sp</dimen>
-    <dimen name="text_size_9">9.0sp</dimen>
-    <dimen name="text_size_8">8.0sp</dimen>
-    <dimen name="text_size_7">7.0sp</dimen>
+
+    <dimen name="preference_fragment_padding_bottom">0dp</dimen>
+    <!-- Preference fragment padding, sides -->
+    <dimen name="preference_fragment_padding_side">16dp</dimen>
+
+    <integer name="preference_fragment_scrollbarStyle">0x02000000</integer>
 </resources>

@@ -1,21 +1,75 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.ui.fragment.AccountFragment_;
+import com.gzsll.hupu.db.User;
+import com.gzsll.hupu.presenter.AccountPresenter;
+import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.ui.adapter.AccountAdapter;
+import com.gzsll.hupu.ui.view.AccountView;
+import com.gzsll.hupu.widget.SwipyRefreshLayout;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
- * Created by sll on 2015/11/23.
+ * Created by sll on 2016/3/10.
  */
-@EActivity(R.layout.base_content_toolbar_layout)
-public class AccountActivity extends BaseSwipeBackActivity {
+public class AccountActivity extends BaseSwipeBackActivity implements AccountView {
+
+
+    public static void startActivity(Activity mActivity) {
+        Intent intent = new Intent(mActivity, AccountActivity.class);
+        mActivity.startActivity(intent);
+    }
+
+    @Inject
+    AccountPresenter mPresenter;
+    @Inject
+    AccountAdapter mAdapter;
+
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @Bind(R.id.refreshLayout)
+    SwipyRefreshLayout refreshLayout;
+
+
+    @Override
+    public int initContentView() {
+        return R.layout.activity_account;
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent.inject(this);
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
+        initToolBar(toolbar);
+        setTitle("账号管理");
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
+    }
+
     @Override
     protected boolean isApplyStatusBarTranslucency() {
         return true;
@@ -26,17 +80,6 @@ public class AccountActivity extends BaseSwipeBackActivity {
         return true;
     }
 
-    @ViewById
-    Toolbar toolbar;
-
-    @AfterViews
-    void init() {
-        initToolBar(toolbar);
-        setTitle("账号管理");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content,AccountFragment_.builder().build()).commit();
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_account, menu);
@@ -46,9 +89,31 @@ public class AccountActivity extends BaseSwipeBackActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
-            LoginActivity_.intent(this).start();
+            LoginActivity.startAcitivity(this);
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void renderUserList(List<User> users) {
+        mAdapter.bind(users);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

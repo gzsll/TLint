@@ -4,29 +4,17 @@
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#388E3C</color>
 
-    <color name="accent">#eeff41</color>
-    <color name="accentLight">#F4FF81</color>
 
     <!-- Order float button -->
-    <color name="float_button_primary">#00C853</color>
-    <color name="float_button_primary_pressed">#388E3C</color>
-    <color name="float_button_ripple">#2E7D32</color>
 
     <color name="list_background_color">#f0f0f0</color>
 
-    <color name="list_title_text_color">#424242</color>
-    <color name="list_rating_color">#BDBDBD</color>
-    <color name="list_release_date_text_color">#FBC02D</color>
 
 
     <color name="listitem_text">#ffaaaaaa</color>
-    <color name="listitem_text_night">#666666</color>
     <color name="listitem_subject">#ff515151</color>
-    <color name="listitem_summary">#ff666666</color>
-    <color name="listitem_author">#ff5b95d6</color>
 
     <color name="forum_deliver">#ffdddddd</color>
-    <color name="forum_deliver_night">#ff515151</color>
 
     <color name="red">#FFC93437</color>
     <color name="blue">#FF375BF1</color>
@@ -57,13 +45,10 @@
     <drawable name="red">#e74c3c</drawable>
     <drawable name="red_highlight">#c0392b</drawable>
 
-    <drawable name="gray">#95a5a6</drawable>
-    <drawable name="gray_highlight">#7f8c8d</drawable>
 
 
     <color name="retry_button_background">#30000000</color>
     <color name="retry_button_background_stroke">#50000000</color>
-    <color name="window_background">#FFF5F5F5</color>
 
     <color name="base_text_black">#ff333333</color>
     <color name="base_text_gray">#ff7f7f7f</color>

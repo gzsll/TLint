@@ -1,8 +1,12 @@
 package com.gzsll.hupu.ui.activity;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,117 +14,126 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.FrameLayout;
+import android.text.TextUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.bean.UserData;
+import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.presenter.UserProfilePresenter;
-import com.gzsll.hupu.support.storage.bean.UserInfo;
-import com.gzsll.hupu.support.utils.SystemBarTintManager;
-import com.gzsll.hupu.ui.fragment.TopicFragment_;
-import com.gzsll.hupu.view.UserProfileView;
-import com.gzsll.hupu.widget.ProfileScrollView;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.ViewById;
+import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.ui.fragment.BrowserFragment;
+import com.gzsll.hupu.ui.view.UserProfileView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
- * Created by sll on 2015/9/14.
+ * Created by sll on 2016/3/11.
  * 个人中心
  */
-@EActivity(R.layout.activity_profile)
 public class UserProfileActivity extends BaseSwipeBackActivity implements UserProfileView, SwipeRefreshLayout.OnRefreshListener {
 
-    @Extra
-    String uid;
-    @ViewById
+
+    @Bind(R.id.ivCover)
     ImageView ivCover;
-    @ViewById
-    View viewBgDes;
-    @ViewById
-    SimpleDraweeView ivPhoto, ivPost, ivReply, ivLight;
-    @ViewById
-    TextView tvUserName;
-    @ViewById
-    ImageView ivGender;
-    @ViewById
-    RelativeLayout layDesc;
-    @ViewById
-    RelativeLayout layTop;
-    @ViewById
-    TabLayout tabs;
-    @ViewById
-    ViewPager pager;
-    @ViewById
-    ProfileScrollView scrollView;
-    @ViewById
-    SwipeRefreshLayout refreshLayout;
-    @ViewById
-    View viewToolbar;
-    @ViewById
+    @Bind(R.id.ivPhoto)
+    SimpleDraweeView ivPhoto;
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @ViewById
-    RelativeLayout layToolbar;
-    private MaterialDialog mDialog;
+    @Bind(R.id.tabs)
+    TabLayout tabs;
+    @Bind(R.id.toolbarLayout)
+    CollapsingToolbarLayout toolbarLayout;
+    @Bind(R.id.appbar)
+    AppBarLayout appbar;
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
+    @Bind(R.id.maincontent)
+    CoordinatorLayout maincontent;
+    @Bind(R.id.ivGender)
+    ImageView ivGender;
+    @Bind(R.id.tvRegisterTime)
+    TextView tvRegisterTime;
+
+    public static void startActivity(Context mContext, String uid) {
+        Intent intent = new Intent(mContext, UserProfileActivity.class);
+        intent.putExtra("uid", uid);
+        mContext.startActivity(intent);
+    }
 
 
     @Inject
-    UserProfilePresenter mUserProfilePresenter;
+    UserProfilePresenter mPresenter;
+    @Inject
+    SettingPrefHelper mSettingPrefHelper;
 
-    @AfterViews
-    void init() {
-        toolbar.setBackgroundColor(Color.TRANSPARENT);
-        initToolBar(toolbar);
-        setTitle("");
-        SystemBarTintManager manager = new SystemBarTintManager(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            layToolbar.setPadding(layToolbar.getPaddingLeft(),
-                    layToolbar.getPaddingTop() + manager.getConfig().getStatusBarHeight(),
-                    layToolbar.getPaddingRight(),
-                    layToolbar.getPaddingBottom());
-
-            viewToolbar.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                    getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material) + manager.getConfig().getStatusBarHeight()));
-        }
+    private MaterialDialog mDialog;
+    private String uid;
 
 
-        mUserProfilePresenter.setView(this);
-        mUserProfilePresenter.initialize();
-        mDialog = new MaterialDialog.Builder(this)
-                .title("提示")
-                .content("正在加载...").cancelable(false)
-                .progress(true, 0).build();
-        refreshLayout.setOnRefreshListener(this);
-        mUserProfilePresenter.receiveUserInfo(uid);
-
-
-    }
-
-    private void setupViewPager(UserInfo userInfo) {
-        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
-        adapter.addFragment(TopicFragment_.builder().uid(uid).type(Constants.NAV_TOPIC_LIST).build(), String.format("发帖(%d)", userInfo.getPostNum()));
-        adapter.addFragment(TopicFragment_.builder().uid(uid).type(Constants.NAV_TOPIC_FAV).build(), String.format("收藏(%d)", userInfo.getFavoriteNum()));
-        pager.setAdapter(adapter);
-        tabs.setupWithViewPager(pager);
+    @Override
+    public int initContentView() {
+        return R.layout.activity_profile;
     }
 
     @Override
-    public void onRefresh() {
-        mUserProfilePresenter.receiveUserInfo(uid);
+    public void initInjector() {
+        mActivityComponent.inject(this);
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
+        initToolBar(toolbar);
+        toolbarLayout.setTitleEnabled(false);
+        mDialog = new MaterialDialog.Builder(this)
+                .title("提示")
+                .content("正在加载").cancelable(false)
+                .progress(true, 0).build();
+        uid = getIntent().getStringExtra("uid");
+        mPresenter.receiveUserInfo(uid);
+    }
+
+    @Override
+    protected boolean isApplyStatusBarTranslucency() {
+        return true;
+    }
+
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return false;
+    }
+
+    @Override
+    public void renderUserData(UserData userData) {
+        if (userData != null) {
+            setupViewPager(userData);
+            if (!TextUtils.isEmpty(userData.header)) {
+                ivPhoto.setImageURI(Uri.parse(userData.header));
+            }
+            ivGender.setImageResource(userData.gender == 0 ? R.drawable.list_male : R.drawable.list_female);
+            tvRegisterTime.setText(userData.reg_time_str);
+            setTitle(userData.nickname);
+        }
+    }
+
+
+    private void setupViewPager(UserData userData) {
+        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+        adapter.addFragment(BrowserFragment.newInstance(userData.bbs_msg_url, ""), String.format("发帖(%s)", userData.bbs_msg_count));
+        adapter.addFragment(BrowserFragment.newInstance(userData.bbs_post_url, ""), String.format("回帖(%s)", userData.bbs_post_count));
+        viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
     }
 
     public static class MyAdapter extends FragmentPagerAdapter {
@@ -152,30 +165,6 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
         }
     }
 
-
-    @Override
-    protected boolean isApplyStatusBarTranslucency() {
-        return true;
-    }
-
-    @Override
-    protected boolean isApplyKitKatTranslucency() {
-        return false;
-    }
-
-    @Override
-    public void renderUserInfo(UserInfo userInfo) {
-        refreshLayout.setRefreshing(false);
-        setupViewPager(userInfo);
-        scrollView.setUser(userInfo);
-        ivPhoto.setImageURI(Uri.parse(userInfo.getIcon()));
-        tvUserName.setText(userInfo.getUsername());
-        ivPost.setImageURI(Uri.parse(userInfo.getBadge().getSmall().get(0)));
-        ivReply.setImageURI(Uri.parse(userInfo.getBadge().getSmall().get(1)));
-        ivLight.setImageURI(Uri.parse(userInfo.getBadge().getSmall().get(2)));
-        ivGender.setImageResource(userInfo.getSex() == 0 ? R.drawable.list_male : R.drawable.list_female);
-    }
-
     @Override
     public void showLoading() {
         if (!mDialog.isShowing() && !isFinishing()) {
@@ -191,7 +180,25 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
     }
 
     @Override
-    public void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    public void showError() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
+
+    @Override
+    public void onRefresh() {
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

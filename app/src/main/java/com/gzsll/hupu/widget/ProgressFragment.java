@@ -16,6 +16,7 @@ import com.gzsll.hupu.widget.state.NonState;
 import com.gzsll.hupu.widget.state.ProgressState;
 import com.gzsll.hupu.widget.state.ShowState;
 
+
 /**
  * Created by sll on 2015/3/13.
  */

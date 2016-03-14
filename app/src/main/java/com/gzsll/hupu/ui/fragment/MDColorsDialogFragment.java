@@ -1,11 +1,11 @@
 package com.gzsll.hupu.ui.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,46 +15,40 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.gzsll.hupu.AppApplication;
+import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.helper.ThemeHelper;
+import com.gzsll.hupu.injector.component.DaggerFragmentComponent;
+import com.gzsll.hupu.injector.module.FragmentModule;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
-import com.gzsll.hupu.support.pref.SettingPref_;
-import com.gzsll.hupu.support.utils.ThemeHelper;
-import com.gzsll.hupu.ui.activity.BaseActivity;
+import com.gzsll.hupu.ui.BaseActivity;
 import com.squareup.otto.Bus;
-
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-/**
- * 界面配色设置
- *
- * @author wangdan
- */
-@EFragment
+
 public class MDColorsDialogFragment extends DialogFragment
         implements OnItemClickListener {
 
     @Inject
     ThemeHelper mThemeHelper;
-    @Pref
-    SettingPref_ mSettingPref;
+    @Inject
+    SettingPrefHelper mSettingPref;
     @Inject
     Bus mBus;
 
-    public static void launch(Activity context) {
-        Fragment fragment = context.getFragmentManager().findFragmentByTag("DialogFragment");
+    public static void launch(FragmentActivity context) {
+        Fragment fragment = context.getSupportFragmentManager().findFragmentByTag("DialogFragment");
         if (fragment != null) {
-            context.getFragmentManager().beginTransaction().remove(fragment).commit();
+            context.getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
 
-        MDColorsDialogFragment dialogFragment = MDColorsDialogFragment_.builder().build();
-        dialogFragment.show(context.getFragmentManager(), "DialogFragment");
+        MDColorsDialogFragment dialogFragment = new MDColorsDialogFragment();
+        dialogFragment.show(context.getSupportFragmentManager(), "DialogFragment");
     }
 
 
@@ -63,12 +57,12 @@ public class MDColorsDialogFragment extends DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        injectDependencies();
+        DaggerFragmentComponent.builder()
+                .fragmentModule(new FragmentModule(this))
+                .applicationComponent(((MyApplication) getActivity().getApplication()).getApplicationComponent())
+                .build().inject(this);
     }
 
-    private void injectDependencies() {
-        ((AppApplication) getActivity().getApplicationContext()).inject(this);
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -113,7 +107,7 @@ public class MDColorsDialogFragment extends DialogFragment
             imgColor.setImageDrawable(colorDrawable);
 
             View imgSelected = convertView.findViewById(R.id.ivSelected);
-            imgSelected.setVisibility(mSettingPref.ThemeIndex().get() == position ? View.VISIBLE : View.GONE);
+            imgSelected.setVisibility(mSettingPref.getThemeIndex() == position ? View.VISIBLE : View.GONE);
 
             return convertView;
         }
@@ -122,13 +116,13 @@ public class MDColorsDialogFragment extends DialogFragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position == mSettingPref.ThemeIndex().get()) {
+        if (position == mSettingPref.getThemeIndex()) {
             dismiss();
 
             return;
         }
 
-        mSettingPref.ThemeIndex().put(position);
+        mSettingPref.setThemeIndex(position);
 
         dismiss();
         mBus.post(new ChangeThemeEvent());

@@ -1,5 +1,5 @@
 # HuPu-TL
-根据虎扑新版api开发，基于material design，使用mvp模式开发~纯练手之作，由于是从旧版本的修改而来，代码还很乱，有时间会整理，目前基本功能已完成，欢迎jrs来star和fork，有什么问题也可以pull requests
+根据虎扑新版api开发，基于Dagger2+RxJava+Retrofit+material design开发，使用mvp模式开发~纯练手之作，目前基本功能已完成，欢迎jrs来star和fork，有什么问题也可以pull requests
 
 [![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_small.png)](http://play.google.com/store/apps/details?id=com.gzsll.hupu)
 
@@ -31,27 +31,20 @@
 
 ## api接口文档(相关实现在com.gzsll.hupu.api底下，使用retrofit进行请求)
 
->登录接口
-
-http://mobileapi.hupu.com/1/1.1.1/passport/login  
-
-参数（post）  username   password(做md5加密处理)
 
 >论坛相关接口
 
-http://bbs.mobile.hupu.com
+http://bbs.mobileapi.hupu.com/1/7.0.7/
 
 #### 基本参数 
-  - `uuid`  设备唯一id
-  - `v`     版本号（目前固定为固定值7.0）
-  - `platform`   平台（android或ios）
-  - `version`   版本（固定1.1）
-  - `_timestamp`  时间戳
+  - `client`  设备唯一id
+  - `night`     夜间模式
+  - `token`   登陆后的token
   - `sign`   签名信息(获取方法如下)
   
 #### sign获取方法
 ``` java
-public String getRequestSign(Map<String, String> map) {
+ public String getRequestSign(Map<String, String> map) {
         ArrayList<Map.Entry<String, String>> list = new ArrayList<Map.Entry<String, String>>(map.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<String, String>>() {
             @Override
@@ -61,12 +54,14 @@ public String getRequestSign(Map<String, String> map) {
         });
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < list.size(); i = i + 1) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
             Map.Entry<String, String> map1 = list.get(i);
-            builder.append(map1.getKey()).append(map1.getValue());
+            builder.append(map1.getKey()).append("=").append(map1.getValue());
         }
-        builder.append("3542e676b4c80983f6131cdfe577ac9b");
-        logger.debug("builder:" + builder.toString());
-        return securityHelper.getMD5(builder.toString());
+        builder.append("HUPU_SALT_AKJfoiwer394Jeiow4u309");
+        return mSecurityHelper.getMD5(builder.toString());
     }
 ```
 

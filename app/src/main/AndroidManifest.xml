@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gzsll.hupu">
+
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -9,12 +9,12 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-
     <application
-        android:name="com.gzsll.hupu.AppApplication_"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <meta-data
@@ -24,12 +24,8 @@
             android:name="UMENG_CHANNEL"
             android:value="play" />
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <activity
-            android:name=".ui.activity.SplashActivity_"
+            android:name=".ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -37,76 +33,66 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".ui.activity.MainActivity_"
+            android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoneTranslucent" />
+
         <activity
-            android:name=".ui.activity.LoginActivity_"
+            android:name=".ui.activity.ContentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ContentActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.PostActivity_"
+            android:name=".ui.activity.PostActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <activity
-            android:name=".ui.activity.ImagePreviewActivity_"
+            android:name=".ui.activity.GalleryActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.ImagePreviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Pics" />
         <activity
-            android:name=".ui.activity.VideoPlayActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ReportActivity_"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.activity.PhotoGalleryActivity_"
+            android:name=".ui.activity.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.BrowserActivity_"
+            android:name=".ui.activity.AccountActivity"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.ThreadActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ReplyDetailActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.SettingActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.NoticeActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AboutActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserProfileActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AccountActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.NotificationActivity_"
+            android:name=".ui.activity.UserProfileActivity"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
 
-        <service android:name=".service.OffLineService">
-            <intent-filter>
-                <action android:name="com.gzsll.hupu.action.START_DOWNLOAD" />
-            </intent-filter>
-        </service>
+        <activity
+            android:name=".ui.activity.ThreadListActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BrowserActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SettingActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />
+            android:name=".ui.activity.ReportActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.activity.MessageListActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

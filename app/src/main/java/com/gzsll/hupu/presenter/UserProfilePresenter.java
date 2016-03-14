@@ -1,57 +1,70 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.support.storage.bean.UserResult;
-import com.gzsll.hupu.view.UserProfileView;
+import com.gzsll.hupu.api.game.GameApi;
+import com.gzsll.hupu.bean.UserData;
+import com.gzsll.hupu.bean.UserResult;
+import com.gzsll.hupu.ui.view.UserProfileView;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
- * Created by sll on 2015/9/14.
+ * Created by sll on 2016/3/11.
  */
 public class UserProfilePresenter extends Presenter<UserProfileView> {
-    @Override
-    public void initialize() {
 
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
 
     @Inject
-    ThreadApi mThreadApi;
+    GameApi mGameApi;
+
+
+    private Subscription mSubscription;
+
+    @Singleton
+    @Inject
+    public UserProfilePresenter() {
+    }
+
 
     public void receiveUserInfo(String uid) {
         view.showLoading();
-        mThreadApi.getUserInfo(uid, new Callback<UserResult>() {
+        mSubscription = mGameApi.getUserInfo(uid).map(new Func1<UserResult, UserData>() {
             @Override
-            public void success(UserResult userResult, Response response) {
+            public UserData call(UserResult userResult) {
+                if (userResult != null) {
+                    return userResult.result;
+                }
+                return null;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UserData>() {
+            @Override
+            public void call(UserData userData) {
                 view.hideLoading();
-                if (userResult != null && userResult.getStatus() == 200) {
-                    view.renderUserInfo(userResult.getData());
+                if (userData != null) {
+                    view.renderUserData(userData);
+                } else {
+                    view.showError();
                 }
             }
-
+        }, new Action1<Throwable>() {
             @Override
-            public void failure(RetrofitError error) {
-
+            public void call(Throwable throwable) {
+                view.hideLoading();
+                view.showError();
             }
         });
+    }
+
+
+    @Override
+    public void detachView() {
+        if (mSubscription != null) {
+            mSubscription.unsubscribe();
+        }
     }
 }

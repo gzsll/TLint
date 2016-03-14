@@ -1,65 +1,126 @@
 package com.gzsll.hupu.ui.fragment;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.gzsll.hupu.R;
-import com.gzsll.hupu.presenter.ThreadRecommendPresenter;
-import com.gzsll.hupu.support.storage.bean.Thread;
-import com.gzsll.hupu.ui.activity.BaseActivity;
-import com.gzsll.hupu.ui.adapter.BaseListAdapter;
-import com.gzsll.hupu.ui.adapter.ThreadRecommendAdapter;
-import com.gzsll.hupu.ui.view.ThreadListItem;
-import com.gzsll.hupu.view.ThreadRecommendView;
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EFragment;
+import com.gzsll.hupu.R;
+import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.presenter.ThreadRecommendPresenter;
+import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
+import com.gzsll.hupu.ui.view.ThreadRecommendView;
+import com.gzsll.hupu.widget.SwipyRefreshLayout;
+import com.gzsll.hupu.widget.SwipyRefreshLayoutDirection;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
- * Created by sll on 2015/12/12.
+ * Created by sll on 2016/3/9.
  */
-@EFragment
-public class ThreadRecommendFragment extends BaseListFragment<Thread, ThreadListItem> implements ThreadRecommendView {
+public class ThreadRecommendFragment extends BaseFragment implements ThreadRecommendView, SwipyRefreshLayout.OnRefreshListener {
+
+    public static ThreadRecommendFragment newInstance() {
+        return new ThreadRecommendFragment();
+    }
+
 
     @Inject
     ThreadRecommendPresenter mPresenter;
     @Inject
-    ThreadRecommendAdapter adapter;
+    ThreadListAdapter mAdapter;
+    @Inject
+    Activity mActivity;
 
-    private AdView mAdView;
+
+    @Bind(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @Bind(R.id.refreshLayout)
+    SwipyRefreshLayout refreshLayout;
 
 
     @Override
-    protected int inflateContentView() {
+    public void initInjector() {
+        mFragmentComponent.inject(this);
+    }
+
+    @Override
+    public int initContentView() {
         return R.layout.base_list_layout;
     }
 
-    @AfterViews
-    void init() {
-        mPresenter.setView(this);
-        mPresenter.initialize();
-        mPresenter.onRecommendListReceive();
-        mAdView = new AdView(getActivity());
-        mAdView.setAdUnitId("ca-app-pub-8075807288160204/8098671171");
-        mAdView.setAdSize(AdSize.SMART_BANNER);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        listView.addFooterView(mAdView);
-        // Start loading the ad in the background.
-        mAdView.loadAd(adRequest);
+    @Override
+    public void getBundle(Bundle bundle) {
 
     }
 
     @Override
-    protected void onLoadMore() {
-        mPresenter.onLoadMore();
+    public void initUI(View view) {
+        ButterKnife.bind(this, view);
+        mPresenter.attachView(this);
+        refreshLayout.setOnRefreshListener(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
-    protected void onRefresh() {
-        mPresenter.onRefresh();
+    public void initData() {
+        mPresenter.onRecommendThreadsReceive();
+    }
+
+    @Override
+    public void showLoading() {
+        showProgress(true);
+    }
+
+    @Override
+    public void hideLoading() {
+        showContent(true);
+    }
+
+    @Override
+    public void renderThreads(List<Thread> threads) {
+        refreshLayout.setRefreshing(false);
+        mAdapter.bind(threads);
+    }
+
+    @Override
+    public void onError(String error) {
+        setErrorText(error);
+        showError(true);
+    }
+
+    @Override
+    public void onEmpty() {
+        showEmpty(true);
+    }
+
+    @Override
+    public void onScrollToTop() {
+        recyclerView.scrollToPosition(0);
+    }
+
+    @Override
+    public void onRefreshing(boolean refresh) {
+        refreshLayout.setRefreshing(refresh);
+    }
+
+
+    @Override
+    public void onRefresh(SwipyRefreshLayoutDirection direction) {
+        if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
+            mPresenter.onLoadMore();
+        } else {
+            mPresenter.onRefresh();
+        }
     }
 
     @Override
@@ -68,46 +129,8 @@ public class ThreadRecommendFragment extends BaseListFragment<Thread, ThreadList
     }
 
     @Override
-    protected BaseListAdapter<Thread, ThreadListItem> getAdapter() {
-        adapter.setActivity((BaseActivity) getActivity());
-        return adapter;
-    }
-
-    @Override
-    public void onRefreshing(boolean refresh) {
-        refreshLayout.setRefreshing(refresh);
-    }
-
-    /**
-     * Called when leaving the activity
-     */
-    @Override
-    public void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    /**
-     * Called when returning to the activity
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-    }
-
-    /**
-     * Called before the activity is destroyed
-     */
-    @Override
     public void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
         super.onDestroy();
+        mPresenter.detachView();
     }
 }
