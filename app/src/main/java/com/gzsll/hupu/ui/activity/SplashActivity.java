@@ -1,62 +1,66 @@
 package com.gzsll.hupu.ui.activity;
 
-import android.os.Bundle;
-import android.view.View;
+import android.os.Handler;
 import android.widget.FrameLayout;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.support.storage.UserStorage;
-import com.gzsll.hupu.support.utils.ChannelUtil;
+import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.helper.ChannelUtil;
+import com.gzsll.hupu.ui.BaseActivity;
 import com.umeng.analytics.AnalyticsConfig;
-
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
- * Created by sll on 2015/9/11.
+ * Created by sll on 2016/3/11.
  */
-@EActivity(R.layout.activity_splash)
 public class SplashActivity extends BaseActivity {
 
     @Inject
     UserStorage mUserStorage;
-    @ViewById
+    @Bind(R.id.splash)
     FrameLayout splash;
 
-    View view;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public int initContentView() {
+        return R.layout.activity_splash;
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent.inject(this);
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
         AnalyticsConfig.setAppkey(this, "55f1993be0f55a0fd9004fbc");
         AnalyticsConfig.setChannel(ChannelUtil.getChannel(this));
         if (mUserStorage.isLogin()) {
-            toMain();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MainActivity.startActivity(SplashActivity.this);
+                }
+            }, 2000);
         } else {
-            LoginActivity_.intent(this).start();
+            LoginActivity.startAcitivity(this);
             finish();
         }
-    }
-
-
-    @UiThread(delay = 2000)
-    void toMain() {
-        MainActivity_.intent(this).start();
-        finish();
-    }
-
-
-    @Override
-    protected boolean isApplyKitKatTranslucency() {
-        return false;
     }
 
     @Override
     protected boolean isApplyStatusBarTranslucency() {
         return true;
+    }
+
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return false;
     }
 
     @Override

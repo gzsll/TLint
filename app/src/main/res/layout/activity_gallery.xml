@@ -9,8 +9,8 @@
     <include layout="@layout/base_toolbar_layout" />
 
 
-    <GridView
-        android:id="@+id/grid"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/rlSelect"

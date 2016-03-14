@@ -1,72 +1,87 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.ReportPresenter;
-import com.gzsll.hupu.ui.view.ReportListItem;
-import com.gzsll.hupu.ui.view.ReportListItem_;
-import com.gzsll.hupu.view.ReportView;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
+import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.ui.view.ReportView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
- * Created by sll on 2015/12/12.
+ * Created by sll on 2016/3/11.
  */
-@EActivity(R.layout.activity_report)
 public class ReportActivity extends BaseSwipeBackActivity implements ReportView {
 
-    private MaterialDialog mDialog;
 
-
-    @Extra
-    String tid;
-    @Extra
-    String pid;
-
+    public static void startActivity(Context mContext, String tid, String pid) {
+        Intent intent = new Intent(mContext, ReportActivity.class);
+        intent.putExtra("tid", tid);
+        intent.putExtra("pid", pid);
+        mContext.startActivity(intent);
+    }
 
     @Inject
-    ReportPresenter mReportPresenter;
+    ReportPresenter mPresenter;
 
-    @ViewById
-    ListView lvTypes;
-    @ViewById
-    EditText etContent;
-    @ViewById
+
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.lvTypes)
+    ListView lvTypes;
+    @Bind(R.id.etContent)
+    EditText etContent;
+
 
     private List<String> list = new ArrayList<>();
-
     private ReportAdapter adapter;
     private int type = 1;
+    private MaterialDialog mDialog;
+    private String tid;
+    private String pid;
 
-    @AfterViews
-    void init() {
-        mReportPresenter.setView(this);
-        mReportPresenter.initialize();
+    @Override
+    public int initContentView() {
+        return R.layout.activity_report;
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent.inject(this);
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
         initToolBar(toolbar);
         setTitle("举报");
+        pid = getIntent().getStringExtra("pid");
+        tid = getIntent().getStringExtra("tid");
         mDialog = new MaterialDialog.Builder(this)
                 .title("提示")
-                .content("正在举报.....")
+                .content("正在举报")
                 .progress(true, 0).build();
         initData();
         adapter = new ReportAdapter();
@@ -80,11 +95,6 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportView 
                 type = position + 1;
             }
         });
-    }
-
-    @Click
-    void btCommit() {
-        mReportPresenter.submitReports(tid, pid, String.valueOf(type), etContent.getText().toString());
     }
 
     private void initData() {
@@ -118,7 +128,6 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportView 
         listView.setLayoutParams(params);
     }
 
-
     @Override
     protected boolean isApplyStatusBarTranslucency() {
         return true;
@@ -127,12 +136,6 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportView 
     @Override
     protected boolean isApplyKitKatTranslucency() {
         return true;
-    }
-
-    @Override
-    @UiThread(delay = 1000)
-    public void onReportSuccess() {
-        finish();
     }
 
     @Override
@@ -150,11 +153,17 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportView 
     }
 
     @Override
-    public void showToast(String msg) {
+    public void reportSuccess() {
 
     }
 
-    private class ReportAdapter extends BaseAdapter {
+    @OnClick(R.id.btCommit)
+    void btCommitClick() {
+        mPresenter.submitReports(tid, pid, String.valueOf(type), etContent.getText().toString());
+    }
+
+
+    public class ReportAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -173,19 +182,35 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportView 
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ReportListItem item;
+            ViewHolder holder;
             if (convertView == null) {
-                item = ReportListItem_.build(ReportActivity.this);
+                convertView = LayoutInflater.from(ReportActivity.this).inflate(R.layout.item_list_report, parent, false);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
             } else {
-                item = (ReportListItem) convertView;
+                holder = (ViewHolder) convertView.getTag();
             }
             if (lvTypes.isItemChecked(position)) {
-                item.setIvCheckVisibility(View.VISIBLE);
+                holder.ivCheck.setVisibility(View.VISIBLE);
             } else {
-                item.setIvCheckVisibility(View.GONE);
+                holder.ivCheck.setVisibility(View.GONE);
             }
-            item.setText(getItem(position));
-            return item;
+            holder.tvType.setText(getItem(position));
+            return convertView;
+        }
+
+
+        class ViewHolder {
+            @Bind(R.id.tvType)
+            TextView tvType;
+            @Bind(R.id.ivCheck)
+            ImageView ivCheck;
+
+            ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
     }
+
+
 }

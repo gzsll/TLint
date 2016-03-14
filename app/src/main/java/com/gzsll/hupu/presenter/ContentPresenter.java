@@ -2,50 +2,35 @@ package com.gzsll.hupu.presenter;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.support.db.DBThreadInfoDao;
-import com.gzsll.hupu.support.db.DBThreadReplyItemDao;
-import com.gzsll.hupu.support.storage.bean.FavoriteResult;
-import com.gzsll.hupu.support.storage.bean.ThreadSchemaInfo;
-import com.gzsll.hupu.support.utils.DbConverterHelper;
-import com.gzsll.hupu.support.utils.FormatHelper;
-import com.gzsll.hupu.support.utils.NetWorkHelper;
-import com.gzsll.hupu.support.utils.SettingPrefHelper;
-import com.gzsll.hupu.view.ContentView;
-
-import org.apache.log4j.Logger;
+import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.CollectResult;
+import com.gzsll.hupu.bean.ThreadSchemaInfo;
+import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.ui.view.ContentView;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
- * Created by sll on 2015/3/7.
+ * Created by sll on 2016/3/9.
  */
 public class ContentPresenter extends Presenter<ContentView> {
-    Logger logger = Logger.getLogger(ContentPresenter.class.getSimpleName());
-
 
     @Inject
-    Gson gson;
-    @Inject
-    ThreadApi mThreadApi;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
-    @Inject
-    FormatHelper mFormatHelper;
-    @Inject
-    NetWorkHelper mNetWorkHelper;
+    ForumApi mForumApi;
     @Inject
     Context mContext;
     @Inject
-    DBThreadInfoDao mThreadInfoDao;
+    ToastHelper mToastHelper;
+
+
     @Inject
-    DBThreadReplyItemDao mReplyDao;
-    @Inject
-    DbConverterHelper mDbConverterHelper;
+    @Singleton
+    public ContentPresenter() {
+    }
 
 
     private String tid;
@@ -63,9 +48,8 @@ public class ContentPresenter extends Presenter<ContentView> {
         loadContent(page);
     }
 
-
     private void loadContent(int page) {
-        mThreadApi.getThreadInfo(tid,fid,page,pid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadSchemaInfo>() {
+        mForumApi.getThreadInfo(tid, fid, page, pid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadSchemaInfo>() {
             @Override
             public void call(ThreadSchemaInfo threadSchemaInfo) {
                 if (threadSchemaInfo != null) {
@@ -73,8 +57,12 @@ public class ContentPresenter extends Presenter<ContentView> {
                         view.onError(threadSchemaInfo.error.text);
                     } else {
                         totalPage = threadSchemaInfo.pageSize;
-                        view.renderContent(threadSchemaInfo.url, threadSchemaInfo.page, threadSchemaInfo.pageSize);
+                        view.renderContent(threadSchemaInfo.url);
+                        view.isCollected(threadSchemaInfo.isCollected == 1);
+                        view.renderShare(threadSchemaInfo.share.weibo, threadSchemaInfo.share.url);
                     }
+                } else {
+                    view.onError("加载失败");
                 }
             }
         }, new Action1<Throwable>() {
@@ -84,9 +72,6 @@ public class ContentPresenter extends Presenter<ContentView> {
             }
         });
     }
-
-
-
 
     public void onReload() {
         loadContent(currentPage);
@@ -118,42 +103,41 @@ public class ContentPresenter extends Presenter<ContentView> {
     }
 
 
-    public void addArchive() {
-//        mThreadApi.addSpecial(groupThreadId + "", new Callback<BaseResult>() {
-//            @Override
-//            public void success(BaseResult o, Response response) {
-//
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//
-//            }
-//        });
-
-    }
-
-
-    public void addFavorite() {
-        mThreadApi.addFavorite(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<FavoriteResult>() {
+    public void addCollect() {
+        mForumApi.addCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectResult>() {
             @Override
-            public void call(FavoriteResult favoriteResult) {
-                if (favoriteResult.result != null) {
-                    view.showToast(favoriteResult.result.msg);
+            public void call(CollectResult collectResult) {
+                if (collectResult != null && collectResult.result != null) {
+                    mToastHelper.showToast(collectResult.result.msg);
+                    view.isCollected(collectResult.result.status == 200);
                 }
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                view.showToast("收藏失败");
+                mToastHelper.showToast("收藏失败");
             }
         });
     }
 
 
-    public void reply(String title) {
-        view.reply(title);
+    public void delCollect() {
+        mForumApi.delCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectResult>() {
+            @Override
+            public void call(CollectResult collectResult) {
+                if (collectResult != null && collectResult.result != null) {
+                    mToastHelper.showToast(collectResult.result.msg);
+                    view.isCollected(collectResult.result.status != 200);
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                mToastHelper.showToast("取消收藏失败");
+            }
+        });
     }
+
 
     public void copy(String stripped) {
         int sdk = android.os.Build.VERSION.SDK_INT;
@@ -166,29 +150,12 @@ public class ContentPresenter extends Presenter<ContentView> {
                     .newPlainText("content", stripped);
             clipboard.setPrimaryClip(clip);
         }
-        view.showToast("复制成功");
+        mToastHelper.showToast("复制成功");
     }
 
 
     @Override
-    public void initialize() {
-        view.showLoading();
-    }
-
-    @Override
-    public void resume() {
+    public void detachView() {
 
     }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-
-
 }

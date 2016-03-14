@@ -21,7 +21,7 @@
             android:id="@+id/nav_topic"
             android:title="@string/nav_topic" />
         <item
-            android:id="@+id/nav_fav"
+            android:id="@+id/nav_collect"
             android:title="@string/nav_fav" />
 
         <item
@@ -52,9 +52,6 @@
         <item
             android:id="@+id/nav_football"
             android:title="国内足球论坛" />
-        <item
-            android:id="@+id/nav_race"
-            android:title="@string/nav_race" />
         <item
             android:id="@+id/nav_fitness"
             android:title="@string/nav_fitness" />

@@ -1,26 +1,19 @@
 package com.gzsll.hupu.presenter;
 
+import android.support.annotation.NonNull;
 
-import com.gzsll.hupu.view.BaseView;
+import com.gzsll.hupu.ui.BaseView;
 
 /**
- * Presenter contains the lifecycle of the view
- * <p/>
- * Created by sll on 2015/3/4.
+ * Created by sll on 2016/3/9.
  */
 public abstract class Presenter<T extends BaseView> {
 
     protected T view;
 
-    public void setView(T view) {
+    public void attachView(@NonNull T view) {
         this.view = view;
     }
 
-    public abstract void initialize();
-
-    public abstract void resume();
-
-    public abstract void pause();
-
-    public abstract void destroy();
+    public abstract void detachView();
 }

@@ -26,6 +26,7 @@
             android:layout_marginTop="16dip"
             fresco:progressBarImage="@drawable/icon_def_head"
             fresco:failureImage="@drawable/icon_def_head"
+            fresco:placeholderImage="@drawable/icon_def_head"
             fresco:roundAsCircle="true" />
 
         <TextView

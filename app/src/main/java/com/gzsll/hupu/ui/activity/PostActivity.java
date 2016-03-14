@@ -1,9 +1,9 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -19,109 +18,163 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.PostPresenter;
-import com.gzsll.hupu.view.PostView;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
-import org.apache.log4j.Logger;
+import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.ui.view.PostView;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
- * Created by sll on 2015/3/11.
+ * Created by sll on 2016/3/9.
  */
-@EActivity(R.layout.activity_post)
 public class PostActivity extends BaseSwipeBackActivity implements PostView {
 
-    private static final int REQUEST_IMAGE = 101;
-    Logger logger = Logger.getLogger("PostActivity");
-
-    @Extra
-    int type;
-    @Extra
-    String fid;
-    @Extra
-    String tid;
-    @Extra
-    String title;
-    @Extra
-    String pid;
-    @Extra
-    String mTo;
+    public static void startActivity(Context mContext, int type, String fid, String tid, String pid, String title) {
+        Intent intent = new Intent(mContext, PostActivity.class);
+        intent.putExtra("type", type);
+        intent.putExtra("fid", fid);
+        intent.putExtra("tid", tid);
+        intent.putExtra("pid", pid);
+        intent.putExtra("title", title);
+        mContext.startActivity(intent);
+    }
 
 
-    @ViewById
-    EditText etSubject;
-    @ViewById
-    EditText etContent;
-    @ViewById
-    TextInputLayout textInputSubject, textInputContent;
-    @ViewById
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @ViewById
-    HorizontalScrollView scrollView;
-    @ViewById
+    @Bind(R.id.etSubject)
+    EditText etSubject;
+    @Bind(R.id.etContent)
+    EditText etContent;
+    @Bind(R.id.llPics)
     LinearLayout llPics;
-
-
-    @Inject
-    PostPresenter postPresenter;
+    @Bind(R.id.scrollView)
+    HorizontalScrollView scrollView;
 
 
     private ArrayList<String> selectImages = new ArrayList<String>();
-    private MaterialDialog dialog;
+    private MaterialDialog mDialog;
 
-    @AfterViews
-    void init() {
+
+    private String title;
+    private int type;
+    private String fid;
+    private String tid;
+    private String pid;
+
+
+    @Inject
+    PostPresenter mPresenter;
+
+    @Override
+    public int initContentView() {
+        return R.layout.activity_post;
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent.inject(this);
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
+        mPresenter.attachView(this);
         initToolBar(toolbar);
-        dialog = new MaterialDialog.Builder(this)
+        initBundle();
+        initPostType();
+        mDialog = new MaterialDialog.Builder(this)
                 .title("提示")
-                .content("正在发送.....")
+                .content("正在发送")
                 .progress(true, 0).build();
-        postPresenter.setView(this);
-        postPresenter.initialize();
-        if (type == Constants.TYPE_COMMENT) {
-            setTitle("评论");
-            etSubject.setFocusable(false);
-            etSubject.setFocusableInTouchMode(false);
-            etSubject.setText("Reply:" + title);
-            etContent.setHint("请输入评论内容");
-        } else if (type == Constants.TYPE_REPLY) {
-            setTitle("评论");
-            etSubject.setFocusable(false);
-            etSubject.setFocusableInTouchMode(false);
-            etSubject.setText("Reply:" + title);
-            etContent.setHint("请输入评论内容");
-        } else if (type == Constants.TYPE_AT) {
-            setTitle("回复");
-            etSubject.setFocusable(false);
-            etSubject.setFocusableInTouchMode(false);
-            etSubject.setText("回复 :" + mTo);
-            etContent.setHint("请输入回复内容");
-        } else if (type == Constants.TYPE_FEEDBACK) {
-            setTitle("反馈");
-            etSubject.setFocusable(false);
-            etSubject.setFocusableInTouchMode(false);
-            etSubject.setText("Feedback: TinyHuPu For Android");
-            etContent.setHint("请输入反馈内容");
-        } else if (type == Constants.TYPE_QUOTE) {
-            setTitle("引用");
-            etSubject.setFocusable(false);
-            etSubject.setFocusableInTouchMode(false);
-            etSubject.setText("Quote:" + title);
-            etContent.setHint("请输入评论内容");
-        } else {
-            setTitle("发新帖");
-        }
 
     }
 
+    private void initBundle() {
+        Intent intent = getIntent();
+        type = intent.getIntExtra("type", Constants.TYPE_COMMENT);
+        title = intent.getStringExtra("title");
+        fid = intent.getStringExtra("fid");
+        tid = intent.getStringExtra("tid");
+        pid = intent.getStringExtra("pid");
+    }
+
+    private void initPostType() {
+        switch (type) {
+            case Constants.TYPE_COMMENT:
+                setTitle("评论");
+                etSubject.setFocusable(false);
+                etSubject.setFocusableInTouchMode(false);
+                etSubject.setText("Reply:" + title);
+                etContent.setHint("请输入评论内容");
+                break;
+            case Constants.TYPE_REPLY:
+                setTitle("评论");
+                etSubject.setFocusable(false);
+                etSubject.setFocusableInTouchMode(false);
+                etSubject.setText("Reply:" + title);
+                etContent.setHint("请输入评论内容");
+                break;
+            case Constants.TYPE_AT:
+                setTitle("评论");
+                etSubject.setFocusable(false);
+                etSubject.setFocusableInTouchMode(false);
+                etSubject.setText("Reply:" + title);
+                etContent.setHint("请输入评论内容");
+                break;
+            case Constants.TYPE_FEEDBACK:
+                setTitle("反馈");
+                etSubject.setFocusable(false);
+                etSubject.setFocusableInTouchMode(false);
+                etSubject.setText("Feedback: TLint For Android");
+                etContent.setHint("请输入反馈内容");
+                break;
+            case Constants.TYPE_QUOTE:
+                setTitle("引用");
+                etSubject.setFocusable(false);
+                etSubject.setFocusableInTouchMode(false);
+                etSubject.setText("Quote:" + title);
+                etContent.setHint("请输入评论内容");
+                break;
+            default:
+                setTitle("发新帖");
+                break;
+        }
+    }
+
+    @Override
+    protected boolean isApplyStatusBarTranslucency() {
+        return true;
+    }
+
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return true;
+    }
+
+    @Override
+    public void showLoading() {
+        if (!mDialog.isShowing() && !isFinishing()) {
+            mDialog.show();
+        }
+    }
+
+    @Override
+    public void hideLoading() {
+        if (mDialog.isShowing() && !isFinishing()) {
+            mDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void postSuccess() {
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,73 +188,30 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
         if (id == R.id.action_send) {
             send();
         } else if (id == R.id.action_camera) {
-            PhotoGalleryActivity_.intent(this).startForResult(REQUEST_IMAGE);
+            GalleryActivity.startAcitivty(this, selectImages);
         } else if (id == android.R.id.home) {
             finish();
         }
         return true;
     }
 
-    @Override
-    protected boolean isApplyKitKatTranslucency() {
-        return true;
-    }
-
-    @Override
-    protected boolean isApplyStatusBarTranslucency() {
-        return true;
-    }
-
-
     private void send() {
-        postPresenter.parse(selectImages);
+        mPresenter.parse(selectImages);
         String content = etContent.getText().toString();
         if (type == Constants.TYPE_POST) {
             String title = etSubject.getText().toString();
-            postPresenter.post(fid, content, title);
+            mPresenter.post(fid, content, title);
         } else {
-            postPresenter.comment(tid, fid, pid, content);
-        }
-
-    }
-
-    @UiThread
-    @Override
-    public void showLoading() {
-        if (!dialog.isShowing() && !isFinishing()) {
-            dialog.show();
-        }
-
-    }
-
-    @UiThread
-    @Override
-    public void hideLoading() {
-        if (dialog.isShowing() && !isFinishing()) {
-            dialog.dismiss();
+            mPresenter.comment(tid, fid, pid, content);
         }
     }
-
-    @UiThread
-    @Override
-    public void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-
-    @UiThread(delay = 2000)
-    @Override
-    public void postSuccess() {
-        finish();
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
+        if (requestCode == GalleryActivity.REQUEST_IMAGE && resultCode == RESULT_OK) {
             // 获取返回的图片列表
-            ArrayList<String> path = data.getStringArrayListExtra(PhotoGalleryActivity.EXTRA_RESULT);
+            ArrayList<String> path = data.getStringArrayListExtra(GalleryActivity.EXTRA_RESULT);
             // 处理你自己的逻辑 ....
             selectImages.clear();
             selectImages.addAll(path);
@@ -266,6 +276,6 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        postPresenter.destroy();
+        mPresenter.detachView();
     }
 }

@@ -8,23 +8,24 @@ import de.greenrobot.daogenerator.Schema;
 
 public class GreenDaoGenerator {
 
-    public static final int VERSION = 47;
-    public static final String GREEN_DAO_CODE_PATH = "../TLint/src/main/greendao";
+    public static final int VERSION = 51;
+    public static final String GREEN_DAO_CODE_PATH = "../TLint/app/src/main/java";
 
     public static void main(String[] args) throws Exception {
 
-        Schema schema = new Schema(VERSION, "com.gzsll.hupu.support.db");
+        Schema schema = new Schema(VERSION, "com.gzsll.hupu.db");
 
-        Entity board = schema.addEntity("Board");
+        Entity forum = schema.addEntity("Forum");
 
-        board.addIdProperty();
-        board.addStringProperty("fid");
-        board.addStringProperty("name");
-        board.addStringProperty("logo");
-        board.addStringProperty("description");
-        board.addStringProperty("backImg");
-        board.addStringProperty("boardId");
-        board.addStringProperty("categoryName");
+        forum.addIdProperty();
+        forum.addStringProperty("fid");
+        forum.addStringProperty("name");
+        forum.addStringProperty("logo");
+        forum.addStringProperty("description");
+        forum.addStringProperty("backImg");
+        forum.addStringProperty("forumId");
+        forum.addStringProperty("categoryName");
+        forum.addIntProperty("weight");
 
 
         Entity user = schema.addEntity("User");
@@ -33,103 +34,14 @@ public class GreenDaoGenerator {
         user.addStringProperty("uid");
         user.addStringProperty("token");
         user.addStringProperty("icon");
-        user.addIntProperty("syncTime");
         user.addIntProperty("sex");
-        user.addIntProperty("level");
-        user.addBooleanProperty("isLogin");
         user.addStringProperty("cookie");
-
-
-        Entity groupThread = schema.addEntity("DBGroupThread");
-        groupThread.addIdProperty();
-        groupThread.addIntProperty("lights");
-        groupThread.addStringProperty("username");
-        groupThread.addLongProperty("createAtUnixTime");
-        groupThread.addStringProperty("title");
-        groupThread.addStringProperty("note");
-        groupThread.addIntProperty("replies");
-        groupThread.addIntProperty("tid");
-        groupThread.addLongProperty("serverId");
-        groupThread.addLongProperty("userId"); //关联UserInfo
-        groupThread.addLongProperty("coverId");
-        groupThread.addLongProperty("groupId");
-
-
-        Entity cover = schema.addEntity("DBCover");
-        cover.addIdProperty();
-        cover.addStringProperty("urlSmall");
-        cover.addIntProperty("height");
-        cover.addStringProperty("url");
-        cover.addIntProperty("width");
-
-
-        Entity userInfo = schema.addEntity("DBUserInfo");
-        userInfo.addIdProperty();
-        userInfo.addStringProperty("username");
-        userInfo.addIntProperty("syncTime");
-        userInfo.addIntProperty("uid");
-        userInfo.addStringProperty("icon");
-        userInfo.addIntProperty("replyNum");
-        userInfo.addIntProperty("postNum");
-        userInfo.addStringProperty("groups");
-        userInfo.addIntProperty("sex");
-        userInfo.addIntProperty("favoriteNum");
-        userInfo.addIntProperty("level");
-
-
-        Entity threadInfo = schema.addEntity("DBThreadInfo");
-        threadInfo.addIdProperty();
-        threadInfo.addLongProperty("serverId");
-        threadInfo.addIntProperty("uid");
-        threadInfo.addIntProperty("lastReplyTime");
-        threadInfo.addIntProperty("special");
-        threadInfo.addIntProperty("lights");
-        threadInfo.addIntProperty("attention");
-        threadInfo.addIntProperty("type");
-        threadInfo.addIntProperty("zan");
-        threadInfo.addIntProperty("digest");
-        threadInfo.addLongProperty("createAtUnixTime");
-        threadInfo.addIntProperty("replies");
-        threadInfo.addLongProperty("groupId");
-        threadInfo.addLongProperty("tid");
-        threadInfo.addStringProperty("sharedImg");
-        threadInfo.addStringProperty("username");
-        threadInfo.addStringProperty("createAt");
-        threadInfo.addStringProperty("title");
-        threadInfo.addStringProperty("note");
-        threadInfo.addStringProperty("content");
-        threadInfo.addLongProperty("userId");
-        threadInfo.addLongProperty("groupsId");
-
-
-        Entity groups = schema.addEntity("DBGroups");
-        groups.addIdProperty();
-        groups.addStringProperty("groupName");
-        groups.addLongProperty("serverId");
-        groups.addStringProperty("groupCover");
-
-
-        Entity threadReplyItem = schema.addEntity("DBThreadReplyItem");
-        threadReplyItem.addIdProperty();
-        threadReplyItem.addLongProperty("serverId");
-        threadReplyItem.addLongProperty("pid");
-        threadReplyItem.addStringProperty("createAt");
-        threadReplyItem.addIntProperty("lights");
-        threadReplyItem.addIntProperty("floor");
-        threadReplyItem.addLongProperty("groupThreadId");
-        threadReplyItem.addLongProperty("userId");
-        threadReplyItem.addStringProperty("content");
-        threadReplyItem.addBooleanProperty("isHot");
-
-        Entity miniReplyListItem = schema.addEntity("DBMiniReplyListItem");
-        miniReplyListItem.addIdProperty();
-        miniReplyListItem.addLongProperty("serverId");
-        miniReplyListItem.addLongProperty("pid");
-        miniReplyListItem.addStringProperty("formatTime");
-        miniReplyListItem.addLongProperty("groupThreadId");
-        miniReplyListItem.addLongProperty("userId");
-        miniReplyListItem.addStringProperty("content");
-        miniReplyListItem.addLongProperty("parentReplyId");
+        user.addStringProperty("registerTime");
+        user.addStringProperty("location");
+        user.addStringProperty("school");
+        user.addStringProperty("threadUrl");
+        user.addStringProperty("postUrl");
+        user.addStringProperty("nickNameUrl");
 
 
         File f = new File(GREEN_DAO_CODE_PATH);

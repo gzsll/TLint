@@ -1,33 +1,45 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.ui.fragment.SettingFragment_;
+import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.ui.fragment.SettingFragment;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
- * Created by sll on 2015/9/7 0007.
+ * Created by sll on 2016/3/11.
  */
-@EActivity(R.layout.base_content_toolbar_layout)
 public class SettingActivity extends BaseSwipeBackActivity {
 
-    @ViewById
+    public static void startActivity(Context mContext) {
+        Intent intent = new Intent(mContext, SettingActivity.class);
+        mContext.startActivity(intent);
+    }
+
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    @AfterViews
-    void init() {
-        initToolBar(toolbar);
-        setTitle("设置");
-        getFragmentManager().beginTransaction().replace(R.id.content, SettingFragment_.builder().build()).commit();
+    @Override
+    public int initContentView() {
+        return R.layout.base_content_toolbar_layout;
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
-        return true;
+    public void initInjector() {
+
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
+        initToolBar(toolbar);
+        setTitle("设置");
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, new SettingFragment()).commit();
     }
 
     @Override
@@ -35,4 +47,8 @@ public class SettingActivity extends BaseSwipeBackActivity {
         return true;
     }
 
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return true;
+    }
 }

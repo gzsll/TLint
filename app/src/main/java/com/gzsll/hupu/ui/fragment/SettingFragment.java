@@ -4,35 +4,31 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.gzsll.hupu.AppApplication;
+import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.support.pref.SettingPref_;
-import com.gzsll.hupu.support.utils.CacheHelper;
-import com.gzsll.hupu.support.utils.DataCleanHelper;
-import com.gzsll.hupu.support.utils.FileHelper;
-import com.gzsll.hupu.ui.activity.BaseActivity;
-
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.sharedpreferences.Pref;
+import com.gzsll.hupu.helper.CacheHelper;
+import com.gzsll.hupu.helper.DataCleanHelper;
+import com.gzsll.hupu.helper.FileHelper;
+import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.injector.component.DaggerFragmentComponent;
+import com.gzsll.hupu.injector.module.FragmentModule;
+import com.gzsll.hupu.ui.BaseActivity;
+import com.gzsll.hupu.widget.PreferenceFragment;
 
 import java.io.File;
 
 import javax.inject.Inject;
 
 /**
- * Created by sll on 2015/9/8.
+ * Created by sll on 2016/3/11.
  */
-@EFragment
 public class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
-    @Pref
-    SettingPref_ mSettingPref;
 
     private Preference pTheme;// 主题设置
     private ListPreference pTextSize;// 字体大小
@@ -40,23 +36,28 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private Preference pClearCache;
     private ListPreference pThreadSort;
     private ListPreference pSwipeBackEdgeMode;// 手势返回方向
-    //   private ListPreference pOfflineCount;
-
 
     @Inject
+    SettingPrefHelper mSettingPrefHelper;
+    @Inject
     CacheHelper mCacheHelper;
+    @Inject
+    DataCleanHelper mDataCleanHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppApplication) getActivity().getApplicationContext()).inject(this);
+        DaggerFragmentComponent.builder()
+                .fragmentModule(new FragmentModule(this))
+                .applicationComponent(((MyApplication) getActivity().getApplication()).getApplicationComponent())
+                .build().inject(this);
         addPreferencesFromResource(R.xml.setting);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
         pTheme = findPreference("pTheme");
         pTheme.setOnPreferenceClickListener(this);
-        pTheme.setSummary(getResources().getStringArray(R.array.mdColorNames)[mSettingPref.ThemeIndex().get()]);
+        pTheme.setSummary(getResources().getStringArray(R.array.mdColorNames)[mSettingPrefHelper.getThemeIndex()]);
 
         pTextSize = (ListPreference) findPreference("pTextSize");
         pTextSize.setOnPreferenceChangeListener(this);
@@ -65,7 +66,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
         pPicSavePath = findPreference("pPicSavePath");
         pPicSavePath.setOnPreferenceClickListener(this);
-        pPicSavePath.setSummary("/sdcard" + File.separator + mSettingPref.PicSavePath().get() + File.separator);
+        pPicSavePath.setSummary("/sdcard" + File.separator + mSettingPrefHelper.getPicSavePath() + File.separator);
 
 
         pClearCache = findPreference("pClearCache");
@@ -116,8 +117,6 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         return true;
     }
 
-    @Inject
-    DataCleanHelper mDataCleanHelper;
 
     private void cleanCache() {
 //        new MaterialDialog.Builder(getActivity()).title("提示").content("正在清空缓存...").progress(true,0).show();
@@ -142,7 +141,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
 
     private void modifyImageSavePath() {
-        new MaterialDialog.Builder(getActivity()).title("修改图片保存路径").input(null, mSettingPref.PicSavePath().get(), new MaterialDialog.InputCallback() {
+        new MaterialDialog.Builder(getActivity()).title("修改图片保存路径").input(null, mSettingPrefHelper.getPicSavePath(), new MaterialDialog.InputCallback() {
             @Override
             public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
                 if (TextUtils.isEmpty(charSequence)) {
@@ -152,7 +151,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 String path = mFileHelper.getSdcardPath() + File.separator + charSequence + File.separator;
                 File file = new File(path);
                 if (file.exists() || file.mkdirs()) {
-                    mSettingPref.PicSavePath().put(charSequence.toString());
+                    mSettingPrefHelper.setPicSavePath(charSequence.toString());
                     pPicSavePath.setSummary("/sdcard" + File.separator + charSequence + File.separator);
                     showToast("更新成功");
                 } else {

@@ -1,5 +1,10 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -7,6 +12,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -18,60 +26,83 @@ import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.UpdateAgent;
-import com.gzsll.hupu.otto.ChangeThemeEvent;
+import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.MessageResult;
+import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.db.User;
+import com.gzsll.hupu.db.UserDao;
+import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
-import com.gzsll.hupu.otto.NotificationEvent;
-import com.gzsll.hupu.otto.ReceiveNoticeEvent;
-import com.gzsll.hupu.presenter.NotificationPresenter;
-import com.gzsll.hupu.support.db.User;
-import com.gzsll.hupu.support.db.UserDao;
-import com.gzsll.hupu.support.storage.UserStorage;
-import com.gzsll.hupu.support.storage.bean.Notice;
-import com.gzsll.hupu.support.utils.SettingPrefHelper;
-import com.gzsll.hupu.ui.fragment.BoardListFragment_;
-import com.gzsll.hupu.ui.fragment.ThreadRecommendFragment_;
-import com.gzsll.hupu.ui.fragment.TopicFragment_;
+import com.gzsll.hupu.otto.MessageReadEvent;
+import com.gzsll.hupu.ui.BaseActivity;
+import com.gzsll.hupu.ui.fragment.BrowserFragment;
+import com.gzsll.hupu.ui.fragment.ForumListFragment;
+import com.gzsll.hupu.ui.fragment.ThreadCollectFragment;
+import com.gzsll.hupu.ui.fragment.ThreadRecommendFragment;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-@EActivity(R.layout.activity_main)
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+
+/**
+ * Created by sll on 2016/3/9.
+ */
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    Logger logger = Logger.getLogger(MainActivity.class.getSimpleName());
+    public static void startActivity(Context mContext) {
+        Intent intent = new Intent(mContext, MainActivity.class);
+        mContext.startActivity(intent);
+    }
 
 
-    @ViewById(R.id.nav_view)
+    @Bind(R.id.navigationView)
     NavigationView navigationView;
-    @ViewById
+    @Bind(R.id.drawerLayout)
     DrawerLayout drawerLayout;
-    @ViewById
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
     SimpleDraweeView ivIcon;
     TextView tvName, tvNotification;
-
 
     @Inject
     SettingPrefHelper mSettingPrefHelper;
     @Inject
     UpdateAgent mUpdateAgent;
     @Inject
-    NotificationPresenter mNotificationPresenter;
+    UserStorage mUserStorage;
+    @Inject
+    UserDao mUserDao;
+    @Inject
+    Bus mBus;
+    @Inject
+    ForumApi mForumApi;
 
-    @AfterViews
-    void init() {
+
+    @Override
+    public int initContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent.inject(this);
+        mBus.register(this);
+    }
+
+    @Override
+    public void initUiAndListener() {
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("帖子推荐");
-
         ivIcon = (SimpleDraweeView) navigationView.getHeaderView(0).findViewById(R.id.ivIcon);
         tvName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvName);
         tvNotification = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvNotification);
@@ -82,121 +113,146 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mDrawerToggle.syncState();
         drawerLayout.setDrawerListener(mDrawerToggle);
         setupDrawerContent();
-        Fragment fragment = ThreadRecommendFragment_.builder().build();
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, ThreadRecommendFragment.newInstance()).commit();
         initUserInfo();
+        initNotification();
         if (mSettingPrefHelper.getAutoUpdate()) {
             mUpdateAgent.checkUpdate(this);
         }
-
     }
 
     private void initUserInfo() {
-        ivIcon.setImageURI(Uri.parse("placeholder"));
-        tvName.setText(getUser().getUserName());
+        if (mUserStorage.isLogin()) {
+            User user = mUserStorage.getUser();
+            if (!TextUtils.isEmpty(user.getIcon())) {
+                ivIcon.setImageURI(Uri.parse(user.getIcon()));
+            }
+            tvName.setText(user.getUserName());
+        }
+    }
+
+    private void initNotification() {
+        mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageResult>() {
+            @Override
+            public void call(MessageResult result) {
+                if (result != null && result.status == 200) {
+                    count = result.result.list.size();
+                    invalidateOptionsMenu();
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+
+            }
+        });
     }
 
 
     private void setupDrawerContent() {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        int groupId = 0;
-                        switch (menuItem.getItemId()) {
-                            case R.id.nav_nba:
-                                groupId = 1;
-                                break;
-                            case R.id.nav_my:
-                                groupId = 0;
-                                break;
-                            case R.id.nav_topic:
-                                groupId = Constants.NAV_TOPIC_LIST;
-                                break;
-                            case R.id.nav_fav:
-                                groupId = Constants.NAV_TOPIC_FAV;
-                                break;
-                            case R.id.nav_cba:
-                                groupId = 232;
-                                break;
-                            case R.id.nav_gambia:
-                                groupId = 174;
-                                break;
-                            case R.id.nav_equipment:
-                                groupId = 233;
-                                break;
-                            case R.id.nav_fitness:
-                                groupId = 234;
-                                break;
-                            case R.id.nav_football:
-                                groupId = 4596;
-                                break;
-                            case R.id.nav_intel_football:
-                                groupId = 198;
-                                break;
-                            case R.id.nav_sport:
-                                groupId = 41;
-                                break;
-                            case R.id.nav_setting:
-                                groupId = Constants.NAV_SETTING;
-                                break;
-                            case R.id.nav_feedback:
-                                groupId = Constants.NAV_FEEDBACK;
-                                break;
-                            case R.id.nav_about:
-                                groupId = Constants.NAV_ABOUT;
-                                break;
-                            case R.id.nav_recommend:
-                                groupId = Constants.NAV_THREAD_RECOMMEND;
-                                break;
-                        }
-                        Fragment fragment;
-                        if (groupId >= 10000) {
-                            if (groupId == Constants.NAV_SETTING) {
-                                SettingActivity_.intent(MainActivity.this).start();
-                            } else if (groupId == Constants.NAV_FEEDBACK) {
-                                PostActivity_.intent(MainActivity.this).type(Constants.TYPE_FEEDBACK).tid("2869008").start();
-
-                            } else {
-                                BrowserActivity_.intent(MainActivity.this).url("http://www.pursll.com/TLint").start();
-                            }
-
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_collect:
+                    case R.id.nav_topic:
+                    case R.id.nav_recommend:
+                    case R.id.nav_nba:
+                    case R.id.nav_my:
+                    case R.id.nav_cba:
+                    case R.id.nav_gambia:
+                    case R.id.nav_equipment:
+                    case R.id.nav_fitness:
+                    case R.id.nav_football:
+                    case R.id.nav_intel_football:
+                    case R.id.nav_sport:
+                        Fragment mFragment;
+                        if (menuItem.getItemId() == R.id.nav_collect) {
+                            mFragment = ThreadCollectFragment.newInstance();
+                        } else if (menuItem.getItemId() == R.id.nav_topic) {
+                            mFragment = BrowserFragment.newInstance(mUserStorage.getUser().getThreadUrl(), "我的帖子");
+                        } else if (menuItem.getItemId() == R.id.nav_recommend) {
+                            mFragment = ThreadRecommendFragment.newInstance();
                         } else {
-                            if (groupId >= 0) {
-                                fragment = BoardListFragment_.builder().id(groupId).build();
-                            } else {
-                                if (groupId != Constants.NAV_THREAD_RECOMMEND) {
-                                    fragment = TopicFragment_.builder().type(groupId).uid(getUser().getUid()).build();
-                                } else {
-                                    fragment = ThreadRecommendFragment_.builder().build();
-                                }
-                            }
-                            getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
-                            menuItem.setChecked(true);
-                            setTitle(menuItem.getTitle());
+                            mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(menuItem.getItemId()));
                         }
-                        drawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
+                        menuItem.setChecked(true);
+                        setTitle(menuItem.getTitle());
+                        getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
+                        break;
+                    case R.id.nav_setting:
+                        SettingActivity.startActivity(MainActivity.this);
+                        break;
+                    case R.id.nav_feedback:
+                        PostActivity.startActivity(MainActivity.this, Constants.TYPE_FEEDBACK, "", "2869008", "", "TLint For Android");
+                        break;
+                    case R.id.nav_about:
+                        BrowserActivity.startActivity(MainActivity.this, "http://www.pursll.com/TLint");
+                        break;
+                }
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
+
+
+    }
+
+    private int count = 0;
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_notification);
+        menuItem.setIcon(buildCounterDrawable(count, R.drawable.ic_menu_notification));
+        return true;
     }
 
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
+    private Drawable buildCounterDrawable(int count, int backgroundImageId) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.notification_count_layout, null);
+        view.setBackgroundResource(backgroundImageId);
+        TextView tvCount = (TextView) view.findViewById(R.id.tvCount);
+        if (count == 0) {
+            tvCount.setVisibility(View.GONE);
+        } else {
+            tvCount.setVisibility(View.VISIBLE);
+            tvCount.setText("" + count);
+        }
+
+        view.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        view.setDrawingCacheEnabled(true);
+        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+
+        return new BitmapDrawable(getResources(), bitmap);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
-                return true;
+                break;
+            case R.id.action_notification:
+                MessageListActivity.startActivity(MainActivity.this);
+                break;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected boolean isApplyStatusBarTranslucency() {
+        return true;
     }
 
     @Override
@@ -205,51 +261,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected boolean isApplyStatusBarTranslucency() {
-        return true;
-    }
-
-
-    @Subscribe
-    public void onLoginSuccessEvent(LoginSuccessEvent event) {
-        reload();
-    }
-
-    @Subscribe
-    public void onChangeThemeEvent(ChangeThemeEvent event) {
-        reload();
-    }
-
-    @Subscribe
-    public void onReceiveNoticeEvent(ReceiveNoticeEvent event) {
-        Notice notice = event.getNotice();
-        tvNotification.setVisibility(View.VISIBLE);
-        tvNotification.setText(String.valueOf(notice.getNewNum()));
-        Toast.makeText(this, notice.getNewMsg(), Toast.LENGTH_SHORT).show();
-
-    }
-
-    private int toastCount = 1;
-
-    @Subscribe
-    public void onNotificationEvent(NotificationEvent event) {
-        int count = event.getCount();
-        if (count > 0) {
-            tvNotification.setVisibility(View.VISIBLE);
-            tvNotification.setText(String.valueOf(count));
-            if (toastCount <= 3) {
-                Toast.makeText(this, String.format("有%d条新消息", count), Toast.LENGTH_SHORT).show();
-                toastCount++;
-            }
-        } else {
-            tvNotification.setVisibility(View.GONE);
+    public void onBackPressed() {
+        if (isCanExit()) {
+            AppManager.getAppManager().AppExit(this);
         }
     }
 
-    @Inject
-    UserDao mUserDao;
-    @Inject
-    UserStorage mUserStorage;
+    private long mExitTime = 0;
+
+    public boolean isCanExit() {
+        if (System.currentTimeMillis() - mExitTime > 2000) {
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ivCover:
+                UserProfileActivity.startActivity(this, mUserStorage.getUid());
+                drawerLayout.closeDrawers();
+                break;
+            case R.id.llAccount:
+                showAccountMenu();
+                break;
+        }
+    }
 
 
     private void showAccountMenu() {
@@ -270,10 +310,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                 if (which == items.length - 1) {
                     // 账号管理
-                    AccountActivity_.intent(MainActivity.this).start();
+                    AccountActivity.startActivity(MainActivity.this);
                 } else {
                     mUserStorage.login(userList.get(which));
-                    bus.post(new LoginSuccessEvent());
+                    initUserInfo();
                 }
             }
         }).show();
@@ -281,40 +321,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     @Override
-    public void onBackPressed() {
-        if (isCanExit()) {
-            AppManager.getAppManager().AppExit(this);
+    protected void onDestroy() {
+        super.onDestroy();
+        mBus.unregister(this);
+    }
+
+    @Subscribe
+    public void onLoginSuccessEvent(LoginSuccessEvent event) {
+        initUserInfo();
+    }
+
+    @Subscribe
+    public void onMessageReadEvent(MessageReadEvent event) {
+        if (count >= 1) {
+            count--;
         }
+        invalidateOptionsMenu();
     }
 
-    private long mExitTime = 0;
-
-    public boolean isCanExit() {
-        if (System.currentTimeMillis() - mExitTime > 2000) {
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-            mExitTime = System.currentTimeMillis();
-            return false;
-        }
-        return true;
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ivCover:
-                NotificationActivity_.intent(this).start();
-                drawerLayout.closeDrawers();
-                break;
-            case R.id.llAccount:
-                showAccountMenu();
-                break;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mNotificationPresenter.loadNotification();
-    }
 }

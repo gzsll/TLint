@@ -8,13 +8,18 @@ import android.os.Looper;
 import android.text.Html;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.gson.Gson;
-import com.gzsll.hupu.support.storage.bean.UpdateInfo;
-import com.gzsll.hupu.support.utils.OkHttpHelper;
-
-import org.androidannotations.api.BackgroundExecutor;
+import com.amazonaws.com.google.gson.Gson;
+import com.gzsll.hupu.bean.UpdateInfo;
+import com.gzsll.hupu.helper.OkHttpHelper;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sll on 2015/10/8.
@@ -22,6 +27,7 @@ import javax.inject.Inject;
 public class UpdateAgent {
 
     @Inject
+    @Singleton
     public UpdateAgent() {
     }
 
@@ -38,23 +44,34 @@ public class UpdateAgent {
 
     public void checkUpdate(Activity mActivity) {
         this.mActivity = mActivity;
-        BackgroundExecutor.execute(new Runnable() {
+        Observable.just(UPDATE_URL).subscribeOn(Schedulers.io()).map(new Func1<String, UpdateInfo>() {
             @Override
-            public void run() {
+            public UpdateInfo call(String s) {
                 try {
                     String result = mOkHttpHelper.getStringFromServer(UPDATE_URL);
-                    UpdateInfo updateInfo = mGson.fromJson(result, UpdateInfo.class);
-                    checkUpdateFinished(updateInfo);
+                    return mGson.fromJson(result, UpdateInfo.class);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                return null;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UpdateInfo>() {
+            @Override
+            public void call(UpdateInfo updateInfo) {
+                checkUpdateFinished(updateInfo);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
 
             }
         });
+
+
     }
 
     private void checkUpdateFinished(UpdateInfo updateInfo) {
-        if (updateInfo.getVersionCode() > BuildConfig.VERSION_CODE) {
+        if (updateInfo != null && updateInfo.getVersionCode() > BuildConfig.VERSION_CODE) {
             showUpdateDialog(updateInfo);
         }
     }

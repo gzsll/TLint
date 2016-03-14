@@ -1,81 +1,106 @@
 package com.gzsll.hupu.presenter;
 
-import com.gzsll.hupu.api.thread.ThreadApi;
-import com.gzsll.hupu.support.storage.bean.Thread;
-import com.gzsll.hupu.support.storage.bean.ThreadListResult;
-import com.gzsll.hupu.view.ThreadRecommendView;
+import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.bean.ThreadListData;
+import com.gzsll.hupu.bean.ThreadListResult;
+import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.ui.view.ThreadRecommendView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
- * Created by sll on 2015/12/12.
+ * Created by sll on 2016/3/9.
  */
 public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
 
 
     @Inject
-    ThreadApi mThreadApi;
+    ForumApi mForumApi;
+    @Inject
+    ToastHelper mToastHelper;
+
+
+    private List<Thread> threads = new ArrayList<>();
+
+    @Inject
+    @Singleton
+    public ThreadRecommendPresenter() {
+    }
+
 
     private String lastTid = "";
     private String lastTamp = "";
-    private boolean clear;
 
-    private List<Thread> threads = new ArrayList<Thread>();
+    private Subscription mSubscription;
 
-    public void onRecommendListReceive() {
+    public void onRecommendThreadsReceive() {
         view.showLoading();
-        clear = true;
-        loadRecommendList();
+        loadRecommendList(false);
     }
 
-    private void loadRecommendList() {
-        mThreadApi.getRecommendThreadList(lastTid,lastTamp).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadListResult>() {
+
+    private void loadRecommendList(final boolean clear) {
+        mSubscription = mForumApi.getRecommendThreadList(lastTid, lastTamp).map(new Func1<ThreadListResult, List<Thread>>() {
             @Override
-            public void call(ThreadListResult result) {
+            public List<Thread> call(ThreadListResult result) {
                 if (clear) {
                     threads.clear();
-                    view.onScrollToTop();
                 }
-                if (result.result != null) {
-                    lastTamp = result.result.stamp;
-                    addThreads(result.result.data);
-                    view.renderList(threads);
+                if (result != null && result.result != null) {
+                    ThreadListData data = result.result;
+                    lastTamp = data.stamp;
+                    return addThreads(data.data);
+                }
+                return null;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Thread>>() {
+            @Override
+            public void call(List<Thread> threads) {
+                if (threads != null) {
+                    view.onRefreshing(false);
                     view.hideLoading();
+                    view.renderThreads(threads);
                 } else {
-                    if (threads.isEmpty()) {
-                        view.onError("数据加载失败");
-                    } else {
-                        view.onRefreshing(false);
-                        view.showToast("数据加载失败");
-                    }
+                    loadThreadError();
                 }
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                if (threads.isEmpty()) {
-                    view.onError("数据加载失败");
-                } else {
-                    view.onRefreshing(false);
-                    view.showToast("数据加载失败,请检查网络后重试");
-                }
+                loadThreadError();
             }
         });
     }
 
-    private void addThreads(List<Thread> threadList) {
+
+    private void loadThreadError() {
+        if (threads.isEmpty()) {
+            view.onError("数据加载失败");
+        } else {
+            view.hideLoading();
+            view.onRefreshing(false);
+            mToastHelper.showToast("数据加载失败");
+        }
+    }
+
+    private List<Thread> addThreads(List<Thread> threadList) {
         for (Thread thread : threadList) {
             if (!contains(thread)) {
                 threads.add(thread);
             }
         }
         lastTid = threads.get(threads.size() - 1).tid;
+        return threads;
     }
 
 
@@ -94,39 +119,28 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
     public void onRefresh() {
         lastTamp = "";
         lastTid = "";
-        clear = true;
-        loadRecommendList();
-    }
-
-    public void onLoadMore() {
-        clear = false;
-        loadRecommendList();
+        loadRecommendList(true);
     }
 
 
     public void onReload() {
-        clear = false;
-        loadRecommendList();
+        loadRecommendList(false);
+
+    }
+
+    public void onLoadMore() {
+        loadRecommendList(false);
     }
 
 
     @Override
-    public void initialize() {
-
+    public void detachView() {
+        lastTamp = "";
+        lastTid = "";
+        if (mSubscription != null) {
+            mSubscription.unsubscribe();
+        }
+        threads.clear();
     }
 
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
 }

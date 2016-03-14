@@ -5,10 +5,11 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.gzsll.hupu.support.utils.SystemBarUtils;
+import com.gzsll.hupu.helper.SystemBarUtils;
+
 
 /**
- * Created by wangdan on 15/4/26.
+ * Created by sll on 15/4/26.
  */
 public class KitkatProfileViewGroup extends FrameLayout {
 
@@ -36,8 +37,6 @@ public class KitkatProfileViewGroup extends FrameLayout {
                     getPaddingTop(),
                     getPaddingRight(),
                     getPaddingBottom() + SystemBarUtils.getNavigationBarHeight(getContext()));
-
-//            setBackgroundColor(Utils.resolveColor(getContext(), R.attr.colorPrimary, Color.BLACK));
         }
     }
 

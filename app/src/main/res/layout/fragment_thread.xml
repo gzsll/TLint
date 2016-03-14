@@ -68,7 +68,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.gzsll.hupu.widget.NestedScrollRefreshLayout
+    <com.gzsll.hupu.widget.SwipyRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -76,13 +76,13 @@
         app:direction="both"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ListView
-            android:id="@+id/listView"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
 
-    </com.gzsll.hupu.widget.NestedScrollRefreshLayout>
+    </com.gzsll.hupu.widget.SwipyRefreshLayout>
 
     <FrameLayout
         android:id="@+id/frameLayout"
