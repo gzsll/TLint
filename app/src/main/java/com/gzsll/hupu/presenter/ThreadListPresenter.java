@@ -265,7 +265,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
             public void call(AttendStatusResult attendStatusResult) {
                 if (attendStatusResult != null && attendStatusResult.status == 200) {
                     view.renderThreadInfo(attendStatusResult.forumInfo);
-                    view.attendStatus(attendStatusResult.attendStatus);
+                    view.attendStatus(attendStatusResult.attendStatus == 1);
                 }
             }
         }, new Action1<Throwable>() {
@@ -283,6 +283,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
             public void call(AttendStatusResult result) {
                 if (result.status == 200 && result.result == 1) {
                     mToastHelper.showToast("添加关注成功");
+                    view.attendStatus(result.status == 200);
                 }
             }
         }, new Action1<Throwable>() {
@@ -299,6 +300,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
             public void call(AttendStatusResult result) {
                 if (result.status == 200 && result.result == 1) {
                     mToastHelper.showToast("取消关注成功");
+                    view.attendStatus(result.status != 200);
                 }
             }
         }, new Action1<Throwable>() {

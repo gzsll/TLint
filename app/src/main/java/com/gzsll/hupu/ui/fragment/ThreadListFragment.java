@@ -105,6 +105,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
 
     private String fid;
+    private boolean isAttention;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -209,14 +210,16 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     }
 
     @Override
-    public void attendStatus(int status) {
-        if (status == 0) {
+    public void attendStatus(boolean isAttention) {
+        this.isAttention = isAttention;
+        if (!isAttention) {
             floatingAttention.setImageResource(R.drawable.ic_menu_add);
             floatingAttention.setLabelText("添加关注");
         } else {
             floatingAttention.setImageResource(R.drawable.ic_minus);
             floatingAttention.setLabelText("取消关注");
         }
+
     }
 
     @Override
@@ -270,6 +273,16 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         mPresenter.onReload();
     }
 
+
+    @OnClick(R.id.floatingAttention)
+    void floatingAttention() {
+        if (isAttention) {
+            mPresenter.delAttention();
+        } else {
+            mPresenter.addAttention();
+        }
+        floatingMenu.toggle(true);
+    }
 
     @OnClick(R.id.floatingPost)
     void floatingPost() {

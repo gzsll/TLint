@@ -19,7 +19,7 @@ public interface ThreadListView extends BaseView {
 
     void renderThreads(List<Thread> threads);
 
-    void attendStatus(int status);
+    void attendStatus(boolean isAttention);
 
     void onError(String error);
 
