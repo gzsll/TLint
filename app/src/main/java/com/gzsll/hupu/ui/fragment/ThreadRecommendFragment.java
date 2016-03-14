@@ -100,6 +100,7 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
 
     @Override
     public void onEmpty() {
+        setEmptyText("没有推荐帖子");
         showEmpty(true);
     }
 

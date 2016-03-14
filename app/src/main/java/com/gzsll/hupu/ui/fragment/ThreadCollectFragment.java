@@ -96,6 +96,7 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
 
     @Override
     public void onEmpty() {
+        setEmptyText("没有收藏的帖子");
         showEmpty(true);
     }
 

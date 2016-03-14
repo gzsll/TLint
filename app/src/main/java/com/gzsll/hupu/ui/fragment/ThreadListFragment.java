@@ -227,6 +227,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @Override
     public void onEmpty() {
+        setEmptyText("暂无帖子");
         showEmpty(true);
     }
 

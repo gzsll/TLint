@@ -12,7 +12,10 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.AttendStatusResult;
 import com.gzsll.hupu.db.Forum;
+import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.otto.DelForumAttentionEvent;
 import com.gzsll.hupu.ui.activity.ThreadListActivity;
 import com.squareup.otto.Bus;
@@ -28,6 +31,8 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by sll on 2016/3/11.
@@ -40,6 +45,10 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
     Activity mActivity;
     @Inject
     Bus mBus;
+    @Inject
+    ForumApi mForumApi;
+    @Inject
+    ToastHelper mToastHelper;
 
     @Inject
     public ForumListAdapter() {
@@ -121,7 +130,22 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
         @OnClick(R.id.tvDel)
         void tvDelClick() {
             swipeLayout.close();
-            mBus.post(new DelForumAttentionEvent(forum.getFid()));
+            mForumApi.delAttention(forum.getFid()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+                @Override
+                public void call(AttendStatusResult result) {
+                    if (result.status == 200 && result.result == 1) {
+                        mToastHelper.showToast("取消关注成功");
+                        mBus.post(new DelForumAttentionEvent(forum.getFid()));
+                        forums.remove(forum);
+                        notifyDataSetChanged();
+                    }
+                }
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable throwable) {
+                    mToastHelper.showToast("取消关注失败，请重试");
+                }
+            });
         }
 
 

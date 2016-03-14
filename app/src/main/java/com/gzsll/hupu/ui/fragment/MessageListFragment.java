@@ -92,6 +92,7 @@ public class MessageListFragment extends BaseFragment implements MessageListView
 
     @Override
     public void onEmpty() {
+        setEmptyText("暂无论坛消息");
         showEmpty(true);
     }
 }
