@@ -22,7 +22,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sll on 2016/3/11.
@@ -41,42 +40,24 @@ public class ForumListPresenter extends Presenter<ForumListView> {
     }
 
 
-    private List<Forum> forums = new ArrayList<>();
-    private String forumId;
-
 
     public void onForumListReceive(final String forumId) {
         view.showLoading();
-        Observable.just(forumId).subscribeOn(Schedulers.io()).map(new Func1<String, List<Forum>>() {
-            @Override
-            public List<Forum> call(String s) {
-                return mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq(forumId)).list();
-            }
-        }).flatMap(new Func1<List<Forum>, Observable<List<Forum>>>() {
-            @Override
-            public Observable<List<Forum>> call(List<Forum> fora) {
-                if (fora.isEmpty()) {
-                    return loadFromNet(forumId);
-                } else {
-                    return Observable.just(fora);
-                }
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Forum>>() {
+        getForumObservable(forumId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Forum>>() {
             @Override
             public void call(List<Forum> fora) {
-                view.hideLoading();
-                view.renderForumList(fora);
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                view.onError();
+                if (fora == null || fora.isEmpty()) {
+                    view.onError();
+                } else {
+                    view.hideLoading();
+                    view.renderForumList(fora);
+                }
             }
         });
     }
 
 
-    private Observable<List<Forum>> loadFromNet(String forumId) {
+    private Observable<List<Forum>> getForumObservable(String forumId) {
         return Observable.just(forumId).flatMap(new Func1<String, Observable<List<Forum>>>() {
             @Override
             public Observable<List<Forum>> call(String s) {
@@ -110,6 +91,11 @@ public class ForumListPresenter extends Presenter<ForumListView> {
             public void call(List<Forum> fora) {
                 saveToDb(fora);
             }
+        }).onErrorReturn(new Func1<Throwable, List<Forum>>() {
+            @Override
+            public List<Forum> call(Throwable throwable) {
+                return mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq("0")).list();
+            }
         });
     }
 
@@ -140,6 +126,11 @@ public class ForumListPresenter extends Presenter<ForumListView> {
             @Override
             public void call(List<Forum> fora) {
                 saveToDb(fora);
+            }
+        }).onErrorReturn(new Func1<Throwable, List<Forum>>() {
+            @Override
+            public List<Forum> call(Throwable throwable) {
+                return mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq(forumId)).list();
             }
         });
 
