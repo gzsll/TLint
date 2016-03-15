@@ -91,7 +91,6 @@ public final class HttpLoggingInterceptor implements Interceptor {
         Logger DEFAULT = new Logger() {
             @Override
             public void log(String message) {
-                // com.moonmod.gs.kdyg.Logger.e(message);
                 Platform.get().log(message);
             }
         };

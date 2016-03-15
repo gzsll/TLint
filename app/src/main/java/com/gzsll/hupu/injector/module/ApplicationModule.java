@@ -18,7 +18,6 @@ import com.squareup.otto.Bus;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -67,13 +66,6 @@ public class ApplicationModule {
         return builder.build();
     }
 
-    @Provides
-    @Singleton
-    @Named("fresco")
-    OkHttpClient provideFrescoOkHttpClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(20 * 1000, TimeUnit.MILLISECONDS).readTimeout(20 * 1000, TimeUnit.MILLISECONDS);
-        return builder.build();
-    }
 
 
     @Provides

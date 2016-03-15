@@ -26,7 +26,6 @@ import org.apache.log4j.Level;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 import okhttp3.OkHttpClient;
@@ -40,7 +39,6 @@ public class MyApplication extends Application {
 
 
     @Inject
-    @Named("fresco")
     OkHttpClient mOkHttpClient;
     @Inject
     UserStorage mUserStorage;

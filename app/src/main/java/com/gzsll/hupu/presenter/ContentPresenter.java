@@ -91,6 +91,7 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void onReload() {
+        view.showLoading();
         loadContent(currentPage);
     }
 
