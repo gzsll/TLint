@@ -106,7 +106,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if ("pTheme".equals(preference.getKey())) {
-            MDColorsDialogFragment.launch(getActivity());
+            ColorsDialogFragment.launch(getActivity());
         } else if ("pPicSavePath".equals(preference.getKey())) {
             modifyImageSavePath();
         } else if ("pClearCache".equals(preference.getKey())) {

@@ -31,7 +31,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 
-public class MDColorsDialogFragment extends DialogFragment
+public class ColorsDialogFragment extends DialogFragment
         implements OnItemClickListener {
 
     @Inject
@@ -47,7 +47,7 @@ public class MDColorsDialogFragment extends DialogFragment
             context.getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
 
-        MDColorsDialogFragment dialogFragment = new MDColorsDialogFragment();
+        ColorsDialogFragment dialogFragment = new ColorsDialogFragment();
         dialogFragment.show(context.getSupportFragmentManager(), "DialogFragment");
     }
 

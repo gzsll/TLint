@@ -27,15 +27,15 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/10.
  */
-public class PictureItemFragment extends BaseFragment {
+public class ImageFragment extends BaseFragment {
 
     @Bind(R.id.image)
     PhotoDraweeView image;
     @Bind(R.id.progressBar)
     ProgressBarCircularIndeterminate progressBar;
 
-    public static PictureItemFragment newInstance(String url) {
-        PictureItemFragment mFragment = new PictureItemFragment();
+    public static ImageFragment newInstance(String url) {
+        ImageFragment mFragment = new ImageFragment();
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
         mFragment.setArguments(bundle);

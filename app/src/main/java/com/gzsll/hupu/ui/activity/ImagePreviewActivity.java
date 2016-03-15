@@ -20,7 +20,7 @@ import com.gzsll.hupu.helper.FormatHelper;
 import com.gzsll.hupu.helper.OkHttpHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
-import com.gzsll.hupu.ui.fragment.PictureItemFragment;
+import com.gzsll.hupu.ui.fragment.ImageFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private HashMap<Integer, PictureItemFragment> fragmentMap
+    private HashMap<Integer, ImageFragment> fragmentMap
             = new HashMap<>();
     private ImageViewAdapter mImageViewAdapter;
     private int mCurrentItem = 0;
@@ -151,9 +151,9 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
 
         @Override
         public Fragment getItem(int position) {
-            PictureItemFragment fragment = fragmentMap.get(position);
+            ImageFragment fragment = fragmentMap.get(position);
             if (fragment == null) {
-                fragment = PictureItemFragment.newInstance(extraPics.get(position));
+                fragment = ImageFragment.newInstance(extraPics.get(position));
                 fragmentMap.put(position, fragment);
             }
             return fragment;
@@ -168,7 +168,7 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
             if (object instanceof Fragment) {
-                fragmentMap.put(position, (PictureItemFragment) object);
+                fragmentMap.put(position, (ImageFragment) object);
             }
         }
     }
