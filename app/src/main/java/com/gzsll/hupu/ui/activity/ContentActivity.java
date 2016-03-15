@@ -121,6 +121,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
     private String shareUrl;
     private PagePicker mPagePicker;
     private int totalPage;
+    private MyAdapter mAdapter;
 
     @Override
     public int initContentView() {
@@ -192,8 +193,10 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
     @Override
     public void renderContent(String url, List<String> urls) {
         totalPage = urls.size();
-        MyAdapter mAdapter = new MyAdapter(getSupportFragmentManager(), urls);
-        viewPager.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new MyAdapter(getSupportFragmentManager(), urls);
+            viewPager.setAdapter(mAdapter);
+        }
         viewPager.setCurrentItem(urls.indexOf(url));
         onUpdatePager(viewPager.getCurrentItem() + 1, totalPage);
     }
@@ -205,6 +208,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
     @Override
     public void onPageSelected(int position) {
         onUpdatePager(position + 1, totalPage);
+        mPresenter.updatePage(position + 1);
     }
 
 

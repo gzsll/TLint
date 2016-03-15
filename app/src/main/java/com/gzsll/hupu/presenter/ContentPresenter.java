@@ -61,6 +61,7 @@ public class ContentPresenter extends Presenter<ContentView> {
                         view.onError(threadSchemaInfo.error.text);
                     } else {
                         totalPage = threadSchemaInfo.pageSize;
+                        currentPage = threadSchemaInfo.page;
                         urls = createPageList(threadSchemaInfo.url, threadSchemaInfo.page, threadSchemaInfo.pageSize);
                         view.renderContent(threadSchemaInfo.url, urls);
                         view.isCollected(threadSchemaInfo.isCollected == 1);
@@ -117,9 +118,14 @@ public class ContentPresenter extends Presenter<ContentView> {
     }
 
     public void onPageSelected(int page) {
+        currentPage = page;
         view.renderContent(urls.get(page - 1), urls);
     }
 
+
+    public void updatePage(int page) {
+        currentPage = page;
+    }
 
     public void addCollect() {
         mForumApi.addCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectData>() {
