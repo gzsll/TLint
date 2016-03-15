@@ -4,13 +4,13 @@
     <item android:state_pressed="true">
         <shape>
             <corners android:radius="2dp" />
-            <solid android:color="@color/retry_button_background" />
+            <solid android:color="?attr/colorPrimary" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape>
             <corners android:radius="2dp" />
-            <solid android:color="@color/retry_button_background" />
+            <solid android:color="?attr/colorPrimaryDark" />
             <stroke android:color="@color/retry_button_background_stroke" />
         </shape>
     </item>
