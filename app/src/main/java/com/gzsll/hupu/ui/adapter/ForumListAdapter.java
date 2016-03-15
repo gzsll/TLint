@@ -56,10 +56,12 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
 
 
     private List<Forum> forums = new ArrayList<>();
+    private String forumId;
 
 
-    public void bind(List<Forum> forums) {
+    public void bind(List<Forum> forums, String forumId) {
         this.forums = forums;
+        this.forumId = forumId;
         notifyDataSetChanged();
     }
 
@@ -76,6 +78,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
             holder.ivIcon.setImageURI(Uri.parse(forum.getLogo()));
         }
         holder.tvName.setText(forum.getName());
+        holder.swipeLayout.setSwipeEnabled(forumId.equals("0"));
     }
 
     @Override

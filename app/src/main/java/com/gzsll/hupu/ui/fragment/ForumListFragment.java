@@ -99,7 +99,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
 
     @Override
     public void renderForumList(List<Forum> forumList) {
-        mAdapter.bind(forumList);
+        mAdapter.bind(forumList, forumId);
     }
 
 
