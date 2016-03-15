@@ -8,6 +8,9 @@ import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.view.ContentView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -38,6 +41,7 @@ public class ContentPresenter extends Presenter<ContentView> {
     private String pid;
     public int totalPage;
     public int currentPage = 1;
+    private List<String> urls = new ArrayList<>();
 
 
     public void onThreadInfoReceive(String tid, String fid, String pid, int page) {
@@ -57,9 +61,11 @@ public class ContentPresenter extends Presenter<ContentView> {
                         view.onError(threadSchemaInfo.error.text);
                     } else {
                         totalPage = threadSchemaInfo.pageSize;
-                        view.renderContent(threadSchemaInfo.url);
+                        urls = createPageList(threadSchemaInfo.url, threadSchemaInfo.page, threadSchemaInfo.pageSize);
+                        view.renderContent(threadSchemaInfo.url, urls);
                         view.isCollected(threadSchemaInfo.isCollected == 1);
                         view.renderShare(threadSchemaInfo.share.weibo, threadSchemaInfo.share.url);
+                        view.hideLoading();
                     }
                 } else {
                     view.onError("加载失败");
@@ -72,6 +78,17 @@ public class ContentPresenter extends Presenter<ContentView> {
             }
         });
     }
+
+
+    private List<String> createPageList(String url, int page, int pageSize) {
+        List<String> urls = new ArrayList<>();
+        for (int i = 1; i <= pageSize; i++) {
+            String newUrl = url.replace("page=" + page, "page=" + i);
+            urls.add(newUrl);
+        }
+        return urls;
+    }
+
 
     public void onReload() {
         loadContent(currentPage);
@@ -87,7 +104,7 @@ public class ContentPresenter extends Presenter<ContentView> {
         if (currentPage >= totalPage) {
             currentPage = totalPage;
         }
-        loadContent(currentPage);
+        view.renderContent(urls.get(currentPage - 1), urls);
     }
 
     public void onPagePre() {
@@ -95,11 +112,11 @@ public class ContentPresenter extends Presenter<ContentView> {
         if (currentPage <= 1) {
             currentPage = 1;
         }
-        loadContent(currentPage);
+        view.renderContent(urls.get(currentPage - 1), urls);
     }
 
     public void onPageSelected(int page) {
-        loadContent(page);
+        view.renderContent(urls.get(page - 1), urls);
     }
 
 
@@ -156,6 +173,8 @@ public class ContentPresenter extends Presenter<ContentView> {
 
     @Override
     public void detachView() {
-
+        urls.clear();
+        totalPage = 1;
+        currentPage = 1;
     }
 }

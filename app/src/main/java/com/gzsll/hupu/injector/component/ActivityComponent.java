@@ -7,6 +7,7 @@ import com.gzsll.hupu.injector.module.ActivityModule;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.activity.AccountActivity;
 import com.gzsll.hupu.ui.activity.BrowserActivity;
+import com.gzsll.hupu.ui.activity.ContentActivity;
 import com.gzsll.hupu.ui.activity.GalleryActivity;
 import com.gzsll.hupu.ui.activity.ImagePreviewActivity;
 import com.gzsll.hupu.ui.activity.LoginActivity;
@@ -54,6 +55,8 @@ public interface ActivityComponent {
 
     //
     void inject(SplashActivity mSplashActivity);
+
+    void inject(ContentActivity mActivity);
 
 
 }

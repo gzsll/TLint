@@ -124,8 +124,7 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
 
 
     public void onReload() {
-        loadRecommendList(false);
-
+        onRecommendThreadsReceive();
     }
 
     public void onLoadMore() {

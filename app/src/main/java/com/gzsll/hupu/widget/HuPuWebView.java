@@ -9,6 +9,8 @@ import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -151,7 +153,17 @@ public class HuPuWebView extends WebView {
             if (!view.getSettings().getLoadsImagesAutomatically()) {
                 view.getSettings().setLoadsImagesAutomatically(true);
             }
+            if (callBack != null) {
+                callBack.onFinish();
+            }
+        }
 
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            if (callBack != null) {
+                callBack.onError();
+            }
         }
     }
 
@@ -215,9 +227,6 @@ public class HuPuWebView extends WebView {
                 }
                 String js = "javascript:HupuBridge._handle_('" + successcb + "','" + jSONObject.toString() + "','null','null');";
                 loadUrl(js);
-                if (callBack != null) {
-                    callBack.onReady();
-                }
                 break;
             case "hupu.ui.updatebbspager":
                 int page = data.getInt("page");
@@ -300,9 +309,11 @@ public class HuPuWebView extends WebView {
 
     public interface HuPuWebViewCallBack {
 
-        void onReady();
+        void onFinish();
 
         void onUpdatePager(int page, int total);
+
+        void onError();
 
     }
 
