@@ -2,7 +2,7 @@ package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.Message;
-import com.gzsll.hupu.bean.MessageResult;
+import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.view.MessageListView;
 
@@ -38,9 +38,9 @@ public class MessageListPresenter extends Presenter<MessageListView> {
     private List<Message> messages = new ArrayList<>();
 
     public void onMessageListReceive() {
-        mForumApi.getMessageList(lastTid, page).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageResult>() {
+        mForumApi.getMessageList(lastTid, page).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageData>() {
             @Override
-            public void call(MessageResult result) {
+            public void call(MessageData result) {
 
                 if (result != null && result.status == 200) {
                     messages.addAll(result.result.list);

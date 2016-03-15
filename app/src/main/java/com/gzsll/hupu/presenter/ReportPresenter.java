@@ -1,7 +1,7 @@
 package com.gzsll.hupu.presenter;
 
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.BaseResult;
+import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.view.ReportView;
 
@@ -30,9 +30,9 @@ public class ReportPresenter extends Presenter<ReportView> {
 
     public void submitReports(String tid, String pid, String type, String content) {
         view.showLoading();
-        mForumApi.submitReports(tid, pid, type, content).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseResult>() {
+        mForumApi.submitReports(tid, pid, type, content).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
             @Override
-            public void call(BaseResult result) {
+            public void call(BaseData result) {
                 view.hideLoading();
                 if (result.status == 200) {
                     view.reportSuccess();

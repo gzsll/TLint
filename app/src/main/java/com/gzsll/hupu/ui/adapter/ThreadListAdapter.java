@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gzsll.hupu.R;
@@ -62,7 +61,6 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
         Thread thread = threads.get(position);
         holder.thread = thread;
         holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTitleSize());
-        holder.rlLight.setVisibility(View.GONE);
         if (thread.lightReply > 0) {
             holder.tvLight.setText(String.valueOf(thread.lightReply));
             holder.tvLight.setVisibility(View.VISIBLE);
@@ -71,12 +69,41 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
         }
         holder.tvReply.setText(thread.replies);
         holder.tvTitle.setText(thread.title);
-        holder.rlUser.setVisibility(View.GONE);
         holder.tvSingleTime.setVisibility(View.VISIBLE);
         holder.tvSummary.setVisibility(View.GONE);
         holder.grid.setVisibility(View.GONE);
         holder.tvSingleTime.setText(thread.time);
     }
+
+//    protected void buildMultiPic(final GroupThread thread, final GridLayout gridLayout) {
+//        if (mSettingPrefHelper.getLoadPic()) {
+//            gridLayout.setVisibility(View.VISIBLE);
+//            final int count = thread.getCover().size();
+//            final List<String> pics = new ArrayList<String>();
+//            for (int i = 0; i < count; i++) {
+//                SimpleDraweeView imageView = (SimpleDraweeView) gridLayout.getChildAt(i);
+//                imageView.setVisibility(View.VISIBLE);
+//                final Cover threadPic = thread.getCover().get(i);
+//                pics.add(threadPic.getUrl());
+//                imageView.setImageURI(Uri.parse(mSettingPrefHelper.getLoadOriginPic() ? threadPic.getUrl() : threadPic.getUrlSmall()));
+//                imageView.setOnClickListener(new OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        ImagePreviewActivity_.intent(mActivity).extraPic(threadPic.getUrl()).extraPics(pics).start();
+//                    }
+//                });
+//            }
+//
+//            if (count < 9) {
+//                for (int i = 8; i > count - 1; i--) {
+//                    SimpleDraweeView pic = (SimpleDraweeView) gridLayout.getChildAt(i);
+//                    pic.setVisibility(View.GONE);
+//                }
+//            }
+//        } else {
+//            gridLayout.setVisibility(GONE);
+//        }
+//    }
 
     @Override
     public int getItemCount() {
@@ -85,10 +112,7 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.rlLight)
-        RelativeLayout rlLight;
-        @Bind(R.id.rlUser)
-        RelativeLayout rlUser;
+
         @Bind(R.id.tvTitle)
         TextView tvTitle;
         @Bind(R.id.tvSummary)
@@ -101,6 +125,7 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
         TextView tvReply;
         @Bind(R.id.tvLight)
         TextView tvLight;
+
         Thread thread;
 
 

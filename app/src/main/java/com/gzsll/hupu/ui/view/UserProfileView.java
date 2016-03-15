@@ -1,6 +1,6 @@
 package com.gzsll.hupu.ui.view;
 
-import com.gzsll.hupu.bean.UserData;
+import com.gzsll.hupu.bean.UserResult;
 import com.gzsll.hupu.ui.BaseView;
 
 /**
@@ -8,7 +8,7 @@ import com.gzsll.hupu.ui.BaseView;
  */
 public interface UserProfileView extends BaseView {
 
-    void renderUserData(UserData userData);
+    void renderUserData(UserResult userResult);
 
     void showLoading();
 

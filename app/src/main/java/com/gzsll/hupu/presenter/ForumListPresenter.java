@@ -71,11 +71,11 @@ public class ForumListPresenter extends Presenter<ForumListView> {
     }
 
     private Observable<List<Forum>> loadUserForums() {
-        return mForumApi.getMyForums().flatMap(new Func1<MyForumsResult, Observable<List<Forum>>>() {
+        return mForumApi.getMyForums().flatMap(new Func1<MyForumsData, Observable<List<Forum>>>() {
             @Override
-            public Observable<List<Forum>> call(MyForumsResult result) {
+            public Observable<List<Forum>> call(MyForumsData result) {
                 if (result != null && result.data != null) {
-                    MyForumsData data = result.data;
+                    MyForumsResult data = result.data;
                     for (Forum forum : data.sub) {
                         forum.setForumId(data.fid);
                         forum.setCategoryName(data.name);
@@ -100,11 +100,11 @@ public class ForumListPresenter extends Presenter<ForumListView> {
     }
 
     private Observable<List<Forum>> loadAllForums(final String forumId) {
-        return mForumApi.getForums().flatMap(new Func1<ForumsResult, Observable<List<Forum>>>() {
+        return mForumApi.getForums().flatMap(new Func1<ForumsData, Observable<List<Forum>>>() {
             @Override
-            public Observable<List<Forum>> call(ForumsResult result) {
+            public Observable<List<Forum>> call(ForumsData result) {
                 if (result != null) {
-                    for (ForumsData data : result.data) {
+                    for (ForumsResult data : result.data) {
                         if (data.fid.equals(forumId)) {
                             List<Forum> forumList = new ArrayList<>();
                             for (Forums forums : data.sub) {

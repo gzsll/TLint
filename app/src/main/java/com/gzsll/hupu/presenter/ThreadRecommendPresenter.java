@@ -50,14 +50,14 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
 
 
     private void loadRecommendList(final boolean clear) {
-        mSubscription = mForumApi.getRecommendThreadList(lastTid, lastTamp).map(new Func1<ThreadListResult, List<Thread>>() {
+        mSubscription = mForumApi.getRecommendThreadList(lastTid, lastTamp).map(new Func1<ThreadListData, List<Thread>>() {
             @Override
-            public List<Thread> call(ThreadListResult result) {
+            public List<Thread> call(ThreadListData result) {
                 if (clear) {
                     threads.clear();
                 }
                 if (result != null && result.result != null) {
-                    ThreadListData data = result.result;
+                    ThreadListResult data = result.result;
                     lastTamp = data.stamp;
                     return addThreads(data.data);
                 }

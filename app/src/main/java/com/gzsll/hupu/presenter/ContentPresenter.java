@@ -3,7 +3,7 @@ package com.gzsll.hupu.presenter;
 import android.content.Context;
 
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.CollectResult;
+import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.view.ContentView;
@@ -122,12 +122,12 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void addCollect() {
-        mForumApi.addCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectResult>() {
+        mForumApi.addCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectData>() {
             @Override
-            public void call(CollectResult collectResult) {
-                if (collectResult != null && collectResult.result != null) {
-                    mToastHelper.showToast(collectResult.result.msg);
-                    view.isCollected(collectResult.result.status == 200);
+            public void call(CollectData collectData) {
+                if (collectData != null && collectData.result != null) {
+                    mToastHelper.showToast(collectData.result.msg);
+                    view.isCollected(collectData.result.status == 200);
                 }
             }
         }, new Action1<Throwable>() {
@@ -140,12 +140,12 @@ public class ContentPresenter extends Presenter<ContentView> {
 
 
     public void delCollect() {
-        mForumApi.delCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectResult>() {
+        mForumApi.delCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectData>() {
             @Override
-            public void call(CollectResult collectResult) {
-                if (collectResult != null && collectResult.result != null) {
-                    mToastHelper.showToast(collectResult.result.msg);
-                    view.isCollected(collectResult.result.status != 200);
+            public void call(CollectData collectData) {
+                if (collectData != null && collectData.result != null) {
+                    mToastHelper.showToast(collectData.result.msg);
+                    view.isCollected(collectData.result.status != 200);
                 }
             }
         }, new Action1<Throwable>() {

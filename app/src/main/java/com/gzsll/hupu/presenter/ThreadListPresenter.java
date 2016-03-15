@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.AttendStatusResult;
+import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
@@ -110,14 +110,14 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     private void loadThreadList(String last, final boolean clear) {
-        mSubscription = mForumApi.getThreadsList(fid, last, 20, lastTamp, type, list).map(new Func1<ThreadListResult, List<Thread>>() {
+        mSubscription = mForumApi.getThreadsList(fid, last, 20, lastTamp, type, list).map(new Func1<ThreadListData, List<Thread>>() {
             @Override
-            public List<Thread> call(ThreadListResult result) {
+            public List<Thread> call(ThreadListData result) {
                 if (clear) {
                     threads.clear();
                 }
                 if (result != null && result.result != null) {
-                    ThreadListData data = result.result;
+                    ThreadListResult data = result.result;
                     lastTamp = data.stamp;
                     return addThreads(data.data);
                 }
@@ -260,12 +260,12 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     private void getAttendStatus() {
-        mForumApi.getAttentionStatus(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+        mForumApi.getAttentionStatus(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusData>() {
             @Override
-            public void call(AttendStatusResult attendStatusResult) {
-                if (attendStatusResult != null && attendStatusResult.status == 200) {
-                    view.renderThreadInfo(attendStatusResult.forumInfo);
-                    view.attendStatus(attendStatusResult.attendStatus == 1);
+            public void call(AttendStatusData attendStatusData) {
+                if (attendStatusData != null && attendStatusData.status == 200) {
+                    view.renderThreadInfo(attendStatusData.forumInfo);
+                    view.attendStatus(attendStatusData.attendStatus == 1);
                 }
             }
         }, new Action1<Throwable>() {
@@ -278,9 +278,9 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
 
     public void addAttention() {
-        mForumApi.addAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+        mForumApi.addAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusData>() {
             @Override
-            public void call(AttendStatusResult result) {
+            public void call(AttendStatusData result) {
                 if (result.status == 200 && result.result == 1) {
                     mToastHelper.showToast("添加关注成功");
                     view.attendStatus(result.status == 200);
@@ -295,9 +295,9 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     }
 
     public void delAttention() {
-        mForumApi.delAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+        mForumApi.delAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusData>() {
             @Override
-            public void call(AttendStatusResult result) {
+            public void call(AttendStatusData result) {
                 if (result.status == 200 && result.result == 1) {
                     mToastHelper.showToast("取消关注成功");
                     view.attendStatus(result.status != 200);

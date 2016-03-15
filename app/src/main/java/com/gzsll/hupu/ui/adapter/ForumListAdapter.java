@@ -13,7 +13,7 @@ import com.daimajia.swipe.SwipeLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.AttendStatusResult;
+import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.otto.DelForumAttentionEvent;
@@ -133,9 +133,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
         @OnClick(R.id.tvDel)
         void tvDelClick() {
             swipeLayout.close();
-            mForumApi.delAttention(forum.getFid()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusResult>() {
+            mForumApi.delAttention(forum.getFid()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusData>() {
                 @Override
-                public void call(AttendStatusResult result) {
+                public void call(AttendStatusData result) {
                     if (result.status == 200 && result.result == 1) {
                         mToastHelper.showToast("取消关注成功");
                         mBus.post(new DelForumAttentionEvent(forum.getFid()));

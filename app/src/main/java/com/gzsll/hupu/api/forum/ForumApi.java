@@ -3,13 +3,13 @@ package com.gzsll.hupu.api.forum;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.gzsll.hupu.bean.AttendStatusResult;
-import com.gzsll.hupu.bean.BaseResult;
-import com.gzsll.hupu.bean.CollectResult;
-import com.gzsll.hupu.bean.ForumsResult;
-import com.gzsll.hupu.bean.MessageResult;
-import com.gzsll.hupu.bean.MyForumsResult;
-import com.gzsll.hupu.bean.ThreadListResult;
+import com.gzsll.hupu.bean.AttendStatusData;
+import com.gzsll.hupu.bean.BaseData;
+import com.gzsll.hupu.bean.CollectData;
+import com.gzsll.hupu.bean.ForumsData;
+import com.gzsll.hupu.bean.MessageData;
+import com.gzsll.hupu.bean.MyForumsData;
+import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.components.retrofit.GsonConverterFactory;
 import com.gzsll.hupu.components.storage.UserStorage;
@@ -49,19 +49,19 @@ public class ForumApi {
     }
 
 
-    public Observable<ForumsResult> getForums() {
+    public Observable<ForumsData> getForums() {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         String sign = mRequestHelper.getRequestSign(params);
         return mForumService.getForums(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<MyForumsResult> getMyForums() {
+    public Observable<MyForumsData> getMyForums() {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         String sign = mRequestHelper.getRequestSign(params);
         return mForumService.getMyForums(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<ThreadListResult> getThreadsList(String fid, String lastTid, int limit, String lastTamp, String type, List<String> list) {
+    public Observable<ThreadListData> getThreadsList(String fid, String lastTid, int limit, String lastTamp, String type, List<String> list) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
         params.put("lastTid", lastTid);
@@ -84,7 +84,7 @@ public class ForumApi {
     }
 
 
-    public Observable<AttendStatusResult> addAttention(String fid) {
+    public Observable<AttendStatusData> addAttention(String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
         params.put("uid", mUserStorage.getUid());
@@ -92,7 +92,7 @@ public class ForumApi {
         return mForumService.addAttention(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<AttendStatusResult> delAttention(String fid) {
+    public Observable<AttendStatusData> delAttention(String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
         params.put("uid", mUserStorage.getUid());
@@ -100,7 +100,7 @@ public class ForumApi {
         return mForumService.delAttention(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<AttendStatusResult> getAttentionStatus(String fid) {
+    public Observable<AttendStatusData> getAttentionStatus(String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
         params.put("uid", mUserStorage.getUid());
@@ -127,7 +127,7 @@ public class ForumApi {
     }
 
 
-    public Observable<BaseResult> addThread(String title, String content, String fid) {
+    public Observable<BaseData> addThread(String title, String content, String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("title", title);
         params.put("content", content);
@@ -137,7 +137,7 @@ public class ForumApi {
         return mForumService.addThread(params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseResult> addReplyByApp(String tid, String fid, String pid, String content) {
+    public Observable<BaseData> addReplyByApp(String tid, String fid, String pid, String content) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("tid", tid);
         params.put("content", content);
@@ -154,14 +154,14 @@ public class ForumApi {
     }
 
 
-    public Observable<CollectResult> addCollect(String tid) {
+    public Observable<CollectData> addCollect(String tid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("tid", tid);
         String sign = mRequestHelper.getRequestSign(params);
         return mForumService.addCollect(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<CollectResult> delCollect(String tid) {
+    public Observable<CollectData> delCollect(String tid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("tid", tid);
         String sign = mRequestHelper.getRequestSign(params);
@@ -180,7 +180,7 @@ public class ForumApi {
      * @param type
      * @param content
      */
-    public Observable<BaseResult> submitReports(String tid, String pid, String type, String content) {
+    public Observable<BaseData> submitReports(String tid, String pid, String type, String content) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         if (!TextUtils.isEmpty(tid)) {
             params.put("tid", tid);
@@ -194,7 +194,7 @@ public class ForumApi {
         return mForumService.submitReports(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<ThreadListResult> getRecommendThreadList(String lastTid, String lastTamp) {
+    public Observable<ThreadListData> getRecommendThreadList(String lastTid, String lastTamp) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("lastTid", lastTid);
         params.put("isHome", "1");
@@ -203,7 +203,7 @@ public class ForumApi {
         return mForumService.getRecommendThreadList(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<MessageResult> getMessageList(String lastTid, int page) {
+    public Observable<MessageData> getMessageList(String lastTid, int page) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("messageID", lastTid);
         params.put("page", String.valueOf(page));
@@ -212,7 +212,7 @@ public class ForumApi {
         return mForumService.getMessageList(sign, params).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseResult> delMessage(String id) {
+    public Observable<BaseData> delMessage(String id) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("id", id);
         String sign = mRequestHelper.getRequestSign(params);

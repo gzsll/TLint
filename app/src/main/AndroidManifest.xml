@@ -17,12 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="55f1993be0f55a0fd9004fbc" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="play" />
 
         <activity
             android:name=".ui.activity.SplashActivity"

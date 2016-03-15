@@ -1,8 +1,8 @@
 package com.gzsll.hupu.api.game;
 
-import com.gzsll.hupu.bean.LoginResult;
-import com.gzsll.hupu.bean.ThreadListResult;
-import com.gzsll.hupu.bean.UserResult;
+import com.gzsll.hupu.bean.LoginData;
+import com.gzsll.hupu.bean.ThreadListData;
+import com.gzsll.hupu.bean.UserData;
 
 import java.util.Map;
 
@@ -21,14 +21,14 @@ public interface GameService {
 
     @FormUrlEncoded
     @POST("user/loginUsernameEmail")
-    Observable<LoginResult> login(@FieldMap Map<String, String> params, @Query("client") String client);
+    Observable<LoginData> login(@FieldMap Map<String, String> params, @Query("client") String client);
 
 
     @FormUrlEncoded
     @POST("user/page")
-    Observable<UserResult> getUserInfo(@FieldMap Map<String, String> params, @Query("client") String client);
+    Observable<UserData> getUserInfo(@FieldMap Map<String, String> params, @Query("client") String client);
 
 
     @GET("collect/getThreadsCollectList")
-    Observable<ThreadListResult> getCollectList(@Query("sign") String sign, @QueryMap Map<String, String> params);
+    Observable<ThreadListData> getCollectList(@Query("sign") String sign, @QueryMap Map<String, String> params);
 }

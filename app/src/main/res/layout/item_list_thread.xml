@@ -23,8 +23,6 @@
             android:orientation="vertical">
 
 
-            <include layout="@layout/thread_userinfo_view" />
-
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"

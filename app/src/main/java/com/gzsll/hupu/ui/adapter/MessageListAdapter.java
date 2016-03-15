@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.BaseResult;
+import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.Message;
 import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.ui.activity.ContentActivity;
@@ -84,10 +84,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         @OnClick(R.id.listItem)
         void listItemClick() {
             ContentActivity.startActivity(mActivity, "", message.tid, message.pid, Integer.valueOf(message.page), "");
-            mForumApi.delMessage(message.id).subscribe(new Action1<BaseResult>() {
+            mForumApi.delMessage(message.id).subscribe(new Action1<BaseData>() {
                 @Override
-                public void call(BaseResult baseResult) {
-                    if (baseResult != null && baseResult.status == 200) {
+                public void call(BaseData baseData) {
+                    if (baseData != null && baseData.status == 200) {
                         messages.remove(message);
                         notifyDataSetChanged();
                         mBus.post(new MessageReadEvent());

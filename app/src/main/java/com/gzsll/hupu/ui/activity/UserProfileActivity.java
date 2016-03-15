@@ -3,7 +3,6 @@ package com.gzsll.hupu.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -21,7 +20,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.bean.UserData;
+import com.gzsll.hupu.bean.UserResult;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.presenter.UserProfilePresenter;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
@@ -115,23 +114,23 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
     }
 
     @Override
-    public void renderUserData(UserData userData) {
-        if (userData != null) {
-            setupViewPager(userData);
-            if (!TextUtils.isEmpty(userData.header)) {
-                ivPhoto.setImageURI(Uri.parse(userData.header));
+    public void renderUserData(UserResult userResult) {
+        if (userResult != null) {
+            setupViewPager(userResult);
+            if (!TextUtils.isEmpty(userResult.header)) {
+                ivPhoto.setImageURI(Uri.parse(userResult.header));
             }
-            ivGender.setImageResource(userData.gender == 0 ? R.drawable.list_male : R.drawable.list_female);
-            tvRegisterTime.setText(userData.reg_time_str);
-            setTitle(userData.nickname);
+            ivGender.setImageResource(userResult.gender == 0 ? R.drawable.list_male : R.drawable.list_female);
+            tvRegisterTime.setText(userResult.reg_time_str);
+            setTitle(userResult.nickname);
         }
     }
 
 
-    private void setupViewPager(UserData userData) {
+    private void setupViewPager(UserResult userResult) {
         MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
-        adapter.addFragment(BrowserFragment.newInstance(userData.bbs_msg_url, ""), String.format("发帖(%s)", userData.bbs_msg_count));
-        adapter.addFragment(BrowserFragment.newInstance(userData.bbs_post_url, ""), String.format("回帖(%s)", userData.bbs_post_count));
+        adapter.addFragment(BrowserFragment.newInstance(userResult.bbs_msg_url, ""), String.format("发帖(%s)", userResult.bbs_msg_count));
+        adapter.addFragment(BrowserFragment.newInstance(userResult.bbs_post_url, ""), String.format("回帖(%s)", userResult.bbs_post_count));
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
     }
@@ -195,10 +194,4 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

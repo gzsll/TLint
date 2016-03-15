@@ -11,7 +11,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.BaseResult;
+import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.UploadInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.ConfigHelper;
@@ -105,9 +105,9 @@ public class PostPresenter extends Presenter<PostView> {
                 buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
             }
         }
-        mForumApi.addReplyByApp(tid, fid, pid, buffer.toString()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseResult>() {
+        mForumApi.addReplyByApp(tid, fid, pid, buffer.toString()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
             @Override
-            public void call(BaseResult result) {
+            public void call(BaseData result) {
                 view.hideLoading();
                 if (result != null) {
                     mToastHelper.showToast(result.msg);
@@ -166,9 +166,9 @@ public class PostPresenter extends Presenter<PostView> {
                 buffer.append("<br><br><img src=\"" + url + "\"><br><br>");
             }
         }
-        mForumApi.addThread(title, buffer.toString(), fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseResult>() {
+        mForumApi.addThread(title, buffer.toString(), fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
             @Override
-            public void call(BaseResult result) {
+            public void call(BaseData result) {
                 view.hideLoading();
                 if (result != null) {
                     mToastHelper.showToast(result.msg);

@@ -27,7 +27,7 @@ import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.MessageResult;
+import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
@@ -132,9 +132,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initNotification() {
-        mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageResult>() {
+        mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageData>() {
             @Override
-            public void call(MessageResult result) {
+            public void call(MessageData result) {
                 if (result != null && result.status == 200) {
                     count = result.result.list.size();
                     invalidateOptionsMenu();

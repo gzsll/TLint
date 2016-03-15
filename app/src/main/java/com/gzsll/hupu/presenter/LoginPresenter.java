@@ -65,11 +65,11 @@ public class LoginPresenter extends Presenter<LoginView> {
 
     public void login(final String userName, final String passWord) {
         view.showLoading();
-        mSubscription = mGameApi.login(userName, mSecurityHelper.getMD5(passWord)).flatMap(new Func1<LoginResult, Observable<UserResult>>() {
+        mSubscription = mGameApi.login(userName, mSecurityHelper.getMD5(passWord)).flatMap(new Func1<LoginData, Observable<UserData>>() {
             @Override
-            public Observable<UserResult> call(LoginResult loginResult) {
-                if (loginResult != null && loginResult.is_login == 1) {
-                    LoginData data = loginResult.result;
+            public Observable<UserData> call(LoginData loginData) {
+                if (loginData != null && loginData.is_login == 1) {
+                    LoginResult data = loginData.result;
                     String cookie = "";
                     try {
                         cookie = URLDecoder.decode(mUserStorage.getCookie(), "UTF-8");
@@ -87,11 +87,11 @@ public class LoginPresenter extends Presenter<LoginView> {
                 }
                 return null;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UserResult>() {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UserData>() {
             @Override
-            public void call(UserResult userResult) {
-                if (userResult != null && userResult.result != null) {
-                    UserData data = userResult.result;
+            public void call(UserData userData) {
+                if (userData != null && userData.result != null) {
+                    UserResult data = userData.result;
                     user.setIcon(data.header);
                     user.setThreadUrl(data.bbs_msg_url);
                     user.setPostUrl(data.bbs_post_url);

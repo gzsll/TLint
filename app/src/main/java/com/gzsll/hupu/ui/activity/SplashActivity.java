@@ -5,7 +5,7 @@ import android.widget.FrameLayout;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.ChannelUtil;
+import com.gzsll.hupu.helper.ChannelHelper;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.umeng.analytics.AnalyticsConfig;
 
@@ -39,7 +39,7 @@ public class SplashActivity extends BaseActivity {
     public void initUiAndListener() {
         ButterKnife.bind(this);
         AnalyticsConfig.setAppkey(this, "55f1993be0f55a0fd9004fbc");
-        AnalyticsConfig.setChannel(ChannelUtil.getChannel(this));
+        AnalyticsConfig.setChannel(ChannelHelper.getChannel(this));
         if (mUserStorage.isLogin()) {
             new Handler().postDelayed(new Runnable() {
                 @Override

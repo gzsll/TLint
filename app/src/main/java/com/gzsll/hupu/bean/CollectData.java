@@ -1,10 +1,10 @@
 package com.gzsll.hupu.bean;
 
 /**
- * Created by sll on 2015/12/12.
+ * Created by sll on 2015/6/19.
  */
 public class CollectData {
-    public String msg;
+
     public int status;
-    public int data;
+    public CollectResult result;
 }

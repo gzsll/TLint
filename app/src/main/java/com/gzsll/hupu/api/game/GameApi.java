@@ -1,8 +1,8 @@
 package com.gzsll.hupu.api.game;
 
-import com.gzsll.hupu.bean.LoginResult;
-import com.gzsll.hupu.bean.ThreadListResult;
-import com.gzsll.hupu.bean.UserResult;
+import com.gzsll.hupu.bean.LoginData;
+import com.gzsll.hupu.bean.ThreadListData;
+import com.gzsll.hupu.bean.UserData;
 import com.gzsll.hupu.components.retrofit.GsonConverterFactory;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.RequestHelper;
@@ -36,7 +36,7 @@ public class GameApi {
         mGameService = retrofit.create(GameService.class);
     }
 
-    public Observable<LoginResult> login(String userName, String passWord) {
+    public Observable<LoginData> login(String userName, String passWord) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("username", userName);
         params.put("password", passWord);
@@ -46,7 +46,7 @@ public class GameApi {
 
     }
 
-    public Observable<UserResult> getUserInfo(String uid) {
+    public Observable<UserData> getUserInfo(String uid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("puid", uid);
         String sign = mRequestHelper.getRequestSign(params);
@@ -54,7 +54,7 @@ public class GameApi {
         return mGameService.getUserInfo(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
     }
 
-    public Observable<ThreadListResult> getCollectList(int page) {
+    public Observable<ThreadListData> getCollectList(int page) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("page", String.valueOf(page));
         String sign = mRequestHelper.getRequestSign(params);

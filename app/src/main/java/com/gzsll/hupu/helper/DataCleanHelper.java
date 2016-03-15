@@ -86,7 +86,7 @@ public class DataCleanHelper {
         cleanFiles();
     }
 
-    public void cleadAPplicationCache() {
+    public void cleanApplicationCache() {
         cleanInternalCache();
         cleanExternalCache();
         cleanFiles();

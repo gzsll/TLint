@@ -46,14 +46,14 @@ public class ThreadCollectPresenter extends Presenter<ThreadCollectView> {
 
     private void loadCollectList(final int page) {
         this.page = page;
-        mSubscription = mGameApi.getCollectList(page).map(new Func1<ThreadListResult, List<Thread>>() {
+        mSubscription = mGameApi.getCollectList(page).map(new Func1<ThreadListData, List<Thread>>() {
             @Override
-            public List<Thread> call(ThreadListResult result) {
+            public List<Thread> call(ThreadListData result) {
                 if (page == 1) {
                     threads.clear();
                 }
                 if (result != null && result.result != null) {
-                    ThreadListData data = result.result;
+                    ThreadListResult data = result.result;
                     return addThreads(data.data);
                 }
                 return null;

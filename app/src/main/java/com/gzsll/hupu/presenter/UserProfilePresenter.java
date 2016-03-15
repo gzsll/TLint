@@ -33,20 +33,20 @@ public class UserProfilePresenter extends Presenter<UserProfileView> {
 
     public void receiveUserInfo(String uid) {
         view.showLoading();
-        mSubscription = mGameApi.getUserInfo(uid).map(new Func1<UserResult, UserData>() {
+        mSubscription = mGameApi.getUserInfo(uid).map(new Func1<UserData, UserResult>() {
             @Override
-            public UserData call(UserResult userResult) {
-                if (userResult != null) {
-                    return userResult.result;
+            public UserResult call(UserData userData) {
+                if (userData != null) {
+                    return userData.result;
                 }
                 return null;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UserData>() {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UserResult>() {
             @Override
-            public void call(UserData userData) {
+            public void call(UserResult userResult) {
                 view.hideLoading();
-                if (userData != null) {
-                    view.renderUserData(userData);
+                if (userResult != null) {
+                    view.renderUserData(userResult);
                 } else {
                     view.showError();
                 }

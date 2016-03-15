@@ -6,5 +6,7 @@ import java.util.ArrayList;
  * Created by sll on 2016/3/8.
  */
 public class ForumsResult {
-    public ArrayList<ForumsData> data;
+    public String fid;
+    public String name;
+    public ArrayList<Forums> sub;
 }

@@ -1,7 +1,7 @@
 package com.gzsll.hupu.api.login;
 
 
-import com.gzsll.hupu.bean.CookieResult;
+import com.gzsll.hupu.bean.CookieData;
 import com.gzsll.hupu.components.retrofit.GsonConverterFactory;
 
 import okhttp3.OkHttpClient;
@@ -27,7 +27,7 @@ public class CookieApi {
     }
 
 
-    public Observable<CookieResult> login(String userName, String passWord) {
+    public Observable<CookieData> login(String userName, String passWord) {
         return mCookieService.login(userName, passWord).subscribeOn(Schedulers.io());
     }
 }

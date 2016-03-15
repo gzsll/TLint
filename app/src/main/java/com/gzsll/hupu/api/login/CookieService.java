@@ -1,6 +1,6 @@
 package com.gzsll.hupu.api.login;
 
-import com.gzsll.hupu.bean.CookieResult;
+import com.gzsll.hupu.bean.CookieData;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -14,5 +14,5 @@ public interface CookieService {
 
     @FormUrlEncoded
     @POST("member.action")
-    Observable<CookieResult> login(@Field("username") String username, @Field("password") String password);
+    Observable<CookieData> login(@Field("username") String username, @Field("password") String password);
 }

@@ -3,7 +3,7 @@ package com.gzsll.hupu.bean;
 /**
  * Created by sll on 2015/8/22.
  */
-public class BaseResult {
+public class BaseData {
 
 
     /**
