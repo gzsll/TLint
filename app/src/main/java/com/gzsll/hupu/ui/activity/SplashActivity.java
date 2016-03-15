@@ -45,6 +45,7 @@ public class SplashActivity extends BaseActivity {
                 @Override
                 public void run() {
                     MainActivity.startActivity(SplashActivity.this);
+                    finish();
                 }
             }, 2000);
         } else {
