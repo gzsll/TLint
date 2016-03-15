@@ -53,6 +53,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (theme > 0)
             setTheme(theme);
         super.onCreate(savedInstanceState);
+        setTranslucentStatus(isApplyStatusBarTranslucency());
+        setSystemBarTintEnabled(isApplyKitKatTranslucency());
         setContentView(initContentView());
         initInjector();
         initUiAndListener();
