@@ -39,6 +39,8 @@ public class UserStorage {
             mSettingPrefHelper.setLoginUid("");
         }
         user = null;
+        cookie = "";
+        token = "";
     }
 
     public boolean isLogin() {

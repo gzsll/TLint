@@ -8,6 +8,8 @@ import java.util.Map;
  */
 public class Constants {
 
+    public static String Cookie = "";
+
     public static final int TYPE_COMMENT = 1001;
     public static final int TYPE_FEEDBACK = 1002;
     public static final int TYPE_AT = 1003;

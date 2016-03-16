@@ -32,6 +32,7 @@ import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.otto.AccountChangeEvent;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.ui.BaseActivity;
@@ -128,6 +129,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 ivIcon.setImageURI(Uri.parse(user.getIcon()));
             }
             tvName.setText(user.getUserName());
+        } else {
+            ivIcon.setImageURI(null);
+            tvName.setText("");
         }
     }
 
@@ -282,7 +286,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivCover:
-                UserProfileActivity.startActivity(this, mUserStorage.getUid());
+                if (mUserStorage.isLogin()) {
+                    UserProfileActivity.startActivity(this, mUserStorage.getUid());
+                } else {
+                    AccountActivity.startActivity(this);
+                }
                 drawerLayout.closeDrawers();
                 break;
             case R.id.llAccount:
@@ -328,6 +336,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Subscribe
     public void onLoginSuccessEvent(LoginSuccessEvent event) {
+        initUserInfo();
+    }
+
+    @Subscribe
+    public void onAccountChangeEvent(AccountChangeEvent event) {
         initUserInfo();
     }
 

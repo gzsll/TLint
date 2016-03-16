@@ -93,10 +93,12 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
                 @Override
                 public void onPositive(MaterialDialog dialog) {
                     mUserDao.delete(user);
-                    if (String.valueOf(user.getId()).equals(mUserStorage.getUid())) {
+                    if (String.valueOf(user.getUid()).equals(mUserStorage.getUid())) {
                         mUserStorage.logout();
                     }
                     mBus.post(new AccountChangeEvent());
+                    users.remove(user);
+                    notifyDataSetChanged();
                 }
             }).show();
         }

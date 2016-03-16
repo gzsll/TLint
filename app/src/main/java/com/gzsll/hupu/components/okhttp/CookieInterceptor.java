@@ -2,6 +2,7 @@ package com.gzsll.hupu.components.okhttp;
 
 import android.text.TextUtils;
 
+import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.components.storage.UserStorage;
 
 import org.apache.log4j.Logger;
@@ -30,16 +31,16 @@ public class CookieInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
-        if (!TextUtils.isEmpty(mUserStorage.getCookie())) {
+        if (!TextUtils.isEmpty(mUserStorage.getCookie()) && !original.url().toString().contains("loginUsernameEmail")) {
             Request request = original.newBuilder().addHeader("Cookie", "u=" + URLEncoder.encode(mUserStorage.getCookie()) + ";").build();
             return chain.proceed(request);
         } else {
             for (String header : chain.proceed(original).headers("Set-Cookie")) {
                 if (header.startsWith("u=")) {
-                    String token = header.split(";")[0].substring(2);
-                    logger.debug("token:" + token);
-                    if (!TextUtils.isEmpty(token)) {
-                        mUserStorage.setCookie(token);
+                    String cookie = header.split(";")[0].substring(2);
+                    logger.debug("cookie:" + cookie);
+                    if (!TextUtils.isEmpty(cookie)) {
+                        Constants.Cookie = cookie;
                     }
                 }
             }

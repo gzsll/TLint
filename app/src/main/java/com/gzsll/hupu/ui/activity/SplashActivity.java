@@ -5,9 +5,13 @@ import android.widget.FrameLayout;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.db.User;
+import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.helper.ChannelHelper;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.umeng.analytics.AnalyticsConfig;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,6 +25,9 @@ public class SplashActivity extends BaseActivity {
 
     @Inject
     UserStorage mUserStorage;
+    @Inject
+    UserDao mUserDao;
+
     @Bind(R.id.splash)
     FrameLayout splash;
 
@@ -49,7 +56,12 @@ public class SplashActivity extends BaseActivity {
                 }
             }, 2000);
         } else {
-            LoginActivity.startAcitivity(this);
+            List<User> users = mUserDao.queryBuilder().list();
+            if (users.isEmpty()) {
+                LoginActivity.startAcitivity(this);
+            } else {
+                mUserStorage.login(users.get(0));
+            }
             finish();
         }
     }

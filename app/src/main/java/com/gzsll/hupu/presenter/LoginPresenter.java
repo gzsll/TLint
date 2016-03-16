@@ -1,5 +1,6 @@
 package com.gzsll.hupu.presenter;
 
+import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.api.login.CookieApi;
@@ -72,7 +73,7 @@ public class LoginPresenter extends Presenter<LoginView> {
                     LoginResult data = loginData.result;
                     String cookie = "";
                     try {
-                        cookie = URLDecoder.decode(mUserStorage.getCookie(), "UTF-8");
+                        cookie = URLDecoder.decode(Constants.Cookie, "UTF-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }

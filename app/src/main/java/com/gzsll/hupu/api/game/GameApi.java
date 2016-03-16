@@ -8,6 +8,7 @@ import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -37,7 +38,8 @@ public class GameApi {
     }
 
     public Observable<LoginData> login(String userName, String passWord) {
-        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("client", mRequestHelper.getDeviceId());
         params.put("username", userName);
         params.put("password", passWord);
         String sign = mRequestHelper.getRequestSign(params);
