@@ -22,7 +22,8 @@ import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.activity.BrowserActivity;
 import com.gzsll.hupu.ui.activity.ContentActivity;
-import com.gzsll.hupu.ui.activity.ImagePreviewActivity;
+import com.gzsll.hupu.ui.activity.LoginActivity;
+import com.gzsll.hupu.ui.activity.PictureActivity;
 import com.gzsll.hupu.ui.activity.PostActivity;
 import com.gzsll.hupu.ui.activity.ReportActivity;
 import com.gzsll.hupu.ui.activity.ThreadListActivity;
@@ -254,7 +255,7 @@ public class HuPuWebView extends WebView {
                     JSONObject image = images.getJSONObject(i);
                     extraPics.add(image.getString("url"));
                 }
-                ImagePreviewActivity.startActivity(getContext(), extraPics.get(index), extraPics);
+                PictureActivity.startActivity(getContext(), extraPics.get(index), extraPics);
                 break;
             case "hupu.ui.copy":
                 String copy = data.getString("content");
@@ -267,7 +268,8 @@ public class HuPuWebView extends WebView {
                 ReportActivity.startActivity(getContext(), reportTid, String.valueOf(reportPid));
                 break;
             case "hupu.user.login":
-
+                LoginActivity.startActivity(getContext());
+                mToastHelper.showToast("请先登录");
                 break;
         }
     }

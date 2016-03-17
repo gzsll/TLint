@@ -18,30 +18,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.UpdateAgent;
-import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.helper.SettingPrefHelper;
-import com.gzsll.hupu.otto.AccountChangeEvent;
-import com.gzsll.hupu.otto.LoginSuccessEvent;
-import com.gzsll.hupu.otto.MessageReadEvent;
+import com.gzsll.hupu.presenter.MainPresenter;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.fragment.BrowserFragment;
 import com.gzsll.hupu.ui.fragment.ForumListFragment;
 import com.gzsll.hupu.ui.fragment.ThreadCollectFragment;
 import com.gzsll.hupu.ui.fragment.ThreadRecommendFragment;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import com.gzsll.hupu.ui.view.MainView;
 
 import java.util.List;
 
@@ -49,13 +41,11 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by sll on 2016/3/9.
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, MainView {
 
     public static void startActivity(Context mContext) {
         Intent intent = new Intent(mContext, MainActivity.class);
@@ -79,11 +69,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Inject
     UserStorage mUserStorage;
     @Inject
-    UserDao mUserDao;
-    @Inject
-    Bus mBus;
-    @Inject
-    ForumApi mForumApi;
+    MainPresenter mPresenter;
 
 
     @Override
@@ -94,7 +80,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void initInjector() {
         mActivityComponent.inject(this);
-        mBus.register(this);
     }
 
     @Override
@@ -115,41 +100,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         drawerLayout.setDrawerListener(mDrawerToggle);
         setupDrawerContent();
         getSupportFragmentManager().beginTransaction().replace(R.id.content, ThreadRecommendFragment.newInstance()).commit();
-        initUserInfo();
-        initNotification();
+        mPresenter.attachView(this);
         if (mSettingPrefHelper.getAutoUpdate()) {
             mUpdateAgent.checkUpdate(this);
         }
-    }
-
-    private void initUserInfo() {
-        if (mUserStorage.isLogin()) {
-            User user = mUserStorage.getUser();
-            if (!TextUtils.isEmpty(user.getIcon())) {
-                ivIcon.setImageURI(Uri.parse(user.getIcon()));
-            }
-            tvName.setText(user.getUserName());
-        } else {
-            ivIcon.setImageURI(null);
-            tvName.setText("");
-        }
-    }
-
-    private void initNotification() {
-        mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageData>() {
-            @Override
-            public void call(MessageData result) {
-                if (result != null && result.status == 200) {
-                    count = result.result.list.size();
-                    invalidateOptionsMenu();
-                }
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-
-            }
-        });
     }
 
 
@@ -246,7 +200,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.action_notification:
-                MessageListActivity.startActivity(MainActivity.this);
+                mPresenter.clickNotification();
                 break;
 
         }
@@ -266,90 +220,57 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onBackPressed() {
-        if (isCanExit()) {
-            AppManager.getAppManager().AppExit(this);
-        }
+        mPresenter.exist();
     }
 
-    private long mExitTime = 0;
-
-    public boolean isCanExit() {
-        if (System.currentTimeMillis() - mExitTime > 2000) {
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-            mExitTime = System.currentTimeMillis();
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivCover:
-                if (mUserStorage.isLogin()) {
-                    UserProfileActivity.startActivity(this, mUserStorage.getUid());
-                } else {
-                    AccountActivity.startActivity(this);
-                }
+                mPresenter.clickCover();
                 drawerLayout.closeDrawers();
                 break;
             case R.id.llAccount:
-                showAccountMenu();
+                mPresenter.showAccountMenu();
                 break;
         }
-    }
-
-
-    private void showAccountMenu() {
-        final List<User> userList = mUserDao.queryBuilder().list();
-        for (User bean : userList) {
-            if (bean.getUid().equals(mUserStorage.getUid())) {
-                userList.remove(bean);
-                break;
-            }
-        }
-
-        final String[] items = new String[userList.size() + 1];
-        for (int i = 0; i < userList.size(); i++)
-            items[i] = userList.get(i).getUserName();
-        items[items.length - 1] = "账号管理";
-        new MaterialDialog.Builder(this).items(items).itemsCallback(new MaterialDialog.ListCallback() {
-            @Override
-            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                if (which == items.length - 1) {
-                    // 账号管理
-                    AccountActivity.startActivity(MainActivity.this);
-                } else {
-                    mUserStorage.login(userList.get(which));
-                    initUserInfo();
-                }
-            }
-        }).show();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBus.unregister(this);
+        mPresenter.detachView();
     }
 
-    @Subscribe
-    public void onLoginSuccessEvent(LoginSuccessEvent event) {
-        initUserInfo();
-    }
 
-    @Subscribe
-    public void onAccountChangeEvent(AccountChangeEvent event) {
-        initUserInfo();
-    }
-
-    @Subscribe
-    public void onMessageReadEvent(MessageReadEvent event) {
-        if (count >= 1) {
-            count--;
+    @Override
+    public void renderUserInfo(User user) {
+        if (user != null) {
+            if (!TextUtils.isEmpty(user.getIcon())) {
+                ivIcon.setImageURI(Uri.parse(user.getIcon()));
+            }
+            tvName.setText(user.getUserName());
+        } else {
+            ivIcon.setImageURI(null);
+            tvName.setText(null);
         }
+    }
+
+    @Override
+    public void renderAccountList(final List<User> users, final String[] items) {
+        new MaterialDialog.Builder(this).items(items).itemsCallback(new MaterialDialog.ListCallback() {
+            @Override
+            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                mPresenter.onAccountItemClick(which, users, items);
+            }
+        }).show();
+    }
+
+    @Override
+    public void renderNotification(int count) {
+        this.count = count;
         invalidateOptionsMenu();
     }
-
 }

@@ -48,7 +48,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.ImagePreviewActivity"
+            android:name=".ui.activity.PictureActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Pics" />
         <activity

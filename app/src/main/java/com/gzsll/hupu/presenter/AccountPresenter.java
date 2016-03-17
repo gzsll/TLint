@@ -36,7 +36,6 @@ public class AccountPresenter extends Presenter<AccountView> {
     @Override
     public void attachView(@NonNull AccountView view) {
         super.attachView(view);
-        view.showLoading();
         loadUserList();
     }
 
@@ -50,7 +49,6 @@ public class AccountPresenter extends Presenter<AccountView> {
             @Override
             public void call(List<User> users) {
                 view.renderUserList(users);
-                view.hideLoading();
             }
         });
     }

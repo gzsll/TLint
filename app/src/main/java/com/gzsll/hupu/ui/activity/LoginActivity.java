@@ -1,6 +1,6 @@
 package com.gzsll.hupu.ui.activity;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
@@ -29,9 +29,9 @@ import butterknife.ButterKnife;
 public class LoginActivity extends BaseSwipeBackActivity implements LoginView {
 
 
-    public static void startAcitivity(Activity mActivity) {
-        Intent intent = new Intent(mActivity, LoginActivity.class);
-        mActivity.startActivity(intent);
+    public static void startActivity(Context mContext) {
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        mContext.startActivity(intent);
     }
 
 

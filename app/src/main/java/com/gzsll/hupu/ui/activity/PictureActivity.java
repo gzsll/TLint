@@ -40,11 +40,11 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/3/10.
  */
-public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewPager.OnPageChangeListener {
+public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.OnPageChangeListener {
 
 
     public static void startActivity(Context mContext, String extraPic, ArrayList<String> extraPics) {
-        Intent intent = new Intent(mContext, ImagePreviewActivity.class);
+        Intent intent = new Intent(mContext, PictureActivity.class);
         intent.putExtra("extraPic", extraPic);
         intent.putExtra("extraPics", extraPics);
         mContext.startActivity(intent);

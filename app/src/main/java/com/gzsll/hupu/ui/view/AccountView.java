@@ -10,9 +10,6 @@ import java.util.List;
  */
 public interface AccountView extends BaseView {
 
-    void showLoading();
-
-    void hideLoading();
 
 
     void renderUserList(List<User> users);

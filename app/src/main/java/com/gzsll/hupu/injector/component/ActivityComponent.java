@@ -9,9 +9,9 @@ import com.gzsll.hupu.ui.activity.AccountActivity;
 import com.gzsll.hupu.ui.activity.BrowserActivity;
 import com.gzsll.hupu.ui.activity.ContentActivity;
 import com.gzsll.hupu.ui.activity.GalleryActivity;
-import com.gzsll.hupu.ui.activity.ImagePreviewActivity;
 import com.gzsll.hupu.ui.activity.LoginActivity;
 import com.gzsll.hupu.ui.activity.MainActivity;
+import com.gzsll.hupu.ui.activity.PictureActivity;
 import com.gzsll.hupu.ui.activity.PostActivity;
 import com.gzsll.hupu.ui.activity.ReportActivity;
 import com.gzsll.hupu.ui.activity.SplashActivity;
@@ -40,7 +40,7 @@ public interface ActivityComponent {
     void inject(BrowserActivity mBrowserActivity);
 
     //
-    void inject(ImagePreviewActivity mImagePreviewActivity);
+    void inject(PictureActivity mPictureActivity);
 
     //
     void inject(GalleryActivity mGalleryActivity);

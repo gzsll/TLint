@@ -58,7 +58,7 @@ public class SplashActivity extends BaseActivity {
         } else {
             List<User> users = mUserDao.queryBuilder().list();
             if (users.isEmpty()) {
-                LoginActivity.startAcitivity(this);
+                LoginActivity.startActivity(this);
             } else {
                 mUserStorage.login(users.get(0));
             }

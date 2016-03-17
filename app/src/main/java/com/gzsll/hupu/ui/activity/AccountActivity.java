@@ -88,21 +88,12 @@ public class AccountActivity extends BaseSwipeBackActivity implements AccountVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
-            LoginActivity.startAcitivity(this);
+            LoginActivity.startActivity(this);
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
 
     @Override
     public void renderUserList(List<User> users) {
