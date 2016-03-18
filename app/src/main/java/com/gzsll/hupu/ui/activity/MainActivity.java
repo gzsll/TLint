@@ -124,19 +124,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     case R.id.nav_football:
                     case R.id.nav_intel_football:
                     case R.id.nav_sport:
-                        Fragment mFragment;
+                        Fragment mFragment = null;
                         if (menuItem.getItemId() == R.id.nav_collect) {
-                            mFragment = ThreadCollectFragment.newInstance();
+                            if (mPresenter.isLogin()) {
+                                mFragment = ThreadCollectFragment.newInstance();
+                            } else {
+                                mPresenter.login();
+                            }
                         } else if (menuItem.getItemId() == R.id.nav_topic) {
-                            mFragment = BrowserFragment.newInstance(mUserStorage.getUser().getThreadUrl(), "我的帖子");
+                            if (mPresenter.isLogin()) {
+                                mFragment = BrowserFragment.newInstance(mUserStorage.getUser().getThreadUrl(), "我的帖子");
+                            } else {
+                                mPresenter.login();
+                            }
                         } else if (menuItem.getItemId() == R.id.nav_recommend) {
                             mFragment = ThreadRecommendFragment.newInstance();
                         } else {
-                            mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(menuItem.getItemId()));
+                            if (mPresenter.isLogin() || menuItem.getItemId() != R.id.nav_my) {
+                                mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(menuItem.getItemId()));
+                            } else {
+                                mPresenter.login();
+                            }
                         }
-                        menuItem.setChecked(true);
-                        setTitle(menuItem.getTitle());
-                        getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
+                        if (mFragment != null) {
+                            menuItem.setChecked(true);
+                            setTitle(menuItem.getTitle());
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
+                        }
                         break;
                     case R.id.nav_setting:
                         SettingActivity.startActivity(MainActivity.this);

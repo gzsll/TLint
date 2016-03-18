@@ -1,17 +1,15 @@
 package com.gzsll.hupu.ui.activity;
 
-import android.os.Handler;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.helper.ChannelHelper;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.umeng.analytics.AnalyticsConfig;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,23 +45,27 @@ public class SplashActivity extends BaseActivity {
         ButterKnife.bind(this);
         AnalyticsConfig.setAppkey(this, "55f1993be0f55a0fd9004fbc");
         AnalyticsConfig.setChannel(ChannelHelper.getChannel(this));
-        if (mUserStorage.isLogin()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MainActivity.startActivity(SplashActivity.this);
-                    finish();
-                }
-            }, 2000);
-        } else {
-            List<User> users = mUserDao.queryBuilder().list();
-            if (users.isEmpty()) {
-                LoginActivity.startActivity(this);
-            } else {
-                mUserStorage.login(users.get(0));
+        AlphaAnimation aa = new AlphaAnimation(0.7f, 1.0f);
+        aa.setDuration(2000);
+        splash.startAnimation(aa);
+        aa.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
             }
-            finish();
-        }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                MainActivity.startActivity(SplashActivity.this);
+                finish();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
     }
 
     @Override

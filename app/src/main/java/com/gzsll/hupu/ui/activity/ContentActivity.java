@@ -17,6 +17,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.DisplayHelper;
 import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.ResourceHelper;
@@ -108,6 +109,8 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
     Bus mBus;
     @Inject
     ThemeHelper mThemeHelper;
+    @Inject
+    UserStorage mUserStorage;
 
 
     private String fid;
@@ -293,7 +296,9 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
 
     @OnClick(R.id.floatingComment)
     void setFloatingCommentClick() {
-        PostActivity.startActivity(this, Constants.TYPE_COMMENT, fid, tid, "", title);
+        if (isLogin()) {
+            PostActivity.startActivity(this, Constants.TYPE_COMMENT, fid, tid, "", title);
+        }
         floatingMenu.toggle(true);
     }
 
@@ -309,18 +314,30 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
 
     @OnClick(R.id.floatingReport)
     void floatingReport() {
-        ReportActivity.startActivity(this, tid, "");
+        if (isLogin()) {
+            ReportActivity.startActivity(this, tid, "");
+        }
         floatingMenu.toggle(true);
     }
 
     @OnClick(R.id.floatingCollect)
     void floatingCollect() {
-        if (isCollect) {
-            mPresenter.delCollect();
-        } else {
-            mPresenter.addCollect();
+        if (isLogin()) {
+            if (isCollect) {
+                mPresenter.delCollect();
+            } else {
+                mPresenter.addCollect();
+            }
         }
         floatingMenu.toggle(true);
+    }
+
+    private boolean isLogin() {
+        if (!mUserStorage.isLogin()) {
+            LoginActivity.startActivity(this);
+            return false;
+        }
+        return true;
     }
 
     @OnClick(R.id.tvPre)

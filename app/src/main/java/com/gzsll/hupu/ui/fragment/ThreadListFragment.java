@@ -30,11 +30,13 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.presenter.ThreadListPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.activity.LoginActivity;
 import com.gzsll.hupu.ui.activity.PostActivity;
 import com.gzsll.hupu.ui.activity.ThreadListActivity;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
@@ -65,6 +67,8 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     ResourceHelper mResourceHelper;
     @Inject
     Activity mActivity;
+    @Inject
+    UserStorage mUserStorage;
 
 
     @Bind(R.id.backdrop)
@@ -276,18 +280,30 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @OnClick(R.id.floatingAttention)
     void floatingAttention() {
-        if (isAttention) {
-            mPresenter.delAttention();
-        } else {
-            mPresenter.addAttention();
+        if (isLogin()) {
+            if (isAttention) {
+                mPresenter.delAttention();
+            } else {
+                mPresenter.addAttention();
+            }
         }
         floatingMenu.toggle(true);
     }
 
     @OnClick(R.id.floatingPost)
     void floatingPost() {
-        PostActivity.startActivity(mActivity, Constants.TYPE_POST, fid, "", "", "");
+        if (isLogin()) {
+            PostActivity.startActivity(mActivity, Constants.TYPE_POST, fid, "", "", "");
+        }
         floatingMenu.toggle(true);
+    }
+
+    private boolean isLogin() {
+        if (!mUserStorage.isLogin()) {
+            LoginActivity.startActivity(mActivity);
+            return false;
+        }
+        return true;
     }
 
     @OnClick(R.id.floatingRefresh)

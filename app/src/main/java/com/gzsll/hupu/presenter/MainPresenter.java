@@ -104,7 +104,7 @@ public class MainPresenter extends Presenter<MainView> {
         }
     }
 
-    private void login() {
+    public void login() {
         LoginActivity.startActivity(mActivity);
         mToastHelper.showToast("请先登录");
     }
@@ -172,7 +172,7 @@ public class MainPresenter extends Presenter<MainView> {
         return true;
     }
 
-    private boolean isLogin() {
+    public boolean isLogin() {
         return mUserStorage.isLogin();
     }
 
