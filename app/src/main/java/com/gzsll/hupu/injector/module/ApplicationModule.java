@@ -112,8 +112,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    UserStorage provideUserStorage(SettingPrefHelper mSettingPrefHelper) {
-        return new UserStorage(mSettingPrefHelper);
+    UserStorage provideUserStorage(SettingPrefHelper mSettingPrefHelper, Context mContext) {
+        return new UserStorage(mSettingPrefHelper, mContext);
     }
 
 }

@@ -1,6 +1,10 @@
 package com.gzsll.hupu.components.storage;
 
 
+import android.content.Context;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 
@@ -11,10 +15,12 @@ import com.gzsll.hupu.helper.SettingPrefHelper;
 public class UserStorage {
 
     private SettingPrefHelper mSettingPrefHelper;
+    private Context mContext;
 
 
-    public UserStorage(SettingPrefHelper mSettingPrefHelper) {
+    public UserStorage(SettingPrefHelper mSettingPrefHelper, Context mContext) {
         this.mSettingPrefHelper = mSettingPrefHelper;
+        this.mContext = mContext;
     }
 
 
@@ -41,6 +47,14 @@ public class UserStorage {
         user = null;
         cookie = "";
         token = "";
+        removeCookie();
+    }
+
+    private void removeCookie() {
+        CookieSyncManager.createInstance(mContext);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
+        CookieSyncManager.getInstance().sync();
     }
 
     public boolean isLogin() {
