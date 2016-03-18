@@ -87,6 +87,16 @@
             android:name=".ui.activity.MessageListActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name="com.gzsll.hupu.service.MessageService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.gzsll.hupu.ACTION_GET" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

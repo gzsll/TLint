@@ -104,7 +104,6 @@ public class LoginActivity extends BaseSwipeBackActivity implements LoginView {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MainActivity.startActivity(LoginActivity.this);
                 finish();
             }
         }, 1500);

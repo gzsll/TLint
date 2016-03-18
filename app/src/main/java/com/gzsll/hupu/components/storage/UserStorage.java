@@ -2,11 +2,13 @@ package com.gzsll.hupu.components.storage;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.service.MessageService;
 
 /**
  * Created by sll on 2015/7/11.
@@ -37,6 +39,9 @@ public class UserStorage {
     public void login(User user) {
         this.user = user;
         mSettingPrefHelper.setLoginUid(user.getUid());
+        Intent intent = new Intent(mContext, MessageService.class);
+        intent.setAction(MessageService.ACTION_GET);
+        mContext.startService(intent);
     }
 
 
@@ -48,6 +53,9 @@ public class UserStorage {
         cookie = "";
         token = "";
         removeCookie();
+        Intent intent = new Intent(mContext, MessageService.class);
+        intent.setAction(MessageService.ACTION_CLOSE);
+        mContext.startService(intent);
     }
 
     private void removeCookie() {

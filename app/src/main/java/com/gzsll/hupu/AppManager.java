@@ -99,4 +99,8 @@ public class AppManager {
         } catch (Exception e) {
         }
     }
+
+    public boolean isAppExit() {
+        return activityStack == null || activityStack.isEmpty();
+    }
 }

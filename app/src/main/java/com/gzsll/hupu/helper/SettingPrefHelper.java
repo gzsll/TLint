@@ -95,6 +95,11 @@ public class SettingPrefHelper {
         return prefs.getBoolean("pLoadPic", true);
     }
 
+    public boolean getNotification() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("pNotification", true);
+    }
+
     public boolean getLoadOriginPic() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("pLoadOriginPic", false);

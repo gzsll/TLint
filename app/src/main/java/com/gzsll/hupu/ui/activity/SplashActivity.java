@@ -1,5 +1,6 @@
 package com.gzsll.hupu.ui.activity;
 
+import android.text.TextUtils;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
@@ -20,6 +21,8 @@ import butterknife.ButterKnife;
  * Created by sll on 2016/3/11.
  */
 public class SplashActivity extends BaseActivity {
+
+    public static final String ACTION_NOTIFICATION_MESSAGE = "com.gzsll.hupu.ACTION_NOTIFICATION_MESSAGE";
 
     @Inject
     UserStorage mUserStorage;
@@ -57,6 +60,10 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 MainActivity.startActivity(SplashActivity.this);
+                String action = getIntent().getAction();
+                if (TextUtils.equals(action, ACTION_NOTIFICATION_MESSAGE)) {
+                    MessageListActivity.startActivity(SplashActivity.this);
+                }
                 finish();
             }
 
