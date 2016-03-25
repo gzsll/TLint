@@ -12,8 +12,10 @@ import com.gzsll.hupu.presenter.ThreadRecommendPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.ui.view.ThreadRecommendView;
-import com.gzsll.hupu.widget.SwipyRefreshLayout;
-import com.gzsll.hupu.widget.SwipyRefreshLayoutDirection;
+import com.gzsll.hupu.widget.AutoLoadScrollListener;
+import com.yalantis.phoenix.PullToRefreshView;
+
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -25,7 +27,9 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/9.
  */
-public class ThreadRecommendFragment extends BaseFragment implements ThreadRecommendView, SwipyRefreshLayout.OnRefreshListener {
+public class ThreadRecommendFragment extends BaseFragment implements ThreadRecommendView, PullToRefreshView.OnRefreshListener {
+
+    private static Logger logger = Logger.getLogger(ThreadRecommendFragment.class.getSimpleName());
 
     public static ThreadRecommendFragment newInstance() {
         return new ThreadRecommendFragment();
@@ -43,7 +47,10 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
-    SwipyRefreshLayout refreshLayout;
+    PullToRefreshView refreshLayout;
+
+
+    private AutoLoadScrollListener mAutoLoadListener;
 
 
     @Override
@@ -53,7 +60,7 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
 
     @Override
     public int initContentView() {
-        return R.layout.base_list_layout;
+        return R.layout.base_phonix_list_layout;
     }
 
     @Override
@@ -66,9 +73,18 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
         ButterKnife.bind(this, view);
         mPresenter.attachView(this);
         refreshLayout.setOnRefreshListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
+        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore() {
+                mPresenter.onLoadMore();
+            }
+        };
+        recyclerView.addOnScrollListener(mAutoLoadListener);
+
     }
 
     @Override
@@ -89,6 +105,7 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
     @Override
     public void renderThreads(List<Thread> threads) {
         refreshLayout.setRefreshing(false);
+        mAutoLoadListener.setLoading(false);
         mAdapter.bind(threads);
     }
 
@@ -104,25 +121,12 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
         showEmpty(true);
     }
 
-    @Override
-    public void onScrollToTop() {
-        recyclerView.scrollToPosition(0);
-    }
 
     @Override
     public void onRefreshing(boolean refresh) {
         refreshLayout.setRefreshing(refresh);
     }
 
-
-    @Override
-    public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
-            mPresenter.onLoadMore();
-        } else {
-            mPresenter.onRefresh();
-        }
-    }
 
     @Override
     public void onReloadClicked() {
@@ -133,5 +137,10 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.onRefresh();
     }
 }

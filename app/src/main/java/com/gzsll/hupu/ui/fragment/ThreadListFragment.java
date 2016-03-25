@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -41,8 +42,7 @@ import com.gzsll.hupu.ui.activity.PostActivity;
 import com.gzsll.hupu.ui.activity.ThreadListActivity;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.ui.view.ThreadListView;
-import com.gzsll.hupu.widget.SwipyRefreshLayout;
-import com.gzsll.hupu.widget.SwipyRefreshLayoutDirection;
+import com.gzsll.hupu.widget.AutoLoadScrollListener;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ import butterknife.OnClick;
 /**
  * Created by sll on 2016/3/9.
  */
-public class ThreadListFragment extends BaseFragment implements ThreadListView, SwipyRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
+public class ThreadListFragment extends BaseFragment implements ThreadListView, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
 
     @Inject
     ThreadListPresenter mPresenter;
@@ -84,7 +84,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
-    SwipyRefreshLayout refreshLayout;
+    SwipeRefreshLayout refreshLayout;
     @Bind(R.id.floatingAttention)
     FloatingActionButton floatingAttention;
     @Bind(R.id.floatingPost)
@@ -97,6 +97,8 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     FloatingActionMenu floatingMenu;
     @Bind(R.id.frameLayout)
     FrameLayout frameLayout;
+
+    private AutoLoadScrollListener mAutoLoadListener;
 
 
     public static ThreadListFragment newInstance(String fid) {
@@ -144,6 +146,13 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
+        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore() {
+                mPresenter.onLoadMore();
+            }
+        };
+        recyclerView.addOnScrollListener(mAutoLoadListener);
     }
 
 
@@ -210,6 +219,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Override
     public void renderThreads(List<Thread> threads) {
         refreshLayout.setRefreshing(false);
+        mAutoLoadListener.setLoading(false);
         mAdapter.bind(threads);
     }
 
@@ -264,12 +274,8 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     }
 
     @Override
-    public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        if (direction == SwipyRefreshLayoutDirection.TOP) {
-            mPresenter.onRefresh();
-        } else {
-            mPresenter.onLoadMore();
-        }
+    public void onRefresh() {
+        mPresenter.onRefresh();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.gzsll.hupu.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,7 +13,6 @@ import com.gzsll.hupu.presenter.ForumListPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.adapter.ForumListAdapter;
 import com.gzsll.hupu.ui.view.ForumListView;
-import com.gzsll.hupu.widget.SwipyRefreshLayout;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
-    SwipyRefreshLayout refreshLayout;
+    SwipeRefreshLayout refreshLayout;
 
 
     private String forumId;
@@ -75,6 +75,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
         recyclerView.setAdapter(mAdapter);
         final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(mAdapter);
         recyclerView.addItemDecoration(headersDecor);
+        refreshLayout.setEnabled(false);
     }
 
     @Override

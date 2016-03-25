@@ -80,20 +80,22 @@ public class MainPresenter extends Presenter<MainView> {
 
 
     private void initNotification() {
-        mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageData>() {
-            @Override
-            public void call(MessageData result) {
-                if (result != null && result.status == 200) {
-                    count = result.result.list.size();
-                    view.renderNotification(count);
+        if (isLogin()) {
+            mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageData>() {
+                @Override
+                public void call(MessageData result) {
+                    if (result != null && result.status == 200) {
+                        count = result.result.list.size();
+                        view.renderNotification(count);
+                    }
                 }
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     public void clickNotification() {

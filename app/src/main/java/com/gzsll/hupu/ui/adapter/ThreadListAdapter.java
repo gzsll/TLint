@@ -1,6 +1,7 @@
 package com.gzsll.hupu.ui.adapter;
 
 import android.app.Activity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ import butterknife.OnClick;
 /**
  * Created by sll on 2016/3/9.
  */
-public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.ViewHolder> {
+public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter.ViewHolder> {
 
 
     @Inject
@@ -73,6 +74,7 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
         holder.tvSummary.setVisibility(View.GONE);
         holder.grid.setVisibility(View.GONE);
         holder.tvSingleTime.setText(thread.time);
+        showItemAnim(holder.cardView, position);
     }
 
 //    protected void buildMultiPic(final GroupThread thread, final GridLayout gridLayout) {
@@ -125,6 +127,8 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
         TextView tvReply;
         @Bind(R.id.tvLight)
         TextView tvLight;
+        @Bind(R.id.cardView)
+        CardView cardView;
 
         Thread thread;
 

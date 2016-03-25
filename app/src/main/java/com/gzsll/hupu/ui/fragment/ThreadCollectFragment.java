@@ -12,8 +12,8 @@ import com.gzsll.hupu.presenter.ThreadCollectPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.ui.view.ThreadCollectView;
-import com.gzsll.hupu.widget.SwipyRefreshLayout;
-import com.gzsll.hupu.widget.SwipyRefreshLayoutDirection;
+import com.gzsll.hupu.widget.AutoLoadScrollListener;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/11.
  */
-public class ThreadCollectFragment extends BaseFragment implements ThreadCollectView, SwipyRefreshLayout.OnRefreshListener {
+public class ThreadCollectFragment extends BaseFragment implements ThreadCollectView, PullToRefreshView.OnRefreshListener {
 
     public static ThreadCollectFragment newInstance() {
         return new ThreadCollectFragment();
@@ -41,7 +41,9 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
-    SwipyRefreshLayout refreshLayout;
+    PullToRefreshView refreshLayout;
+
+    private AutoLoadScrollListener mAutoLoadListener;
 
     @Override
     public void initInjector() {
@@ -50,7 +52,7 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
 
     @Override
     public int initContentView() {
-        return R.layout.base_list_layout;
+        return R.layout.base_phonix_list_layout;
     }
 
     @Override
@@ -66,6 +68,13 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
+        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore() {
+                mPresenter.onLoadMore();
+            }
+        };
+        recyclerView.addOnScrollListener(mAutoLoadListener);
     }
 
     @Override
@@ -85,6 +94,8 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
 
     @Override
     public void renderThreads(List<Thread> threads) {
+        refreshLayout.setRefreshing(false);
+        mAutoLoadListener.setLoading(false);
         mAdapter.bind(threads);
     }
 
@@ -111,12 +122,8 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
     }
 
     @Override
-    public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
-            mPresenter.onLoadMore();
-        } else {
-            mPresenter.onRefresh();
-        }
+    public void onRefresh() {
+        mPresenter.onRefresh();
     }
 
     @Override

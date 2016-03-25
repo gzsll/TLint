@@ -68,12 +68,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.gzsll.hupu.widget.SwipyRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/list_background_color"
-        app:direction="both"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
@@ -82,7 +81,7 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
 
-    </com.gzsll.hupu.widget.SwipyRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <FrameLayout
         android:id="@+id/frameLayout"

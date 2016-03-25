@@ -67,7 +67,6 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
             @Override
             public void call(List<Thread> threads) {
                 if (threads != null) {
-                    view.onRefreshing(false);
                     view.hideLoading();
                     view.renderThreads(threads);
                 } else {

@@ -14,7 +14,6 @@ import com.gzsll.hupu.presenter.AccountPresenter;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.adapter.AccountAdapter;
 import com.gzsll.hupu.ui.view.AccountView;
-import com.gzsll.hupu.widget.SwipyRefreshLayout;
 
 import java.util.List;
 
@@ -44,8 +43,6 @@ public class AccountActivity extends BaseSwipeBackActivity implements AccountVie
     Toolbar toolbar;
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
-    @Bind(R.id.refreshLayout)
-    SwipyRefreshLayout refreshLayout;
 
 
     @Override

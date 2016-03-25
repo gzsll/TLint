@@ -23,8 +23,6 @@ public interface ThreadRecommendView extends BaseView {
 
     void onEmpty();
 
-    void onScrollToTop();
-
 
     void onRefreshing(boolean refresh);
 }

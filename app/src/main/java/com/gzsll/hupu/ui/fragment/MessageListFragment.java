@@ -12,7 +12,8 @@ import com.gzsll.hupu.presenter.MessageListPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.adapter.MessageListAdapter;
 import com.gzsll.hupu.ui.view.MessageListView;
-import com.gzsll.hupu.widget.SwipyRefreshLayout;
+import com.gzsll.hupu.widget.AutoLoadScrollListener;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
 
@@ -24,12 +25,12 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/11.
  */
-public class MessageListFragment extends BaseFragment implements MessageListView {
+public class MessageListFragment extends BaseFragment implements MessageListView, PullToRefreshView.OnRefreshListener {
 
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
-    SwipyRefreshLayout refreshLayout;
+    PullToRefreshView refreshLayout;
 
 
     @Inject
@@ -39,6 +40,7 @@ public class MessageListFragment extends BaseFragment implements MessageListView
     @Inject
     Activity mActivity;
 
+    private AutoLoadScrollListener mAutoLoadListener;
 
     @Override
     public void initInjector() {
@@ -47,7 +49,7 @@ public class MessageListFragment extends BaseFragment implements MessageListView
 
     @Override
     public int initContentView() {
-        return R.layout.base_list_layout;
+        return R.layout.base_phonix_list_layout;
     }
 
     @Override
@@ -62,6 +64,13 @@ public class MessageListFragment extends BaseFragment implements MessageListView
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
+        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore() {
+                mPresenter.onLoadMore();
+            }
+        };
+        recyclerView.addOnScrollListener(mAutoLoadListener);
     }
 
     @Override
@@ -77,11 +86,12 @@ public class MessageListFragment extends BaseFragment implements MessageListView
     @Override
     public void hideLoading() {
         showContent(true);
-
     }
 
     @Override
     public void renderMessageList(List<Message> messages) {
+        mAutoLoadListener.setLoading(false);
+        refreshLayout.setRefreshing(false);
         mAdapter.bind(messages);
     }
 
@@ -94,5 +104,10 @@ public class MessageListFragment extends BaseFragment implements MessageListView
     public void onEmpty() {
         setEmptyText("暂无论坛消息");
         showEmpty(true);
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.onRefresh();
     }
 }
