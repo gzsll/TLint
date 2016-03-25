@@ -46,9 +46,10 @@
 
         <TextView
             android:id="@+id/tvFolder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:gravity="center"
             android:text="最近照片"
             android:textColor="#5f646e" />
 

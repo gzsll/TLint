@@ -59,23 +59,23 @@
             android:rowCount="3"
             android:useDefaultMargins="false">
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
-            <com.facebook.drawee.view.SimpleDraweeView style="@style/listViewMultiImageView" />
+            <ImageView style="@style/listViewMultiImageView" />
 
         </GridLayout>
 

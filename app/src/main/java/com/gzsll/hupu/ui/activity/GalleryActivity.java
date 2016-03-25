@@ -2,8 +2,6 @@ package com.gzsll.hupu.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -118,7 +116,6 @@ public class GalleryActivity extends BaseSwipeBackActivity implements GalleryVie
 
     private void createPopupFolderList() {
         mFolderPopupWindow = new ListPopupWindow(this);
-        mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mFolderPopupWindow.setAdapter(mFolderAdapter);
         mFolderPopupWindow.setContentWidth(ListPopupWindow.MATCH_PARENT);
         mFolderPopupWindow.setWidth(ListPopupWindow.MATCH_PARENT);

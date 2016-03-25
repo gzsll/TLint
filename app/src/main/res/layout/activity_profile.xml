@@ -35,17 +35,12 @@
                 app:layout_collapseMode="parallax" />
 
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <ImageView
                 android:id="@+id/ivPhoto"
                 android:layout_width="100dip"
                 android:layout_height="100dip"
                 android:layout_gravity="center|left"
-                android:layout_marginLeft="20dp"
-                app:failureImage="@drawable/icon_def_head"
-                app:failureImageScaleType="centerInside"
-                app:placeholderImage="@drawable/icon_def_head"
-                app:placeholderImageScaleType="fitCenter"
-                app:roundAsCircle="true" />
+                android:layout_marginLeft="20dp" />
 
             <TextView
                 android:id="@+id/tvRegisterTime"

@@ -31,31 +31,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginBottom="160dp"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginBottom="160dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <ImageView
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
-                app:actualImageScaleType="centerCrop" />
+                app:layout_collapseMode="parallax" />
 
 
             <TextView
                 android:id="@+id/tvSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="32dp"
-                android:layout_marginRight="64dp"
-                android:layout_marginLeft="48dp"
-                app:layout_collapseMode="parallax"
                 android:layout_gravity="bottom"
-                />
+                android:layout_marginBottom="32dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginRight="64dp"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

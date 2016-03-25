@@ -1,16 +1,15 @@
 package com.gzsll.hupu.ui.adapter;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
@@ -26,6 +25,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by sll on 2016/3/10.
@@ -63,9 +63,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = users.get(position);
         holder.user = user;
-        if (!TextUtils.isEmpty(user.getIcon())) {
-            holder.ivIcon.setImageURI(Uri.parse(user.getIcon()));
-        }
+        Glide.with(mActivity).load(user.getIcon()).bitmapTransform(new CropCircleTransformation(mActivity)).into(holder.ivIcon);
         holder.tvName.setText(user.getUserName());
         holder.tvDesc.setText(user.getRegisterTime());
     }
@@ -82,7 +80,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         @Bind(R.id.tvDesc)
         TextView tvDesc;
         @Bind(R.id.ivIcon)
-        SimpleDraweeView ivIcon;
+        ImageView ivIcon;
 
         User user;
 

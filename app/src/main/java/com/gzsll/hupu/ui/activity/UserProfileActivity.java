@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.UserResult;
 import com.gzsll.hupu.helper.SettingPrefHelper;
@@ -34,6 +34,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by sll on 2016/3/11.
@@ -45,7 +46,7 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
     @Bind(R.id.ivCover)
     ImageView ivCover;
     @Bind(R.id.ivPhoto)
-    SimpleDraweeView ivPhoto;
+    ImageView ivPhoto;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.tabs)
@@ -120,6 +121,7 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
             if (!TextUtils.isEmpty(userResult.header)) {
                 ivPhoto.setImageURI(Uri.parse(userResult.header));
             }
+            Glide.with(this).load(userResult.header).placeholder(R.drawable.icon_def_head).bitmapTransform(new CropCircleTransformation(this)).into(ivPhoto);
             ivGender.setImageResource(userResult.gender == 0 ? R.drawable.list_male : R.drawable.list_female);
             tvRegisterTime.setText(userResult.reg_time_str);
             setTitle(userResult.nickname);
