@@ -108,6 +108,7 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
             mCurrentItem = 0;
         }
         viewPager.setCurrentItem(mCurrentItem);
+        viewPager.setOffscreenPageLimit(extraPics.size() + 1);
         getSupportActionBar().setTitle((mCurrentItem + 1) + "/" + extraPics.size());
     }
 

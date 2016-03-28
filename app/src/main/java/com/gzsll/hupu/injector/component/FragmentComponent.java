@@ -9,6 +9,7 @@ import com.gzsll.hupu.ui.fragment.BrowserFragment;
 import com.gzsll.hupu.ui.fragment.ColorsDialogFragment;
 import com.gzsll.hupu.ui.fragment.ContentFragment;
 import com.gzsll.hupu.ui.fragment.ForumListFragment;
+import com.gzsll.hupu.ui.fragment.ImageFragment;
 import com.gzsll.hupu.ui.fragment.MessageListFragment;
 import com.gzsll.hupu.ui.fragment.SettingFragment;
 import com.gzsll.hupu.ui.fragment.ThreadCollectFragment;
@@ -46,5 +47,6 @@ public interface FragmentComponent {
 
     void inject(MessageListFragment mMessageListFragment);
 
+    void inject(ImageFragment imageFragment);
 
 }
