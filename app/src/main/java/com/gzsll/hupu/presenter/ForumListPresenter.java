@@ -21,7 +21,8 @@ import javax.inject.Singleton;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
+import rx.functions.Func0;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by sll on 2016/3/11.
@@ -33,47 +34,61 @@ public class ForumListPresenter extends Presenter<ForumListView> {
     @Inject
     ForumApi mForumApi;
 
+    private boolean isFirst = true;
+
+    private PublishSubject<List<Forum>> mSubject;
+
 
     @Singleton
     @Inject
     public ForumListPresenter() {
+        mSubject = PublishSubject.create();
     }
-
 
 
     public void onForumListReceive(final String forumId) {
         view.showLoading();
-        getForumObservable(forumId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Forum>>() {
+        getForumListObservable(forumId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Forum>>() {
             @Override
             public void call(List<Forum> fora) {
                 if (fora == null || fora.isEmpty()) {
-                    view.onError();
+                    if (!isFirst) {
+                        view.onError();
+                    }
+                    isFirst = false;
                 } else {
                     view.hideLoading();
                     view.renderForumList(fora);
                 }
             }
         });
+
+        getForumObservable(forumId);
     }
 
-
-    private Observable<List<Forum>> getForumObservable(String forumId) {
-        return Observable.just(forumId).flatMap(new Func1<String, Observable<List<Forum>>>() {
+    public Observable<List<Forum>> getForumListObservable(final String forumId) {
+        Observable<List<Forum>> firstObservable = Observable.fromCallable(new Func0<List<Forum>>() {
             @Override
-            public Observable<List<Forum>> call(String s) {
-                if (TextUtils.equals(s, "0")) {
-                    return loadUserForums();
-                } else {
-                    return loadAllForums(s);
-                }
+            public List<Forum> call() {
+                return mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq(forumId)).list();
             }
         });
+        return firstObservable.concatWith(mSubject);
     }
 
-    private Observable<List<Forum>> loadUserForums() {
-        return mForumApi.getMyForums().flatMap(new Func1<MyForumsData, Observable<List<Forum>>>() {
+
+    private void getForumObservable(String forumId) {
+        if (TextUtils.equals(forumId, "0")) {
+            loadUserForums();
+        } else {
+            loadAllForums(forumId);
+        }
+    }
+
+    private void loadUserForums() {
+        mForumApi.getMyForums().doOnNext(new Action1<MyForumsData>() {
             @Override
-            public Observable<List<Forum>> call(MyForumsData result) {
+            public void call(MyForumsData result) {
                 if (result != null && result.data != null) {
                     MyForumsResult data = result.data;
                     for (Forum forum : data.sub) {
@@ -81,69 +96,67 @@ public class ForumListPresenter extends Presenter<ForumListView> {
                         forum.setCategoryName(data.name);
                         forum.setWeight(1);
                     }
-                    return Observable.just(data.sub);
+                    saveToDb(data.sub, "0", true);
                 }
+            }
+        }).subscribe(new Action1<MyForumsData>() {
+            @Override
+            public void call(MyForumsData myForumsData) {
 
-                return null;
             }
-        }).doOnNext(new Action1<List<Forum>>() {
+        }, new Action1<Throwable>() {
             @Override
-            public void call(List<Forum> fora) {
-                saveToDb(fora);
-            }
-        }).onErrorReturn(new Func1<Throwable, List<Forum>>() {
-            @Override
-            public List<Forum> call(Throwable throwable) {
-                return mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq("0")).list();
+            public void call(Throwable throwable) {
+                saveToDb(null, "0", true);
             }
         });
     }
 
-    private Observable<List<Forum>> loadAllForums(final String forumId) {
-        return mForumApi.getForums().flatMap(new Func1<ForumsData, Observable<List<Forum>>>() {
+    private void loadAllForums(final String forumId) {
+        mForumApi.getForums().doOnNext(new Action1<ForumsData>() {
             @Override
-            public Observable<List<Forum>> call(ForumsData result) {
+            public void call(ForumsData result) {
                 if (result != null) {
                     for (ForumsResult data : result.data) {
-                        if (data.fid.equals(forumId)) {
-                            List<Forum> forumList = new ArrayList<>();
-                            for (Forums forums : data.sub) {
-                                for (Forum forum : forums.data) {
-                                    forum.setForumId(data.fid);
-                                    forum.setCategoryName(forums.name);
-                                    forum.setWeight(forums.weight);
-                                    forumList.add(forum);
-                                }
+                        List<Forum> forumList = new ArrayList<>();
+                        for (Forums forums : data.sub) {
+                            for (Forum forum : forums.data) {
+                                forum.setForumId(data.fid);
+                                forum.setCategoryName(forums.name);
+                                forum.setWeight(forums.weight);
+                                forumList.add(forum);
                             }
-                            return Observable.just(forumList);
+
                         }
+                        saveToDb(forumList, data.fid, data.fid.equals(forumId));
                     }
 
                 }
-                return null;
             }
-        }).doOnNext(new Action1<List<Forum>>() {
+        }).subscribe(new Action1<ForumsData>() {
             @Override
-            public void call(List<Forum> fora) {
-                saveToDb(fora);
+            public void call(ForumsData forumsData) {
+
             }
-        }).onErrorReturn(new Func1<Throwable, List<Forum>>() {
+        }, new Action1<Throwable>() {
             @Override
-            public List<Forum> call(Throwable throwable) {
-                return mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq(forumId)).list();
+            public void call(Throwable throwable) {
+                saveToDb(null, forumId, true);
             }
         });
 
     }
 
 
-    private void saveToDb(List<Forum> forums) {
-        for (Forum forum : forums) {
-            List<Forum> forumList = mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq(forum.getForumId()), ForumDao.Properties.Fid.eq(forum.getFid())).list();
-            if (!forumList.isEmpty()) {
-                forum.setId(forumList.get(0).getId());
+    private void saveToDb(List<Forum> forums, String forumId, boolean concat) {
+        if (forums != null && !forums.isEmpty()) {
+            mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq(forumId)).buildDelete().executeDeleteWithoutDetachingEntities();
+            for (Forum forum : forums) {
+                mForumDao.insertOrReplace(forum);
             }
-            mForumDao.insertOrReplace(forum);
+        }
+        if (concat) {
+            mSubject.onNext(mForumDao.queryBuilder().where(ForumDao.Properties.ForumId.eq(forumId)).list());
         }
     }
 
