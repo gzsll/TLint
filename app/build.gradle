@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:2.1.0-alpha4'
+        classpath 'com.android.tools.build:gradle:1.5.0'
         // Since Android's Gradle plugin 0.11, you have to use android-apt >= 1.3
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.droidtitan:lint-cleaner-plugin:0.3.0'
@@ -79,4 +79,5 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'jp.wasabeef:glide-transformations:2.0.0'
     compile 'com.commit451:PhotoView:1.2.5'
+    compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
 }

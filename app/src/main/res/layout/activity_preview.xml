@@ -10,7 +10,8 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#3b3b3b" />
 
     <include
         layout="@layout/base_toolbar_layout"

@@ -6,10 +6,13 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ImageViewTarget;
 
+import org.apache.log4j.Logger;
+
 /**
  * Created by sll on 2016/3/28.
  */
 public class GifDrawableImageViewTarget extends ImageViewTarget<GifDrawable> {
+    Logger logger = Logger.getLogger(GifDrawableImageViewTarget.class.getSimpleName());
 
     private GifDrawable resource;
 
@@ -22,6 +25,8 @@ public class GifDrawableImageViewTarget extends ImageViewTarget<GifDrawable> {
         super.onResourceReady(resource, glideAnimation);
         this.resource = resource;
         onStart();
+        logger.debug("onResourceReady");
+
     }
 
     @Override
