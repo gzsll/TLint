@@ -140,7 +140,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         } else if (menuItem.getItemId() == R.id.nav_recommend) {
                             mFragment = ThreadRecommendFragment.newInstance();
                         } else {
-                            mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(menuItem.getItemId()));
+                            if (mPresenter.isLogin() || menuItem.getItemId() != R.id.nav_my) {
+                                mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(menuItem.getItemId()));
+                            } else {
+                                mPresenter.login();
+                            }
                         }
                         if (mFragment != null) {
                             menuItem.setChecked(true);

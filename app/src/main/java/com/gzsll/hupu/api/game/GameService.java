@@ -1,6 +1,7 @@
 package com.gzsll.hupu.api.game;
 
 import com.gzsll.hupu.bean.LoginData;
+import com.gzsll.hupu.bean.SearchData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
 
@@ -31,4 +32,7 @@ public interface GameService {
 
     @GET("collect/getThreadsCollectList")
     Observable<ThreadListData> getCollectList(@Query("sign") String sign, @QueryMap Map<String, String> params);
+
+    @GET("search/list")
+    Observable<SearchData> search(@QueryMap Map<String, String> params, @Query("client") String client);
 }

@@ -3,6 +3,7 @@ package com.gzsll.hupu.ui.adapter;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +70,7 @@ public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter
             holder.tvLight.setVisibility(View.GONE);
         }
         holder.tvReply.setText(thread.replies);
-        holder.tvTitle.setText(thread.title);
+        holder.tvTitle.setText(Html.fromHtml(thread.title));
         holder.tvSingleTime.setVisibility(View.VISIBLE);
         holder.tvSummary.setVisibility(View.GONE);
         holder.grid.setVisibility(View.GONE);

@@ -5,7 +5,11 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.AttendStatusData;
+import com.gzsll.hupu.bean.Search;
+import com.gzsll.hupu.bean.SearchData;
+import com.gzsll.hupu.bean.SearchResult;
 import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
@@ -16,27 +20,20 @@ import com.gzsll.hupu.ui.view.ThreadListView;
 import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sll on 2016/3/9.
@@ -58,6 +55,8 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     ToastHelper mToastHelper;
     @Inject
     OkHttpClient mOkHttpClient;
+    @Inject
+    GameApi mGameApi;
 
 
     @Singleton
@@ -76,6 +75,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     private List<String> list;
     private int loadType = TYPE_LIST;
     private String key;
+    private boolean hasNextPage = true;
 
 
     private static final int TYPE_LIST = 1;
@@ -113,12 +113,14 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
         mSubscription = mForumApi.getThreadsList(fid, last, 20, lastTamp, type, list).map(new Func1<ThreadListData, List<Thread>>() {
             @Override
             public List<Thread> call(ThreadListData result) {
-                if (clear) {
-                    threads.clear();
-                }
                 if (result != null && result.result != null) {
+                    if (clear) {
+                        threads.clear();
+                        view.onScrollToTop();
+                    }
                     ThreadListResult data = result.result;
                     lastTamp = data.stamp;
+                    hasNextPage = data.nextPage;
                     return addThreads(data.data);
                 }
                 return null;
@@ -144,87 +146,58 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
 
     private void loadSearchList() {
         loadType = TYPE_SEARCH;
-        String url = String
-                .format("http://my.hupu.com/search?type=topic&sortby=datedesc&q=%s&fid=%s&page=%s",
-                        URLEncoder.encode(key), fid, pageIndex);
-        Observable.just(url).subscribeOn(Schedulers.io()).map(new Func1<String, List<Thread>>() {
+        mGameApi.search(key, fid, pageIndex).map(new Func1<SearchData, List<Thread>>() {
             @Override
-            public List<Thread> call(String s) {
-                try {
-                    Request request = new Request.Builder().url(s).build();
-                    Response response = mOkHttpClient.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        return parse(new String(response.body().bytes(), "gb2312"));
+            public List<Thread> call(SearchData searchData) {
+                if (searchData != null) {
+                    if (pageIndex == 1) {
+                        threads.clear();
+                        view.onScrollToTop();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    SearchResult result = searchData.result;
+                    hasNextPage = result.hasNextPage == 1;
+                    for (Search search : result.data) {
+                        Thread thread = new Thread();
+                        thread.fid = search.fid;
+                        thread.tid = search.id;
+                        thread.lightReply = Integer.valueOf(search.lights);
+                        thread.replies = search.replies;
+                        thread.userName = search.username;
+                        thread.title = search.title;
+                        long time = Long.valueOf(search.addtime);
+                        Date date = new Date(time);
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        thread.time = format.format(date);
+                        if (!contains(thread)) {
+                            threads.add(thread);
+                        }
+                    }
+                    return threads;
                 }
                 return null;
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Thread>>() {
             @Override
-            public void call(List<Thread> list) {
-                if (list == null) {
+            public void call(List<Thread> threads) {
+                if (threads == null) {
                     loadThreadError();
                 } else {
-                    if (list.isEmpty()) {
+                    if (threads.isEmpty()) {
                         view.onEmpty();
                     } else {
                         view.hideLoading();
-                        view.renderThreads(list);
+                        view.renderThreads(threads);
                     }
                 }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                loadThreadError();
             }
         });
     }
 
-    private List<Thread> parse(String response) {
-        Document document = Jsoup.parse(response);
-        Elements eles = document.select("tbody tr");
-        if (eles != null) {
-            if (pageIndex == 1) {
-                threads.clear();
-                view.onScrollToTop();
-            }
-            for (int i = 0; i < eles.size(); i++) {
-                Element element = eles.get(i);
-                Elements attrs = element.select("td");
-                if (attrs != null) {
-                    Thread thread = new Thread();
-                    thread.fid = fid;
-                    for (int j = 0; j < attrs.size(); j++) {
-                        Element td = attrs.get(j);
-                        if (j == 0) {
-                            Element a = td.select("a").first();
-                            if (a != null) {
-                                String url = a.attr("href");
-                                int k = url.lastIndexOf("/") + 1;
-                                String str = url.substring(k);
-                                thread.tid = str.split(".html")[0];
-                            }
-                            thread.title = td.text();
-                        }
-                        if (j == 2) {
-                            thread.userName = td.text();
-                        }
-                        if (j == 3) {
-                            thread.time = td.text();
-                        }
-                        if (j == 4) {
-                            thread.replies = td.text();
-                        }
-
-                    }
-                    if ((thread.tid != null) && (!contains(thread))) {
-                        threads.add(thread);
-                    }
-                }
-
-            }
-
-        }
-        return threads;
-    }
 
     private void loadThreadError() {
         if (threads.isEmpty()) {
@@ -333,6 +306,12 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     }
 
     public void onLoadMore() {
+        if (!hasNextPage) {
+            mToastHelper.showToast("没有更多了~");
+            view.onRefreshing(false);
+            return;
+        }
+
         if (loadType == TYPE_LIST) {
             loadThreadList(lastTid, false);
         } else {
@@ -350,5 +329,6 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
         threads.clear();
         lastTid = "";
         lastTamp = "";
+        pageIndex = 1;
     }
 }

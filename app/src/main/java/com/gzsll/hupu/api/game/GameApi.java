@@ -1,6 +1,7 @@
 package com.gzsll.hupu.api.game;
 
 import com.gzsll.hupu.bean.LoginData;
+import com.gzsll.hupu.bean.SearchData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
 import com.gzsll.hupu.components.retrofit.GsonConverterFactory;
@@ -61,6 +62,25 @@ public class GameApi {
         params.put("page", String.valueOf(page));
         String sign = mRequestHelper.getRequestSign(params);
         return mGameService.getCollectList(sign, params).subscribeOn(Schedulers.io());
+    }
+
+    /**
+     * type暂时写死，只搜索论坛
+     *
+     * @param key  搜索词
+     * @param fid  论坛fid
+     * @param page 页数
+     * @return
+     */
+    public Observable<SearchData> search(String key, String fid, int page) {
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        params.put("keyword", key);
+        params.put("type", "posts");
+        params.put("fid", fid);
+        params.put("page", String.valueOf(page));
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        return mGameService.search(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
     }
 
 }

@@ -140,6 +140,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         appbar.addOnOffsetChangedListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
         mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
             @Override
@@ -247,6 +248,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Override
     public void onRefreshing(boolean refresh) {
         refreshLayout.setRefreshing(refresh);
+        mAutoLoadListener.setLoading(refresh);
     }
 
 
