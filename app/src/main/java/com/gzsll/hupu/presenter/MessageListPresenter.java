@@ -97,7 +97,9 @@ public class MessageListPresenter extends Presenter<MessageListView> {
                 messages.add(thread);
             }
         }
-        lastTid = messages.get(messages.size() - 1).tid;
+        if (!messages.isEmpty()) {
+            lastTid = messages.get(messages.size() - 1).tid;
+        }
         return messages;
     }
 

@@ -9,4 +9,5 @@ public class ThreadListResult {
     public String stamp;
     public ArrayList<Thread> data;
     public boolean nextPage;
+    public int nextDataExists;
 }

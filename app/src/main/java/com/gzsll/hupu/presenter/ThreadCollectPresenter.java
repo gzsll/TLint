@@ -38,6 +38,7 @@ public class ThreadCollectPresenter extends Presenter<ThreadCollectView> {
     private Subscription mSubscription;
     private List<Thread> threads = new ArrayList<>();
     private int page = 1;
+    private boolean hasNextPage = true;
 
     public void onCollectThreadsReceive() {
         view.showLoading();
@@ -54,6 +55,7 @@ public class ThreadCollectPresenter extends Presenter<ThreadCollectView> {
                 }
                 if (result != null && result.result != null) {
                     ThreadListResult data = result.result;
+                    hasNextPage = data.nextDataExists == 1;
                     return addThreads(data.data);
                 }
                 return null;
@@ -125,6 +127,10 @@ public class ThreadCollectPresenter extends Presenter<ThreadCollectView> {
     }
 
     public void onLoadMore() {
+        if (!hasNextPage) {
+            mToastHelper.showToast("没有更多了~");
+            return;
+        }
         loadCollectList(++page);
     }
 

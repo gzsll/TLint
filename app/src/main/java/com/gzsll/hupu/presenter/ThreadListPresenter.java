@@ -330,5 +330,6 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
         lastTid = "";
         lastTamp = "";
         pageIndex = 1;
+        hasNextPage = true;
     }
 }

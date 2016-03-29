@@ -74,7 +74,11 @@ public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter
         holder.tvSingleTime.setVisibility(View.VISIBLE);
         holder.tvSummary.setVisibility(View.GONE);
         holder.grid.setVisibility(View.GONE);
-        holder.tvSingleTime.setText(thread.time);
+        if (thread.forum != null) {
+            holder.tvSingleTime.setText(thread.forum.getName());
+        } else {
+            holder.tvSingleTime.setText(thread.time);
+        }
         showItemAnim(holder.cardView, position);
     }
 

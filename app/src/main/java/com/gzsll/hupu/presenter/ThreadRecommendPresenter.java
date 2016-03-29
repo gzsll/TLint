@@ -40,6 +40,7 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
 
     private String lastTid = "";
     private String lastTamp = "";
+    private boolean hasNextPage = true;
 
     private Subscription mSubscription;
 
@@ -59,6 +60,7 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
                 if (result != null && result.result != null) {
                     ThreadListResult data = result.result;
                     lastTamp = data.stamp;
+                    hasNextPage = data.nextPage;
                     return addThreads(data.data);
                 }
                 return null;
@@ -98,7 +100,9 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
                 threads.add(thread);
             }
         }
-        lastTid = threads.get(threads.size() - 1).tid;
+        if (!threads.isEmpty()) {
+            lastTid = threads.get(threads.size() - 1).tid;
+        }
         return threads;
     }
 
@@ -127,6 +131,10 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
     }
 
     public void onLoadMore() {
+        if (!hasNextPage) {
+            mToastHelper.showToast("没有更多了~");
+            return;
+        }
         loadRecommendList(false);
     }
 

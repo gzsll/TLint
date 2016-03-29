@@ -131,4 +131,9 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
         super.onDestroy();
         mPresenter.detachView();
     }
+
+    @Override
+    public void onReloadClicked() {
+        mPresenter.onReload();
+    }
 }
