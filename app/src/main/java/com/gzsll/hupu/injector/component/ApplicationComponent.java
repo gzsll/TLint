@@ -22,6 +22,8 @@ import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.helper.SecurityHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.helper.ShareHelper;
+import com.gzsll.hupu.helper.StringHelper;
 import com.gzsll.hupu.helper.ThemeHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.injector.module.ApiModule;
@@ -91,6 +93,10 @@ public interface ApplicationComponent {
     FormatHelper getFormatHelper();
 
     OkHttpClient getOkHttpClient();
+
+    ShareHelper getShareHelper();
+
+    StringHelper getStringHelper();
 
 
     void inject(MyApplication mApplication);

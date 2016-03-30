@@ -18,6 +18,8 @@ import com.gzsll.hupu.helper.ConfigHelper;
 import com.gzsll.hupu.helper.FileHelper;
 import com.gzsll.hupu.helper.FormatHelper;
 import com.gzsll.hupu.helper.OkHttpHelper;
+import com.gzsll.hupu.helper.ShareHelper;
+import com.gzsll.hupu.helper.StringHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.fragment.ImageFragment;
@@ -60,6 +62,10 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
     ConfigHelper mConfigHelper;
     @Inject
     ToastHelper mToastHelper;
+    @Inject
+    ShareHelper mShareHelper;
+    @Inject
+    StringHelper mStringHelper;
 
 
     @Bind(R.id.viewPager)
@@ -188,9 +194,7 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
         } else if (id == R.id.share) {
 
         } else if (id == R.id.copy) {
-
-        } else if (id == R.id.downloadAgain) {
-
+            mStringHelper.copy(extraPics.get(viewPager.getCurrentItem()));
         } else if (id == android.R.id.home) {
             finish();
         }

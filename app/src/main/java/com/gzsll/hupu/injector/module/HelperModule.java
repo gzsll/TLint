@@ -14,6 +14,8 @@ import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.helper.SecurityHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.helper.ShareHelper;
+import com.gzsll.hupu.helper.StringHelper;
 import com.gzsll.hupu.helper.ThemeHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 
@@ -111,5 +113,16 @@ public class HelperModule {
         return new CacheHelper(mContext, mFormatHelper);
     }
 
+    @Provides
+    @Singleton
+    ShareHelper provideShareHelper(Context mContext) {
+        return new ShareHelper(mContext);
+    }
+
+    @Provides
+    @Singleton
+    StringHelper provideStringHelper(Context mContext, ToastHelper mToastHelper) {
+        return new StringHelper(mContext, mToastHelper);
+    }
 
 }

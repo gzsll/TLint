@@ -302,13 +302,10 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
         floatingMenu.toggle(true);
     }
 
+
     @OnClick(R.id.floatingShare)
     void floatingShare() {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+        mPresenter.onShare(shareText);
         floatingMenu.toggle(true);
     }
 

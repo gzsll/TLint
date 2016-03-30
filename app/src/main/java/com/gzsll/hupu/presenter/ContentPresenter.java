@@ -5,6 +5,7 @@ import android.content.Context;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
+import com.gzsll.hupu.helper.ShareHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.view.ContentView;
 
@@ -28,7 +29,8 @@ public class ContentPresenter extends Presenter<ContentView> {
     Context mContext;
     @Inject
     ToastHelper mToastHelper;
-
+    @Inject
+    ShareHelper mShareHelper;
 
     @Inject
     @Singleton
@@ -177,6 +179,10 @@ public class ContentPresenter extends Presenter<ContentView> {
         mToastHelper.showToast("复制成功");
     }
 
+
+    public void onShare(String text) {
+        mShareHelper.share(text);
+    }
 
     @Override
     public void detachView() {

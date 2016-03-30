@@ -1,7 +1,5 @@
 package com.gzsll.hupu.ui.activity;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.helper.StringHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.fragment.BrowserFragment;
@@ -39,7 +38,8 @@ public class BrowserActivity extends BaseSwipeBackActivity {
 
     @Inject
     ToastHelper mToastHelper;
-
+    @Inject
+    StringHelper mStringHelper;
     private String url;
     private BrowserFragment mFragment;
 
@@ -99,8 +99,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
                 mFragment.reload();
             }
         } else if (item.getItemId() == R.id.copy) {
-            copyToClipboard(url);
-            mToastHelper.showToast("链接已复制");
+            mStringHelper.copy(url);
         } else if (item.getItemId() == R.id.to_browser) {
             try {
                 Intent intent = new Intent();
@@ -112,15 +111,6 @@ public class BrowserActivity extends BaseSwipeBackActivity {
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void copyToClipboard(String text) {
-        // 得到剪贴板管理器
-        try {
-            ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            cmb.setPrimaryClip(ClipData.newPlainText(null, text.trim()));
-        } catch (Exception e) {
-        }
     }
 
 
