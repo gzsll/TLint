@@ -30,7 +30,7 @@ android {
         applicationId "com.gzsll.hupu"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 38
+        versionCode 37
         versionName "1.6"
     }
     buildTypes {
@@ -80,4 +80,5 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.0'
     compile 'com.commit451:PhotoView:1.2.5'
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
+    compile 'com.liulishuo.filedownloader:library:0.2.0'
 }

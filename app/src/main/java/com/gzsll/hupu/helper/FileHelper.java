@@ -132,4 +132,17 @@ public class FileHelper {
         File file = new File(url);
         return file.exists();
     }
+
+
+    public void chmod(String permission, String path) {
+        try {
+            String command = "chmod " + permission + " " + path;
+            Runtime runtime = Runtime.getRuntime();
+            runtime.exec(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+

@@ -12,6 +12,7 @@ import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.component.DaggerApplicationComponent;
 import com.gzsll.hupu.injector.module.ApplicationModule;
+import com.liulishuo.filedownloader.FileDownloader;
 
 import org.apache.log4j.Level;
 
@@ -47,6 +48,7 @@ public class MyApplication extends Application {
         initComponent();
         initLogger();
         initUser();
+        FileDownloader.init(this);
     }
 
     private void initComponent() {
