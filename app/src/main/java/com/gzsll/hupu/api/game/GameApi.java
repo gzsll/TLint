@@ -4,7 +4,7 @@ import com.gzsll.hupu.bean.LoginData;
 import com.gzsll.hupu.bean.SearchData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
-import com.gzsll.hupu.components.retrofit.GsonConverterFactory;
+import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
@@ -33,7 +33,7 @@ public class GameApi {
         this.mRequestHelper = mRequestHelper;
         this.mSettingPrefHelper = mSettingPrefHelper;
         this.mUserStorage = mUserStorage;
-        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(FastJsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
         mGameService = retrofit.create(GameService.class);
     }

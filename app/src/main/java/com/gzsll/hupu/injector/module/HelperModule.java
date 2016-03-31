@@ -16,7 +16,6 @@ import com.gzsll.hupu.helper.SecurityHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.helper.ShareHelper;
 import com.gzsll.hupu.helper.StringHelper;
-import com.gzsll.hupu.helper.ThemeHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 
 import javax.inject.Singleton;
@@ -59,8 +58,8 @@ public class HelperModule {
 
     @Provides
     @Singleton
-    RequestHelper provideRequestUtil(SecurityHelper securityHelper, Context context, UserStorage mUserStorage) {
-        return new RequestHelper(securityHelper, context, mUserStorage);
+    RequestHelper provideRequestUtil(SecurityHelper securityHelper, Context context, UserStorage mUserStorage, SettingPrefHelper mSettingPrefHelper) {
+        return new RequestHelper(securityHelper, context, mUserStorage, mSettingPrefHelper);
     }
 
     @Provides
@@ -83,11 +82,6 @@ public class HelperModule {
         return new ResourceHelper();
     }
 
-    @Provides
-    @Singleton
-    ThemeHelper provideThemeHelper(Context mContext, SettingPrefHelper mSettingPrefHelper) {
-        return new ThemeHelper(mContext, mSettingPrefHelper);
-    }
 
     @Provides
     @Singleton

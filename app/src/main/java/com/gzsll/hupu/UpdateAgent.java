@@ -12,7 +12,7 @@ import android.text.Html;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.amazonaws.com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 import com.gzsll.hupu.bean.UpdateInfo;
 import com.gzsll.hupu.helper.FileHelper;
 import com.gzsll.hupu.helper.FormatHelper;
@@ -48,8 +48,6 @@ public class UpdateAgent {
     @Inject
     OkHttpHelper mOkHttpHelper;
     @Inject
-    Gson mGson;
-    @Inject
     FormatHelper mFormatHelper;
     @Inject
     FileHelper mFileHelper;
@@ -75,7 +73,7 @@ public class UpdateAgent {
             public UpdateInfo call(String s) {
                 try {
                     String result = mOkHttpHelper.getStringFromServer(UPDATE_URL);
-                    return mGson.fromJson(result, UpdateInfo.class);
+                    return JSON.parseObject(result, UpdateInfo.class);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

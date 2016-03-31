@@ -2,7 +2,6 @@ package com.gzsll.hupu.injector.component;
 
 import android.content.Context;
 
-import com.amazonaws.com.google.gson.Gson;
 import com.amazonaws.mobileconnectors.s3.transfermanager.TransferManager;
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.api.forum.ForumApi;
@@ -24,7 +23,6 @@ import com.gzsll.hupu.helper.SecurityHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.helper.ShareHelper;
 import com.gzsll.hupu.helper.StringHelper;
-import com.gzsll.hupu.helper.ThemeHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.injector.module.ApiModule;
 import com.gzsll.hupu.injector.module.ApplicationModule;
@@ -49,7 +47,6 @@ public interface ApplicationComponent {
 
     Bus getBus();
 
-    Gson getGson();
 
     ForumApi getForumApi();
 
@@ -80,7 +77,6 @@ public interface ApplicationComponent {
 
     ToastHelper getToastHelper();
 
-    ThemeHelper getThemeHelper();
 
     SettingPrefHelper getSettingPrefHelper();
 

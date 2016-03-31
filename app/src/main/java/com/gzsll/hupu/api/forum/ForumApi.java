@@ -11,7 +11,7 @@ import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
-import com.gzsll.hupu.components.retrofit.GsonConverterFactory;
+import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
@@ -43,7 +43,7 @@ public class ForumApi {
         this.mRequestHelper = mRequestHelper;
         this.mSettingPrefHelper = mSettingPrefHelper;
         this.mUserStorage = mUserStorage;
-        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(FastJsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
         mForumService = retrofit.create(ForumService.class);
     }

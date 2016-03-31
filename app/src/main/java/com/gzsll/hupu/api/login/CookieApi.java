@@ -2,7 +2,7 @@ package com.gzsll.hupu.api.login;
 
 
 import com.gzsll.hupu.bean.CookieData;
-import com.gzsll.hupu.components.retrofit.GsonConverterFactory;
+import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -21,7 +21,7 @@ public class CookieApi {
     private static final String BASE_URL = "http://passport.hupu.com/pc/login/";
 
     public CookieApi(OkHttpClient mOkHttpClient) {
-        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(FastJsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
         mCookieService = retrofit.create(CookieService.class);
     }
