@@ -134,7 +134,7 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportView 
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 

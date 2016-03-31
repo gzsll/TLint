@@ -72,7 +72,7 @@ public class AccountActivity extends BaseSwipeBackActivity implements AccountVie
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 

@@ -21,7 +21,6 @@ import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.DisplayHelper;
 import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.ResourceHelper;
-import com.gzsll.hupu.helper.ThemeHelper;
 import com.gzsll.hupu.otto.ContentScrollEvent;
 import com.gzsll.hupu.presenter.ContentPresenter;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
@@ -69,8 +68,6 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
     FloatingActionButton floatingShare;
     @Bind(R.id.floatingMenu)
     FloatingActionMenu floatingMenu;
-    @Bind(R.id.deliver)
-    View deliver;
     @Bind(R.id.tvPre)
     TextView tvPre;
     @Bind(R.id.tvPageNum)
@@ -107,8 +104,6 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
     RequestHelper mRequestHelper;
     @Inject
     Bus mBus;
-    @Inject
-    ThemeHelper mThemeHelper;
     @Inject
     UserStorage mUserStorage;
 
@@ -150,7 +145,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
         initFloatingButton();
         viewPager.setOffscreenPageLimit(1);
         viewPager.setOnPageChangeListener(this);
-        progressBar.setBackgroundColor(mThemeHelper.getThemeColor());
+        progressBar.setBackgroundColor(mResourceHelper.getThemeColor(this));
         mPresenter.onThreadInfoReceive(tid, fid, pid, page);
     }
 
@@ -174,7 +169,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return false;
     }
 

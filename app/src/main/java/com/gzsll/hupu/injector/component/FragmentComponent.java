@@ -6,7 +6,6 @@ import com.gzsll.hupu.injector.PerFragment;
 import com.gzsll.hupu.injector.module.FragmentModule;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.fragment.BrowserFragment;
-import com.gzsll.hupu.ui.fragment.ColorsDialogFragment;
 import com.gzsll.hupu.ui.fragment.ContentFragment;
 import com.gzsll.hupu.ui.fragment.ForumListFragment;
 import com.gzsll.hupu.ui.fragment.ImageFragment;
@@ -43,7 +42,6 @@ public interface FragmentComponent {
 
     void inject(SettingFragment mSettingFragment);
 
-    void inject(ColorsDialogFragment mColorsDialogFragment);
 
     void inject(MessageListFragment mMessageListFragment);
 

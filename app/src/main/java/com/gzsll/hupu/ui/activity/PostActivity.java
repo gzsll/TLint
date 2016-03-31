@@ -153,7 +153,7 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 

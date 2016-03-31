@@ -68,7 +68,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 

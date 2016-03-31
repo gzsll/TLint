@@ -19,6 +19,7 @@ import com.gzsll.hupu.helper.FileHelper;
 import com.gzsll.hupu.helper.FormatHelper;
 import com.gzsll.hupu.helper.OkHttpHelper;
 import com.gzsll.hupu.helper.ShareHelper;
+import com.gzsll.hupu.helper.StatusBarUtil;
 import com.gzsll.hupu.helper.StringHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
@@ -123,14 +124,10 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
-        return true;
+    protected boolean isApplyStatusBarColor() {
+        return false;
     }
 
-    @Override
-    protected int configTheme() {
-        return R.style.AppTheme_Pics;
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -237,5 +234,10 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
         sendBroadcast(mediaScanIntent);
     }
 
-
+    @Override
+    public void setStatusBarColor(boolean on) {
+        if (on) {
+            StatusBarUtil.setColor(this, Color.TRANSPARENT, 0);
+        }
+    }
 }

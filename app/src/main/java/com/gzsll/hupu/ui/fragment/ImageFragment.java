@@ -15,7 +15,6 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.glide.GifDrawableImageViewTarget;
 import com.gzsll.hupu.components.glide.ProgressTarget;
 import com.gzsll.hupu.helper.ResourceHelper;
-import com.gzsll.hupu.helper.ThemeHelper;
 import com.gzsll.hupu.ui.BaseLazyLoadFragment;
 import com.gzsll.hupu.widget.CircleProgressBar;
 
@@ -41,8 +40,6 @@ public class ImageFragment extends BaseLazyLoadFragment {
     @Bind(R.id.rlProgress)
     RelativeLayout rlProgress;
 
-    @Inject
-    ThemeHelper mThemeHelper;
     @Inject
     ResourceHelper mResourceHelper;
 
@@ -76,7 +73,7 @@ public class ImageFragment extends BaseLazyLoadFragment {
     public void initUI(View view) {
         ButterKnife.bind(this, view);
         progressBar.setMax(100);
-        progressBar.setProgressColor(mThemeHelper.getThemeColor());
+        progressBar.setProgressColor(mResourceHelper.getThemeColor(getActivity()));
         progress.setIndeterminate(true);
         image.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override

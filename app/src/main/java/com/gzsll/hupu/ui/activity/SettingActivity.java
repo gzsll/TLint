@@ -44,11 +44,11 @@ public class SettingActivity extends BaseSwipeBackActivity {
 
     @Override
     protected boolean isApplyStatusBarTranslucency() {
-        return true;
+        return false;
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 }

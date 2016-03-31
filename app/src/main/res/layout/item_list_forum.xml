@@ -46,12 +46,13 @@
             android:layout_marginTop="3dp" />
 
         <TextView
+            android:text="火箭"
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:textColor="@color/base_text_black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="15sp" />
 
 

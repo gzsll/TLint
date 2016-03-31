@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -15,15 +16,14 @@ import com.gzsll.hupu.R;
 public class ResourceHelper {
 
 
-    public int getThemeColor(Context mContext) {
-        int materialBlue = mContext.getResources().getColor(R.color.md_green_500);
-        return resolveColor(mContext, R.attr.theme_color, materialBlue);
+    public int getThemeColor(@NonNull Context context) {
+        return getThemeAttrColor(context, R.attr.colorPrimary);
     }
 
-    private int resolveColor(Context mContext, @AttrRes int attr, int fallback) {
-        TypedArray a = mContext.getTheme().obtainStyledAttributes(new int[]{attr});
+    public int getThemeAttrColor(@NonNull Context context, @AttrRes int attr) {
+        TypedArray a = context.obtainStyledAttributes(null, new int[]{attr});
         try {
-            return a.getColor(0, fallback);
+            return a.getColor(0, 0);
         } finally {
             a.recycle();
         }

@@ -17,11 +17,6 @@
     </style>
 
 
-    <style name="forum_list_item_divider">
-        <item name="android:background">@color/forum_deliver</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">1.0px</item>
-    </style>
 
     <style name="listViewMultiImageView">
         <item name="android:scaleType">centerCrop</item>

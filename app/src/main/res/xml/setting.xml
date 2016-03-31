@@ -2,9 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/settings_general_settings">
-        <Preference
-            android:key="pTheme"
-            android:title="@string/settings_md_colors" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:key="pNightMode"
+            android:title="夜间模式" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:enabled="true"

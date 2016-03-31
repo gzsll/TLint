@@ -4,14 +4,14 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
-    android:layout_gravity="center"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_width="match_parent"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="3dp"
-    card_view:cardElevation="5dp">
+    card_view:cardUseCompatPadding="true"
+    card_view:cardBackgroundColor="?attr/widgetBackground">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/llThreadItem"
@@ -21,6 +21,7 @@
 
 
         <TextView
+            android:text="title"
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,10 +30,11 @@
             android:layout_marginTop="10dip"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="#000000"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
+            android:text="Summary"
             android:id="@+id/tvSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +44,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="8dp"
             android:maxLines="3"
-            android:textColor="#666666"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp" />
 
         <GridLayout
@@ -92,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="15dp"
-                android:textColor="#ffaaaaaa" />
+                android:textColor="?android:attr/textColorSecondary" />
 
             <TextView
                 android:id="@+id/tvReply"
@@ -104,7 +106,7 @@
                 android:drawableLeft="@drawable/ic_list_comment"
                 android:drawablePadding="5.0dip"
                 android:text="111"
-                android:textColor="#ffaaaaaa" />
+                android:textColor="?android:attr/textColorSecondary" />
 
 
             <TextView
@@ -118,7 +120,7 @@
                 android:drawableLeft="@drawable/ic_list_light"
                 android:drawablePadding="5.0dip"
                 android:text="0"
-                android:textColor="#ffaaaaaa" />
+                android:textColor="?android:attr/textColorSecondary" />
 
         </RelativeLayout>
 

@@ -17,8 +17,10 @@ import com.gzsll.hupu.helper.FileHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.injector.component.DaggerFragmentComponent;
 import com.gzsll.hupu.injector.module.FragmentModule;
+import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.widget.PreferenceFragment;
+import com.squareup.otto.Bus;
 
 import java.io.File;
 
@@ -30,7 +32,6 @@ import javax.inject.Inject;
 public class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
 
-    private Preference pTheme;// 主题设置
     private ListPreference pTextSize;// 字体大小
     private Preference pPicSavePath;// 图片保存路径
     private Preference pClearCache;
@@ -43,6 +44,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     CacheHelper mCacheHelper;
     @Inject
     DataCleanHelper mDataCleanHelper;
+    @Inject
+    Bus mBus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +57,6 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         addPreferencesFromResource(R.xml.setting);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-
-        pTheme = findPreference("pTheme");
-        pTheme.setOnPreferenceClickListener(this);
-        pTheme.setSummary(getResources().getStringArray(R.array.mdColorNames)[mSettingPrefHelper.getThemeIndex()]);
 
         pTextSize = (ListPreference) findPreference("pTextSize");
         pTextSize.setOnPreferenceChangeListener(this);
@@ -99,15 +98,17 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             ((BaseActivity) getActivity()).reload();
         } else if ("pOfflineCount".equals(preference.getKey())) {
             //  setListSetting(Integer.parseInt(newValue.toString()), R.array.offlineCount, pOfflineCount);
+        } else if ("pNightMode".equals(preference.getKey())) {
+            mBus.post(new ChangeThemeEvent());
+            if (getActivity() instanceof BaseActivity)
+                ((BaseActivity) getActivity()).reload();
         }
         return true;
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if ("pTheme".equals(preference.getKey())) {
-            ColorsDialogFragment.launch(getActivity());
-        } else if ("pPicSavePath".equals(preference.getKey())) {
+        if ("pPicSavePath".equals(preference.getKey())) {
             modifyImageSavePath();
         } else if ("pClearCache".equals(preference.getKey())) {
             cleanCache();

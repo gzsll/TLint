@@ -49,7 +49,7 @@ public class MessageListActivity extends BaseSwipeBackActivity {
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 }

@@ -7,14 +7,15 @@
     <ImageView
         android:id="@+id/ivCover"
         android:layout_width="match_parent"
-        android:layout_height="160dip"
+        android:layout_height="200dip"
         android:scaleType="centerCrop"
         android:src="@drawable/bg_banner_dialog" />
 
     <RelativeLayout
+        android:layout_marginTop="25dp"
         android:id="@+id/layProfile"
         android:layout_width="match_parent"
-        android:layout_height="160dip"
+        android:layout_height="175dp"
         android:background="@drawable/bg_menu_profile">
 
         <ImageView
@@ -24,19 +25,17 @@
             android:layout_marginLeft="16dip"
             android:layout_marginTop="16dip" />
 
-        <TextView
-            android:id="@+id/tvNotification"
+        <ImageView
+            android:id="@+id/ivTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/ivIcon"
-            android:layout_alignTop="@id/ivIcon"
-            android:background="@drawable/menu_followers_counter"
-            android:gravity="center"
-            android:minWidth="18dip"
-            android:text="10"
-            android:textColor="@color/base_text_white"
-            android:textSize="12sp"
-            android:visibility="gone" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:adjustViewBounds="true"
+            android:padding="10dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_brightness_3_white_24dp" />
 
         <LinearLayout
             android:id="@+id/llAccount"

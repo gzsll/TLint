@@ -89,6 +89,16 @@ public class SettingPrefHelper {
         return Integer.parseInt(prefs.getString("pThreadSort", "0")) == 0 ? Constants.THREAD_TYPE_NEW : Constants.THREAD_TYPE_HOT;
     }
 
+    public boolean getNightModel() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("pNightMode", false);
+    }
+
+    public void setNightModel(boolean nightModel) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putBoolean("pNightMode", nightModel).apply();
+    }
+
 
     public boolean getLoadPic() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

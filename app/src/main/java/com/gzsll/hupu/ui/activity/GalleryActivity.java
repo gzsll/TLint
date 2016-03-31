@@ -139,7 +139,7 @@ public class GalleryActivity extends BaseSwipeBackActivity implements GalleryVie
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 

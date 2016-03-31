@@ -110,7 +110,7 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return false;
     }
 

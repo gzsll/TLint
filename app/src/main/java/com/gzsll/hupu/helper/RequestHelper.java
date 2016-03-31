@@ -24,18 +24,20 @@ public class RequestHelper {
     private SecurityHelper mSecurityHelper;
     private Context mContext;
     private UserStorage mUserStorage;
+    private SettingPrefHelper mSettingPrefHelper;
 
-    public RequestHelper(SecurityHelper mSecurityHelper, Context mContext, UserStorage mUserStorage) {
+    public RequestHelper(SecurityHelper mSecurityHelper, Context mContext, UserStorage mUserStorage, SettingPrefHelper mSettingPrefHelper) {
         this.mSecurityHelper = mSecurityHelper;
         this.mContext = mContext;
         this.mUserStorage = mUserStorage;
+        this.mSettingPrefHelper = mSettingPrefHelper;
     }
 
 
     public Map<String, String> getHttpRequestMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("client", getDeviceId());
-        map.put("night", "0");
+        map.put("night", mSettingPrefHelper.getNightModel() ? "1" : "0");
         if (mUserStorage.isLogin()) {
             try {
                 map.put("token", URLEncoder.encode(mUserStorage.getToken(), "UTF-8"));

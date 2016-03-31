@@ -3,18 +3,26 @@
     <!-- Styling -->
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorAccent">#388E3C</color>
 
 
-    <!-- Order float button -->
+    <color name="window_background_light">#ffeeeeee</color>
+    <color name="window_background_dark">#ff303030</color>
 
-    <color name="list_background_color">#f0f0f0</color>
+    <color name="text_color_light">#b3ffffff</color>
+    <color name="text_color_dark">#de000000</color>
+
+    <color name="list_divider_light">#ffe0e0e0</color>
+    <color name="list_divider_dark">#ff666666</color>
 
 
+    <color name="selectable_item_background_general_light_normal">@android:color/white</color>
+    <color name="selectable_item_background_general_light_pressed">#ffeeeeee</color>
+    <color name="selectable_item_background_general_light_accent">#ffcccccc</color>
+    <color name="selectable_item_background_general_dark_normal">#ff3c3c3c</color>
+    <color name="selectable_item_background_general_dark_pressed">#ff444444</color>
+    <color name="selectable_item_background_general_dark_accent">#ff666666</color>
 
-    <color name="listitem_text">#ffaaaaaa</color>
-    <color name="listitem_subject">#ff515151</color>
-
-    <color name="forum_deliver">#ffdddddd</color>
 
     <color name="red">#FFC93437</color>
     <color name="blue">#FF375BF1</color>

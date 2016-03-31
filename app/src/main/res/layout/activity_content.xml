@@ -4,7 +4,6 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/list_background_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -74,14 +73,11 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="bottom"
-        android:background="@color/md_white">
+        android:background="?attr/widgetBackground">
 
         <View
-            android:id="@+id/deliver"
-            android:layout_width="fill_parent"
-            android:layout_height="0.5dip"
-            android:layout_alignParentTop="true"
-            android:background="#e5e5e5" />
+            style="@style/AppWidget.DeepLine"
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:id="@+id/tvPre"
@@ -117,13 +113,6 @@
             android:text="下一页"
             android:textColor="@color/blue"
             android:textSize="15.0sp" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="0.5dip"
-            android:layout_alignParentBottom="true"
-            android:background="#e5e5e5" />
-
 
     </RelativeLayout>
 

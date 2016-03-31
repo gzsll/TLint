@@ -107,7 +107,7 @@ public abstract class BaseFragment extends ProgressFragment {
 
     public int getThemeColor(Context mContext) {
         int materialBlue = mContext.getResources().getColor(R.color.md_green_500);
-        return resolveColor(mContext, R.attr.theme_color, materialBlue);
+        return resolveColor(mContext, R.attr.colorPrimary, materialBlue);
     }
 
     private int resolveColor(Context mContext, @AttrRes int attr, int fallback) {

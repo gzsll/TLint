@@ -16,7 +16,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppThemeLight">
 
 
         <meta-data
@@ -30,7 +30,8 @@
         <activity
             android:name=".ui.activity.SplashActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLaunch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,61 +42,72 @@
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoneTranslucent" />
+            android:theme="@style/AppThemeLight.NoTranslucent" />
 
         <activity
             android:name=".ui.activity.ContentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
         <activity
             android:name=".ui.activity.PostActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/AppThemeLight" />
 
         <activity
             android:name=".ui.activity.GalleryActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
 
         <activity
             android:name=".ui.activity.PictureActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Pics" />
+            android:theme="@style/AppThemeLight.FitsStatusBar" />
         <activity
             android:name=".ui.activity.LoginActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
         <activity
             android:name=".ui.activity.AccountActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
 
         <activity
             android:name=".ui.activity.UserProfileActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
 
         <activity
             android:name=".ui.activity.ThreadListActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
         <activity
             android:name=".ui.activity.BrowserActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
         <activity
             android:name=".ui.activity.SettingActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
 
         <activity
             android:name=".ui.activity.ReportActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
 
         <activity
             android:name=".ui.activity.MessageListActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight" />
 
         <service
             android:name="com.gzsll.hupu.service.MessageService"

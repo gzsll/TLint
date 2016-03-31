@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.widget.HuPuWebView;
 
@@ -43,6 +44,8 @@ public class BrowserFragment extends BaseFragment {
 
     @Inject
     Activity mActivity;
+    @Inject
+    SettingPrefHelper mSettingPrefHelper;
 
 
     private String url;
@@ -62,6 +65,9 @@ public class BrowserFragment extends BaseFragment {
     public void getBundle(Bundle bundle) {
         url = bundle.getString("url");
         title = bundle.getString("title");
+        if (mSettingPrefHelper.getNightModel()) {
+            url += "&night=1";
+        }
     }
 
     @Override

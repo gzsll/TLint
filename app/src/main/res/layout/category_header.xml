@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <TextView
-        android:background="@color/forum_deliver"
         android:text="nba"
         android:textSize="16dp"
         android:textColor="#ff727272"

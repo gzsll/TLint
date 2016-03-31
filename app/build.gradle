@@ -30,7 +30,7 @@ android {
         applicationId "com.gzsll.hupu"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 37
+        versionCode 38
         versionName "1.6"
     }
     buildTypes {

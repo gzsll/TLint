@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,7 +26,9 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
+import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.helper.StatusBarUtil;
 import com.gzsll.hupu.presenter.MainPresenter;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.fragment.BrowserFragment;
@@ -59,8 +62,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     DrawerLayout drawerLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    ImageView ivIcon;
-    TextView tvName, tvNotification;
+    ImageView ivIcon, ivTheme;
+    TextView tvName;
 
     @Inject
     SettingPrefHelper mSettingPrefHelper;
@@ -70,6 +73,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     UserStorage mUserStorage;
     @Inject
     MainPresenter mPresenter;
+    @Inject
+    ResourceHelper mResourceHelper;
 
 
     @Override
@@ -91,13 +96,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setTitle("帖子推荐");
         ivIcon = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ivIcon);
         tvName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvName);
-        tvNotification = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvNotification);
         navigationView.getHeaderView(0).findViewById(R.id.ivCover).setOnClickListener(this);
         navigationView.getHeaderView(0).findViewById(R.id.llAccount).setOnClickListener(this);
+        ivTheme = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ivTheme);
+        ivTheme.setOnClickListener(this);
+        ivTheme.setImageResource(mSettingPrefHelper.getNightModel() ? R.drawable.ic_wb_sunny_white_24dp : R.drawable.ic_brightness_3_white_24dp);
         //创建返回键，并实现打开关/闭监听
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         mDrawerToggle.syncState();
         drawerLayout.setDrawerListener(mDrawerToggle);
+        StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, mResourceHelper.getThemeColor(this), 0);
         setupDrawerContent();
         getSupportFragmentManager().beginTransaction().replace(R.id.content, ThreadRecommendFragment.newInstance()).commit();
         mPresenter.attachView(this);
@@ -149,7 +157,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (mFragment != null) {
                             menuItem.setChecked(true);
                             setTitle(menuItem.getTitle());
-                            getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
+                            final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content, mFragment, mFragment.getClass().getSimpleName());
+                            ft.addToBackStack(null);
+                            ft.commit();
                         }
                         break;
                     case R.id.nav_setting:
@@ -224,12 +235,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected boolean isApplyStatusBarTranslucency() {
-        return true;
+        return false;
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
-        return true;
+    protected boolean isApplyStatusBarColor() {
+        return false;
     }
 
     @Override
@@ -247,6 +258,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.llAccount:
                 mPresenter.showAccountMenu();
+                break;
+            case R.id.ivTheme:
+                mSettingPrefHelper.setNightModel(!mSettingPrefHelper.getNightModel());
+                reload();
                 break;
         }
     }

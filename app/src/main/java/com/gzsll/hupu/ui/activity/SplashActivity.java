@@ -81,12 +81,8 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return false;
     }
 
-    @Override
-    protected int configTheme() {
-        return R.style.AppTheme_NoneTranslucent;
-    }
 }

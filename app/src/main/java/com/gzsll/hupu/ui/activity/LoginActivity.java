@@ -81,7 +81,7 @@ public class LoginActivity extends BaseSwipeBackActivity implements LoginView {
     }
 
     @Override
-    protected boolean isApplyKitKatTranslucency() {
+    protected boolean isApplyStatusBarColor() {
         return true;
     }
 

@@ -16,7 +16,8 @@
         android:layout_marginLeft="10.0dip"
         android:gravity="center_vertical"
         android:text="New Text"
-        android:textSize="14.0sp" />
+        android:textSize="14.0sp"
+        android:textColor="?android:attr/textColorPrimary" />
 
     <ImageView
         android:id="@+id/ivCheck"
