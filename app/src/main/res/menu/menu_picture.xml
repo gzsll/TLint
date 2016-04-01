@@ -20,5 +20,8 @@
         app:showAsAction="never"
         android:title="@string/copy_url" />
 
-
+    <item
+        android:id="@+id/downloadAgain"
+        app:showAsAction="never"
+        android:title="@string/download_again" />
 </menu>

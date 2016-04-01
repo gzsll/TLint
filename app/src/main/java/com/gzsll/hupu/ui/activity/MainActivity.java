@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.UpdateAgent;
@@ -43,7 +45,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by sll on 2016/3/9.
@@ -62,7 +63,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     DrawerLayout drawerLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    ImageView ivIcon, ivTheme;
+    ImageView ivTheme;
+    SimpleDraweeView ivIcon;
     TextView tvName;
 
     @Inject
@@ -94,7 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("帖子推荐");
-        ivIcon = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ivIcon);
+        ivIcon = (SimpleDraweeView) navigationView.getHeaderView(0).findViewById(R.id.ivIcon);
         tvName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tvName);
         navigationView.getHeaderView(0).findViewById(R.id.ivCover).setOnClickListener(this);
         navigationView.getHeaderView(0).findViewById(R.id.llAccount).setOnClickListener(this);
@@ -277,7 +279,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void renderUserInfo(User user) {
         if (user != null) {
-            Glide.with(this).load(user.getIcon()).placeholder(R.drawable.icon_def_head).bitmapTransform(new CropCircleTransformation(this)).into(ivIcon);
+            if (!TextUtils.isEmpty(user.getIcon())) {
+                ivIcon.setImageURI(Uri.parse(user.getIcon()));
+            }
             tvName.setText(user.getUserName());
         } else {
             ivIcon.setImageURI(null);

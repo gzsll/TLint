@@ -1,47 +1,58 @@
 package com.gzsll.hupu.ui.fragment;
 
-import android.graphics.Bitmap;
+import android.app.Activity;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.Target;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.components.glide.GifDrawableImageViewTarget;
-import com.gzsll.hupu.components.glide.ProgressTarget;
 import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.ui.BaseLazyLoadFragment;
-import com.gzsll.hupu.widget.CircleProgressBar;
+import com.gzsll.hupu.widget.ImageLoadProgressBar;
+import com.gzsll.hupu.widget.photodraweeview.OnViewTapListener;
+import com.gzsll.hupu.widget.photodraweeview.PhotoDraweeView;
+
+import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by sll on 2016/3/10.
  */
 public class ImageFragment extends BaseLazyLoadFragment {
 
+    private Logger logger = Logger.getLogger(ImageFragment.class.getSimpleName());
+
     @Bind(R.id.image)
-    PhotoView image;
-    @Bind(R.id.progressBar)
-    CircleProgressBar progressBar;
+    PhotoDraweeView image;
     @Bind(R.id.progress)
     SmoothProgressBar progress;
     @Bind(R.id.rlProgress)
     RelativeLayout rlProgress;
+    @Bind(R.id.tvInfo)
+    TextView tvInfo;
 
     @Inject
     ResourceHelper mResourceHelper;
+    @Inject
+    Activity mActivity;
 
     public static ImageFragment newInstance(String url) {
         ImageFragment mFragment = new ImageFragment();
@@ -72,10 +83,8 @@ public class ImageFragment extends BaseLazyLoadFragment {
     @Override
     public void initUI(View view) {
         ButterKnife.bind(this, view);
-        progressBar.setMax(100);
-        progressBar.setProgressColor(mResourceHelper.getThemeColor(getActivity()));
         progress.setIndeterminate(true);
-        image.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+        image.setOnViewTapListener(new OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
                 getActivity().finish();
@@ -89,59 +98,62 @@ public class ImageFragment extends BaseLazyLoadFragment {
     @Override
     public void initData() {
         showContent(true);
-        if (url.endsWith(".gif")) {
-            ProgressTarget<String, GifDrawable> target = new MyProgressTarget<>(new GifDrawableImageViewTarget(image), progress, progressBar);
-            target.setModel(url);
-            Glide.with(this).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(target);
-        } else {
-            ProgressTarget<String, Bitmap> target = new MyProgressTarget<>(new BitmapImageViewTarget(image), progress, progressBar);
-            target.setModel(url);
-            Glide.with(this).load(url).asBitmap().fitCenter().into(target);
-        }
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
+                .setProgressiveRenderingEnabled(true)
+                .build();
+
+        GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
+                .setProgressBarImage(new ImageLoadProgressBar(new ImageLoadProgressBar.OnLevelChangeListener() {
+                    @Override
+                    public void onChange(int level) {
+                        if (level > 100 && progress.getVisibility() == View.VISIBLE) {
+                            progress.setVisibility(View.GONE);
+                        }
+                    }
+                }, mResourceHelper.getThemeColor(mActivity)))
+                .build();
+        hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+
+        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+        controller.setControllerListener(listener);
+        controller.setImageRequest(request);
+        controller.setOldController(image.getController());
+        controller.setAutoPlayAnimations(true);
+        image.setHierarchy(hierarchy);
+        image.setController(controller.build());
     }
 
-
-    private static class MyProgressTarget<Z> extends ProgressTarget<String, Z> {
-
-        private final SmoothProgressBar mSmoothProgressBar;
-        private final CircleProgressBar mCircleProgressBar;
-
-        public MyProgressTarget(Target<Z> target, SmoothProgressBar mSmoothProgressBar, CircleProgressBar mCircleProgressBar) {
-            super(target);
-            this.mSmoothProgressBar = mSmoothProgressBar;
-            this.mCircleProgressBar = mCircleProgressBar;
-        }
+    private BaseControllerListener<ImageInfo> listener = new BaseControllerListener<ImageInfo>() {
 
         @Override
-        protected void onConnecting() {
-            System.out.println("onConnecting");
-            mCircleProgressBar.setVisibility(View.GONE);
-            mSmoothProgressBar.setVisibility(View.VISIBLE);
+        public void onFailure(String id, Throwable throwable) {
+            super.onFailure(id, throwable);
+            System.out.println("onFailure:" + throwable.getMessage());
+            progress.setVisibility(View.GONE);
+            tvInfo.setVisibility(View.VISIBLE);
+            tvInfo.setText("图片加载失败");
         }
 
+
         @Override
-        protected void onDownloading(long bytesRead, long expectedLength) {
-            int progress = (int) (100 * bytesRead / expectedLength);
-            mCircleProgressBar.setProgress(progress);
-            if (progress > 1) {
-                mSmoothProgressBar.setVisibility(View.GONE);
-                mCircleProgressBar.setVisibility(View.VISIBLE);
+        public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+            super.onFinalImageSet(id, imageInfo, animatable);
+            System.out.println("onFinalImageSet");
+            if (imageInfo == null) {
+                return;
             }
+            image.update(imageInfo.getWidth(), imageInfo.getHeight());
+            progress.setVisibility(View.GONE);
         }
 
         @Override
-        protected void onDownloaded() {
-            System.out.println("onDownloaded");
-
+        public void onSubmit(String id, Object callerContext) {
+            super.onSubmit(id, callerContext);
+            System.out.println("onSubmit");
+            progress.setVisibility(View.VISIBLE);
+            tvInfo.setVisibility(View.GONE);
         }
-
-        @Override
-        protected void onDelivered() {
-            System.out.println("onDelivered");
-            mCircleProgressBar.setVisibility(View.GONE);
-            mSmoothProgressBar.setVisibility(View.GONE);
-        }
-    }
+    };
 
 
 }

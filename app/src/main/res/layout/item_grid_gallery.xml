@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gzsll.hupu.widget.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/flItem"
-    android:layout_margin="3dp"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/flItem">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/ivPhoto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:viewAspectRatio="1" />
 
 
     <ImageView
@@ -22,4 +23,4 @@
         android:layout_marginTop="5dp"
         android:src="@drawable/ap_gallery_normal" />
 
-</com.gzsll.hupu.widget.SquareFrameLayout>
+</FrameLayout>

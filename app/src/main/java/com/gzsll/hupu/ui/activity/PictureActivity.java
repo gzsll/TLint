@@ -194,6 +194,11 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
             mStringHelper.copy(extraPics.get(viewPager.getCurrentItem()));
         } else if (id == android.R.id.home) {
             finish();
+        } else if (id == R.id.downloadAgain) {
+            ImageFragment fragment = ((ImageFragment) mImageViewAdapter.getItem(viewPager.getCurrentItem()));
+            if (fragment != null) {
+                fragment.initData();
+            }
         }
         return true;
     }

@@ -3,18 +3,18 @@ package com.gzsll.hupu.ui.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.presenter.PostPresenter;
@@ -237,10 +237,10 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
             llPics.removeAllViews();
             for (String path : selectImages) {
                 View itemView = View.inflate(this, R.layout.item_post_pic, null);
-                ImageView ivPic = (ImageView) itemView.findViewById(R.id.ivPic);
+                SimpleDraweeView ivPic = (SimpleDraweeView) itemView.findViewById(R.id.ivPic);
                 itemView.setTag(path);
                 itemView.setOnClickListener(onPictureClickListener);
-                Glide.with(this).load(new File(path)).centerCrop().into(ivPic);
+                ivPic.setImageURI(Uri.fromFile(new File(path)));
                 llPics.addView(itemView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             }
         }

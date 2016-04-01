@@ -36,11 +36,12 @@
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="parallax"
+                app:actualImageScaleType="centerCrop" />
 
 
             <TextView

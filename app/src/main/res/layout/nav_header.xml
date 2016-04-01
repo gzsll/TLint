@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <ImageView
@@ -18,12 +19,16 @@
         android:layout_height="175dp"
         android:background="@drawable/bg_menu_profile">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/ivIcon"
             android:layout_width="80dip"
             android:layout_height="80dip"
             android:layout_marginLeft="16dip"
-            android:layout_marginTop="16dip" />
+            android:layout_marginTop="16dip"
+            fresco:progressBarImage="@drawable/icon_def_head"
+            fresco:failureImage="@drawable/icon_def_head"
+            fresco:placeholderImage="@drawable/icon_def_head"
+            fresco:roundAsCircle="true" />
 
         <ImageView
             android:id="@+id/ivTheme"

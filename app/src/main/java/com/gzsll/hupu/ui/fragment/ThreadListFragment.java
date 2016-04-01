@@ -1,6 +1,7 @@
 package com.gzsll.hupu.ui.fragment;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -17,10 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
@@ -67,7 +72,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
 
     @Bind(R.id.backdrop)
-    ImageView backdrop;
+    SimpleDraweeView backdrop;
     @Bind(R.id.tvSubTitle)
     TextView tvSubTitle;
     @Bind(R.id.toolbar)
@@ -198,7 +203,16 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @Override
     public void renderThreadInfo(Forum forum) {
-        Glide.with(this).load(forum.getBackImg()).centerCrop().into(backdrop);
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(forum.getBackImg()))
+                .setResizeOptions(
+                        new ResizeOptions(500, 500))
+                .build();
+        DraweeController draweeController = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(backdrop.getController())
+                .setAutoPlayAnimations(true)
+                .build();
+        backdrop.setController(draweeController);
         collapsingToolbar.setTitle(forum.getName());
         tvSubTitle.setText(forum.getDescription());
     }

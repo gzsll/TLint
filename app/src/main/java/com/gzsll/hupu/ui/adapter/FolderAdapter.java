@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.adapter;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Folder;
 
@@ -30,9 +29,6 @@ public class FolderAdapter extends BaseAdapter {
 
     private List<Folder> folders = new ArrayList<>();
     private int lastSelected = 0;
-
-    @Inject
-    Activity mActivity;
 
 
     @Inject
@@ -105,7 +101,7 @@ public class FolderAdapter extends BaseAdapter {
         } else {
             holder.tvName.setText(folder.name);
             holder.tvSize.setText(folder.images.size() + "张");
-            Glide.with(mActivity).load(new File(folder.cover.path)).into(holder.ivCover);
+            holder.ivCover.setImageURI(Uri.fromFile(new File(folder.cover.path)));
         }
         holder.ivIndicator.setVisibility(lastSelected == position ? View.VISIBLE : View.GONE);
         return convertView;
@@ -114,7 +110,7 @@ public class FolderAdapter extends BaseAdapter {
 
     static class ViewHolder {
         @Bind(R.id.ivCover)
-        ImageView ivCover;
+        SimpleDraweeView ivCover;
         @Bind(R.id.tvName)
         TextView tvName;
         @Bind(R.id.tvSize)

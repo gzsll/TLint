@@ -1,15 +1,16 @@
 package com.gzsll.hupu.ui.adapter;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.daimajia.swipe.SwipeLayout;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.AttendStatusData;
@@ -73,7 +74,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         Forum forum = forums.get(position);
         holder.forum = forum;
-        Glide.with(mActivity).load(forum.getLogo()).into(holder.ivIcon);
+        if (!TextUtils.isEmpty(forum.getLogo())) {
+            holder.ivIcon.setImageURI(Uri.parse(forum.getLogo()));
+        }
         holder.tvName.setText(forum.getName());
         holder.swipeLayout.setSwipeEnabled(forumId.equals("0"));
     }
@@ -112,7 +115,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.ivIcon)
-        ImageView ivIcon;
+        SimpleDraweeView ivIcon;
         @Bind(R.id.tvName)
         TextView tvName;
         @Bind(R.id.swipeLayout)
