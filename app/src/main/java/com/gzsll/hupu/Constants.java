@@ -36,9 +36,9 @@ public class Constants {
 
     public static final String BOX_APP_KEY = "U8DCMNBEFLP1E9W60BIP";
     public static final String BOX_APP_SECRETE = "+m/4pmmh05RRxpZo/Hor1wPMQFihwJ+QinHGRdR0";
-    public static final String BOX_BUCKET_NAME = "bbsmobile";
+    public static final String BOX_BUCKET_NAME = "/img/Imgup";
     public static final String BOX_END_POINT = "http://s3.hupu.com";
-    public static final String BOX_END_POINT_NEW = "http://bbsmobile.hupucdn.com/";
+    public static final String BOX_END_POINT_NEW = "http://bbs-test.mobileapi.hupu.com/";
     public static final String BOX_KEY_NAME = "SJW28AP753KGAWB0FN6Q";
 
 

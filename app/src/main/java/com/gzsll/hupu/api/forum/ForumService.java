@@ -8,14 +8,20 @@ import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
+import com.gzsll.hupu.bean.UploadData;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -82,6 +88,11 @@ public interface ForumService {
     @POST("user/delUserMessage")
     @FormUrlEncoded
     Observable<BaseData> delMessage(@Field("sign") String sign, @FieldMap Map<String, String> params);
+
+
+    @POST("img/Imgup")
+    @Multipart
+    Observable<UploadData> upload(@Part MultipartBody.Part file, @PartMap Map<String, RequestBody> params);
 
 
 }

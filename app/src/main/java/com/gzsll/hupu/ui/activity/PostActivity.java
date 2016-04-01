@@ -23,11 +23,14 @@ import com.gzsll.hupu.ui.view.PostView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Created by sll on 2016/3/9.
@@ -173,7 +176,12 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
 
     @Override
     public void postSuccess() {
-
+        Observable.timer(2, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
+            @Override
+            public void call(Long aLong) {
+                finish();
+            }
+        });
     }
 
     @Override

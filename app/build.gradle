@@ -86,6 +86,4 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.5'
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     compile 'com.liulishuo.filedownloader:library:0.2.0'
-    compile 'com.amazonaws:aws-android-sdk-core:2.2.13'
-    compile 'com.amazonaws:aws-android-sdk-s3:2.2.13'
 }

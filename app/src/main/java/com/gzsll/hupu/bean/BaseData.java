@@ -17,6 +17,7 @@ public class BaseData {
     public String data;
     public String msg;
     public String result;
+    public BaseError error;
 
 
 }

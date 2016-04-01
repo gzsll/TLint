@@ -11,6 +11,7 @@ import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
+import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.RequestHelper;
@@ -18,10 +19,15 @@ import com.gzsll.hupu.helper.SettingPrefHelper;
 
 import org.json.JSONArray;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Observable;
@@ -217,6 +223,39 @@ public class ForumApi {
         params.put("id", id);
         String sign = mRequestHelper.getRequestSign(params);
         return mForumService.delMessage(sign, params).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<UploadData> upload(String path) {
+        File file = new File(path);
+        RequestBody requestFile = RequestBody.create(MediaType.parse(getContentType(path)), file);
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        Map<String, RequestBody> requestBody = new HashMap<>();
+        for (String key : params.keySet()) {
+            String value = params.get(key);
+            requestBody.put(key, RequestBody.create(MediaType.parse("multipart/form-data"), value));
+        }
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("files", file.getName(), requestFile);
+        return mForumService.upload(body, requestBody);
+    }
+
+
+    private String getContentType(String str) {
+        if (str == null) {
+            return null;
+        }
+        if (str.endsWith(".jpe") || str.endsWith(".JPE") || str.endsWith(".JPEG") || str.endsWith(".jpeg") || str.endsWith(".jpg") || str.endsWith(".JPG")) {
+            return "image/jpeg";
+        }
+        if (str.endsWith(".png") || str.endsWith(".PNG")) {
+            return "image/png";
+        }
+        if (str.endsWith(".gif")) {
+            return "image/gif";
+        }
+        return null;
     }
 
 

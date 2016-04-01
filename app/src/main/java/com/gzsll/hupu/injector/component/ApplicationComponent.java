@@ -2,7 +2,6 @@ package com.gzsll.hupu.injector.component;
 
 import android.content.Context;
 
-import com.amazonaws.mobileconnectors.s3.transfermanager.TransferManager;
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
@@ -60,7 +59,6 @@ public interface ApplicationComponent {
 
     NetWorkHelper getNetWorkHelper();
 
-    TransferManager getTransferManager();
 
 
     SecurityHelper getSecurityHelper();
