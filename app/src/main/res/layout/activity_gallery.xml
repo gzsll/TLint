@@ -28,7 +28,11 @@
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:layout_alignParentBottom="true"
-        android:background="#5ff4f4f4">
+        android:background="?widgetBackground">
+
+        <View
+            style="@style/AppWidget.DeepLine"
+            android:layout_alignParentTop="true" />
 
         <RelativeLayout
             android:id="@+id/rlCamera"
