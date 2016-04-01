@@ -11,6 +11,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="true"
             android:divider="@null"
-            android:saveEnabled="false" />
+            android:saveEnabled="false"
+            android:background="?attr/widgetBackground" />
 
 </LinearLayout>

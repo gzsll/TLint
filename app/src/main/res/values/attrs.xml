@@ -40,4 +40,16 @@
             <enum name="sun" value="0" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="MaterialNumberPicker">
+        <attr name="npMinValue" format="integer" />
+        <attr name="npMaxValue" format="integer" />
+        <attr name="npDefaultValue" format="integer" />
+        <attr name="npTextSize" format="dimension" />
+        <attr name="npTextColor" format="color" />
+        <attr name="npSeparatorColor" format="color" />
+        <attr name="npFocusValue" format="boolean" />
+        <attr name="npWrapValue" format="boolean" />
+        <attr name="npBackground" format="color" />
+    </declare-styleable>
 </resources>

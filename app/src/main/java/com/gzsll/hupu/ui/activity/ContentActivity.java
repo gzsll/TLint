@@ -345,7 +345,11 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentVie
 
     @OnClick(R.id.tvPageNum)
     void tvPageNum() {
-        mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, DisplayHelper.dip2px(this, 40));
+        if (mPagePicker.isShowing()) {
+            mPagePicker.dismiss();
+        } else {
+            mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, DisplayHelper.dip2px(this, 40));
+        }
     }
 
     @OnClick(R.id.btnReload)

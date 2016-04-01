@@ -7,18 +7,17 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.PopupWindow;
 
 import com.gzsll.hupu.R;
+
 
 public class PagePicker extends PopupWindow implements View.OnClickListener {
 
 
     private OnJumpListener mListener;
 
-    private Button btCancel, btFirst, btJump, btLast;
-    private NumberPicker picker;
+    private MaterialNumberPicker picker;
 
     public PagePicker(Context context) {
         this(context, null);
@@ -38,7 +37,7 @@ public class PagePicker extends PopupWindow implements View.OnClickListener {
         rootView.findViewById(R.id.btFirst).setOnClickListener(this);
         rootView.findViewById(R.id.btJump).setOnClickListener(this);
         rootView.findViewById(R.id.btLast).setOnClickListener(this);
-        picker = (NumberPicker) rootView.findViewById(R.id.picker);
+        picker = (MaterialNumberPicker) rootView.findViewById(R.id.picker);
         setContentView(rootView);
     }
 

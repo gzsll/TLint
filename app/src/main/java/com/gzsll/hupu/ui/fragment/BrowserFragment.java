@@ -65,7 +65,7 @@ public class BrowserFragment extends BaseFragment {
     public void getBundle(Bundle bundle) {
         url = bundle.getString("url");
         title = bundle.getString("title");
-        if (mSettingPrefHelper.getNightModel()) {
+        if (mSettingPrefHelper.getNightModel() && url.contains("?")) {
             url += "&night=1";
         }
     }
