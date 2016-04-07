@@ -18,11 +18,14 @@ public interface ThreadRecommendView extends BaseView {
 
     void renderThreads(List<Thread> threads);
 
+    void onLoadCompleted(boolean hasMore);
+
+    void onRefreshCompleted();
+
 
     void onError(String error);
 
     void onEmpty();
 
 
-    void onRefreshing(boolean refresh);
 }

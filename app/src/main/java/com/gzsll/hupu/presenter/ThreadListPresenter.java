@@ -131,6 +131,8 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                 if (threads != null) {
                     view.hideLoading();
                     view.renderThreads(threads);
+                    view.onRefreshCompleted();
+                    view.onLoadCompleted(true);
                 } else {
                     loadThreadError();
                 }
@@ -186,6 +188,8 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
                         view.onEmpty();
                     } else {
                         view.hideLoading();
+                        view.onRefreshCompleted();
+                        view.onLoadCompleted(true);
                         view.renderThreads(threads);
                     }
                 }
@@ -204,7 +208,8 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
             view.onError("数据加载失败");
         } else {
             view.hideLoading();
-            view.onRefreshing(false);
+            view.onRefreshCompleted();
+            view.onLoadCompleted(true);
             mToastHelper.showToast("数据加载失败");
         }
     }
@@ -308,7 +313,7 @@ public class ThreadListPresenter extends Presenter<ThreadListView> {
     public void onLoadMore() {
         if (!hasNextPage) {
             mToastHelper.showToast("没有更多了~");
-            view.onRefreshing(false);
+            view.onLoadCompleted(false);
             return;
         }
 

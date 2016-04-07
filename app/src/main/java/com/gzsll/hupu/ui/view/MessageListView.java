@@ -16,6 +16,10 @@ public interface MessageListView extends BaseView {
 
     void renderMessageList(List<Message> messages);
 
+    void onRefreshCompleted();
+
+    void onLoadCompleted(boolean haMore);
+
     void onError();
 
     void onEmpty();

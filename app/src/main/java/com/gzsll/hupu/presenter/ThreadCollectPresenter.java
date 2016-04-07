@@ -67,7 +67,8 @@ public class ThreadCollectPresenter extends Presenter<ThreadCollectView> {
                     if (threads.isEmpty()) {
                         view.onEmpty();
                     } else {
-                        view.onRefreshing(false);
+                        view.onLoadCompleted(true);
+                        view.onRefreshCompleted();
                         view.hideLoading();
                         view.renderThreads(threads);
                     }
@@ -88,7 +89,8 @@ public class ThreadCollectPresenter extends Presenter<ThreadCollectView> {
             view.onError("数据加载失败");
         } else {
             view.hideLoading();
-            view.onRefreshing(false);
+            view.onLoadCompleted(true);
+            view.onRefreshCompleted();
             mToastHelper.showToast("数据加载失败");
         }
     }
@@ -129,6 +131,7 @@ public class ThreadCollectPresenter extends Presenter<ThreadCollectView> {
     public void onLoadMore() {
         if (!hasNextPage) {
             mToastHelper.showToast("没有更多了~");
+            view.onLoadCompleted(false);
             return;
         }
         loadCollectList(++page);

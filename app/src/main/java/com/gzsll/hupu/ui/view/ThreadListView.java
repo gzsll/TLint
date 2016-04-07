@@ -19,6 +19,10 @@ public interface ThreadListView extends BaseView {
 
     void renderThreads(List<Thread> threads);
 
+    void onLoadCompleted(boolean hasMore);
+
+    void onRefreshCompleted();
+
     void attendStatus(boolean isAttention);
 
     void onError(String error);
@@ -29,5 +33,5 @@ public interface ThreadListView extends BaseView {
 
     void onFloatingVisibility(int visibility);
 
-    void onRefreshing(boolean refresh);
+
 }

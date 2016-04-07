@@ -71,6 +71,8 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
                 if (threads != null) {
                     view.hideLoading();
                     view.renderThreads(threads);
+                    view.onRefreshCompleted();
+                    view.onLoadCompleted(true);
                 } else {
                     loadThreadError();
                 }
@@ -89,7 +91,8 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
             view.onError("数据加载失败");
         } else {
             view.hideLoading();
-            view.onRefreshing(false);
+            view.onRefreshCompleted();
+            view.onLoadCompleted(true);
             mToastHelper.showToast("数据加载失败");
         }
     }
@@ -133,6 +136,7 @@ public class ThreadRecommendPresenter extends Presenter<ThreadRecommendView> {
     public void onLoadMore() {
         if (!hasNextPage) {
             mToastHelper.showToast("没有更多了~");
+            view.onLoadCompleted(false);
             return;
         }
         loadRecommendList(false);

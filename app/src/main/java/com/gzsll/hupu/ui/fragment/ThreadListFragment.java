@@ -42,7 +42,7 @@ import com.gzsll.hupu.ui.activity.PostActivity;
 import com.gzsll.hupu.ui.activity.ThreadListActivity;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.ui.view.ThreadListView;
-import com.gzsll.hupu.widget.AutoLoadScrollListener;
+import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ import butterknife.OnClick;
 /**
  * Created by sll on 2016/3/9.
  */
-public class ThreadListFragment extends BaseFragment implements ThreadListView, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
+public class ThreadListFragment extends BaseFragment implements ThreadListView, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, LoadMoreRecyclerView.LoadMoreListener {
 
     @Inject
     ThreadListPresenter mPresenter;
@@ -82,7 +82,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Bind(R.id.appbar)
     AppBarLayout appbar;
     @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
+    LoadMoreRecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
     SwipeRefreshLayout refreshLayout;
     @Bind(R.id.floatingAttention)
@@ -98,7 +98,6 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     @Bind(R.id.frameLayout)
     FrameLayout frameLayout;
 
-    private AutoLoadScrollListener mAutoLoadListener;
 
 
     public static ThreadListFragment newInstance(String fid) {
@@ -147,13 +146,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
-        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore() {
-                mPresenter.onLoadMore();
-            }
-        };
-        recyclerView.addOnScrollListener(mAutoLoadListener);
+        recyclerView.setLoadMoreListener(this);
     }
 
 
@@ -219,9 +212,17 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @Override
     public void renderThreads(List<Thread> threads) {
-        refreshLayout.setRefreshing(false);
-        mAutoLoadListener.setLoading(false);
         mAdapter.bind(threads);
+    }
+
+    @Override
+    public void onLoadCompleted(boolean hasMore) {
+        recyclerView.notifyMoreFinish(hasMore);
+    }
+
+    @Override
+    public void onRefreshCompleted() {
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -259,11 +260,6 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
         floatingMenu.setVisibility(visibility);
     }
 
-    @Override
-    public void onRefreshing(boolean refresh) {
-        refreshLayout.setRefreshing(refresh);
-        mAutoLoadListener.setLoading(refresh);
-    }
 
 
     @Override
@@ -370,5 +366,10 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
+    }
+
+    @Override
+    public void onLoadMore() {
+        mPresenter.onLoadMore();
     }
 }

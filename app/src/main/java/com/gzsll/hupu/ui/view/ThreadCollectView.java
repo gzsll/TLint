@@ -23,8 +23,7 @@ public interface ThreadCollectView extends BaseView {
 
     void onEmpty();
 
-    void onScrollToTop();
+    void onLoadCompleted(boolean hasMore);
 
-
-    void onRefreshing(boolean refresh);
+    void onRefreshCompleted();
 }

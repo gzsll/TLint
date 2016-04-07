@@ -3,7 +3,6 @@ package com.gzsll.hupu.ui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.gzsll.hupu.R;
@@ -12,7 +11,7 @@ import com.gzsll.hupu.presenter.ThreadCollectPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.ui.view.ThreadCollectView;
-import com.gzsll.hupu.widget.AutoLoadScrollListener;
+import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
@@ -25,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/11.
  */
-public class ThreadCollectFragment extends BaseFragment implements ThreadCollectView, PullToRefreshView.OnRefreshListener {
+public class ThreadCollectFragment extends BaseFragment implements ThreadCollectView, PullToRefreshView.OnRefreshListener, LoadMoreRecyclerView.LoadMoreListener {
 
     public static ThreadCollectFragment newInstance() {
         return new ThreadCollectFragment();
@@ -39,11 +38,10 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
     Activity mActivity;
 
     @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
+    LoadMoreRecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
     PullToRefreshView refreshLayout;
 
-    private AutoLoadScrollListener mAutoLoadListener;
 
     @Override
     public void initInjector() {
@@ -68,13 +66,7 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
-        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore() {
-                mPresenter.onLoadMore();
-            }
-        };
-        recyclerView.addOnScrollListener(mAutoLoadListener);
+        recyclerView.setLoadMoreListener(this);
     }
 
     @Override
@@ -94,8 +86,6 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
 
     @Override
     public void renderThreads(List<Thread> threads) {
-        refreshLayout.setRefreshing(false);
-        mAutoLoadListener.setLoading(false);
         mAdapter.bind(threads);
     }
 
@@ -112,14 +102,15 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
     }
 
     @Override
-    public void onScrollToTop() {
-        recyclerView.smoothScrollToPosition(0);
+    public void onLoadCompleted(boolean hasMore) {
+        recyclerView.notifyMoreFinish(hasMore);
     }
 
     @Override
-    public void onRefreshing(boolean refresh) {
-        refreshLayout.setRefreshing(refresh);
+    public void onRefreshCompleted() {
+        refreshLayout.setRefreshing(false);
     }
+
 
     @Override
     public void onRefresh() {
@@ -135,5 +126,10 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
     @Override
     public void onReloadClicked() {
         mPresenter.onReload();
+    }
+
+    @Override
+    public void onLoadMore() {
+        mPresenter.onLoadMore();
     }
 }

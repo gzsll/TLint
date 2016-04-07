@@ -67,6 +67,8 @@ public class MessageListPresenter extends Presenter<MessageListView> {
                         view.onEmpty();
                     } else {
                         view.hideLoading();
+                        view.onRefreshCompleted();
+                        view.onLoadCompleted(true);
                         view.renderMessageList(messages);
                     }
                 } else {
@@ -87,6 +89,8 @@ public class MessageListPresenter extends Presenter<MessageListView> {
         } else {
             mToastHelper.showToast("数据加载失败，请重试");
             view.hideLoading();
+            view.onRefreshCompleted();
+            view.onLoadCompleted(true);
         }
     }
 

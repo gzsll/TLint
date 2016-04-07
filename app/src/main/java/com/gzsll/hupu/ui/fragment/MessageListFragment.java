@@ -3,7 +3,6 @@ package com.gzsll.hupu.ui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.gzsll.hupu.R;
@@ -12,7 +11,7 @@ import com.gzsll.hupu.presenter.MessageListPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.adapter.MessageListAdapter;
 import com.gzsll.hupu.ui.view.MessageListView;
-import com.gzsll.hupu.widget.AutoLoadScrollListener;
+import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
@@ -25,10 +24,10 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/11.
  */
-public class MessageListFragment extends BaseFragment implements MessageListView, PullToRefreshView.OnRefreshListener {
+public class MessageListFragment extends BaseFragment implements MessageListView, PullToRefreshView.OnRefreshListener, LoadMoreRecyclerView.LoadMoreListener {
 
     @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
+    LoadMoreRecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
     PullToRefreshView refreshLayout;
 
@@ -40,7 +39,6 @@ public class MessageListFragment extends BaseFragment implements MessageListView
     @Inject
     Activity mActivity;
 
-    private AutoLoadScrollListener mAutoLoadListener;
 
     @Override
     public void initInjector() {
@@ -64,13 +62,7 @@ public class MessageListFragment extends BaseFragment implements MessageListView
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
-        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore() {
-                mPresenter.onLoadMore();
-            }
-        };
-        recyclerView.addOnScrollListener(mAutoLoadListener);
+        recyclerView.setLoadMoreListener(this);
     }
 
     @Override
@@ -90,9 +82,17 @@ public class MessageListFragment extends BaseFragment implements MessageListView
 
     @Override
     public void renderMessageList(List<Message> messages) {
-        mAutoLoadListener.setLoading(false);
-        refreshLayout.setRefreshing(false);
         mAdapter.bind(messages);
+    }
+
+    @Override
+    public void onRefreshCompleted() {
+        refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoadCompleted(boolean haMore) {
+        recyclerView.notifyMoreFinish(haMore);
     }
 
     @Override
@@ -109,5 +109,10 @@ public class MessageListFragment extends BaseFragment implements MessageListView
     @Override
     public void onRefresh() {
         mPresenter.onRefresh();
+    }
+
+    @Override
+    public void onLoadMore() {
+        mPresenter.onLoadMore();
     }
 }

@@ -3,7 +3,6 @@ package com.gzsll.hupu.ui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.gzsll.hupu.R;
@@ -12,7 +11,7 @@ import com.gzsll.hupu.presenter.ThreadRecommendPresenter;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.adapter.ThreadListAdapter;
 import com.gzsll.hupu.ui.view.ThreadRecommendView;
-import com.gzsll.hupu.widget.AutoLoadScrollListener;
+import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import org.apache.log4j.Logger;
@@ -45,12 +44,11 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
 
 
     @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
+    LoadMoreRecyclerView recyclerView;
     @Bind(R.id.refreshLayout)
     PullToRefreshView refreshLayout;
 
 
-    private AutoLoadScrollListener mAutoLoadListener;
 
 
     @Override
@@ -77,13 +75,12 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
-        mAutoLoadListener = new AutoLoadScrollListener(layoutManager) {
+        recyclerView.setLoadMoreListener(new LoadMoreRecyclerView.LoadMoreListener() {
             @Override
             public void onLoadMore() {
                 mPresenter.onLoadMore();
             }
-        };
-        recyclerView.addOnScrollListener(mAutoLoadListener);
+        });
 
     }
 
@@ -104,9 +101,17 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
 
     @Override
     public void renderThreads(List<Thread> threads) {
-        refreshLayout.setRefreshing(false);
-        mAutoLoadListener.setLoading(false);
         mAdapter.bind(threads);
+    }
+
+    @Override
+    public void onLoadCompleted(boolean hasMore) {
+        recyclerView.notifyMoreFinish(hasMore);
+    }
+
+    @Override
+    public void onRefreshCompleted() {
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -119,12 +124,6 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
     public void onEmpty() {
         setEmptyText("没有推荐帖子");
         showEmpty(true);
-    }
-
-
-    @Override
-    public void onRefreshing(boolean refresh) {
-        refreshLayout.setRefreshing(refresh);
     }
 
 
