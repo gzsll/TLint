@@ -106,7 +106,7 @@ public class HuPuWebView extends WebView {
         settings.setGeolocationDatabasePath(path);
         settings.setDomStorageEnabled(true);
         this.basicUA = settings.getUserAgentString() + " kanqiu/7.05.6303/7059";
-
+        setBackgroundColor(0);
         initWebViewClient();
         setWebChromeClient(new HuPuChromeClient());
         try {

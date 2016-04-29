@@ -80,6 +80,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         pSwipeBackEdgeMode.setOnPreferenceChangeListener(this);
         setListSetting(Integer.parseInt(prefs.getString("pSwipeBackEdgeMode", "0")), R.array.swipeBackEdgeMode, pSwipeBackEdgeMode);
 
+        findPreference("pNightMode").setOnPreferenceChangeListener(this);
+
 //        pOfflineCount = (ListPreference) findPreference("pOfflineCount");
 //        pOfflineCount.setOnPreferenceChangeListener(this);
 //        setListSetting(Integer.parseInt(prefs.getString("pOfflineCount", "0")), R.array.offlineCount, pOfflineCount);
