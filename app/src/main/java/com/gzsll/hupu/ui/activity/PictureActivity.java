@@ -3,7 +3,6 @@ package com.gzsll.hupu.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,18 +13,12 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.helper.ConfigHelper;
-import com.gzsll.hupu.helper.FileHelper;
-import com.gzsll.hupu.helper.FormatHelper;
-import com.gzsll.hupu.helper.OkHttpHelper;
-import com.gzsll.hupu.helper.ShareHelper;
 import com.gzsll.hupu.helper.StatusBarUtil;
-import com.gzsll.hupu.helper.StringHelper;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.presenter.PicturePresenter;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.fragment.ImageFragment;
+import com.gzsll.hupu.ui.view.PictureView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,16 +27,11 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sll on 2016/3/10.
  */
-public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.OnPageChangeListener {
+public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.OnPageChangeListener, PictureView {
 
 
     public static void startActivity(Context mContext, String extraPic, ArrayList<String> extraPics) {
@@ -53,20 +41,9 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
         mContext.startActivity(intent);
     }
 
+
     @Inject
-    FormatHelper mFormatHelper;
-    @Inject
-    OkHttpHelper mOkHttpHelper;
-    @Inject
-    FileHelper mFileHelper;
-    @Inject
-    ConfigHelper mConfigHelper;
-    @Inject
-    ToastHelper mToastHelper;
-    @Inject
-    ShareHelper mShareHelper;
-    @Inject
-    StringHelper mStringHelper;
+    PicturePresenter mPresenter;
 
 
     @Bind(R.id.viewPager)
@@ -94,6 +71,7 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
     @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
+        mPresenter.attachView(this);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         toolbar.setBackgroundColor(Color.TRANSPARENT);
         initToolBar(toolbar);
@@ -187,11 +165,11 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.savePicture) {
-            save(extraPics.get(viewPager.getCurrentItem()));
+            mPresenter.saveImage(extraPics.get(viewPager.getCurrentItem()));
         } else if (id == R.id.share) {
 
         } else if (id == R.id.copy) {
-            mStringHelper.copy(extraPics.get(viewPager.getCurrentItem()));
+            mPresenter.copyImagePath(extraPics.get(viewPager.getCurrentItem()));
         } else if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.downloadAgain) {
@@ -203,41 +181,7 @@ public class PictureActivity extends BaseSwipeBackActivity implements ViewPager.
         return true;
     }
 
-    private void save(String url) {
-        Observable.just(url).subscribeOn(Schedulers.io()).map(new Func1<String, String>() {
-            @Override
-            public String call(String s) {
-                String fileName = mFormatHelper.getFileNameFromUrl(s);
-                File target = new File(mConfigHelper.getPicSavePath(), fileName);
-                if (!target.exists()) {
-                    try {
-                        mOkHttpHelper.httpDownload(s, target);
-                        scanPhoto(target);
-                        return "保存成功";
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return "保存失败";
-                    }
-                } else {
-                    return "图片已存在";
-                }
 
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
-            @Override
-            public void call(String s) {
-                mToastHelper.showToast(s);
-            }
-        });
-    }
-
-    private void scanPhoto(File file) {
-        Intent mediaScanIntent = new Intent(
-                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(file);
-        mediaScanIntent.setData(contentUri);
-        sendBroadcast(mediaScanIntent);
-    }
 
     @Override
     public void setStatusBarColor(boolean on) {
