@@ -33,18 +33,11 @@ android {
         versionCode 39
         versionName "2.0"
     }
-    signingConfigs {
-        myConfig {
-            storeFile file('pursll.keystore')
-            storePassword 'sll564297,'
-            keyAlias 'pursll'
-            keyPassword 'sll564297,'
-        }
-    }
+
 
     buildTypes {
         release {
-            signingConfig signingConfigs.myConfig
+            //  signingConfig signingConfigs.myConfig
             minifyEnabled false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
