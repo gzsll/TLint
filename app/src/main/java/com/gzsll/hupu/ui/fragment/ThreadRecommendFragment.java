@@ -134,8 +134,8 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mPresenter.detachView();
+        super.onDestroy();
     }
 
     @Override

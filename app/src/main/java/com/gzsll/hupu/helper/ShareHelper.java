@@ -30,8 +30,9 @@ public class ShareHelper {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "分享");
         intent.putExtra(Intent.EXTRA_TEXT, extraText);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(
-                Intent.createChooser(intent, "分享"));
+        Intent sendIntent = Intent.createChooser(intent, "分享");
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(sendIntent
+        );
     }
 }
