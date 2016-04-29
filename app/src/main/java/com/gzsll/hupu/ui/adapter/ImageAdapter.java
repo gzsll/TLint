@@ -105,7 +105,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
         holder.ivCheck.setVisibility(View.VISIBLE);
         holder.ivCheck.setImageResource(selectedImages.contains(image) ? R.drawable.ap_gallery_checked : R.drawable.ap_gallery_normal);
-        int width = 50, height = 50;
+        int width = 100, height = 100;
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.fromFile(new File(image.path)))
                 .setResizeOptions(new ResizeOptions(width, height))
                 .build();

@@ -127,7 +127,7 @@ public class MyApplication extends Application {
                                 .setBaseDirectoryPath(getCacheDir())
                                 .setBaseDirectoryName("imageCache")
                                 .setMaxCacheSize(MAX_DISK_CACHE_SIZE)
-                                .build()).build();
+                                .build()).setDownsampleEnabled(true).build();
         Fresco.initialize(this, config);
 
     }
