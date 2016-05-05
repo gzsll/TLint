@@ -7,10 +7,10 @@ import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
-import com.gzsll.hupu.components.okhttp.OkHttpImagePipelineConfigFactory;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
@@ -124,8 +124,6 @@ public class MyApplication extends Application {
                         })
                 .setMainDiskCacheConfig(
                         DiskCacheConfig.newBuilder(this)
-                                .setBaseDirectoryPath(getCacheDir())
-                                .setBaseDirectoryName("imageCache")
                                 .setMaxCacheSize(MAX_DISK_CACHE_SIZE)
                                 .build()).setDownsampleEnabled(true).build();
         Fresco.initialize(this, config);
