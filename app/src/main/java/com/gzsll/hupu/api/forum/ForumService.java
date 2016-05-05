@@ -81,9 +81,8 @@ public interface ForumService {
     @GET("recommend/getThreadsList")
     Observable<ThreadListData> getRecommendThreadList(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
-    @POST("user/getUserMessageList")
-    @FormUrlEncoded
-    Observable<MessageData> getMessageList(@Field("sign") String sign, @FieldMap Map<String, String> params);
+    @GET("user/getUserMessageList")
+    Observable<MessageData> getMessageList(@Query("sign") String sign, @QueryMap Map<String, String> params);
 
     @POST("user/delUserMessage")
     @FormUrlEncoded
