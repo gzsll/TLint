@@ -30,7 +30,7 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="暂无数据"
-            android:textColor="@color/base_text_black" />
+            android:textColor="?android:attr/textColorSecondary"/>
 
         <Button
             android:id="@+id/btnReload"
@@ -39,7 +39,7 @@
             android:layout_marginTop="18dp"
             android:background="@drawable/retry_button_background"
             android:text="重试"
-            android:textColor="#4F4F4F"
+            android:textColor="?android:attr/textColorSecondary"
             android:visibility="visible" />
 
         <View
