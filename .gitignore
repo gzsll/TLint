@@ -39,3 +39,5 @@ proguard/
 gradle/
 gradlew
 gradlew.bat
+local.properties
+*.keystore

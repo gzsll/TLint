@@ -22,6 +22,9 @@ apt {
     }
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -30,14 +33,26 @@ android {
         applicationId "com.gzsll.hupu"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 39
-        versionName "2.0"
+        versionCode 40
+        versionName "2.1"
+    }
+
+    signingConfigs {
+        def path = properties.getProperty("keystore.path")
+        def password = properties.getProperty("keystore.password")
+        def alias = properties.getProperty("keystore.alias");
+        myConfig {
+            storeFile file(path)
+            storePassword password
+            keyAlias alias
+            keyPassword password
+        }
     }
 
 
     buildTypes {
         release {
-            //  signingConfig signingConfigs.myConfig
+            signingConfig signingConfigs.myConfig
             minifyEnabled false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
