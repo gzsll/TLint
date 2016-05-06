@@ -1,6 +1,10 @@
 package com.gzsll.hupu.api.game;
 
+import android.text.TextUtils;
+
 import com.gzsll.hupu.bean.LoginData;
+import com.gzsll.hupu.bean.PmData;
+import com.gzsll.hupu.bean.PmDetailData;
 import com.gzsll.hupu.bean.SearchData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
@@ -22,7 +26,7 @@ import rx.schedulers.Schedulers;
  * Created by sll on 2016/3/10.
  */
 public class GameApi {
-    static final String BASE_URL = "http://games.mobileapi.hupu.com/1/7.0.7/";
+    static final String BASE_URL = "http://games.mobileapi.hupu.com/1/7.0.8/";
 
     private GameService mGameService;
     private RequestHelper mRequestHelper;
@@ -81,6 +85,39 @@ public class GameApi {
         String sign = mRequestHelper.getRequestSign(params);
         params.put("sign", sign);
         return mGameService.search(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<PmData> queryPmList(String lastTime) {
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        if (!TextUtils.isEmpty(lastTime)) {
+            params.put("last_time", lastTime);
+        }
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        return mGameService.queryPmList(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
+    }
+
+
+    public Observable<PmDetailData> queryPmDetail(String mid, String uid) {
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        if (!TextUtils.isEmpty(mid)) {
+            params.put("pmid", mid);
+        }
+        params.put("from_puid", uid);
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        return mGameService.queryPmDetail(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<PmDetailData> pm(String content, String uid) {
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        if (!TextUtils.isEmpty(content)) {
+            params.put("content", content);
+        }
+        params.put("receiver_puid", uid);
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        return mGameService.pm(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
     }
 
 }

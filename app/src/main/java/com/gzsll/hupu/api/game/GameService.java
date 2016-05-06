@@ -1,6 +1,8 @@
 package com.gzsll.hupu.api.game;
 
 import com.gzsll.hupu.bean.LoginData;
+import com.gzsll.hupu.bean.PmData;
+import com.gzsll.hupu.bean.PmDetailData;
 import com.gzsll.hupu.bean.SearchData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
@@ -35,4 +37,17 @@ public interface GameService {
 
     @GET("search/list")
     Observable<SearchData> search(@QueryMap Map<String, String> params, @Query("client") String client);
+
+    @FormUrlEncoded
+    @POST("pm/list")
+    Observable<PmData> queryPmList(@FieldMap Map<String, String> params, @Query("client") String client);
+
+    @FormUrlEncoded
+    @POST("pm/detail")
+    Observable<PmDetailData> queryPmDetail(@FieldMap Map<String, String> params, @Query("client") String client);
+
+    @FormUrlEncoded
+    @POST("pm/send")
+    Observable<PmDetailData> pm(@FieldMap Map<String, String> params, @Query("client") String client);
+
 }

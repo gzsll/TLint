@@ -18,7 +18,7 @@ import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.ui.activity.AccountActivity;
 import com.gzsll.hupu.ui.activity.LoginActivity;
-import com.gzsll.hupu.ui.activity.MessageListActivity;
+import com.gzsll.hupu.ui.activity.PmListActivity;
 import com.gzsll.hupu.ui.activity.UserProfileActivity;
 import com.gzsll.hupu.ui.view.MainView;
 import com.squareup.otto.Bus;
@@ -100,7 +100,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void clickNotification() {
         if (isLogin()) {
-            MessageListActivity.startActivity(mActivity);
+            PmListActivity.startActivity(mActivity);
         } else {
             login();
         }

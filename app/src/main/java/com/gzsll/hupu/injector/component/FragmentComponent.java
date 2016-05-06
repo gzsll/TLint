@@ -10,6 +10,8 @@ import com.gzsll.hupu.ui.fragment.ContentFragment;
 import com.gzsll.hupu.ui.fragment.ForumListFragment;
 import com.gzsll.hupu.ui.fragment.ImageFragment;
 import com.gzsll.hupu.ui.fragment.MessageListFragment;
+import com.gzsll.hupu.ui.fragment.PmDetailFragment;
+import com.gzsll.hupu.ui.fragment.PmListFragment;
 import com.gzsll.hupu.ui.fragment.SettingFragment;
 import com.gzsll.hupu.ui.fragment.ThreadCollectFragment;
 import com.gzsll.hupu.ui.fragment.ThreadListFragment;
@@ -46,5 +48,10 @@ public interface FragmentComponent {
     void inject(MessageListFragment mMessageListFragment);
 
     void inject(ImageFragment imageFragment);
+
+    void inject(PmListFragment mPmListFragment);
+
+
+    void inject(PmDetailFragment mPmDetailFragment);
 
 }

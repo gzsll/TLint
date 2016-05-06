@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:fresco="http://schemas.android.com/tools"
+                                    android:id="@+id/listItem"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    card_view:cardCornerRadius="3dp"
+                                    card_view:cardElevation="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/ivIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            fresco:actualImageScaleType="centerCrop"
+            fresco:failureImage="@drawable/icon_def_head"
+            fresco:failureImageScaleType="fitCenter"
+            fresco:placeholderImage="@drawable/icon_def_head"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="true"/>
+
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/ivIcon"
+            android:text="pursll"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/text_size_12"/>
+
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvName"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/ivIcon"
+            android:textColor="?android:attr/textColorPrimary"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_15"/>
+
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:text="刚刚"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/text_size_12"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+
+
+

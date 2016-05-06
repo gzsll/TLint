@@ -109,6 +109,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeLight" />
 
+        <activity
+            android:name=".ui.activity.PmListActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight"/>
+
+        <activity
+            android:name=".ui.activity.PmDetailActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight"/>
+
         <service
             android:name="com.gzsll.hupu.service.MessageService"
             android:exported="true">
