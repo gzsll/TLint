@@ -3,7 +3,7 @@ package com.gzsll.hupu.presenter;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
-import com.gzsll.hupu.bean.ExamData;
+import com.gzsll.hupu.bean.PermissionData;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.bean.UploadInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
@@ -59,21 +59,23 @@ public class PostPresenter extends Presenter<PostView> {
 
 
     public void checkPermission(int type, String fid, String tid) {
-        if (mSettingPrefHelper.isNeedExam()) {
-            mForumApi.queryExam(fid, tid, type == Constants.TYPE_POST ? "threadPublish" : "threadReply").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ExamData>() {
-                @Override
-                public void call(ExamData examData) {
-                    if (examData != null) {
-                        view.renderExam(examData.exam);
+        mForumApi.checkPermission(fid, tid, type == Constants.TYPE_POST ? "threadPublish" : "threadReply").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PermissionData>() {
+            @Override
+            public void call(PermissionData permissionData) {
+                if (permissionData != null) {
+                    if (permissionData.error != null) {
+                        view.renderError(permissionData.error);
+                    } else if (mSettingPrefHelper.isNeedExam()) {
+                        view.renderExam(permissionData.exam);
                     }
                 }
-            }, new Action1<Throwable>() {
-                @Override
-                public void call(Throwable throwable) {
-
-                }
-            });
-        }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
     }
 
 

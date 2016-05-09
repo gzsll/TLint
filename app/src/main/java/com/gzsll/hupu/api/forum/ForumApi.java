@@ -6,10 +6,10 @@ import android.util.Log;
 import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.CollectData;
-import com.gzsll.hupu.bean.ExamData;
 import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
+import com.gzsll.hupu.bean.PermissionData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.bean.UploadData;
@@ -266,7 +266,7 @@ public class ForumApi {
      * @param action threadPublish  threadReply
      * @return
      */
-    public Observable<ExamData> queryExam(String fid, String tid, String action) {
+    public Observable<PermissionData> checkPermission(String fid, String tid, String action) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         if (!TextUtils.isEmpty(fid)) {
             params.put("fid", fid);
@@ -278,7 +278,7 @@ public class ForumApi {
             params.put("action", action);
         }
         String sign = mRequestHelper.getRequestSign(params);
-        return mForumService.queryExam(sign, params).subscribeOn(Schedulers.io());
+        return mForumService.checkPermission(sign, params).subscribeOn(Schedulers.io());
     }
 
 

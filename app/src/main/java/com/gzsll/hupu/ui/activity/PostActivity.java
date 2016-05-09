@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.bean.BaseError;
 import com.gzsll.hupu.bean.Exam;
 import com.gzsll.hupu.presenter.PostPresenter;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
@@ -169,6 +170,22 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
     @Override
     protected boolean isApplyStatusBarColor() {
         return true;
+    }
+
+    @Override
+    public void renderError(BaseError error) {
+        if (error != null) {
+            System.out.println(error.text);
+            new MaterialDialog.Builder(this).title("温馨提示").content(error.text).cancelable(false)
+                    .positiveText("确定")
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            finish();
+                        }
+
+                    }).show();
+        }
     }
 
     @Override

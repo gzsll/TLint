@@ -3,10 +3,10 @@ package com.gzsll.hupu.api.forum;
 import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.CollectData;
-import com.gzsll.hupu.bean.ExamData;
 import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
+import com.gzsll.hupu.bean.PermissionData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.bean.UploadData;
@@ -95,5 +95,5 @@ public interface ForumService {
     Observable<UploadData> upload(@Part MultipartBody.Part file, @PartMap Map<String, RequestBody> params);
 
     @GET("permission/check")
-    Observable<ExamData> queryExam(@Query("sign") String sign, @QueryMap Map<String, String> params);
+    Observable<PermissionData> checkPermission(@Query("sign") String sign, @QueryMap Map<String, String> params);
 }
