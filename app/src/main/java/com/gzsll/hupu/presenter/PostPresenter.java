@@ -1,13 +1,16 @@
 package com.gzsll.hupu.presenter;
 
+import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
+import com.gzsll.hupu.bean.ExamData;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.bean.UploadInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.ConfigHelper;
 import com.gzsll.hupu.helper.FileHelper;
 import com.gzsll.hupu.helper.SecurityHelper;
+import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.view.PostView;
 
@@ -41,6 +44,8 @@ public class PostPresenter extends Presenter<PostView> {
     ConfigHelper mConfigHelper;
     @Inject
     ToastHelper mToastHelper;
+    @Inject
+    SettingPrefHelper mSettingPrefHelper;
 
 
     @Inject
@@ -51,6 +56,25 @@ public class PostPresenter extends Presenter<PostView> {
 
     private ArrayList<String> paths = new ArrayList<>();
     int uploadCount = 0;
+
+
+    public void checkPermission(int type, String fid, String tid) {
+        if (mSettingPrefHelper.isNeedExam()) {
+            mForumApi.queryExam(fid, tid, type == Constants.TYPE_POST ? "threadPublish" : "threadReply").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ExamData>() {
+                @Override
+                public void call(ExamData examData) {
+                    if (examData != null) {
+                        view.renderExam(examData.exam);
+                    }
+                }
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable throwable) {
+
+                }
+            });
+        }
+    }
 
 
     public void parse(ArrayList<String> paths) {

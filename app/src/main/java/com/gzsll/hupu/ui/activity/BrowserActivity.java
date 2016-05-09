@@ -26,10 +26,15 @@ import butterknife.ButterKnife;
 public class BrowserActivity extends BaseSwipeBackActivity {
 
 
-    public static void startActivity(Context mContext, String url) {
+    public static void startActivity(Context mContext, String url, boolean external) {
         Intent intent = new Intent(mContext, BrowserActivity.class);
         intent.putExtra("url", url);
+        intent.putExtra("external", external);
         mContext.startActivity(intent);
+    }
+
+    public static void startActivity(Context mContext, String url) {
+        startActivity(mContext, url, true);
     }
 
     @Bind(R.id.toolbar)
@@ -58,7 +63,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar);
         url = getIntent().getStringExtra("url");
-        mFragment = BrowserFragment.newInstance(url, "", true);
+        mFragment = BrowserFragment.newInstance(url, "", getIntent().getBooleanExtra("external", true));
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
     }
 

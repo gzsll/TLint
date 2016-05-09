@@ -17,6 +17,7 @@ import com.gzsll.hupu.bean.UpdateInfo;
 import com.gzsll.hupu.helper.FileHelper;
 import com.gzsll.hupu.helper.FormatHelper;
 import com.gzsll.hupu.helper.OkHttpHelper;
+import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.ui.activity.MainActivity;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
@@ -51,6 +52,8 @@ public class UpdateAgent {
     FormatHelper mFormatHelper;
     @Inject
     FileHelper mFileHelper;
+    @Inject
+    SettingPrefHelper mSettingPrefHelper;
 
 
     private NotificationManager mNotifyManager;
@@ -83,6 +86,9 @@ public class UpdateAgent {
             @Override
             public void call(UpdateInfo updateInfo) {
                 checkUpdateFinished(updateInfo);
+                if (updateInfo != null && updateInfo.extra != null) {
+                    mSettingPrefHelper.setNeedExam(updateInfo.extra.needExam == 1);
+                }
             }
         }, new Action1<Throwable>() {
             @Override
@@ -95,7 +101,7 @@ public class UpdateAgent {
     }
 
     private void checkUpdateFinished(UpdateInfo updateInfo) {
-        if (updateInfo != null && updateInfo.getVersionCode() > BuildConfig.VERSION_CODE) {
+        if (updateInfo != null && updateInfo.versionCode > BuildConfig.VERSION_CODE) {
             showUpdateDialog(updateInfo);
         }
     }
@@ -103,12 +109,12 @@ public class UpdateAgent {
     private void showUpdateDialog(final UpdateInfo updateInfo) {
         if (updateInfo != null) {
             MaterialDialog.Builder builder = new MaterialDialog.Builder(mActivity).title("升级新版本");
-            builder.positiveText("立刻升级").negativeText("取消").content(Html.fromHtml(updateInfo.getUpdateInfo()));
+            builder.positiveText("立刻升级").negativeText("取消").content(Html.fromHtml(updateInfo.updateInfo));
             builder.callback(new MaterialDialog.ButtonCallback() {
                 @Override
                 public void onPositive(MaterialDialog dialog) {
                     try {
-                        String url = updateInfo.getUpdateUrl();
+                        String url = updateInfo.updateUrl;
                         mBuilder.setContentTitle(mActivity.getString(R.string.app_name) + "正在更新").setAutoCancel(true).setSmallIcon(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).applicationInfo.icon);
                         destinationUri = Uri.parse(SDCARD_ROOT + File.separator + mFormatHelper.getFileNameFromUrl(url));
                         FileDownloader.getImpl().create(url).setPath(SDCARD_ROOT + File.separator + mFormatHelper.getFileNameFromUrl(url)).setListener(listener).start();

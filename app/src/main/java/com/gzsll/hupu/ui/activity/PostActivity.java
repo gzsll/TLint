@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.bean.Exam;
 import com.gzsll.hupu.presenter.PostPresenter;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.view.PostView;
@@ -91,6 +92,16 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
         initToolBar(toolbar);
         initBundle();
         initPostType();
+        initDialog();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.checkPermission(type, fid, tid);
+    }
+
+    private void initDialog() {
         mDialog = new MaterialDialog.Builder(this)
                 .title("提示")
                 .content("正在发送")
@@ -158,6 +169,25 @@ public class PostActivity extends BaseSwipeBackActivity implements PostView {
     @Override
     protected boolean isApplyStatusBarColor() {
         return true;
+    }
+
+    @Override
+    public void renderExam(final Exam exam) {
+        if (exam != null) {
+            new MaterialDialog.Builder(this).title("温馨提示").content(exam.title).cancelable(false)
+                    .positiveText("开始答题").negativeText("放弃答题")
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            BrowserActivity.startActivity(PostActivity.this, exam.url, false);
+                        }
+
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            finish();
+                        }
+                    }).show();
+        }
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.components.storage.UserStorage;
@@ -94,7 +95,6 @@ public class HuPuWebView extends WebView {
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setDomStorageEnabled(true);
         settings.setCacheMode(1);
-        settings.setLoadsImagesAutomatically(false);
         settings.setUseWideViewPort(true);
         if (Build.VERSION.SDK_INT > 6) {
             settings.setAppCacheEnabled(true);
@@ -150,9 +150,6 @@ public class HuPuWebView extends WebView {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if (!view.getSettings().getLoadsImagesAutomatically()) {
-                view.getSettings().setLoadsImagesAutomatically(true);
-            }
             if (callBack != null) {
                 callBack.onFinish();
             }
@@ -270,6 +267,9 @@ public class HuPuWebView extends WebView {
                 LoginActivity.startActivity(getContext());
                 mToastHelper.showToast("请先登录");
                 break;
+            case "hupu.ui.pageclose":
+                AppManager.getAppManager().finishActivity();
+                break;
         }
     }
 
@@ -295,11 +295,11 @@ public class HuPuWebView extends WebView {
 
 
     public void loadUrl(String url) {
+        logger.debug("loadUrl:" + url);
         setUA(-1);
         if (header == null) {
             header = new HashMap<>();
             header.put("Accept-Encoding", "gzip");
-            header.put("X-Requested-With", "com.hupu.games");
         }
         super.loadUrl(url, header);
     }

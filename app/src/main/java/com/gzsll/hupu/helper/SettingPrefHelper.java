@@ -151,4 +151,14 @@ public class SettingPrefHelper {
 
     }
 
+    public void setNeedExam(boolean needExam) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putBoolean("needExam", needExam).apply();
+    }
+
+    public boolean isNeedExam() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("needExam", false);
+    }
+
 }
