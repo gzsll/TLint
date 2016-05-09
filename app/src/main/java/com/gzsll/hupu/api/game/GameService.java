@@ -1,9 +1,12 @@
 package com.gzsll.hupu.api.game;
 
+import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.LoginData;
 import com.gzsll.hupu.bean.PmData;
 import com.gzsll.hupu.bean.PmDetailData;
+import com.gzsll.hupu.bean.PmSettingData;
 import com.gzsll.hupu.bean.SearchData;
+import com.gzsll.hupu.bean.SendPmData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
 
@@ -48,6 +51,18 @@ public interface GameService {
 
     @FormUrlEncoded
     @POST("pm/send")
-    Observable<PmDetailData> pm(@FieldMap Map<String, String> params, @Query("client") String client);
+    Observable<SendPmData> pm(@FieldMap Map<String, String> params, @Query("client") String client);
+
+    @FormUrlEncoded
+    @POST("pm/setting")
+    Observable<PmSettingData> queryPmSetting(@FieldMap Map<String, String> params, @Query("client") String client);
+
+    @FormUrlEncoded
+    @POST("pm/clear")
+    Observable<BaseData> clearPm(@FieldMap Map<String, String> params, @Query("client") String client);
+
+    @FormUrlEncoded
+    @POST("pm/block")
+    Observable<BaseData> blockPm(@FieldMap Map<String, String> params, @Query("client") String client);
 
 }

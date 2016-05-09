@@ -62,7 +62,7 @@ public class SplashActivity extends BaseActivity {
                 MainActivity.startActivity(SplashActivity.this);
                 String action = getIntent().getAction();
                 if (TextUtils.equals(action, ACTION_NOTIFICATION_MESSAGE)) {
-                    MessageListActivity.startActivity(SplashActivity.this);
+                    MessageActivity.startActivity(SplashActivity.this);
                 }
                 finish();
             }

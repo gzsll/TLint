@@ -2,11 +2,15 @@ package com.gzsll.hupu.presenter;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.MessageData;
+import com.gzsll.hupu.bean.Pm;
+import com.gzsll.hupu.bean.PmData;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
@@ -18,7 +22,7 @@ import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.ui.activity.AccountActivity;
 import com.gzsll.hupu.ui.activity.LoginActivity;
-import com.gzsll.hupu.ui.activity.PmListActivity;
+import com.gzsll.hupu.ui.activity.MessageActivity;
 import com.gzsll.hupu.ui.activity.UserProfileActivity;
 import com.gzsll.hupu.ui.view.MainView;
 import com.squareup.otto.Bus;
@@ -33,6 +37,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -57,6 +62,8 @@ public class MainPresenter extends Presenter<MainView> {
     ToastHelper mToastHelper;
     @Inject
     Activity mActivity;
+    @Inject
+    GameApi mGameApi;
 
     private int count = 0;
 
@@ -81,13 +88,28 @@ public class MainPresenter extends Presenter<MainView> {
 
     private void initNotification() {
         if (isLogin()) {
-            mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageData>() {
+            Observable.zip(mGameApi.queryPmList(""), mForumApi.getMessageList("", 1), new Func2<PmData, MessageData, Integer>() {
                 @Override
-                public void call(MessageData result) {
-                    if (result != null && result.status == 200) {
-                        count = result.result.list.size();
-                        view.renderNotification(count);
+                public Integer call(PmData pmData, MessageData messageData) {
+                    int size = 0;
+                    if (pmData != null) {
+                        for (Pm pm : pmData.result.data) {
+                            if (!TextUtils.isEmpty(pm.unread) && pm.unread.equals("1")) {
+                                size++;
+                            }
+                        }
                     }
+
+                    if (messageData != null && messageData.status == 200) {
+                        size += messageData.result.list.size();
+                    }
+                    return size;
+                }
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+                @Override
+                public void call(Integer integer) {
+                    count = integer;
+                    view.renderNotification(integer);
                 }
             }, new Action1<Throwable>() {
                 @Override
@@ -100,7 +122,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void clickNotification() {
         if (isLogin()) {
-            PmListActivity.startActivity(mActivity);
+            MessageActivity.startActivity(mActivity);
         } else {
             login();
         }

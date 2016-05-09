@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.gzsll.hupu.R;
@@ -28,10 +29,15 @@ public class BrowserFragment extends BaseFragment {
     private Logger logger = Logger.getLogger(BrowserFragment.class.getSimpleName());
 
     public static BrowserFragment newInstance(String url, String title) {
+        return newInstance(url, title, false);
+    }
+
+    public static BrowserFragment newInstance(String url, String title, boolean external) {
         BrowserFragment mFragment = new BrowserFragment();
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
         bundle.putString("title", title);
+        bundle.putBoolean("external", external);
         mFragment.setArguments(bundle);
         return mFragment;
     }
@@ -50,6 +56,7 @@ public class BrowserFragment extends BaseFragment {
 
     private String url;
     private String title;
+    private boolean external;
 
     @Override
     public void initInjector() {
@@ -65,9 +72,7 @@ public class BrowserFragment extends BaseFragment {
     public void getBundle(Bundle bundle) {
         url = bundle.getString("url");
         title = bundle.getString("title");
-        if (mSettingPrefHelper.getNightModel() && url.contains("?")) {
-            url += "&night=1";
-        }
+        external = bundle.getBoolean("external");
     }
 
     @Override
@@ -92,6 +97,15 @@ public class BrowserFragment extends BaseFragment {
                 }
             }
         });
+        if (external) {
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if (url != null) view.loadUrl(url);
+                    return true;
+                }
+            });
+        }
 
     }
 

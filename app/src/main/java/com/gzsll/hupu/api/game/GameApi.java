@@ -2,10 +2,13 @@ package com.gzsll.hupu.api.game;
 
 import android.text.TextUtils;
 
+import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.LoginData;
 import com.gzsll.hupu.bean.PmData;
 import com.gzsll.hupu.bean.PmDetailData;
+import com.gzsll.hupu.bean.PmSettingData;
 import com.gzsll.hupu.bean.SearchData;
+import com.gzsll.hupu.bean.SendPmData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
 import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
@@ -109,7 +112,7 @@ public class GameApi {
         return mGameService.queryPmDetail(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
     }
 
-    public Observable<PmDetailData> pm(String content, String uid) {
+    public Observable<SendPmData> pm(String content, String uid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         if (!TextUtils.isEmpty(content)) {
             params.put("content", content);
@@ -119,5 +122,32 @@ public class GameApi {
         params.put("sign", sign);
         return mGameService.pm(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
     }
+
+
+    public Observable<PmSettingData> queryPmSetting(String uid) {
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        params.put("other_puid", uid);
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        return mGameService.queryPmSetting(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseData> clearPm(String uid) {
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        params.put("clear_puid", uid);
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        return mGameService.clearPm(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseData> blockPm(String uid, int block) {
+        Map<String, String> params = mRequestHelper.getHttpRequestMap();
+        params.put("block_puid", uid);
+        params.put("is_block", String.valueOf(block));
+        String sign = mRequestHelper.getRequestSign(params);
+        params.put("sign", sign);
+        return mGameService.blockPm(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
+    }
+
 
 }

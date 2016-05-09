@@ -137,15 +137,14 @@ public class HuPuWebView extends WebView {
             logger.debug(Uri.decode(url));
             Uri uri = Uri.parse(url);
             String scheme = uri.getScheme();
-            logger.debug("scheme:" + scheme);
             if (url.startsWith("hupu") || url.startsWith("kanqiu")) {
                 if (scheme != null) {
                     handleScheme(scheme, url);
                 }
-                return true;
-
+            } else if (scheme.equals("http") || scheme.equals("https")) {
+                BrowserActivity.startActivity(getContext(), url);
             }
-            return super.shouldOverrideUrlLoading(view, url);
+            return true;
         }
 
         @Override

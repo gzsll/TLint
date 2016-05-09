@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/toUser"
+        android:title="查看用户"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/block"
+        android:title="屏蔽该用户"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/clear"
+        android:title="清空聊天记录"
+        app:showAsAction="never"/>
+</menu>

@@ -3,7 +3,12 @@ package com.gzsll.hupu.ui.adapter;
 import android.app.Activity;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +19,20 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.PmDetail;
 import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.ui.activity.BrowserActivity;
+import com.gzsll.hupu.ui.activity.ContentActivity;
+import com.gzsll.hupu.ui.activity.ThreadListActivity;
 import com.gzsll.hupu.ui.activity.UserProfileActivity;
+import com.gzsll.hupu.widget.MyMovementMethod;
+
+import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -31,7 +44,7 @@ import butterknife.OnClick;
  * Created by sll on 2016/5/6.
  */
 public class PmDetailAdapter extends RecyclerView.Adapter<PmDetailAdapter.ViewHolder> {
-
+    Logger logger = Logger.getLogger(PmDetailAdapter.class.getSimpleName());
 
     @Inject
     UserStorage mUserStorage;
@@ -76,13 +89,14 @@ public class PmDetailAdapter extends RecyclerView.Adapter<PmDetailAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         PmDetail detail = mPmDetails.get(position);
         holder.detail = detail;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date(Long.valueOf(detail.create_time) * 1000);
         holder.tvDate.setText(format.format(date));
         if (!TextUtils.isEmpty(detail.header)) {
             holder.ivUser.setImageURI(Uri.parse(detail.header));
         }
-        holder.tvContent.setText(detail.content);
+        holder.tvContent.setMovementMethod(MyMovementMethod.getInstance());
+        holder.tvContent.setText(a(detail.content));
     }
 
     @Override
@@ -111,6 +125,68 @@ public class PmDetailAdapter extends RecyclerView.Adapter<PmDetailAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+    }
+
+    private SpannableStringBuilder a(String content) {
+        Matcher matcher = Pattern.compile("<a.+?</a>", Pattern.CASE_INSENSITIVE).matcher(content);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        int i = 0;
+        while (matcher.find()) {
+            i = matcher.end();
+            String group = matcher.group();
+            spannableStringBuilder.append(content.substring(0, i - group.length()));
+            spannableStringBuilder.append(span(content.substring(i - group.length(), i)));
+        }
+        if (i <= 0) {
+            spannableStringBuilder.append(content);
+        } else {
+            spannableStringBuilder.append(content.substring(i));
+        }
+        return spannableStringBuilder;
+    }
+
+    private CharSequence span(String text) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder(Html.fromHtml(text));
+        URLSpan[] spans = ssb.getSpans(0, ssb.length(), URLSpan.class);
+        for (final URLSpan span : spans) {
+            int start = ssb.getSpanStart(span);
+            int end = ssb.getSpanEnd(span);
+            ssb.removeSpan(span);
+            ssb.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    handlerSpan(span);
+                }
+            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return ssb;
+    }
+
+    private void handlerSpan(URLSpan span) {
+        String url = span.getURL();
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+        Uri uri = Uri.parse(url);
+        switch (uri.getScheme()) {
+            case "kanqiu":
+                if (url.contains("topic")) {
+                    String tid = uri.getLastPathSegment();
+                    ContentActivity.startActivity(mActivity, "", tid, "", 1, "");
+                } else if (url.contains("board")) {
+                    String boardId = uri.getLastPathSegment();
+                    ThreadListActivity.startActivity(mActivity, boardId);
+                }
+                break;
+            case "app":
+                break;
+            case "http":
+            case "https":
+                BrowserActivity.startActivity(mActivity, url);
+                break;
+
         }
     }
 

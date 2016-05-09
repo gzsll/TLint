@@ -22,7 +22,7 @@ import com.gzsll.hupu.helper.NetWorkHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.injector.component.DaggerServiceComponent;
 import com.gzsll.hupu.injector.module.ServiceModule;
-import com.gzsll.hupu.ui.activity.MessageListActivity;
+import com.gzsll.hupu.ui.activity.MessageActivity;
 import com.gzsll.hupu.ui.activity.SplashActivity;
 
 import org.apache.log4j.Logger;
@@ -160,7 +160,7 @@ public class MessageService extends Service {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setAction(SplashActivity.ACTION_NOTIFICATION_MESSAGE);
             } else {
-                intent = new Intent(this, MessageListActivity.class);
+                intent = new Intent(this, MessageActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
             PendingIntent contentIntent = PendingIntent.getActivity(this, Integer.valueOf(message.id), intent, PendingIntent.FLAG_CANCEL_CURRENT);

@@ -58,7 +58,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar);
         url = getIntent().getStringExtra("url");
-        mFragment = BrowserFragment.newInstance(url, "");
+        mFragment = BrowserFragment.newInstance(url, "", true);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
     }
 

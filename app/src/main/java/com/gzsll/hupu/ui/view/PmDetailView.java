@@ -13,12 +13,17 @@ public interface PmDetailView extends BaseView {
 
     void hideLoading();
 
+    void isBlock(boolean isBlock);
 
     void renderPmDetailList(List<PmDetail> pmDetails);
+
+    void scrollTo(int position);
 
     void onRefreshCompleted();
 
     void onError();
 
     void onEmpty();
+
+    void cleanEditText();
 }

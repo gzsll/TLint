@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Pm;
 import com.gzsll.hupu.ui.activity.PmDetailActivity;
+import com.gzsll.hupu.widget.LabelCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,9 +60,15 @@ public class PmListAdapter extends RecyclerView.Adapter<PmListAdapter.ViewHolder
         }
         holder.tvContent.setText(pm.content);
         holder.tvName.setText(pm.nickname);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date(Long.valueOf(pm.last_time) * 1000);
         holder.tvTime.setText(format.format(date));
+        if (!TextUtils.isEmpty(pm.unread) && pm.unread.equals("1")) {
+            holder.cardView.setLabelText("NEW");
+            holder.cardView.setLabelVisual(true);
+        } else {
+            holder.cardView.setLabelVisual(false);
+        }
     }
 
     @Override
@@ -81,6 +88,8 @@ public class PmListAdapter extends RecyclerView.Adapter<PmListAdapter.ViewHolder
         TextView tvTime;
         @Bind(R.id.ivIcon)
         SimpleDraweeView ivIcon;
+        @Bind(R.id.listItem)
+        LabelCardView cardView;
 
         @OnClick(R.id.listItem)
         void listItemClick() {
