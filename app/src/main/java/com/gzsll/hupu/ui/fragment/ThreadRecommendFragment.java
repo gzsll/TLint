@@ -106,7 +106,7 @@ public class ThreadRecommendFragment extends BaseFragment implements ThreadRecom
 
     @Override
     public void onLoadCompleted(boolean hasMore) {
-        recyclerView.notifyMoreFinish(hasMore);
+        recyclerView.onLoadCompleted(hasMore);
     }
 
     @Override

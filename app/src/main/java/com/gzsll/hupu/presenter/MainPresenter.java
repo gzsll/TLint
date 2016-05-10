@@ -79,6 +79,9 @@ public class MainPresenter extends Presenter<MainView> {
         mBus.register(this);
         initUserInfo();
         initNotification();
+        if (mSettingPrefHelper.getAutoUpdate()) {
+            mUpdateAgent.checkUpdate(mActivity);
+        }
     }
 
     private void initUserInfo() {

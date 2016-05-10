@@ -215,14 +215,16 @@ public class LoadMoreRecyclerView extends RecyclerView {
      *
      * @param autoLoadMore
      */
-    public void setAutoLoadMoreEnable(boolean autoLoadMore) {
+    public void setLoadMoreEnable(boolean autoLoadMore) {
         mIsFooterEnable = autoLoadMore;
     }
 
 
-    public void notifyMoreFinish(boolean hasMore) {
-        setAutoLoadMoreEnable(hasMore);
-        getAdapter().notifyItemRemoved(mLoadMorePosition);
+    public void onLoadCompleted(boolean hasMore) {
+        setLoadMoreEnable(hasMore);
+        if (mIsLoadingMore) {
+            getAdapter().notifyItemRemoved(mLoadMorePosition);
+        }
         mIsLoadingMore = false;
     }
 }

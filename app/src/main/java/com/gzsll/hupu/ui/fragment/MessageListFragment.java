@@ -92,7 +92,7 @@ public class MessageListFragment extends BaseFragment implements MessageListView
 
     @Override
     public void onLoadCompleted(boolean haMore) {
-        recyclerView.notifyMoreFinish(haMore);
+        recyclerView.onLoadCompleted(haMore);
     }
 
     @Override

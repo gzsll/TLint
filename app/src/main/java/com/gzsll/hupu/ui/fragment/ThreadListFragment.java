@@ -217,7 +217,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListView, 
 
     @Override
     public void onLoadCompleted(boolean hasMore) {
-        recyclerView.notifyMoreFinish(hasMore);
+        recyclerView.onLoadCompleted(hasMore);
     }
 
     @Override

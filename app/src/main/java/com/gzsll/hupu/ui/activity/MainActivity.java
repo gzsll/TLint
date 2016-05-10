@@ -25,7 +25,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.helper.ResourceHelper;
@@ -70,8 +69,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Inject
     SettingPrefHelper mSettingPrefHelper;
     @Inject
-    UpdateAgent mUpdateAgent;
-    @Inject
     UserStorage mUserStorage;
     @Inject
     MainPresenter mPresenter;
@@ -111,9 +108,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setupDrawerContent();
         getSupportFragmentManager().beginTransaction().replace(R.id.content, ThreadRecommendFragment.newInstance()).commit();
         mPresenter.attachView(this);
-        if (mSettingPrefHelper.getAutoUpdate()) {
-            mUpdateAgent.checkUpdate(this);
-        }
+
     }
 
 
@@ -203,7 +198,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tvCount.setVisibility(View.GONE);
         } else {
             tvCount.setVisibility(View.VISIBLE);
-            tvCount.setText("" + count);
+            tvCount.setText(String.valueOf(count));
         }
 
         view.measure(

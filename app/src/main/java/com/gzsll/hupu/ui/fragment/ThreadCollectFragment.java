@@ -103,7 +103,7 @@ public class ThreadCollectFragment extends BaseFragment implements ThreadCollect
 
     @Override
     public void onLoadCompleted(boolean hasMore) {
-        recyclerView.notifyMoreFinish(hasMore);
+        recyclerView.onLoadCompleted(hasMore);
     }
 
     @Override

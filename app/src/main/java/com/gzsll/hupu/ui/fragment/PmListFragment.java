@@ -94,7 +94,7 @@ public class PmListFragment extends BaseFragment implements PmListView, PullToRe
 
     @Override
     public void onLoadCompleted(boolean haMore) {
-        recyclerView.notifyMoreFinish(haMore);
+        recyclerView.onLoadCompleted(haMore);
     }
 
     @Override
