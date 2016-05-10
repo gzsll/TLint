@@ -27,7 +27,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.gzsll.hupu"
@@ -38,15 +38,17 @@ android {
     }
 
     signingConfigs {
-        def path = properties.getProperty("keystore.path")
-        def password = properties.getProperty("keystore.password")
-        def alias = properties.getProperty("keystore.alias");
+        def isRelease = gradle.startParameter.taskNames.any { it.contains('Release') }
+        def path = isRelease ? properties.getProperty("keystore.path") : 'debug.keystore'
+        def password = isRelease ? properties.getProperty("keystore.password") : ''
+        def alias = isRelease ? properties.getProperty("keystore.alias") : ''
         myConfig {
             storeFile file(path)
             storePassword password
             keyAlias alias
             keyPassword password
         }
+
     }
 
 
@@ -67,10 +69,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:cardview-v7:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:cardview-v7:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     //Dagger
     provided 'javax.annotation:javax.annotation-api:1.2'
