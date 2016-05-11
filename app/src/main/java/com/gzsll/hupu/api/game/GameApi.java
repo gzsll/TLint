@@ -12,9 +12,7 @@ import com.gzsll.hupu.bean.SendPmData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
 import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
-import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.RequestHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,18 +31,23 @@ public class GameApi {
 
     private GameService mGameService;
     private RequestHelper mRequestHelper;
-    private SettingPrefHelper mSettingPrefHelper;
-    private UserStorage mUserStorage;
 
-    public GameApi(RequestHelper mRequestHelper, SettingPrefHelper mSettingPrefHelper, UserStorage mUserStorage, OkHttpClient mOkHttpClient) {
+
+    public GameApi(RequestHelper mRequestHelper, OkHttpClient mOkHttpClient) {
         this.mRequestHelper = mRequestHelper;
-        this.mSettingPrefHelper = mSettingPrefHelper;
-        this.mUserStorage = mUserStorage;
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(FastJsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
         mGameService = retrofit.create(GameService.class);
     }
 
+
+    /**
+     * 登录
+     *
+     * @param userName 用户名
+     * @param passWord 密码
+     * @return
+     */
     public Observable<LoginData> login(String userName, String passWord) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("client", mRequestHelper.getDeviceId());
@@ -56,6 +59,13 @@ public class GameApi {
 
     }
 
+
+    /**
+     * 获取用户相关信息
+     *
+     * @param uid 用户id
+     * @return
+     */
     public Observable<UserData> getUserInfo(String uid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("puid", uid);
@@ -64,6 +74,12 @@ public class GameApi {
         return mGameService.getUserInfo(params, mRequestHelper.getDeviceId()).subscribeOn(Schedulers.io());
     }
 
+    /**
+     * 获取收藏帖子
+     *
+     * @param page 页数
+     * @return
+     */
     public Observable<ThreadListData> getCollectList(int page) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("page", String.valueOf(page));

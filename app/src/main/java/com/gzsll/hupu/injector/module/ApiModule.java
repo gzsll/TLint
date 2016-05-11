@@ -30,8 +30,8 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public GameApi provideGameApi(UserStorage userStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, SettingPrefHelper settingPrefHelper) {
-        return new GameApi(requestHelper, settingPrefHelper, userStorage, okHttpClient);
+    public GameApi provideGameApi(RequestHelper requestHelper, OkHttpClient okHttpClient) {
+        return new GameApi(requestHelper, okHttpClient);
     }
 
 

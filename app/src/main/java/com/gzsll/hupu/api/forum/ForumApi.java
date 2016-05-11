@@ -55,19 +55,41 @@ public class ForumApi {
         mForumService = retrofit.create(ForumService.class);
     }
 
-
+    /**
+     * 获取所有论坛列表
+     *
+     * @return
+     */
     public Observable<ForumsData> getForums() {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         String sign = mRequestHelper.getRequestSign(params);
         return mForumService.getForums(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 获取用户收藏的论坛列表
+     *
+     * @return
+     */
     public Observable<MyForumsData> getMyForums() {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         String sign = mRequestHelper.getRequestSign(params);
         return mForumService.getMyForums(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 获取论坛帖子列表
+     *
+     * @param fid      论坛id，通过getForums接口获取
+     * @param lastTid  最后一篇帖子的id
+     * @param limit    分页大小
+     * @param lastTamp 时间戳
+     * @param type     加载类型  1 按发帖时间排序  2 按回帖时间排序
+     * @param list     未知 ，暂时没使用
+     * @return
+     */
     public Observable<ThreadListData> getThreadsList(String fid, String lastTid, int limit, String lastTamp, String type, List<String> list) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
@@ -91,6 +113,12 @@ public class ForumApi {
     }
 
 
+    /**
+     * 添加关注
+     *
+     * @param fid 论坛id
+     * @return
+     */
     public Observable<AttendStatusData> addAttention(String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
@@ -99,6 +127,13 @@ public class ForumApi {
         return mForumService.addAttention(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 取消关注
+     *
+     * @param fid 论坛id
+     * @return
+     */
     public Observable<AttendStatusData> delAttention(String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
@@ -107,6 +142,13 @@ public class ForumApi {
         return mForumService.delAttention(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 获取论坛关注状态
+     *
+     * @param fid 论坛id
+     * @return
+     */
     public Observable<AttendStatusData> getAttentionStatus(String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("fid", fid);
@@ -116,6 +158,15 @@ public class ForumApi {
     }
 
 
+    /**
+     * 获取帖子详情
+     *
+     * @param tid  帖子id
+     * @param fid  论坛id
+     * @param page 页数
+     * @param pid  回复id
+     * @return
+     */
     public Observable<ThreadSchemaInfo> getThreadInfo(String tid, String fid, int page, String pid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         if (!TextUtils.isEmpty(tid)) {
@@ -134,6 +185,14 @@ public class ForumApi {
     }
 
 
+    /**
+     * 发新帖
+     *
+     * @param title   标题
+     * @param content 内容
+     * @param fid     论坛id
+     * @return
+     */
     public Observable<BaseData> addThread(String title, String content, String fid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("title", title);
@@ -144,6 +203,16 @@ public class ForumApi {
         return mForumService.addThread(params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 评论或者回复
+     *
+     * @param tid     帖子id
+     * @param fid     论坛id
+     * @param pid     回复id（评论时为空，回复某条回复的为回复的id）
+     * @param content 内容
+     * @return
+     */
     public Observable<BaseData> addReplyByApp(String tid, String fid, String pid, String content) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("tid", tid);
@@ -160,7 +229,12 @@ public class ForumApi {
 
     }
 
-
+    /**
+     * 收藏帖子
+     *
+     * @param tid 帖子id
+     * @return
+     */
     public Observable<CollectData> addCollect(String tid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("tid", tid);
@@ -168,6 +242,13 @@ public class ForumApi {
         return mForumService.addCollect(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 取消收藏帖子
+     *
+     * @param tid 帖子id
+     * @return
+     */
     public Observable<CollectData> delCollect(String tid) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("tid", tid);
@@ -201,6 +282,13 @@ public class ForumApi {
         return mForumService.submitReports(sign, params).subscribeOn(Schedulers.io());
     }
 
+    /**
+     * 获取推荐帖子列表
+     *
+     * @param lastTid
+     * @param lastTamp
+     * @return
+     */
     public Observable<ThreadListData> getRecommendThreadList(String lastTid, String lastTamp) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("lastTid", lastTid);
@@ -210,6 +298,14 @@ public class ForumApi {
         return mForumService.getRecommendThreadList(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 获取论坛消息列表
+     *
+     * @param lastTid 上一条消息id
+     * @param page    页数
+     * @return
+     */
     public Observable<MessageData> getMessageList(String lastTid, int page) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("messageID", lastTid);
@@ -219,6 +315,13 @@ public class ForumApi {
         return mForumService.getMessageList(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 阅读某条消息
+     *
+     * @param id 消息id
+     * @return
+     */
     public Observable<BaseData> delMessage(String id) {
         Map<String, String> params = mRequestHelper.getHttpRequestMap();
         params.put("id", id);
@@ -226,6 +329,13 @@ public class ForumApi {
         return mForumService.delMessage(sign, params).subscribeOn(Schedulers.io());
     }
 
+
+    /**
+     * 上传图片
+     *
+     * @param path 图片地址
+     * @return
+     */
     public Observable<UploadData> upload(String path) {
         File file = new File(path);
         RequestBody requestFile = RequestBody.create(MediaType.parse(getContentType(path)), file);
@@ -261,8 +371,10 @@ public class ForumApi {
 
 
     /**
-     * @param fid
-     * @param tid
+     * 检查权限
+     *
+     * @param fid    论坛id
+     * @param tid    帖子id
      * @param action threadPublish  threadReply
      * @return
      */
