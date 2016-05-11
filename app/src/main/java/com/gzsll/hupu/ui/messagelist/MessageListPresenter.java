@@ -1,0 +1,154 @@
+package com.gzsll.hupu.ui.messagelist;
+
+import android.support.annotation.NonNull;
+
+import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.Message;
+import com.gzsll.hupu.bean.MessageData;
+import com.gzsll.hupu.helper.ToastHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+
+/**
+ * Created by sll on 2016/3/11.
+ */
+public class MessageListPresenter implements MessageListContract.Presenter {
+
+
+    @Singleton
+    @Inject
+    public MessageListPresenter() {
+    }
+
+
+    @Inject
+    ForumApi mForumApi;
+    @Inject
+    ToastHelper mToastHelper;
+
+    private MessageListContract.View mMessageListView;
+    private String lastTid = "";
+    private int page = 1;
+
+    private List<Message> messages = new ArrayList<>();
+
+    @Override
+    public void onMessageListReceive() {
+        mMessageListView.showLoading();
+        loadMessageList(true);
+    }
+
+    private void loadMessageList(final boolean clear) {
+        mForumApi.getMessageList(lastTid, page).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<MessageData>() {
+            @Override
+            public void call(MessageData messageData) {
+                if (clear) {
+                    messages.clear();
+                }
+            }
+        }).map(new Func1<MessageData, List<Message>>() {
+            @Override
+            public List<Message> call(MessageData messageData) {
+                if (messageData != null && messageData.status == 200) {
+                    return addMessages(messageData.result.list);
+                }
+                return null;
+            }
+        }).subscribe(new Action1<List<Message>>() {
+            @Override
+            public void call(List<Message> messages) {
+                if (messages != null) {
+                    if (messages.isEmpty()) {
+                        mMessageListView.onEmpty();
+                    } else {
+                        mMessageListView.hideLoading();
+                        mMessageListView.onRefreshCompleted();
+                        mMessageListView.onLoadCompleted(true);
+                        mMessageListView.renderMessageList(messages);
+                    }
+                } else {
+                    loadError();
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                loadError();
+            }
+        });
+    }
+
+    private void loadError() {
+        if (messages.isEmpty()) {
+            mMessageListView.onError();
+        } else {
+            mToastHelper.showToast("数据加载失败，请重试");
+            mMessageListView.hideLoading();
+            mMessageListView.onRefreshCompleted();
+            mMessageListView.onLoadCompleted(true);
+        }
+    }
+
+
+    private List<Message> addMessages(List<Message> threadList) {
+        for (Message thread : threadList) {
+            if (!contains(thread)) {
+                messages.add(thread);
+            }
+        }
+        if (!messages.isEmpty()) {
+            lastTid = messages.get(messages.size() - 1).tid;
+        }
+        return messages;
+    }
+
+    private boolean contains(Message message) {
+        boolean isContain = false;
+        for (Message message1 : messages) {
+            if (message.tid.equals(message1.tid)) {
+                isContain = true;
+                break;
+            }
+        }
+        return isContain;
+    }
+
+    @Override
+    public void onRefresh() {
+        lastTid = "";
+        page = 1;
+        onMessageListReceive();
+    }
+
+    @Override
+    public void onReload() {
+
+    }
+
+    @Override
+    public void onLoadMore() {
+        page++;
+        loadMessageList(false);
+    }
+
+
+    @Override
+    public void attachView(@NonNull MessageListContract.View view) {
+        mMessageListView = view;
+    }
+
+    @Override
+    public void detachView() {
+        lastTid = "";
+        page = 1;
+        messages.clear();
+    }
+}

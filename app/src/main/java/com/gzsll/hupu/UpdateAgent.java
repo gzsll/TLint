@@ -18,7 +18,7 @@ import com.gzsll.hupu.helper.FileHelper;
 import com.gzsll.hupu.helper.FormatHelper;
 import com.gzsll.hupu.helper.OkHttpHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
-import com.gzsll.hupu.ui.activity.MainActivity;
+import com.gzsll.hupu.ui.main.MainActivity;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;

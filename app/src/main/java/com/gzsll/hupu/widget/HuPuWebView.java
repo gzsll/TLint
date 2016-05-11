@@ -21,14 +21,14 @@ import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.ToastHelper;
-import com.gzsll.hupu.ui.activity.BrowserActivity;
-import com.gzsll.hupu.ui.activity.ContentActivity;
-import com.gzsll.hupu.ui.activity.LoginActivity;
-import com.gzsll.hupu.ui.activity.PictureActivity;
-import com.gzsll.hupu.ui.activity.PostActivity;
-import com.gzsll.hupu.ui.activity.ReportActivity;
-import com.gzsll.hupu.ui.activity.ThreadListActivity;
-import com.gzsll.hupu.ui.activity.UserProfileActivity;
+import com.gzsll.hupu.ui.browser.BrowserActivity;
+import com.gzsll.hupu.ui.content.ContentActivity;
+import com.gzsll.hupu.ui.imagepreview.ImagePreviewActivity;
+import com.gzsll.hupu.ui.login.LoginActivity;
+import com.gzsll.hupu.ui.post.PostActivity;
+import com.gzsll.hupu.ui.report.ReportActivity;
+import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
+import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -251,7 +251,7 @@ public class HuPuWebView extends WebView {
                     JSONObject image = images.getJSONObject(i);
                     extraPics.add(image.getString("url"));
                 }
-                PictureActivity.startActivity(getContext(), extraPics.get(index), extraPics);
+                ImagePreviewActivity.startActivity(getContext(), extraPics.get(index), extraPics);
                 break;
             case "hupu.ui.copy":
                 String copy = data.getString("content");

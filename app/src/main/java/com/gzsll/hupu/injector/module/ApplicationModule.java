@@ -43,7 +43,6 @@ public class ApplicationModule {
     }
 
 
-
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient(CookieInterceptor mCookieInterceptor) {
@@ -54,7 +53,6 @@ public class ApplicationModule {
         builder.addInterceptor(mCookieInterceptor);
         return builder.build();
     }
-
 
 
     @Provides
@@ -82,5 +80,6 @@ public class ApplicationModule {
     UserStorage provideUserStorage(SettingPrefHelper mSettingPrefHelper, Context mContext) {
         return new UserStorage(mSettingPrefHelper, mContext);
     }
+
 
 }

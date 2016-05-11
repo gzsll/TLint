@@ -8,7 +8,7 @@ import de.greenrobot.daogenerator.Schema;
 
 public class GreenDaoGenerator {
 
-    public static final int VERSION = 51;
+    public static final int VERSION = 52;
     public static final String GREEN_DAO_CODE_PATH = "../TLint/app/src/main/java";
 
     public static void main(String[] args) throws Exception {
@@ -42,6 +42,18 @@ public class GreenDaoGenerator {
         user.addStringProperty("threadUrl");
         user.addStringProperty("postUrl");
         user.addStringProperty("nickNameUrl");
+
+        Entity thread = schema.addEntity("Thread");
+        thread.addStringProperty("tid");
+        thread.addStringProperty("title");
+        thread.addStringProperty("puid");
+        thread.addStringProperty("fid");
+        thread.addStringProperty("replies");
+        thread.addStringProperty("userName");
+        thread.addStringProperty("time");
+        thread.addStringProperty("forumName");
+        thread.addIntProperty("lightReply");
+
 
 
         File f = new File(GREEN_DAO_CODE_PATH);

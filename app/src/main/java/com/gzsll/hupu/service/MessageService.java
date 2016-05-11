@@ -22,8 +22,8 @@ import com.gzsll.hupu.helper.NetWorkHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.injector.component.DaggerServiceComponent;
 import com.gzsll.hupu.injector.module.ServiceModule;
-import com.gzsll.hupu.ui.activity.MessageActivity;
-import com.gzsll.hupu.ui.activity.SplashActivity;
+import com.gzsll.hupu.ui.messagelist.MessageActivity;
+import com.gzsll.hupu.ui.splash.SplashActivity;
 
 import org.apache.log4j.Logger;
 

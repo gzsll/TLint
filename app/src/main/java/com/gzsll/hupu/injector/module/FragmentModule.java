@@ -24,4 +24,6 @@ public class FragmentModule {
     public Activity provideActivity() {
         return mFragment.getActivity();
     }
+
+
 }

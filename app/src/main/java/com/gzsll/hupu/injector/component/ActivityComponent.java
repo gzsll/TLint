@@ -5,17 +5,17 @@ import android.app.Activity;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.injector.module.ActivityModule;
 import com.gzsll.hupu.ui.BaseActivity;
-import com.gzsll.hupu.ui.activity.AccountActivity;
-import com.gzsll.hupu.ui.activity.BrowserActivity;
-import com.gzsll.hupu.ui.activity.ContentActivity;
-import com.gzsll.hupu.ui.activity.GalleryActivity;
-import com.gzsll.hupu.ui.activity.LoginActivity;
-import com.gzsll.hupu.ui.activity.MainActivity;
-import com.gzsll.hupu.ui.activity.PictureActivity;
-import com.gzsll.hupu.ui.activity.PostActivity;
-import com.gzsll.hupu.ui.activity.ReportActivity;
-import com.gzsll.hupu.ui.activity.SplashActivity;
-import com.gzsll.hupu.ui.activity.UserProfileActivity;
+import com.gzsll.hupu.ui.account.AccountActivity;
+import com.gzsll.hupu.ui.browser.BrowserActivity;
+import com.gzsll.hupu.ui.content.ContentActivity;
+import com.gzsll.hupu.ui.gallery.GalleryActivity;
+import com.gzsll.hupu.ui.imagepreview.ImagePreviewActivity;
+import com.gzsll.hupu.ui.login.LoginActivity;
+import com.gzsll.hupu.ui.main.MainActivity;
+import com.gzsll.hupu.ui.post.PostActivity;
+import com.gzsll.hupu.ui.report.ReportActivity;
+import com.gzsll.hupu.ui.splash.SplashActivity;
+import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 
 import dagger.Component;
 
@@ -40,7 +40,7 @@ public interface ActivityComponent {
     void inject(BrowserActivity mBrowserActivity);
 
     //
-    void inject(PictureActivity mPictureActivity);
+    void inject(ImagePreviewActivity mImagePreviewActivity);
 
     //
     void inject(GalleryActivity mGalleryActivity);

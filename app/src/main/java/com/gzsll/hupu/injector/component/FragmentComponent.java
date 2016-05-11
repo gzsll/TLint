@@ -5,17 +5,16 @@ import android.app.Activity;
 import com.gzsll.hupu.injector.PerFragment;
 import com.gzsll.hupu.injector.module.FragmentModule;
 import com.gzsll.hupu.ui.BaseFragment;
-import com.gzsll.hupu.ui.fragment.BrowserFragment;
-import com.gzsll.hupu.ui.fragment.ContentFragment;
-import com.gzsll.hupu.ui.fragment.ForumListFragment;
-import com.gzsll.hupu.ui.fragment.ImageFragment;
-import com.gzsll.hupu.ui.fragment.MessageListFragment;
-import com.gzsll.hupu.ui.fragment.PmDetailFragment;
-import com.gzsll.hupu.ui.fragment.PmListFragment;
-import com.gzsll.hupu.ui.fragment.SettingFragment;
-import com.gzsll.hupu.ui.fragment.ThreadCollectFragment;
-import com.gzsll.hupu.ui.fragment.ThreadListFragment;
-import com.gzsll.hupu.ui.fragment.ThreadRecommendFragment;
+import com.gzsll.hupu.ui.browser.BrowserFragment;
+import com.gzsll.hupu.ui.content.ContentFragment;
+import com.gzsll.hupu.ui.forum.ForumListFragment;
+import com.gzsll.hupu.ui.imagepreview.ImageFragment;
+import com.gzsll.hupu.ui.messagelist.MessageListFragment;
+import com.gzsll.hupu.ui.pmdetail.PmDetailFragment;
+import com.gzsll.hupu.ui.pmlist.PmListFragment;
+import com.gzsll.hupu.ui.setting.SettingFragment;
+import com.gzsll.hupu.ui.thread.list.ThreadListFragment;
+import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
 
 import dagger.Component;
 
@@ -32,11 +31,10 @@ public interface FragmentComponent {
 
     void inject(ThreadListFragment mThreadListFragment);
 
-    void inject(ThreadRecommendFragment mThreadRecommendFragment);
+
 
     void inject(ContentFragment mContentFragment);
 
-    void inject(ThreadCollectFragment mThreadCollectFragment);
 
     void inject(BrowserFragment mBrowserFragment);
 
@@ -53,5 +51,7 @@ public interface FragmentComponent {
 
 
     void inject(PmDetailFragment mPmDetailFragment);
+
+    void inject(SpecialThreadListFragment mSpecialThreadListFragment);
 
 }
