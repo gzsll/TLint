@@ -1,13 +1,20 @@
 package com.gzsll.hupu.ui.content;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
+import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
+import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.ShareHelper;
 import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.ui.login.LoginActivity;
+import com.gzsll.hupu.ui.post.PostActivity;
+import com.gzsll.hupu.ui.report.ReportActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +38,10 @@ public class ContentPresenter implements ContentContract.Presenter {
     ToastHelper mToastHelper;
     @Inject
     ShareHelper mShareHelper;
+    @Inject
+    UserStorage mUserStorage;
+    @Inject
+    Activity mActivity;
 
     @Inject
     @Singleton
@@ -42,11 +53,15 @@ public class ContentPresenter implements ContentContract.Presenter {
     private String tid;
     private String fid;
     private String pid;
-    public int totalPage;
-    public int currentPage = 1;
+    private int totalPage;
+    private int currentPage = 1;
     private List<String> urls = new ArrayList<>();
+    private boolean isCollected;
+    private String title;
+    private String shareText;
 
 
+    @Override
     public void onThreadInfoReceive(String tid, String fid, String pid, int page) {
         this.tid = tid;
         this.fid = fid;
@@ -66,9 +81,11 @@ public class ContentPresenter implements ContentContract.Presenter {
                         totalPage = threadSchemaInfo.pageSize;
                         currentPage = threadSchemaInfo.page;
                         urls = createPageList(threadSchemaInfo.url, threadSchemaInfo.page, threadSchemaInfo.pageSize);
+                        shareText = threadSchemaInfo.share.weibo;
+                        title = threadSchemaInfo.share.wechat_moments;
                         mContentView.renderContent(threadSchemaInfo.url, urls);
-                        mContentView.isCollected(threadSchemaInfo.isCollected == 1);
-                        mContentView.renderShare(threadSchemaInfo.share.weibo, threadSchemaInfo.share.url);
+                        isCollected = threadSchemaInfo.isCollected == 1;
+                        mContentView.isCollected(isCollected);
                         mContentView.hideLoading();
                     }
                 } else {
@@ -93,17 +110,18 @@ public class ContentPresenter implements ContentContract.Presenter {
         return urls;
     }
 
-
+    @Override
     public void onReload() {
         mContentView.showLoading();
         loadContent(currentPage);
     }
 
+    @Override
     public void onRefresh() {
         loadContent(currentPage);
     }
 
-
+    @Override
     public void onPageNext() {
         currentPage++;
         if (currentPage >= totalPage) {
@@ -112,6 +130,7 @@ public class ContentPresenter implements ContentContract.Presenter {
         mContentView.renderContent(urls.get(currentPage - 1), urls);
     }
 
+    @Override
     public void onPagePre() {
         currentPage--;
         if (currentPage <= 1) {
@@ -120,9 +139,54 @@ public class ContentPresenter implements ContentContract.Presenter {
         mContentView.renderContent(urls.get(currentPage - 1), urls);
     }
 
+    @Override
     public void onPageSelected(int page) {
         currentPage = page;
         mContentView.renderContent(urls.get(page - 1), urls);
+    }
+
+    @Override
+    public void onCommendClick() {
+        if (isLogin()) {
+            PostActivity.startActivity(mActivity, Constants.TYPE_COMMENT, fid, tid, "", title);
+        }
+        mContentView.onToggleFloatingMenu();
+    }
+
+    private boolean isLogin() {
+        if (!mUserStorage.isLogin()) {
+            LoginActivity.startActivity(mActivity);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onShareClick() {
+        if (!TextUtils.isEmpty(shareText)) {
+            mShareHelper.share(shareText);
+        }
+        mContentView.onToggleFloatingMenu();
+    }
+
+    @Override
+    public void onReportClick() {
+        if (isLogin()) {
+            ReportActivity.startActivity(mActivity, tid, "");
+        }
+        mContentView.onToggleFloatingMenu();
+    }
+
+    @Override
+    public void onCollectClick() {
+        if (isLogin()) {
+            if (isCollected) {
+                delCollect();
+            } else {
+                addCollect();
+            }
+        }
+        mContentView.onToggleFloatingMenu();
     }
 
 
@@ -130,13 +194,15 @@ public class ContentPresenter implements ContentContract.Presenter {
         currentPage = page;
     }
 
-    public void addCollect() {
+
+    private void addCollect() {
         mForumApi.addCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectData>() {
             @Override
             public void call(CollectData collectData) {
                 if (collectData != null && collectData.result != null) {
                     mToastHelper.showToast(collectData.result.msg);
-                    mContentView.isCollected(collectData.result.status == 200);
+                    isCollected = collectData.result.status == 200;
+                    mContentView.isCollected(isCollected);
                 }
             }
         }, new Action1<Throwable>() {
@@ -148,13 +214,14 @@ public class ContentPresenter implements ContentContract.Presenter {
     }
 
 
-    public void delCollect() {
+    private void delCollect() {
         mForumApi.delCollect(tid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<CollectData>() {
             @Override
             public void call(CollectData collectData) {
                 if (collectData != null && collectData.result != null) {
                     mToastHelper.showToast(collectData.result.msg);
-                    mContentView.isCollected(collectData.result.status != 200);
+                    isCollected = collectData.result.status != 200;
+                    mContentView.isCollected(isCollected);
                 }
             }
         }, new Action1<Throwable>() {
@@ -166,25 +233,6 @@ public class ContentPresenter implements ContentContract.Presenter {
     }
 
 
-    public void copy(String stripped) {
-        int sdk = android.os.Build.VERSION.SDK_INT;
-        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setText(stripped);
-        } else {
-            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData
-                    .newPlainText("content", stripped);
-            clipboard.setPrimaryClip(clip);
-        }
-        mToastHelper.showToast("复制成功");
-    }
-
-
-    public void onShare(String text) {
-        mShareHelper.share(text);
-    }
-
     @Override
     public void attachView(@NonNull ContentContract.View view) {
         mContentView = view;
@@ -195,5 +243,7 @@ public class ContentPresenter implements ContentContract.Presenter {
         urls.clear();
         totalPage = 1;
         currentPage = 1;
+        isCollected = false;
+        shareText = "";
     }
 }

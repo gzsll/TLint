@@ -16,14 +16,15 @@ public interface ContentContract {
 
         void renderContent(String url, List<String> urls);
 
-        void renderShare(String share, String url);
-
         void isCollected(boolean isCollected);
 
         void onError(String error);
+
+        void onToggleFloatingMenu();
     }
 
     interface Presenter extends BasePresenter<View> {
+
         void onThreadInfoReceive(String tid, String fid, String pid, int page);
 
         void onReload();
@@ -36,16 +37,15 @@ public interface ContentContract {
 
         void onPageSelected(int page);
 
+        void onCommendClick();
+
+        void onShareClick();
+
+        void onReportClick();
+
+        void onCollectClick();
+
         void updatePage(int page);
-
-        void addCollect();
-
-        void delCollect();
-
-        void copy(String stripped);
-
-        void onShare(String text);
-
 
     }
 }

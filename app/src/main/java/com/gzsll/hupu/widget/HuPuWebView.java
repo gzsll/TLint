@@ -193,7 +193,7 @@ public class HuPuWebView extends WebView {
             logger.debug("page:" + page);
             String pid = uri.getQueryParameter("pid");
             logger.debug("pid:" + pid);
-            ContentActivity.startActivity(getContext(), "", tid, pid, TextUtils.isEmpty(page) ? 1 : Integer.valueOf(page), "");
+            ContentActivity.startActivity(getContext(), "", tid, pid, TextUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
         } else if (url.contains("board")) {
             String boardId = url.substring(url.lastIndexOf("/") + 1);
             ThreadListActivity.startActivity(getContext(), boardId);

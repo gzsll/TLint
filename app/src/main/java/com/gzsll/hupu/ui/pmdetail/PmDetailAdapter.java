@@ -174,7 +174,7 @@ public class PmDetailAdapter extends RecyclerView.Adapter<PmDetailAdapter.ViewHo
             case "kanqiu":
                 if (url.contains("topic")) {
                     String tid = uri.getLastPathSegment();
-                    ContentActivity.startActivity(mActivity, "", tid, "", 1, "");
+                    ContentActivity.startActivity(mActivity, "", tid, "", 1);
                 } else if (url.contains("board")) {
                     String boardId = uri.getLastPathSegment();
                     ThreadListActivity.startActivity(mActivity, boardId);

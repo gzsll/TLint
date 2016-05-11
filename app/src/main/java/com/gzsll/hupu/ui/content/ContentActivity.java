@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.DisplayHelper;
@@ -23,9 +22,6 @@ import com.gzsll.hupu.helper.RequestHelper;
 import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.otto.ContentScrollEvent;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
-import com.gzsll.hupu.ui.login.LoginActivity;
-import com.gzsll.hupu.ui.post.PostActivity;
-import com.gzsll.hupu.ui.report.ReportActivity;
 import com.gzsll.hupu.widget.PagePicker;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.VerticalViewPager;
@@ -85,13 +81,12 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
     @Bind(R.id.progress_view)
     ProgressBarCircularIndeterminate progressBar;
 
-    public static void startActivity(Context mContext, String fid, String tid, String pid, int page, String title) {
+    public static void startActivity(Context mContext, String fid, String tid, String pid, int page) {
         Intent intent = new Intent(mContext, ContentActivity.class);
         intent.putExtra("fid", fid);
         intent.putExtra("tid", tid);
         intent.putExtra("pid", pid);
         intent.putExtra("page", page);
-        intent.putExtra("title", title);
         mContext.startActivity(intent);
     }
 
@@ -112,11 +107,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
     private String tid;
     private int page;
     private String pid;
-    private String title;
 
-    private boolean isCollect;
-    private String shareText;
-    private String shareUrl;
     private PagePicker mPagePicker;
     private int totalPage;
     private MyAdapter mAdapter;
@@ -140,7 +131,6 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
         tid = getIntent().getStringExtra("tid");
         page = getIntent().getIntExtra("page", 1);
         pid = getIntent().getStringExtra("pid");
-        title = getIntent().getStringExtra("title");
         initPicker();
         initFloatingButton();
         viewPager.setOffscreenPageLimit(1);
@@ -261,14 +251,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
 
 
     @Override
-    public void renderShare(String share, String url) {
-        shareText = share;
-        shareUrl = url;
-    }
-
-    @Override
     public void isCollected(boolean isCollected) {
-        isCollect = isCollected;
         floatingCollect.setImageResource(isCollected ? R.drawable.ic_menu_star : R.drawable.ic_menu_star_outline);
         floatingCollect.setLabelText(isCollected ? "取消收藏" : "收藏");
     }
@@ -282,6 +265,11 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
 
     }
 
+    @Override
+    public void onToggleFloatingMenu() {
+        floatingMenu.toggle(true);
+    }
+
 
     @Override
     public void OnJump(int page) {
@@ -291,46 +279,25 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
 
     @OnClick(R.id.floatingComment)
     void setFloatingCommentClick() {
-        if (isLogin()) {
-            PostActivity.startActivity(this, Constants.TYPE_COMMENT, fid, tid, "", title);
-        }
-        floatingMenu.toggle(true);
+        mPresenter.onCommendClick();
     }
 
 
     @OnClick(R.id.floatingShare)
     void floatingShare() {
-        mPresenter.onShare(shareText);
-        floatingMenu.toggle(true);
+        mPresenter.onShareClick();
     }
 
     @OnClick(R.id.floatingReport)
     void floatingReport() {
-        if (isLogin()) {
-            ReportActivity.startActivity(this, tid, "");
-        }
-        floatingMenu.toggle(true);
+        mPresenter.onReportClick();
     }
 
     @OnClick(R.id.floatingCollect)
     void floatingCollect() {
-        if (isLogin()) {
-            if (isCollect) {
-                mPresenter.delCollect();
-            } else {
-                mPresenter.addCollect();
-            }
-        }
-        floatingMenu.toggle(true);
+        mPresenter.onCollectClick();
     }
 
-    private boolean isLogin() {
-        if (!mUserStorage.isLogin()) {
-            LoginActivity.startActivity(this);
-            return false;
-        }
-        return true;
-    }
 
     @OnClick(R.id.tvPre)
     void tvPre() {

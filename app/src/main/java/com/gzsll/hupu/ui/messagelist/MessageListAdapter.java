@@ -83,7 +83,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         @OnClick(R.id.listItem)
         void listItemClick() {
-            ContentActivity.startActivity(mActivity, "", message.tid, message.pid, Integer.valueOf(message.page), "");
+            ContentActivity.startActivity(mActivity, "", message.tid, message.pid, Integer.valueOf(message.page));
             mForumApi.delMessage(message.id).subscribe(new Action1<BaseData>() {
                 @Override
                 public void call(BaseData baseData) {

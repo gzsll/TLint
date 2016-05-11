@@ -141,7 +141,7 @@ public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter
 
         @OnClick(R.id.llThreadItem)
         void llThreadItemClick() {
-            ContentActivity.startActivity(mActivity, thread.fid, thread.tid, "", 1, thread.title);
+            ContentActivity.startActivity(mActivity, thread.fid, thread.tid, "", 1);
         }
 
         public ViewHolder(View view) {
