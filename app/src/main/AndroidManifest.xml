@@ -1,5 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.gzsll.hupu">
 
 
@@ -19,13 +18,6 @@
         android:theme="@style/AppThemeLight">
 
 
-        <meta-data
-            android:value="GlideModule"
-            android:name="com.gzsll.hupu.components.glide.OkHttpProgressGlideModule" />
-        <meta-data
-            android:value="GlideModule"
-            tools:node="remove"
-            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule" />
 
         <activity
             android:name=".ui.splash.SplashActivity"
