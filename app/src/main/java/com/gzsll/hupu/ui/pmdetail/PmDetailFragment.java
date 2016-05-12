@@ -150,8 +150,8 @@ public class PmDetailFragment extends BaseFragment implements PmDetailContract.V
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mPresenter.detachView();
+        super.onDestroy();
     }
 
     @OnClick(R.id.btSend)

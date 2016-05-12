@@ -328,8 +328,8 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
     @Override
     protected void onDestroy() {
         mBus.unregister(this);
-        super.onDestroy();
         mPresenter.detachView();
+        super.onDestroy();
     }
 
     @Subscribe

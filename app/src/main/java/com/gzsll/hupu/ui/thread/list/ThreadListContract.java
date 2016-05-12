@@ -40,9 +40,9 @@ public interface ThreadListContract {
 
         void onStartSearch(String key, int page);
 
-        void addAttention();
+        void onAttentionClick();
 
-        void delAttention();
+        void onPostClick();
 
         void onRefresh();
 

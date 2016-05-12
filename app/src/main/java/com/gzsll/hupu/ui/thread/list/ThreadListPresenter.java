@@ -1,9 +1,11 @@
 package com.gzsll.hupu.ui.thread.list;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.AttendStatusData;
@@ -13,7 +15,10 @@ import com.gzsll.hupu.bean.SearchResult;
 import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
+import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.ui.login.LoginActivity;
+import com.gzsll.hupu.ui.post.PostActivity;
 
 import org.apache.log4j.Logger;
 
@@ -44,6 +49,10 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
     ToastHelper mToastHelper;
     @Inject
     GameApi mGameApi;
+    @Inject
+    UserStorage mUserStorage;
+    @Inject
+    Activity mActivity;
 
 
     @Singleton
@@ -62,7 +71,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
     private int loadType = TYPE_LIST;
     private String key;
     private boolean hasNextPage = true;
-
+    private boolean isAttention = false;
 
     private static final int TYPE_LIST = 1;
     private static final int TYPE_SEARCH = 2;
@@ -102,7 +111,6 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
                 if (result != null && result.result != null) {
                     if (clear) {
                         threads.clear();
-                        mThreadListView.onScrollToTop();
                     }
                     ThreadListResult data = result.result;
                     lastTamp = data.stamp;
@@ -118,7 +126,10 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
                     mThreadListView.hideLoading();
                     mThreadListView.renderThreads(threads);
                     mThreadListView.onRefreshCompleted();
-                    mThreadListView.onLoadCompleted(true);
+                    mThreadListView.onLoadCompleted(hasNextPage);
+                    if (clear) {
+                        mThreadListView.onScrollToTop();
+                    }
                 } else {
                     loadThreadError();
                 }
@@ -140,7 +151,6 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
                 if (searchData != null) {
                     if (pageIndex == 1) {
                         threads.clear();
-                        mThreadListView.onScrollToTop();
                     }
                     SearchResult result = searchData.result;
                     hasNextPage = result.hasNextPage == 1;
@@ -174,9 +184,12 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
                         mThreadListView.onEmpty();
                     } else {
                         mThreadListView.hideLoading();
-                        mThreadListView.onRefreshCompleted();
-                        mThreadListView.onLoadCompleted(true);
                         mThreadListView.renderThreads(threads);
+                        mThreadListView.onRefreshCompleted();
+                        mThreadListView.onLoadCompleted(hasNextPage);
+                        if (pageIndex == 1) {
+                            mThreadListView.onScrollToTop();
+                        }
                     }
                 }
             }
@@ -229,7 +242,8 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
             public void call(AttendStatusData attendStatusData) {
                 if (attendStatusData != null && attendStatusData.status == 200) {
                     mThreadListView.renderThreadInfo(attendStatusData.forumInfo);
-                    mThreadListView.attendStatus(attendStatusData.attendStatus == 1);
+                    isAttention = attendStatusData.attendStatus == 1;
+                    mThreadListView.attendStatus(isAttention);
                 }
             }
         }, new Action1<Throwable>() {
@@ -241,13 +255,42 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
     }
 
 
-    public void addAttention() {
+    @Override
+    public void onAttentionClick() {
+        if (isLogin()) {
+            if (isAttention) {
+                delAttention();
+            } else {
+                addAttention();
+            }
+        }
+    }
+
+    @Override
+    public void onPostClick() {
+        if (isLogin()) {
+            PostActivity.startActivity(mActivity, Constants.TYPE_POST, fid, "", "", "");
+        }
+    }
+
+
+    private boolean isLogin() {
+        if (!mUserStorage.isLogin()) {
+            LoginActivity.startActivity(mActivity);
+            return false;
+        }
+        return true;
+    }
+
+
+    private void addAttention() {
         mForumApi.addAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusData>() {
             @Override
             public void call(AttendStatusData result) {
                 if (result.status == 200 && result.result == 1) {
                     mToastHelper.showToast("添加关注成功");
-                    mThreadListView.attendStatus(result.status == 200);
+                    isAttention = result.status == 200;
+                    mThreadListView.attendStatus(isAttention);
                 }
             }
         }, new Action1<Throwable>() {
@@ -258,13 +301,14 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
         });
     }
 
-    public void delAttention() {
+    private void delAttention() {
         mForumApi.delAttention(fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AttendStatusData>() {
             @Override
             public void call(AttendStatusData result) {
                 if (result.status == 200 && result.result == 1) {
                     mToastHelper.showToast("取消关注成功");
-                    mThreadListView.attendStatus(result.status != 200);
+                    isAttention = result.status != 200;
+                    mThreadListView.attendStatus(isAttention);
                 }
             }
         }, new Action1<Throwable>() {
@@ -275,7 +319,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
         });
     }
 
-
+    @Override
     public void onRefresh() {
         mThreadListView.onScrollToTop();
         if (loadType == TYPE_LIST) {
@@ -286,7 +330,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
         }
     }
 
-
+    @Override
     public void onReload() {
         mThreadListView.showLoading();
         if (loadType == TYPE_LIST) {
@@ -296,6 +340,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
         }
     }
 
+    @Override
     public void onLoadMore() {
         if (!hasNextPage) {
             mToastHelper.showToast("没有更多了~");

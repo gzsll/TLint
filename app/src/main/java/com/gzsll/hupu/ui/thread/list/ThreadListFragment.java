@@ -31,13 +31,10 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Thread;
-import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.ui.BaseFragment;
-import com.gzsll.hupu.ui.login.LoginActivity;
-import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.thread.ThreadListAdapter;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 
@@ -64,8 +61,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
     ResourceHelper mResourceHelper;
     @Inject
     Activity mActivity;
-    @Inject
-    UserStorage mUserStorage;
+
 
 
     @Bind(R.id.backdrop)
@@ -106,7 +102,6 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
 
     private String fid;
-    private boolean isAttention;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -223,7 +218,6 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @Override
     public void attendStatus(boolean isAttention) {
-        this.isAttention = isAttention;
         if (!isAttention) {
             floatingAttention.setImageResource(R.drawable.ic_menu_add);
             floatingAttention.setLabelText("添加关注");
@@ -279,31 +273,16 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @OnClick(R.id.floatingAttention)
     void floatingAttention() {
-        if (isLogin()) {
-            if (isAttention) {
-                mPresenter.delAttention();
-            } else {
-                mPresenter.addAttention();
-            }
-        }
+        mPresenter.onAttentionClick();
         floatingMenu.toggle(true);
     }
 
     @OnClick(R.id.floatingPost)
     void floatingPost() {
-        if (isLogin()) {
-            PostActivity.startActivity(mActivity, Constants.TYPE_POST, fid, "", "", "");
-        }
+        mPresenter.onPostClick();
         floatingMenu.toggle(true);
     }
 
-    private boolean isLogin() {
-        if (!mUserStorage.isLogin()) {
-            LoginActivity.startActivity(mActivity);
-            return false;
-        }
-        return true;
-    }
 
     @OnClick(R.id.floatingRefresh)
     void floatingRefresh() {
@@ -359,8 +338,8 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mPresenter.detachView();
+        super.onDestroy();
     }
 
     @Override

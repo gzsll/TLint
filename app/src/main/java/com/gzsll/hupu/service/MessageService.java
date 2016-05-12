@@ -115,7 +115,7 @@ public class MessageService extends Service {
         // 指定时间
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.MINUTE, 10);
+        calendar.add(Calendar.HOUR, 1);
         am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getOperation());
     }
 

@@ -330,7 +330,7 @@ public class PostActivity extends BaseSwipeBackActivity implements PostContract.
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mPresenter.detachView();
+        super.onDestroy();
     }
 }
