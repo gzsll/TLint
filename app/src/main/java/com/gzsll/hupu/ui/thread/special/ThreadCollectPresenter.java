@@ -72,7 +72,7 @@ public class ThreadCollectPresenter implements SpecialThreadListContract.Present
                     if (threads.isEmpty()) {
                         mSpecialView.onEmpty();
                     } else {
-                        mSpecialView.onLoadCompleted(true);
+                        mSpecialView.onLoadCompleted(hasNextPage);
                         mSpecialView.onRefreshCompleted();
                         mSpecialView.hideLoading();
                         mSpecialView.renderThreads(threads);

@@ -79,7 +79,7 @@ public class ThreadRecommendPresenter implements SpecialThreadListContract.Prese
                     mSpecialView.hideLoading();
                     mSpecialView.renderThreads(threads);
                     mSpecialView.onRefreshCompleted();
-                    mSpecialView.onLoadCompleted(true);
+                    mSpecialView.onLoadCompleted(hasNextPage);
                 } else {
                     loadThreadError();
                 }
