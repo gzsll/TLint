@@ -18,12 +18,12 @@ import com.gzsll.hupu.bean.Message;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MessageResult;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.NetWorkHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.injector.component.DaggerServiceComponent;
 import com.gzsll.hupu.injector.module.ServiceModule;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.ui.splash.SplashActivity;
+import com.gzsll.hupu.util.NetWorkUtils;
+import com.gzsll.hupu.util.SettingPrefUtils;
 
 import org.apache.log4j.Logger;
 
@@ -50,10 +50,6 @@ public class MessageService extends Service {
     UserStorage mUserStorage;
     @Inject
     ForumApi mForumApi;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
-    @Inject
-    NetWorkHelper mNetWorkHelper;
 
 
     private NotificationManager notificationManager;
@@ -78,7 +74,7 @@ public class MessageService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (!mUserStorage.isLogin() || !mSettingPrefHelper.getNotification()) {
+        if (!mUserStorage.isLogin() || !SettingPrefUtils.getNotification(this)) {
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
@@ -129,7 +125,7 @@ public class MessageService extends Service {
     }
 
     private void loadMessage() {
-        if (!mNetWorkHelper.isWiFi()) {
+        if (!NetWorkUtils.isWifiConnected(this)) {
             return;
         }
         mForumApi.getMessageList("", 1).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<MessageData>() {

@@ -1,11 +1,9 @@
 package com.gzsll.hupu.ui.thread.list;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.AttendStatusData;
@@ -16,9 +14,7 @@ import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.ToastHelper;
-import com.gzsll.hupu.ui.login.LoginActivity;
-import com.gzsll.hupu.ui.post.PostActivity;
+import com.gzsll.hupu.injector.PerActivity;
 
 import org.apache.log4j.Logger;
 
@@ -28,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,36 +33,24 @@ import rx.functions.Func1;
 /**
  * Created by sll on 2016/3/9.
  */
+@PerActivity
 public class ThreadListPresenter implements ThreadListContract.Presenter {
 
     private Logger logger = Logger.getLogger(ThreadListPresenter.class.getSimpleName());
 
+    private String fid;
+    private ForumApi mForumApi;
+    private GameApi mGameApi;
+    private UserStorage mUserStorage;
 
-    @Inject
-    ForumApi mForumApi;
-    @Inject
-    ToastHelper mToastHelper;
-    @Inject
-    GameApi mGameApi;
-    @Inject
-    UserStorage mUserStorage;
-    @Inject
-    Activity mActivity;
-
-
-    @Singleton
-    @Inject
-    public ThreadListPresenter() {
-    }
 
     private ThreadListContract.View mThreadListView;
     private List<Thread> threads = new ArrayList<>();
-    private String fid;
+
     private String lastTid = "";
     private String lastTamp = "";
     private String type;
     private int pageIndex;
-    private List<String> list;
     private int loadType = TYPE_LIST;
     private String key;
     private boolean hasNextPage = true;
@@ -78,22 +61,29 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
 
     private Subscription mSubscription;
 
+    @Inject
+    public ThreadListPresenter(String fid, ForumApi forumApi, GameApi gameApi, UserStorage userStorage) {
+        this.fid = fid;
+        mForumApi = forumApi;
+        mGameApi = gameApi;
+        mUserStorage = userStorage;
+    }
 
-    public void onThreadReceive(String fid, String type, List<String> list) {
+
+    @Override
+    public void onThreadReceive(String type) {
         mThreadListView.showLoading();
         mThreadListView.onFloatingVisibility(View.VISIBLE);
         this.type = type;
-        this.fid = fid;
-        this.list = list;
         loadType = TYPE_LIST;
         loadThreadList("", true);
         getAttendStatus();
     }
 
-
+    @Override
     public void onStartSearch(String key, int page) {
         if (TextUtils.isEmpty(key)) {
-            mToastHelper.showToast("搜索词不能为空");
+            mThreadListView.showToast("搜索词不能为空");
             return;
         }
         mThreadListView.showLoading();
@@ -105,7 +95,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
 
 
     private void loadThreadList(String last, final boolean clear) {
-        mSubscription = mForumApi.getThreadsList(fid, last, 20, lastTamp, type, list).map(new Func1<ThreadListData, List<Thread>>() {
+        mSubscription = mForumApi.getThreadsList(fid, last, 20, lastTamp, type, null).map(new Func1<ThreadListData, List<Thread>>() {
             @Override
             public List<Thread> call(ThreadListData result) {
                 if (result != null && result.result != null) {
@@ -209,7 +199,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
             mThreadListView.hideLoading();
             mThreadListView.onRefreshCompleted();
             mThreadListView.onLoadCompleted(true);
-            mToastHelper.showToast("数据加载失败");
+            mThreadListView.showToast("数据加载失败");
         }
     }
 
@@ -269,14 +259,14 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
     @Override
     public void onPostClick() {
         if (isLogin()) {
-            PostActivity.startActivity(mActivity, Constants.TYPE_POST, fid, "", "", "");
+            mThreadListView.showPostThreadUi(fid);
         }
     }
 
 
     private boolean isLogin() {
         if (!mUserStorage.isLogin()) {
-            LoginActivity.startActivity(mActivity);
+            mThreadListView.showLoginUi();
             return false;
         }
         return true;
@@ -288,7 +278,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
             @Override
             public void call(AttendStatusData result) {
                 if (result.status == 200 && result.result == 1) {
-                    mToastHelper.showToast("添加关注成功");
+                    mThreadListView.showToast("添加关注成功");
                     isAttention = result.status == 200;
                     mThreadListView.attendStatus(isAttention);
                 }
@@ -296,7 +286,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                mToastHelper.showToast("添加关注失败，请检查网络后重试");
+                mThreadListView.showToast("添加关注失败，请检查网络后重试");
             }
         });
     }
@@ -306,7 +296,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
             @Override
             public void call(AttendStatusData result) {
                 if (result.status == 200 && result.result == 1) {
-                    mToastHelper.showToast("取消关注成功");
+                    mThreadListView.showToast("取消关注成功");
                     isAttention = result.status != 200;
                     mThreadListView.attendStatus(isAttention);
                 }
@@ -314,7 +304,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                mToastHelper.showToast("取消关注失败，请检查网络后重试");
+                mThreadListView.showToast("取消关注失败，请检查网络后重试");
             }
         });
     }
@@ -343,7 +333,7 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
     @Override
     public void onLoadMore() {
         if (!hasNextPage) {
-            mToastHelper.showToast("没有更多了~");
+            mThreadListView.showToast("没有更多了~");
             mThreadListView.onLoadCompleted(false);
             return;
         }

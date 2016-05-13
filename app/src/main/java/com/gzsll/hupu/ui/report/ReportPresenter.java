@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ToastUtils;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -15,17 +15,16 @@ import rx.functions.Action1;
 /**
  * Created by sll on 2016/3/11.
  */
+@PerActivity
 public class ReportPresenter implements ReportContract.Presenter {
 
-    @Inject
-    ForumApi mForumApi;
-    @Inject
-    ToastHelper mToastHelper;
+    private ForumApi mForumApi;
 
 
-    @Singleton
+
     @Inject
-    public ReportPresenter() {
+    public ReportPresenter(ForumApi forumApi) {
+        mForumApi = forumApi;
     }
 
     private ReportContract.View mReportView;
@@ -39,16 +38,16 @@ public class ReportPresenter implements ReportContract.Presenter {
                 mReportView.hideLoading();
                 if (result.status == 200) {
                     mReportView.reportSuccess();
-                    mToastHelper.showToast("举报成功~");
+                    ToastUtils.showToast("举报成功~");
                 } else {
-                    mToastHelper.showToast("举报失败，请检查网络后重试");
+                    ToastUtils.showToast("举报失败，请检查网络后重试");
                 }
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
                 mReportView.hideLoading();
-                mToastHelper.showToast("举报失败，请检查网络后重试");
+                ToastUtils.showToast("举报失败，请检查网络后重试");
             }
         });
     }

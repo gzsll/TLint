@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.imagepreview;
 
-import android.app.Activity;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
@@ -19,15 +18,13 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.helper.ResourceHelper;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.widget.ImageLoadProgressBar;
 import com.gzsll.hupu.widget.photodraweeview.OnViewTapListener;
 import com.gzsll.hupu.widget.photodraweeview.PhotoDraweeView;
 
 import org.apache.log4j.Logger;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,11 +46,6 @@ public class ImageFragment extends BaseFragment {
     @Bind(R.id.tvInfo)
     TextView tvInfo;
 
-    @Inject
-    ResourceHelper mResourceHelper;
-    @Inject
-    Activity mActivity;
-
     public static ImageFragment newInstance(String url) {
         ImageFragment mFragment = new ImageFragment();
         Bundle bundle = new Bundle();
@@ -67,7 +59,7 @@ public class ImageFragment extends BaseFragment {
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+
     }
 
     @Override
@@ -91,7 +83,7 @@ public class ImageFragment extends BaseFragment {
             }
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            rlProgress.setPadding(0, mResourceHelper.getStatusBarHeight(getActivity()), 0, 0);
+            rlProgress.setPadding(0, ResourceUtils.getStatusBarHeight(getActivity()), 0, 0);
         }
     }
 
@@ -110,7 +102,7 @@ public class ImageFragment extends BaseFragment {
                             progress.setVisibility(View.GONE);
                         }
                     }
-                }, mResourceHelper.getThemeColor(mActivity)))
+                }, ResourceUtils.getThemeColor(getContext())))
                 .build();
         hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
 

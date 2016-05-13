@@ -15,9 +15,9 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.db.Forum;
-import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.otto.DelForumAttentionEvent;
 import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
+import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -47,8 +47,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
     Bus mBus;
     @Inject
     ForumApi mForumApi;
-    @Inject
-    ToastHelper mToastHelper;
+
 
     @Inject
     public ForumListAdapter() {
@@ -137,7 +136,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
                 @Override
                 public void call(AttendStatusData result) {
                     if (result.status == 200 && result.result == 1) {
-                        mToastHelper.showToast("取消关注成功");
+                        ToastUtils.showToast("取消关注成功");
                         mBus.post(new DelForumAttentionEvent(forum.getFid()));
                         forums.remove(forum);
                         notifyDataSetChanged();
@@ -146,7 +145,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
             }, new Action1<Throwable>() {
                 @Override
                 public void call(Throwable throwable) {
-                    mToastHelper.showToast("取消关注失败，请重试");
+                    ToastUtils.showToast("取消关注失败，请重试");
                 }
             });
         }

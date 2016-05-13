@@ -15,18 +15,17 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.DisplayHelper;
-import com.gzsll.hupu.helper.RequestHelper;
-import com.gzsll.hupu.helper.ResourceHelper;
-import com.gzsll.hupu.otto.ContentScrollEvent;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.ui.login.LoginActivity;
+import com.gzsll.hupu.ui.post.PostActivity;
+import com.gzsll.hupu.ui.report.ReportActivity;
+import com.gzsll.hupu.util.DisplayUtils;
+import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.widget.PagePicker;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.VerticalViewPager;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import org.apache.log4j.Logger;
 
@@ -93,14 +92,6 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
 
     @Inject
     ContentPresenter mPresenter;
-    @Inject
-    ResourceHelper mResourceHelper;
-    @Inject
-    RequestHelper mRequestHelper;
-    @Inject
-    Bus mBus;
-    @Inject
-    UserStorage mUserStorage;
 
 
     private String fid;
@@ -119,14 +110,14 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        DaggerContentComponent.builder().applicationComponent(getApplicationComponent()).activityModule(getActivityModule())
+                .contentModule(new ContentModule()).build().inject(this);
     }
 
     @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
         mPresenter.attachView(this);
-        mBus.register(this);
         fid = getIntent().getStringExtra("fid");
         tid = getIntent().getStringExtra("tid");
         page = getIntent().getIntExtra("page", 1);
@@ -135,7 +126,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
         initFloatingButton();
         viewPager.setOffscreenPageLimit(1);
         viewPager.setOnPageChangeListener(this);
-        progressBar.setBackgroundColor(mResourceHelper.getThemeColor(this));
+        progressBar.setBackgroundColor(ResourceUtils.getThemeColor(this));
         mPresenter.onThreadInfoReceive(tid, fid, pid, page);
     }
 
@@ -146,11 +137,11 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
     }
 
     private void initFloatingButton() {
-        mResourceHelper.setFabMenuColor(this, floatingMenu);
-        mResourceHelper.setFabBtnColor(this, floatingComment);
-        mResourceHelper.setFabBtnColor(this, floatingCollect);
-        mResourceHelper.setFabBtnColor(this, floatingShare);
-        mResourceHelper.setFabBtnColor(this, floatingReport);
+        ResourceUtils.setFabMenuColor(this, floatingMenu);
+        ResourceUtils.setFabBtnColor(this, floatingComment);
+        ResourceUtils.setFabBtnColor(this, floatingCollect);
+        ResourceUtils.setFabBtnColor(this, floatingShare);
+        ResourceUtils.setFabBtnColor(this, floatingReport);
     }
 
     @Override
@@ -270,6 +261,21 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
         floatingMenu.toggle(true);
     }
 
+    @Override
+    public void showLoginUi() {
+        LoginActivity.startActivity(this);
+    }
+
+    @Override
+    public void showReportUi() {
+        ReportActivity.startActivity(this, tid, "");
+    }
+
+    @Override
+    public void showPostUi(String title) {
+        PostActivity.startActivity(this, Constants.TYPE_COMMENT, fid, tid, "", title);
+    }
+
 
     @Override
     public void OnJump(int page) {
@@ -315,7 +321,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
         if (mPagePicker.isShowing()) {
             mPagePicker.dismiss();
         } else {
-            mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, DisplayHelper.dip2px(this, 40));
+            mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, DisplayUtils.dip2px(this, 40));
         }
     }
 
@@ -327,14 +333,13 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
 
     @Override
     protected void onDestroy() {
-        mBus.unregister(this);
         mPresenter.detachView();
         super.onDestroy();
     }
 
-    @Subscribe
-    public void onContentScrollEvent(ContentScrollEvent event) {
-        if (event.isShow()) {
+
+    public void setFLoatingMenuVisibility(boolean show) {
+        if (show) {
             floatingMenu.showMenu(true);
         } else {
             floatingMenu.hideMenu(true);

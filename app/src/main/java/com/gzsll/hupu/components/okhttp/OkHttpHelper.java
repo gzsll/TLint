@@ -1,4 +1,4 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.components.okhttp;
 
 
 import java.io.File;

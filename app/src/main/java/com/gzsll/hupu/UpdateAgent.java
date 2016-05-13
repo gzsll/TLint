@@ -14,11 +14,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.fastjson.JSON;
 import com.gzsll.hupu.bean.UpdateInfo;
-import com.gzsll.hupu.helper.FileHelper;
-import com.gzsll.hupu.helper.FormatHelper;
-import com.gzsll.hupu.helper.OkHttpHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.ui.main.MainActivity;
+import com.gzsll.hupu.util.FileUtils;
+import com.gzsll.hupu.util.FormatUtils;
+import com.gzsll.hupu.util.SettingPrefUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -49,11 +49,8 @@ public class UpdateAgent {
     @Inject
     OkHttpHelper mOkHttpHelper;
     @Inject
-    FormatHelper mFormatHelper;
-    @Inject
-    FileHelper mFileHelper;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
+    Context mContext;
+
 
 
     private NotificationManager mNotifyManager;
@@ -87,7 +84,7 @@ public class UpdateAgent {
             public void call(UpdateInfo updateInfo) {
                 checkUpdateFinished(updateInfo);
                 if (updateInfo != null && updateInfo.extra != null) {
-                    mSettingPrefHelper.setNeedExam(updateInfo.extra.needExam == 1);
+                    SettingPrefUtils.setNeedExam(mContext, updateInfo.extra.needExam == 1);
                 }
             }
         }, new Action1<Throwable>() {
@@ -116,8 +113,8 @@ public class UpdateAgent {
                     try {
                         String url = updateInfo.updateUrl;
                         mBuilder.setContentTitle(mActivity.getString(R.string.app_name) + "正在更新").setAutoCancel(true).setSmallIcon(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).applicationInfo.icon);
-                        destinationUri = Uri.parse(SDCARD_ROOT + File.separator + mFormatHelper.getFileNameFromUrl(url));
-                        FileDownloader.getImpl().create(url).setPath(SDCARD_ROOT + File.separator + mFormatHelper.getFileNameFromUrl(url)).setListener(listener).start();
+                        destinationUri = Uri.parse(SDCARD_ROOT + File.separator + FormatUtils.getFileNameFromUrl(url));
+                        FileDownloader.getImpl().create(url).setPath(SDCARD_ROOT + File.separator + FormatUtils.getFileNameFromUrl(url)).setListener(listener).start();
                         Toast.makeText(mActivity, "开始下载新版本，稍后会开始安装", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -153,7 +150,7 @@ public class UpdateAgent {
         protected void completed(BaseDownloadTask task) {
             Intent installAPKIntent = new Intent(Intent.ACTION_VIEW);
             //如果没有设置SDCard写权限，或者没有sdcard,apk文件保存在内存中，需要授予权限才能安装
-            mFileHelper.chmod("777", destinationUri.getPath());
+            FileUtils.chmod("777", destinationUri.getPath());
             installAPKIntent.setDataAndType(Uri.parse("file://" + destinationUri.getPath()), "application/vnd.android.package-archive");
             PendingIntent pendingIntent = PendingIntent.getActivity(mActivity, 0, installAPKIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(pendingIntent);

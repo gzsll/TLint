@@ -35,6 +35,8 @@ public class LoginActivity extends BaseSwipeBackActivity implements LoginContrac
 
     @Inject
     LoginPresenter mPresenter;
+
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.etUserName)
@@ -56,7 +58,7 @@ public class LoginActivity extends BaseSwipeBackActivity implements LoginContrac
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        DaggerLoginComponent.builder().applicationComponent(getApplicationComponent()).activityModule(getActivityModule()).build().inject(this);
     }
 
     @Override

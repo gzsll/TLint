@@ -1,5 +1,6 @@
 package com.gzsll.hupu.ui.setting;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -9,16 +10,12 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.helper.CacheHelper;
-import com.gzsll.hupu.helper.DataCleanHelper;
-import com.gzsll.hupu.helper.FileHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
-import com.gzsll.hupu.injector.component.DaggerFragmentComponent;
-import com.gzsll.hupu.injector.module.FragmentModule;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.ui.BaseActivity;
+import com.gzsll.hupu.util.CacheUtils;
+import com.gzsll.hupu.util.FileUtils;
+import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.widget.PreferenceFragment;
 import com.squareup.otto.Bus;
 
@@ -38,22 +35,16 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private ListPreference pThreadSort;
     private ListPreference pSwipeBackEdgeMode;// 手势返回方向
 
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
-    @Inject
-    CacheHelper mCacheHelper;
-    @Inject
-    DataCleanHelper mDataCleanHelper;
+
     @Inject
     Bus mBus;
+    @Inject
+    Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerFragmentComponent.builder()
-                .fragmentModule(new FragmentModule(this))
-                .applicationComponent(((MyApplication) getActivity().getApplication()).getApplicationComponent())
-                .build().inject(this);
+
         addPreferencesFromResource(R.xml.setting);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -65,12 +56,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
         pPicSavePath = findPreference("pPicSavePath");
         pPicSavePath.setOnPreferenceClickListener(this);
-        pPicSavePath.setSummary("/sdcard" + File.separator + mSettingPrefHelper.getPicSavePath() + File.separator);
+        pPicSavePath.setSummary("/sdcard" + File.separator + SettingPrefUtils.getPicSavePath(mContext) + File.separator);
 
 
         pClearCache = findPreference("pClearCache");
         pClearCache.setOnPreferenceClickListener(this);
-        pClearCache.setSummary(mCacheHelper.getCacheSize());
+        pClearCache.setSummary(CacheUtils.getCacheSize(mContext));
 
         pThreadSort = (ListPreference) findPreference("pThreadSort");
         pThreadSort.setOnPreferenceChangeListener(this);
@@ -123,9 +114,9 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     private void cleanCache() {
 //        new MaterialDialog.Builder(getActivity()).title("提示").content("正在清空缓存...").progress(true,0).show();
-        mDataCleanHelper.cleanApplicationCache();
+        CacheUtils.cleanApplicationCache(mContext);
         Toast.makeText(getActivity(), "缓存清理成功", Toast.LENGTH_SHORT);
-        pClearCache.setSummary(mCacheHelper.getCacheSize());
+        pClearCache.setSummary(CacheUtils.getCacheSize(mContext));
     }
 
     private void setTextSize(int value) {
@@ -139,22 +130,21 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         listPreference.setSummary(valueTitleArr[value]);
     }
 
-    @Inject
-    FileHelper mFileHelper;
+
 
 
     private void modifyImageSavePath() {
-        new MaterialDialog.Builder(getActivity()).title("修改图片保存路径").input(null, mSettingPrefHelper.getPicSavePath(), new MaterialDialog.InputCallback() {
+        new MaterialDialog.Builder(getActivity()).title("修改图片保存路径").input(null, SettingPrefUtils.getPicSavePath(mContext), new MaterialDialog.InputCallback() {
             @Override
             public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
                 if (TextUtils.isEmpty(charSequence)) {
                     showToast("路径不能为空");
                     return;
                 }
-                String path = mFileHelper.getSdcardPath() + File.separator + charSequence + File.separator;
+                String path = FileUtils.getSdcardPath() + File.separator + charSequence + File.separator;
                 File file = new File(path);
                 if (file.exists() || file.mkdirs()) {
-                    mSettingPrefHelper.setPicSavePath(charSequence.toString());
+                    SettingPrefUtils.setPicSavePath(mContext, charSequence.toString());
                     pPicSavePath.setSummary("/sdcard" + File.separator + charSequence + File.separator);
                     showToast("更新成功");
                 } else {

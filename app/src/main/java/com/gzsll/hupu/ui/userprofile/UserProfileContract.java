@@ -20,7 +20,7 @@ public class UserProfileContract {
     }
 
     interface Presenter extends BasePresenter<View> {
-        void receiveUserInfo(String uid);
+        void receiveUserInfo();
     }
 
 }

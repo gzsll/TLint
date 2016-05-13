@@ -1,6 +1,6 @@
 package com.gzsll.hupu.ui.imagepreview;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -9,17 +9,17 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.gzsll.hupu.helper.ConfigHelper;
-import com.gzsll.hupu.helper.FormatHelper;
-import com.gzsll.hupu.helper.OkHttpHelper;
-import com.gzsll.hupu.helper.StringHelper;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.components.okhttp.OkHttpHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ConfigUtils;
+import com.gzsll.hupu.util.FormatUtils;
+import com.gzsll.hupu.util.StringUtils;
+import com.gzsll.hupu.util.ToastUtils;
 
 import java.io.File;
 import java.io.InputStream;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import okio.BufferedSink;
 import okio.Okio;
@@ -32,26 +32,17 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/4/29.
  */
+@PerActivity
 public class ImagePreviewPresenter implements ImagePreviewContract.Presenter {
 
-    @Inject
-    FormatHelper mFormatHelper;
-    @Inject
-    ConfigHelper mConfigHelper;
-    @Inject
-    OkHttpHelper mOkHttpHelper;
-    @Inject
-    ToastHelper mToastHelper;
-    @Inject
-    Activity mActivity;
-    @Inject
-    StringHelper mStringHelper;
 
+    private OkHttpHelper mOkHttpHelper;
+    private Context mContext;
 
     @Inject
-    @Singleton
-    public ImagePreviewPresenter() {
-
+    public ImagePreviewPresenter(OkHttpHelper okHttpHelper, Context context) {
+        mOkHttpHelper = okHttpHelper;
+        mContext = context;
     }
 
 
@@ -66,8 +57,8 @@ public class ImagePreviewPresenter implements ImagePreviewContract.Presenter {
             @Override
             public File call(InputStream in) {
                 if (in != null) {
-                    String fileName = mFormatHelper.getFileNameFromUrl(url);
-                    File target = new File(mConfigHelper.getPicSavePath(), fileName);
+                    String fileName = FormatUtils.getFileNameFromUrl(url);
+                    File target = new File(ConfigUtils.getPicSavePath(mContext), fileName);
                     if (target.exists()) {
                         return target;
                     }
@@ -107,9 +98,9 @@ public class ImagePreviewPresenter implements ImagePreviewContract.Presenter {
             @Override
             public void call(File file) {
                 if (file != null && file.exists()) {
-                    mToastHelper.showToast("保存成功");
+                    ToastUtils.showToast("保存成功");
                 } else {
-                    mToastHelper.showToast("保存失败，请重试");
+                    ToastUtils.showToast("保存失败，请重试");
                 }
             }
         });
@@ -139,12 +130,12 @@ public class ImagePreviewPresenter implements ImagePreviewContract.Presenter {
                 Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri contentUri = Uri.fromFile(file);
         mediaScanIntent.setData(contentUri);
-        mActivity.sendBroadcast(mediaScanIntent);
+        mContext.sendBroadcast(mediaScanIntent);
     }
 
     @Override
     public void copyImagePath(String url) {
-        mStringHelper.copy(url);
+        StringUtils.copy(mContext, url);
     }
 
 

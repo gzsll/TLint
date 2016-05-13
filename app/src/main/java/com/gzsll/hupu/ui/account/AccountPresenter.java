@@ -4,11 +4,11 @@ import android.support.annotation.NonNull;
 
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
+import com.gzsll.hupu.injector.PerActivity;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -19,20 +19,18 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/3/10.
  */
+@PerActivity
 public class AccountPresenter implements AccountContract.Presenter {
 
 
-    @Inject
-    UserDao mUserDao;
-
-
-    @Singleton
-    @Inject
-    public AccountPresenter() {
-
-    }
-
+    private UserDao mUserDao;
     private AccountContract.View mAccountView;
+
+
+    @Inject
+    public AccountPresenter(UserDao userDao) {
+        mUserDao = userDao;
+    }
 
     private void loadUserList() {
         Observable.create(new Observable.OnSubscribe<List<User>>() {

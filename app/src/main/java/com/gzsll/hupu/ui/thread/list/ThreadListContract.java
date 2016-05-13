@@ -33,10 +33,17 @@ public interface ThreadListContract {
         void onScrollToTop();
 
         void onFloatingVisibility(int visibility);
+
+        void showPostThreadUi(String fid);
+
+        void showLoginUi();
+
+        void showToast(String msg);
     }
 
     interface Presenter extends BasePresenter<View> {
-        void onThreadReceive(String fid, String type, List<String> list);
+
+        void onThreadReceive(String type);
 
         void onStartSearch(String key, int page);
 

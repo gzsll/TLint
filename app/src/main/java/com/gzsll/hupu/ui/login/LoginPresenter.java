@@ -11,9 +11,10 @@ import com.gzsll.hupu.bean.UserResult;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
-import com.gzsll.hupu.helper.SecurityHelper;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
+import com.gzsll.hupu.util.SecurityUtils;
+import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
@@ -23,7 +24,6 @@ import java.net.URLDecoder;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscription;
@@ -34,36 +34,33 @@ import rx.functions.Func1;
 /**
  * Created by sll on 2016/3/10.
  */
+@PerActivity
 public class LoginPresenter implements LoginContract.Presenter {
     Logger logger = Logger.getLogger(LoginPresenter.class.getSimpleName());
 
-    @Inject
-    GameApi mGameApi;
-    @Inject
-    Bus mBus;
-    @Inject
-    UserDao mUserDao;
-    @Inject
-    SecurityHelper mSecurityHelper;
-    @Inject
-    UserStorage mUserStorage;
-    @Inject
-    ToastHelper mToastHelper;
+    private GameApi mGameApi;
+    private Bus mBus;
+    private UserDao mUserDao;
+    private UserStorage mUserStorage;
 
-    @Singleton
-    @Inject
-    public LoginPresenter() {
-    }
 
     private LoginContract.View mLoginView;
     private User user = new User();
     private Subscription mSubscription;
 
+    @Inject
+    public LoginPresenter(GameApi gameApi, Bus bus, UserDao userDao, UserStorage userStorage) {
+        mGameApi = gameApi;
+        mBus = bus;
+        mUserDao = userDao;
+        mUserStorage = userStorage;
+    }
+
 
     @Override
     public void login(final String userName, final String passWord) {
         mLoginView.showLoading();
-        mSubscription = mGameApi.login(userName, mSecurityHelper.getMD5(passWord)).flatMap(new Func1<LoginData, Observable<UserData>>() {
+        mSubscription = mGameApi.login(userName, SecurityUtils.getMD5(passWord)).flatMap(new Func1<LoginData, Observable<UserData>>() {
             @Override
             public Observable<UserData> call(LoginData loginData) {
                 if (loginData != null && loginData.is_login == 1) {
@@ -99,12 +96,12 @@ public class LoginPresenter implements LoginContract.Presenter {
                     user.setLocation(data.location_str);
                     mUserStorage.login(user);
                     insertOrUpdateUser(user);
-                    mToastHelper.showToast("登录成功");
+                    ToastUtils.showToast("登录成功");
                     mBus.post(new LoginSuccessEvent());
                     mLoginView.loginSuccess();
                 } else {
                     mLoginView.hideLoading();
-                    mToastHelper.showToast("登录失败，请检查您的网络");
+                    ToastUtils.showToast("登录失败，请检查您的网络");
                 }
             }
         }, new Action1<Throwable>() {
@@ -112,7 +109,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             public void call(Throwable throwable) {
                 throwable.printStackTrace();
                 mLoginView.hideLoading();
-                mToastHelper.showToast("登录失败，请检查您的网络");
+                ToastUtils.showToast("登录失败，请检查您的网络");
             }
         });
     }

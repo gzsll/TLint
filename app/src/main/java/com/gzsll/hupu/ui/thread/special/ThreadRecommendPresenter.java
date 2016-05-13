@@ -6,13 +6,13 @@ import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,21 +22,15 @@ import rx.functions.Func1;
 /**
  * Created by sll on 2016/3/9.
  */
+@PerActivity
 public class ThreadRecommendPresenter implements SpecialThreadListContract.Presenter {
 
 
-    @Inject
-    ForumApi mForumApi;
-    @Inject
-    ToastHelper mToastHelper;
+    private ForumApi mForumApi;
 
 
     private List<Thread> threads = new ArrayList<>();
 
-    @Inject
-    @Singleton
-    public ThreadRecommendPresenter() {
-    }
 
     private SpecialThreadListContract.View mSpecialView;
     private String lastTid = "";
@@ -45,9 +39,9 @@ public class ThreadRecommendPresenter implements SpecialThreadListContract.Prese
 
     private Subscription mSubscription;
 
-    public ThreadRecommendPresenter(ForumApi forumApi, ToastHelper toastHelper) {
+    @Inject
+    public ThreadRecommendPresenter(ForumApi forumApi) {
         mForumApi = forumApi;
-        mToastHelper = toastHelper;
     }
 
     @Override
@@ -100,7 +94,7 @@ public class ThreadRecommendPresenter implements SpecialThreadListContract.Prese
             mSpecialView.hideLoading();
             mSpecialView.onRefreshCompleted();
             mSpecialView.onLoadCompleted(true);
-            mToastHelper.showToast("数据加载失败");
+            ToastUtils.showToast("数据加载失败");
         }
     }
 
@@ -142,7 +136,7 @@ public class ThreadRecommendPresenter implements SpecialThreadListContract.Prese
 
     public void onLoadMore() {
         if (!hasNextPage) {
-            mToastHelper.showToast("没有更多了~");
+            ToastUtils.showToast("没有更多了~");
             mSpecialView.onLoadCompleted(false);
             return;
         }

@@ -6,8 +6,9 @@ import android.view.LayoutInflater;
 
 import com.gzsll.hupu.components.okhttp.CookieInterceptor;
 import com.gzsll.hupu.components.okhttp.HttpLoggingInterceptor;
+import com.gzsll.hupu.components.okhttp.OkHttpHelper;
+import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.squareup.otto.Bus;
 
 import java.util.concurrent.TimeUnit;
@@ -77,9 +78,21 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    UserStorage provideUserStorage(SettingPrefHelper mSettingPrefHelper, Context mContext) {
-        return new UserStorage(mSettingPrefHelper, mContext);
+    UserStorage provideUserStorage(Context mContext) {
+        return new UserStorage(mContext);
     }
 
+    @Provides
+    @Singleton
+    RequestHelper provideRequestHelper(Context mContext, UserStorage mUserStorage) {
+        return new RequestHelper(mContext, mUserStorage);
+    }
+
+
+    @Provides
+    @Singleton
+    OkHttpHelper provideOkHttpHelper(OkHttpClient mOkHttpClient) {
+        return new OkHttpHelper(mOkHttpClient);
+    }
 
 }

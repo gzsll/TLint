@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.browser;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,8 +13,6 @@ import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.widget.HuPuWebView;
 
 import org.apache.log4j.Logger;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,8 +44,6 @@ public class BrowserFragment extends BaseFragment {
     @Bind(R.id.progress)
     ProgressBar progress;
 
-    @Inject
-    Activity mActivity;
 
 
     private String url;
@@ -57,7 +52,7 @@ public class BrowserFragment extends BaseFragment {
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+
     }
 
     @Override
@@ -80,7 +75,7 @@ public class BrowserFragment extends BaseFragment {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 if (!TextUtils.isEmpty(BrowserFragment.this.title)) {
-                    mActivity.setTitle(BrowserFragment.this.title);
+                    getActivity().setTitle(BrowserFragment.this.title);
                 }
             }
 

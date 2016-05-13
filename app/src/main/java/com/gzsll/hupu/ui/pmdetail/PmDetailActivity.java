@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 
 import butterknife.Bind;
@@ -13,7 +14,7 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/5/6.
  */
-public class PmDetailActivity extends BaseSwipeBackActivity {
+public class PmDetailActivity extends BaseSwipeBackActivity implements HasComponent<PmDetailComponent> {
     public static void startActivity(Context mContext, String uid, String name) {
         Intent intent = new Intent(mContext, PmDetailActivity.class);
         intent.putExtra("uid", uid);
@@ -25,6 +26,9 @@ public class PmDetailActivity extends BaseSwipeBackActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
+    private PmDetailComponent mPmDetailComponent;
+    private String uid;
+
     @Override
     public int initContentView() {
         return R.layout.base_content_toolbar_layout;
@@ -32,7 +36,9 @@ public class PmDetailActivity extends BaseSwipeBackActivity {
 
     @Override
     public void initInjector() {
-
+        uid = getIntent().getStringExtra("uid");
+        mPmDetailComponent = DaggerPmDetailComponent.builder().applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule()).pmDetailModule(new PmDetailModule(uid)).build();
     }
 
     @Override
@@ -40,7 +46,7 @@ public class PmDetailActivity extends BaseSwipeBackActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar);
         String name = getIntent().getStringExtra("name");
-        String uid = getIntent().getStringExtra("uid");
+
         setTitle(name);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, PmDetailFragment.newInstance(uid)).commit();
     }
@@ -53,5 +59,10 @@ public class PmDetailActivity extends BaseSwipeBackActivity {
     @Override
     protected boolean isApplyStatusBarColor() {
         return true;
+    }
+
+    @Override
+    public PmDetailComponent getComponent() {
+        return mPmDetailComponent;
     }
 }

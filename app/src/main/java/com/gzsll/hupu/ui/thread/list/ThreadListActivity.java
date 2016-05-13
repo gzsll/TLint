@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 
 import butterknife.ButterKnife;
@@ -11,13 +12,16 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/11.
  */
-public class ThreadListActivity extends BaseSwipeBackActivity {
+public class ThreadListActivity extends BaseSwipeBackActivity implements HasComponent<ThreadListComponent> {
 
     public static void startActivity(Context mContext, String fid) {
         Intent intent = new Intent(mContext, ThreadListActivity.class);
         intent.putExtra("fid", fid);
         mContext.startActivity(intent);
     }
+
+    private ThreadListComponent mThreadListComponent;
+    private String fid;
 
     @Override
     public int initContentView() {
@@ -26,14 +30,15 @@ public class ThreadListActivity extends BaseSwipeBackActivity {
 
     @Override
     public void initInjector() {
-
+        fid = getIntent().getStringExtra("fid");
+        mThreadListComponent = DaggerThreadListComponent.builder().applicationComponent(getApplicationComponent()).activityModule(getActivityModule())
+                .threadListModule(new ThreadListModule(fid)).build();
     }
 
     @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        String fid = getIntent().getStringExtra("fid");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, ThreadListFragment.newInstance(fid)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, new ThreadListFragment()).commit();
     }
 
     @Override
@@ -44,5 +49,10 @@ public class ThreadListActivity extends BaseSwipeBackActivity {
     @Override
     protected boolean isApplyStatusBarColor() {
         return true;
+    }
+
+    @Override
+    public ThreadListComponent getComponent() {
+        return mThreadListComponent;
     }
 }

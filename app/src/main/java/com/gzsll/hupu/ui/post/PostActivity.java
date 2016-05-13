@@ -83,7 +83,8 @@ public class PostActivity extends BaseSwipeBackActivity implements PostContract.
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        DaggerPostComponent.builder().applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule()).build().inject(this);
     }
 
     @Override

@@ -1,5 +1,6 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.util;
 
+import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -8,17 +9,13 @@ import java.io.File;
 /**
  * Created by sll on 2015/11/26.
  */
-public class ConfigHelper {
-    private SettingPrefHelper mSettingPrefHelper;
-
-    private String cachePath;
-
-    public ConfigHelper(SettingPrefHelper mSettingPrefHelper) {
-        this.mSettingPrefHelper = mSettingPrefHelper;
-    }
+public class ConfigUtils {
 
 
-    public String getCachePath() {
+    private static String cachePath;
+
+
+    public static String getCachePath() {
         if (!TextUtils.isEmpty(cachePath)) {
             return cachePath;
         }
@@ -31,9 +28,9 @@ public class ConfigHelper {
     }
 
 
-    private String uploadPath;
+    private static String uploadPath;
 
-    public String getUploadPath() {
+    public static String getUploadPath() {
         if (!TextUtils.isEmpty(uploadPath)) {
             return uploadPath;
         }
@@ -45,13 +42,13 @@ public class ConfigHelper {
         return uploadPath;
     }
 
-    private String picSavePath;
+    private static String picSavePath;
 
-    public String getPicSavePath() {
+    public static String getPicSavePath(Context context) {
         if (!TextUtils.isEmpty(picSavePath)) {
             return picSavePath;
         }
-        picSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mSettingPrefHelper.getPicSavePath() + File.separator;
+        picSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + SettingPrefUtils.getPicSavePath(context) + File.separator;
         File file = new File(picSavePath);
         if (!file.exists()) {
             file.mkdirs();

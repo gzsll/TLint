@@ -39,7 +39,7 @@ public class MessageListFragment extends BaseFragment implements MessageListCont
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+        getComponent(MessageComponent.class).inject(this);
     }
 
     @Override

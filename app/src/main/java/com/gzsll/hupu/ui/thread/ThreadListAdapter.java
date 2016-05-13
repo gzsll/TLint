@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Thread;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.ui.AnimRecyclerViewAdapter;
 import com.gzsll.hupu.ui.content.ContentActivity;
+import com.gzsll.hupu.util.SettingPrefUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,7 @@ public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter
 
     @Inject
     Activity mActivity;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
+
 
 
     @Inject
@@ -63,7 +62,7 @@ public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter
     public void onBindViewHolder(ViewHolder holder, int position) {
         Thread thread = threads.get(position);
         holder.thread = thread;
-        holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSettingPrefHelper.getTitleSize());
+        holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, SettingPrefUtils.getTitleSize(mActivity));
         if (thread.lightReply > 0) {
             holder.tvLight.setText(String.valueOf(thread.lightReply));
             holder.tvLight.setVisibility(View.VISIBLE);

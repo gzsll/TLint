@@ -8,6 +8,7 @@ import android.view.View;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.main.MainComponent;
 import com.gzsll.hupu.ui.thread.ThreadListAdapter;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
@@ -56,7 +57,7 @@ public class SpecialThreadListFragment extends BaseFragment implements SpecialTh
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+        getComponent(MainComponent.class).inject(this);
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.gzsll.hupu.bean.SendPmData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.UserData;
 import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
-import com.gzsll.hupu.helper.RequestHelper;
+import com.gzsll.hupu.components.retrofit.RequestHelper;
 
 import java.util.HashMap;
 import java.util.Map;

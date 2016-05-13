@@ -1,4 +1,4 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

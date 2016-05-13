@@ -6,13 +6,13 @@ import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.Pm;
 import com.gzsll.hupu.bean.PmData;
 import com.gzsll.hupu.bean.PmResult;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,17 +22,16 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/5/11.
  */
+@PerActivity
 public class PmListPresenter implements PmListContract.Presenter {
 
 
-    @Inject
-    GameApi mGameApi;
-    @Inject
-    ToastHelper mToastHelper;
+    private GameApi mGameApi;
+
 
     @Inject
-    @Singleton
-    public PmListPresenter() {
+    public PmListPresenter(GameApi gameApi) {
+        mGameApi = gameApi;
     }
 
     private PmListContract.View mPmListView;
@@ -67,7 +66,7 @@ public class PmListPresenter implements PmListContract.Presenter {
                         if (mPms.isEmpty()) {
                             mPmListView.onEmpty();
                         } else {
-                            mToastHelper.showToast("没有更多了");
+                            ToastUtils.showToast("没有更多了");
 
                         }
                     } else {
@@ -84,7 +83,7 @@ public class PmListPresenter implements PmListContract.Presenter {
                 if (mPms.isEmpty()) {
                     mPmListView.onError();
                 } else {
-                    mToastHelper.showToast("数据加载失败，请检查网络后重试");
+                    ToastUtils.showToast("数据加载失败，请检查网络后重试");
                     mPmListView.hideLoading();
                     mPmListView.onRefreshCompleted();
                     mPmListView.onLoadCompleted(true);
@@ -125,7 +124,7 @@ public class PmListPresenter implements PmListContract.Presenter {
     @Override
     public void onLoadMore() {
         if (!hasNextPage) {
-            mToastHelper.showToast("没有更多了~");
+            ToastUtils.showToast("没有更多了~");
             mPmListView.onLoadCompleted(false);
             return;
         }

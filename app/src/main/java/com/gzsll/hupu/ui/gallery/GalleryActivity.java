@@ -68,9 +68,6 @@ public class GalleryActivity extends BaseSwipeBackActivity implements GalleryCon
     FolderAdapter mFolderAdapter;
 
 
-    private ArrayList<String> selectImages;
-
-
     public static final int REQUEST_IMAGE = 101;
     public static final String EXTRA_RESULT = "select_result";
 
@@ -88,7 +85,7 @@ public class GalleryActivity extends BaseSwipeBackActivity implements GalleryCon
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        DaggerGalleryComponent.builder().applicationComponent(getApplicationComponent()).activityModule(getActivityModule()).build().inject(this);
     }
 
     @Override
@@ -97,7 +94,7 @@ public class GalleryActivity extends BaseSwipeBackActivity implements GalleryCon
         mPresenter.attachView(this);
         setTitle("图库");
         initToolBar(toolbar);
-        selectImages = getIntent().getStringArrayListExtra("selectImages");
+        ArrayList<String> selectImages = getIntent().getStringArrayListExtra("selectImages");
         if (selectImages != null && selectImages.size() > 0) {
             resultList = selectImages;
             btCommit.setText(String.format("完成( %d/%d )", resultList.size(), MAX));

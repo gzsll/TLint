@@ -21,7 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.UserResult;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.browser.BrowserFragment;
 
@@ -70,11 +69,9 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
 
     @Inject
     UserProfilePresenter mPresenter;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
+
 
     private MaterialDialog mDialog;
-    private String uid;
 
 
     @Override
@@ -84,7 +81,10 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        String uid = getIntent().getStringExtra("uid");
+        DaggerUserProfileComponent.builder().applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule())
+                .userProfileModule(new UserProfileModule(uid)).build().inject(this);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
                 .title("提示")
                 .content("正在加载").cancelable(false)
                 .progress(true, 0).build();
-        uid = getIntent().getStringExtra("uid");
-        mPresenter.receiveUserInfo(uid);
+
+        mPresenter.receiveUserInfo();
     }
 
     @Override

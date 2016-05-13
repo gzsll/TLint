@@ -57,7 +57,7 @@ public class PmDetailFragment extends BaseFragment implements PmDetailContract.V
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+        getComponent(PmDetailComponent.class).inject(this);
     }
 
     @Override
@@ -78,7 +78,6 @@ public class PmDetailFragment extends BaseFragment implements PmDetailContract.V
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
         refreshLayout.setOnRefreshListener(this);
-        mPresenter.bind(uid);
         mPresenter.attachView(this);
     }
 

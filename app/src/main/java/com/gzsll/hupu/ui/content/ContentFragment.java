@@ -1,19 +1,14 @@
 package com.gzsll.hupu.ui.content;
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.otto.ContentScrollEvent;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.widget.HuPuWebView;
-import com.squareup.otto.Bus;
 
 import org.apache.log4j.Logger;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,11 +30,6 @@ public class ContentFragment extends BaseFragment implements HuPuWebView.HuPuWeb
     }
 
 
-    @Inject
-    Activity mActivity;
-    @Inject
-    Bus mBus;
-
     @Bind(R.id.webView)
     HuPuWebView webView;
 
@@ -48,7 +38,7 @@ public class ContentFragment extends BaseFragment implements HuPuWebView.HuPuWeb
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+
     }
 
     @Override
@@ -101,7 +91,10 @@ public class ContentFragment extends BaseFragment implements HuPuWebView.HuPuWeb
     @Override
     public void onScroll(int dx, int dy) {
         if (Math.abs(dy) > 4) {
-            mBus.post(new ContentScrollEvent(dy < 0));
+            ContentActivity activity = ((ContentActivity) getActivity());
+            if (activity != null) {
+                activity.setFLoatingMenuVisibility(dy < 0);
+            }
         }
     }
 

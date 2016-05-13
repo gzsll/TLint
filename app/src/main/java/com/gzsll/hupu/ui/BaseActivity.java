@@ -12,15 +12,13 @@ import android.view.WindowManager;
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.helper.ResourceHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
-import com.gzsll.hupu.helper.StatusBarUtil;
 import com.gzsll.hupu.injector.component.ActivityComponent;
-import com.gzsll.hupu.injector.component.DaggerActivityComponent;
+import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.module.ActivityModule;
+import com.gzsll.hupu.util.ResourceUtils;
+import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.StatusBarUtil;
 import com.umeng.analytics.MobclickAgent;
-
-import javax.inject.Inject;
 
 /**
  * Created by sll on 2016/3/9.
@@ -30,19 +28,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ActivityComponent mActivityComponent;
 
 
-    @Inject
-    ResourceHelper mResourceHelper;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
-                .applicationComponent(((MyApplication) getApplication()).getApplicationComponent())
-                .build();
-        mActivityComponent.inject(this);
+        getApplicationComponent().inject(this);
         initTheme();
         super.onCreate(savedInstanceState);
         setContentView(initContentView());
@@ -52,6 +41,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         initUiAndListener();
         AppManager.getAppManager().addActivity(this);
     }
+
+    protected ApplicationComponent getApplicationComponent() {
+        return ((MyApplication) getApplication()).getApplicationComponent();
+    }
+
+    protected ActivityModule getActivityModule() {
+        return new ActivityModule(this);
+    }
+
 
     @Override
     protected void onResume() {
@@ -67,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     private void initTheme() {
-        if (mSettingPrefHelper.getNightModel()) {
+        if (SettingPrefUtils.getNightModel(this)) {
             int theme;
 
             try {
@@ -138,7 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void setStatusBarColor(boolean on) {
         if (on) {
-            StatusBarUtil.setColor(this, mResourceHelper.getThemeColor(this), 0);
+            StatusBarUtil.setColor(this, ResourceUtils.getThemeColor(this), 0);
         }
     }
 
@@ -154,7 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     public int getStatusBarHeight() {
-        return mResourceHelper.getStatusBarHeight(this);
+        return ResourceUtils.getStatusBarHeight(this);
     }
 
 

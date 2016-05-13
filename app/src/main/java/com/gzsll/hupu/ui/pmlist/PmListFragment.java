@@ -8,6 +8,7 @@ import android.view.View;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Pm;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.messagelist.MessageComponent;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
 
@@ -40,7 +41,7 @@ public class PmListFragment extends BaseFragment implements PmListContract.View,
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+        getComponent(MessageComponent.class).inject(this);
     }
 
     @Override

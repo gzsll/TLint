@@ -1,10 +1,12 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.components.retrofit;
 
 import android.content.Context;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
 import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.util.SecurityUtils;
+import com.gzsll.hupu.util.SettingPrefUtils;
 
 import org.apache.log4j.Logger;
 
@@ -21,23 +23,19 @@ import java.util.Map;
 public class RequestHelper {
     Logger logger = Logger.getLogger("RequestUtil");
 
-    private SecurityHelper mSecurityHelper;
     private Context mContext;
     private UserStorage mUserStorage;
-    private SettingPrefHelper mSettingPrefHelper;
 
-    public RequestHelper(SecurityHelper mSecurityHelper, Context mContext, UserStorage mUserStorage, SettingPrefHelper mSettingPrefHelper) {
-        this.mSecurityHelper = mSecurityHelper;
+    public RequestHelper(Context mContext, UserStorage mUserStorage) {
         this.mContext = mContext;
         this.mUserStorage = mUserStorage;
-        this.mSettingPrefHelper = mSettingPrefHelper;
     }
 
 
     public Map<String, String> getHttpRequestMap() {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("client", getDeviceId());
-        map.put("night", mSettingPrefHelper.getNightModel() ? "1" : "0");
+        map.put("night", SettingPrefUtils.getNightModel(mContext) ? "1" : "0");
         if (mUserStorage.isLogin()) {
             try {
                 map.put("token", URLEncoder.encode(mUserStorage.getToken(), "UTF-8"));
@@ -80,7 +78,7 @@ public class RequestHelper {
             builder.append(map1.getKey()).append("=").append(map1.getValue());
         }
         builder.append("HUPU_SALT_AKJfoiwer394Jeiow4u309");
-        return mSecurityHelper.getMD5(builder.toString());
+        return SecurityUtils.getMD5(builder.toString());
     }
 
 

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,10 +33,12 @@ import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.db.Forum;
-import com.gzsll.hupu.helper.ResourceHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.login.LoginActivity;
+import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.thread.ThreadListAdapter;
+import com.gzsll.hupu.util.ResourceUtils;
+import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 
 import java.util.List;
@@ -54,11 +57,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
     @Inject
     ThreadListPresenter mPresenter;
     @Inject
-    SettingPrefHelper mSettingPrefHelper;
-    @Inject
     ThreadListAdapter mAdapter;
-    @Inject
-    ResourceHelper mResourceHelper;
     @Inject
     Activity mActivity;
 
@@ -92,17 +91,6 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
     FrameLayout frameLayout;
 
 
-    public static ThreadListFragment newInstance(String fid) {
-        ThreadListFragment mFragment = new ThreadListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("fid", fid);
-        mFragment.setArguments(bundle);
-        return mFragment;
-    }
-
-
-    private String fid;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -111,7 +99,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+        getComponent(ThreadListComponent.class).inject(this);
     }
 
     @Override
@@ -121,7 +109,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @Override
     public void getBundle(Bundle bundle) {
-        fid = bundle.getString("fid");
+
     }
 
     @Override
@@ -142,12 +130,12 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
 
     private void initFloatingButton() {
-        mResourceHelper.setFabBtnColor(mActivity, floatingPost);
-        mResourceHelper.setFabBtnColor(mActivity, floatingSwitch);
-        mResourceHelper.setFabBtnColor(mActivity, floatingRefresh);
-        mResourceHelper.setFabBtnColor(mActivity, floatingAttention);
-        mResourceHelper.setFabMenuColor(mActivity, floatingMenu);
-        if (mSettingPrefHelper.getThreadSort().equals(Constants.THREAD_TYPE_HOT)) {
+        ResourceUtils.setFabBtnColor(mActivity, floatingPost);
+        ResourceUtils.setFabBtnColor(mActivity, floatingSwitch);
+        ResourceUtils.setFabBtnColor(mActivity, floatingRefresh);
+        ResourceUtils.setFabBtnColor(mActivity, floatingAttention);
+        ResourceUtils.setFabMenuColor(mActivity, floatingMenu);
+        if (SettingPrefUtils.getThreadSort(mActivity).equals(Constants.THREAD_TYPE_HOT)) {
             floatingSwitch.setLabelText("按发帖时间排序");
         } else {
             floatingSwitch.setLabelText("按回帖时间排序");
@@ -172,7 +160,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @Override
     public void initData() {
-        mPresenter.onThreadReceive(fid, mSettingPrefHelper.getThreadSort(), null);
+        mPresenter.onThreadReceive(SettingPrefUtils.getThreadSort(getContext()));
     }
 
     @Override
@@ -250,6 +238,21 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
         floatingMenu.setVisibility(visibility);
     }
 
+    @Override
+    public void showPostThreadUi(String fid) {
+        PostActivity.startActivity(mActivity, Constants.TYPE_POST, fid, "", "", "");
+    }
+
+    @Override
+    public void showLoginUi() {
+        LoginActivity.startActivity(mActivity);
+    }
+
+    @Override
+    public void showToast(String msg) {
+        Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -294,10 +297,10 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
     @OnClick(R.id.floatingSwitch)
     void floatingSwitch() {
         if (floatingSwitch.getLabelText().equals("按回帖时间排序")) {
-            mPresenter.onThreadReceive(fid, Constants.THREAD_TYPE_HOT, null);
+            mPresenter.onThreadReceive(Constants.THREAD_TYPE_HOT);
             floatingSwitch.setLabelText("按发帖时间排序");
         } else {
-            mPresenter.onThreadReceive(fid, Constants.THREAD_TYPE_NEW, null);
+            mPresenter.onThreadReceive(Constants.THREAD_TYPE_NEW);
             floatingSwitch.setLabelText("按回帖时间排序");
         }
         floatingMenu.toggleMenuButton(true);
@@ -329,7 +332,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mPresenter.onThreadReceive(fid, mSettingPrefHelper.getThreadSort(), null);
+                mPresenter.onThreadReceive(SettingPrefUtils.getThreadSort(mActivity));
                 return true;
             }
         });

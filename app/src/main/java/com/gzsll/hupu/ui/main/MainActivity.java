@@ -27,9 +27,7 @@ import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.helper.ResourceHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
-import com.gzsll.hupu.helper.StatusBarUtil;
+import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.browser.BrowserActivity;
 import com.gzsll.hupu.ui.browser.BrowserFragment;
@@ -37,6 +35,9 @@ import com.gzsll.hupu.ui.forum.ForumListFragment;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.setting.SettingActivity;
 import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
+import com.gzsll.hupu.util.ResourceUtils;
+import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.StatusBarUtil;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/9.
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener, MainContract.View {
+public class MainActivity extends BaseActivity implements View.OnClickListener, MainContract.View, HasComponent<MainComponent> {
 
     public static void startActivity(Context mContext) {
         Intent intent = new Intent(mContext, MainActivity.class);
@@ -66,14 +67,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     SimpleDraweeView ivIcon;
     TextView tvName;
 
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
+
     @Inject
     UserStorage mUserStorage;
     @Inject
     MainPresenter mPresenter;
-    @Inject
-    ResourceHelper mResourceHelper;
+
+    private MainComponent mMainComponent;
 
 
     @Override
@@ -83,7 +83,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        mMainComponent = DaggerMainComponent.builder().applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule()).build();
+        mMainComponent.inject(this);
     }
 
     @Override
@@ -99,12 +101,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         navigationView.getHeaderView(0).findViewById(R.id.llAccount).setOnClickListener(this);
         ivTheme = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ivTheme);
         ivTheme.setOnClickListener(this);
-        ivTheme.setImageResource(mSettingPrefHelper.getNightModel() ? R.drawable.ic_wb_sunny_white_24dp : R.drawable.ic_brightness_3_white_24dp);
+        ivTheme.setImageResource(SettingPrefUtils.getNightModel(this) ? R.drawable.ic_wb_sunny_white_24dp : R.drawable.ic_brightness_3_white_24dp);
         //创建返回键，并实现打开关/闭监听
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         mDrawerToggle.syncState();
         drawerLayout.setDrawerListener(mDrawerToggle);
-        StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, mResourceHelper.getThemeColor(this), 0);
+        StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, ResourceUtils.getThemeColor(this), 0);
         setupDrawerContent();
         getSupportFragmentManager().beginTransaction().replace(R.id.content, SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_RECOMMEND)).commit();
         mPresenter.attachView(this);
@@ -257,7 +259,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mPresenter.showAccountMenu();
                 break;
             case R.id.ivTheme:
-                mSettingPrefHelper.setNightModel(!mSettingPrefHelper.getNightModel());
+                SettingPrefUtils.setNightModel(this, !SettingPrefUtils.getNightModel(this));
                 reload();
                 break;
         }
@@ -298,5 +300,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void renderNotification(int count) {
         this.count = count;
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public MainComponent getComponent() {
+        return mMainComponent;
     }
 }

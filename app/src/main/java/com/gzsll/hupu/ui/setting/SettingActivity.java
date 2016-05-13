@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 
 import butterknife.Bind;
@@ -13,7 +14,7 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/11.
  */
-public class SettingActivity extends BaseSwipeBackActivity {
+public class SettingActivity extends BaseSwipeBackActivity implements HasComponent<SettingComponent> {
 
     public static void startActivity(Context mContext) {
         Intent intent = new Intent(mContext, SettingActivity.class);
@@ -23,6 +24,8 @@ public class SettingActivity extends BaseSwipeBackActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
+    private SettingComponent mSettingComponent;
+
     @Override
     public int initContentView() {
         return R.layout.base_content_toolbar_layout;
@@ -30,7 +33,8 @@ public class SettingActivity extends BaseSwipeBackActivity {
 
     @Override
     public void initInjector() {
-
+        mSettingComponent = DaggerSettingComponent.builder().applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule()).build();
     }
 
     @Override
@@ -49,5 +53,10 @@ public class SettingActivity extends BaseSwipeBackActivity {
     @Override
     protected boolean isApplyStatusBarColor() {
         return true;
+    }
+
+    @Override
+    public SettingComponent getComponent() {
+        return mSettingComponent;
     }
 }

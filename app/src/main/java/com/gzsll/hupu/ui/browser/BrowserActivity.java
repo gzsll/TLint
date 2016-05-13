@@ -10,8 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.helper.StringHelper;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.util.StringUtils;
 
 import javax.inject.Inject;
 
@@ -40,7 +40,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
 
 
     @Inject
-    StringHelper mStringHelper;
+    StringUtils mStringUtils;
 
     private String url;
     private BrowserFragment mFragment;
@@ -52,7 +52,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+
     }
 
     @Override
@@ -101,7 +101,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
                 mFragment.reload();
             }
         } else if (item.getItemId() == R.id.copy) {
-            mStringHelper.copy(url);
+            StringUtils.copy(this, url);
         } else if (item.getItemId() == R.id.to_browser) {
             try {
                 Intent intent = new Intent();

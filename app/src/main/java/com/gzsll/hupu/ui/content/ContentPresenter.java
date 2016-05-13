@@ -1,26 +1,21 @@
 package com.gzsll.hupu.ui.content;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.ShareHelper;
-import com.gzsll.hupu.helper.ToastHelper;
-import com.gzsll.hupu.ui.login.LoginActivity;
-import com.gzsll.hupu.ui.post.PostActivity;
-import com.gzsll.hupu.ui.report.ReportActivity;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ShareUtils;
+import com.gzsll.hupu.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -28,28 +23,18 @@ import rx.functions.Action1;
 /**
  * Created by sll on 2016/3/9.
  */
+@PerActivity
 public class ContentPresenter implements ContentContract.Presenter {
 
-    @Inject
-    ForumApi mForumApi;
-    @Inject
-    Context mContext;
-    @Inject
-    ToastHelper mToastHelper;
-    @Inject
-    ShareHelper mShareHelper;
-    @Inject
-    UserStorage mUserStorage;
-    @Inject
-    Activity mActivity;
+    private ForumApi mForumApi;
+    private Context mContext;
+    private UserStorage mUserStorage;
 
-    @Inject
-    @Singleton
-    public ContentPresenter() {
-    }
 
 
     private ContentContract.View mContentView;
+
+
     private String tid;
     private String fid;
     private String pid;
@@ -59,6 +44,13 @@ public class ContentPresenter implements ContentContract.Presenter {
     private boolean isCollected;
     private String title;
     private String shareText;
+
+    @Inject
+    public ContentPresenter(ForumApi forumApi, Context context, UserStorage userStorage) {
+        mForumApi = forumApi;
+        mContext = context;
+        mUserStorage = userStorage;
+    }
 
 
     @Override
@@ -148,14 +140,14 @@ public class ContentPresenter implements ContentContract.Presenter {
     @Override
     public void onCommendClick() {
         if (isLogin()) {
-            PostActivity.startActivity(mActivity, Constants.TYPE_COMMENT, fid, tid, "", title);
+            mContentView.showPostUi(title);
         }
         mContentView.onToggleFloatingMenu();
     }
 
     private boolean isLogin() {
         if (!mUserStorage.isLogin()) {
-            LoginActivity.startActivity(mActivity);
+            mContentView.showLoginUi();
             return false;
         }
         return true;
@@ -164,7 +156,7 @@ public class ContentPresenter implements ContentContract.Presenter {
     @Override
     public void onShareClick() {
         if (!TextUtils.isEmpty(shareText)) {
-            mShareHelper.share(shareText);
+            ShareUtils.share(mContext, shareText);
         }
         mContentView.onToggleFloatingMenu();
     }
@@ -172,7 +164,7 @@ public class ContentPresenter implements ContentContract.Presenter {
     @Override
     public void onReportClick() {
         if (isLogin()) {
-            ReportActivity.startActivity(mActivity, tid, "");
+            mContentView.showReportUi();
         }
         mContentView.onToggleFloatingMenu();
     }
@@ -200,7 +192,7 @@ public class ContentPresenter implements ContentContract.Presenter {
             @Override
             public void call(CollectData collectData) {
                 if (collectData != null && collectData.result != null) {
-                    mToastHelper.showToast(collectData.result.msg);
+                    ToastUtils.showToast(collectData.result.msg);
                     isCollected = collectData.result.status == 200;
                     mContentView.isCollected(isCollected);
                 }
@@ -208,7 +200,7 @@ public class ContentPresenter implements ContentContract.Presenter {
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                mToastHelper.showToast("收藏失败");
+                ToastUtils.showToast("收藏失败");
             }
         });
     }
@@ -219,7 +211,7 @@ public class ContentPresenter implements ContentContract.Presenter {
             @Override
             public void call(CollectData collectData) {
                 if (collectData != null && collectData.result != null) {
-                    mToastHelper.showToast(collectData.result.msg);
+                    ToastUtils.showToast(collectData.result.msg);
                     isCollected = collectData.result.status != 200;
                     mContentView.isCollected(isCollected);
                 }
@@ -227,7 +219,7 @@ public class ContentPresenter implements ContentContract.Presenter {
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                mToastHelper.showToast("取消收藏失败");
+                ToastUtils.showToast("取消收藏失败");
             }
         });
     }

@@ -1,19 +1,14 @@
 package com.gzsll.hupu.ui;
 
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.annotation.AttrRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.injector.component.DaggerFragmentComponent;
-import com.gzsll.hupu.injector.component.FragmentComponent;
-import com.gzsll.hupu.injector.module.FragmentModule;
+import com.gzsll.hupu.injector.HasComponent;
+import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.ProgressFragment;
 
@@ -22,7 +17,6 @@ import com.gzsll.hupu.widget.ProgressFragment;
  */
 public abstract class BaseFragment extends ProgressFragment {
 
-    protected FragmentComponent mFragmentComponent;
     private TextView tvError, tvEmpty, tvLoading;
     private Button btnReload;
 
@@ -53,10 +47,6 @@ public abstract class BaseFragment extends ProgressFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mFragmentComponent = DaggerFragmentComponent.builder()
-                .fragmentModule(new FragmentModule(this))
-                .applicationComponent(((MyApplication) getActivity().getApplication()).getApplicationComponent())
-                .build();
         initInjector();
         getBundle(getArguments());
         initUI(view);
@@ -101,23 +91,10 @@ public abstract class BaseFragment extends ProgressFragment {
         View loading = inflater.inflate(R.layout.loading_view_layout, null);
         tvLoading = (TextView) loading.findViewById(R.id.tvLoading);
         ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) loading.findViewById(R.id.progress_view);
-        progressBar.setBackgroundColor(getThemeColor(getActivity()));
+        progressBar.setBackgroundColor(ResourceUtils.getThemeColor(getActivity()));
         return loading;
     }
 
-    public int getThemeColor(Context mContext) {
-        int materialBlue = mContext.getResources().getColor(R.color.md_green_500);
-        return resolveColor(mContext, R.attr.colorPrimary, materialBlue);
-    }
-
-    private int resolveColor(Context mContext, @AttrRes int attr, int fallback) {
-        TypedArray a = mContext.getTheme().obtainStyledAttributes(new int[]{attr});
-        try {
-            return a.getColor(0, fallback);
-        } finally {
-            a.recycle();
-        }
-    }
 
 
     public void setErrorText(String text) {
@@ -151,6 +128,12 @@ public abstract class BaseFragment extends ProgressFragment {
     //Override this to reload
     public void onReloadClicked() {
 
+    }
+
+
+    @SuppressWarnings("unchecked")
+    protected <C> C getComponent(Class<C> componentType) {
+        return componentType.cast(((HasComponent<C>) getActivity()).getComponent());
     }
 
 

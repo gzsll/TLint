@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.pmlist.PmListFragment;
 
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by sll on 2016/3/13.
  */
-public class MessageActivity extends BaseSwipeBackActivity {
+public class MessageActivity extends BaseSwipeBackActivity implements HasComponent<MessageComponent> {
 
     public static void startActivity(Context mContext) {
         Intent intent = new Intent(mContext, MessageActivity.class);
@@ -40,6 +41,7 @@ public class MessageActivity extends BaseSwipeBackActivity {
     @Bind(R.id.viewpager)
     ViewPager viewpager;
 
+    private MessageComponent mMessageComponent;
 
     @Override
     public int initContentView() {
@@ -48,7 +50,8 @@ public class MessageActivity extends BaseSwipeBackActivity {
 
     @Override
     public void initInjector() {
-
+        mMessageComponent = DaggerMessageComponent.builder().applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule()).build();
     }
 
     @Override
@@ -61,6 +64,11 @@ public class MessageActivity extends BaseSwipeBackActivity {
         adapter.addFragment(new PmListFragment(), "PM");
         viewpager.setAdapter(adapter);
         tabs.setupWithViewPager(viewpager);
+    }
+
+    @Override
+    public MessageComponent getComponent() {
+        return mMessageComponent;
     }
 
     public static class MyAdapter extends FragmentPagerAdapter {

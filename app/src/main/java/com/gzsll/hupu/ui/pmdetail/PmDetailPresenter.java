@@ -12,13 +12,13 @@ import com.gzsll.hupu.bean.PmSettingData;
 import com.gzsll.hupu.bean.SendPm;
 import com.gzsll.hupu.bean.SendPmData;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,28 +28,28 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/5/6.
  */
+@PerActivity
 public class PmDetailPresenter implements PmDetailContract.Presenter {
 
-
-    @Inject
-    GameApi mGameApi;
-    @Inject
-    ToastHelper mToastHelper;
-    @Inject
-    UserStorage mUserStorage;
-
-    @Inject
-    @Singleton
-    public PmDetailPresenter() {
-    }
+    private String uid;
+    private GameApi mGameApi;
+    private UserStorage mUserStorage;
 
 
     private PmDetailContract.View mPmDetailView;
     private String lastMid = "";
     private List<PmDetail> mPmDetails = new ArrayList<>();
-    private String uid;
+
     private Subscription mSubscription;
     private boolean isBlock;
+
+
+    @Inject
+    public PmDetailPresenter(String uid, GameApi gameApi, UserStorage userStorage) {
+        this.uid = uid;
+        mGameApi = gameApi;
+        mUserStorage = userStorage;
+    }
 
 
     @Override
@@ -71,10 +71,6 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
         });
     }
 
-    @Override
-    public void bind(String uid) {
-        this.uid = uid;
-    }
 
     @Override
     public void onPmDetailReceive() {
@@ -99,7 +95,7 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
                         if (mPmDetails.isEmpty()) {
                             mPmDetailView.onEmpty();
                         } else {
-                            mToastHelper.showToast("没有更多了");
+                            ToastUtils.showToast("没有更多了");
                             mPmDetailView.onRefreshCompleted();
                         }
                     }
@@ -111,7 +107,7 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
                 if (mPmDetails.isEmpty()) {
                     mPmDetailView.onError();
                 } else {
-                    mToastHelper.showToast("数据加载失败，请检查网络后重试");
+                    ToastUtils.showToast("数据加载失败，请检查网络后重试");
                     mPmDetailView.hideLoading();
                 }
             }
@@ -131,7 +127,7 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
     @Override
     public void send(String content) {
         if (TextUtils.isEmpty(content)) {
-            mToastHelper.showToast("内容不能为空");
+            ToastUtils.showToast("内容不能为空");
             return;
         }
         mGameApi.pm(content, uid).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SendPmData>() {
@@ -150,17 +146,17 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
                         mPmDetailView.renderPmDetailList(mPmDetails);
                         mPmDetailView.scrollTo(mPmDetails.size() - 1);
                         mPmDetailView.onRefreshCompleted();
-                        mToastHelper.showToast("发送成功");
+                        ToastUtils.showToast("发送成功");
                         mPmDetailView.cleanEditText();
                     } else {
-                        mToastHelper.showToast(sendPmData.result.desc);
+                        ToastUtils.showToast(sendPmData.result.desc);
                     }
                 }
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                mToastHelper.showToast("发送失败，请检查您的网络后重试");
+                ToastUtils.showToast("发送失败，请检查您的网络后重试");
             }
         });
     }
@@ -170,12 +166,12 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
         mGameApi.clearPm(uid).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
             @Override
             public void call(BaseData baseData) {
-                mToastHelper.showToast("清空记录成功");
+                ToastUtils.showToast("清空记录成功");
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                mToastHelper.showToast("清空记录失败，请检查网络后重试");
+                ToastUtils.showToast("清空记录失败，请检查网络后重试");
             }
         });
     }
@@ -185,14 +181,14 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
         mGameApi.blockPm(uid, isBlock ? 0 : 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
             @Override
             public void call(BaseData baseData) {
-                mToastHelper.showToast(isBlock ? "取消屏蔽成功" : "屏蔽成功");
+                ToastUtils.showToast(isBlock ? "取消屏蔽成功" : "屏蔽成功");
                 isBlock = !isBlock;
                 mPmDetailView.isBlock(isBlock);
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                mToastHelper.showToast(isBlock ? "取消屏蔽失败，请检查网络后重试" : "屏蔽失败，请检查网络后重试");
+                ToastUtils.showToast(isBlock ? "取消屏蔽失败，请检查网络后重试" : "屏蔽失败，请检查网络后重试");
             }
         });
     }

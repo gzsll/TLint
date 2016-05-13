@@ -14,12 +14,11 @@ import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
-import com.gzsll.hupu.helper.ConfigHelper;
-import com.gzsll.hupu.helper.FileHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.component.DaggerApplicationComponent;
 import com.gzsll.hupu.injector.module.ApplicationModule;
+import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 
 import org.apache.log4j.Level;
@@ -44,12 +43,6 @@ public class MyApplication extends Application {
     @Inject
     UserDao mUserDao;
     @Inject
-    FileHelper mFileHelper;
-    @Inject
-    ConfigHelper mConfigHelper;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
-    @Inject
     OkHttpClient mOkHttpClient;
 
 
@@ -61,6 +54,7 @@ public class MyApplication extends Application {
         initUser();
         FileDownloader.init(this);
         initFrescoConfig();
+        ToastUtils.register(this);
     }
 
     private void initComponent() {
@@ -96,7 +90,7 @@ public class MyApplication extends Application {
     }
 
     private void initUser() {
-        List<User> users = mUserDao.queryBuilder().where(UserDao.Properties.Uid.eq(mSettingPrefHelper.getLoginUid())).list();
+        List<User> users = mUserDao.queryBuilder().where(UserDao.Properties.Uid.eq(SettingPrefUtils.getLoginUid(this))).list();
         if (!users.isEmpty()) {
             mUserStorage.login(users.get(0));
         }
@@ -129,9 +123,6 @@ public class MyApplication extends Application {
         Fresco.initialize(this, config);
 
     }
-
-
-
 
 
 }

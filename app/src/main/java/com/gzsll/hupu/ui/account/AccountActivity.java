@@ -50,7 +50,8 @@ public class AccountActivity extends BaseSwipeBackActivity implements AccountCon
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        DaggerAccountComponent.builder().applicationComponent(getApplicationComponent()).activityModule(getActivityModule())
+                .accountModule(new AccountModule()).build().inject(this);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.gzsll.hupu.ui.post;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.gzsll.hupu.Constants;
@@ -8,14 +9,14 @@ import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.PermissionData;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.bean.UploadInfo;
-import com.gzsll.hupu.helper.SettingPrefHelper;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -27,19 +28,18 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/3/9.
  */
+@PerActivity
 public class PostPresenter implements PostContract.Presenter {
 
-    @Inject
-    ForumApi mForumApi;
-    @Inject
-    ToastHelper mToastHelper;
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
+
+    private ForumApi mForumApi;
+    private Context mContext;
 
 
     @Inject
-    @Singleton
-    public PostPresenter() {
+    public PostPresenter(ForumApi forumApi, Context context) {
+        mForumApi = forumApi;
+        mContext = context;
     }
 
     private PostContract.View mPostView;
@@ -54,7 +54,7 @@ public class PostPresenter implements PostContract.Presenter {
                 if (permissionData != null) {
                     if (permissionData.error != null) {
                         mPostView.renderError(permissionData.error);
-                    } else if (mSettingPrefHelper.isNeedExam()) {
+                    } else if (SettingPrefUtils.isNeedExam(mContext)) {
                         mPostView.renderExam(permissionData.exam);
                     }
                 }
@@ -135,20 +135,20 @@ public class PostPresenter implements PostContract.Presenter {
                 mPostView.hideLoading();
                 if (result != null) {
                     if (result.error != null) {
-                        mToastHelper.showToast(result.error.text);
+                        ToastUtils.showToast(result.error.text);
                     } else if (result.status == 200) {
-                        mToastHelper.showToast("发送成功~");
+                        ToastUtils.showToast("发送成功~");
                         mPostView.postSuccess();
                     }
                 } else {
-                    mToastHelper.showToast("您的网络有问题，请检查后重试");
+                    ToastUtils.showToast("您的网络有问题，请检查后重试");
                 }
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
                 mPostView.hideLoading();
-                mToastHelper.showToast("您的网络有问题，请检查后重试");
+                ToastUtils.showToast("您的网络有问题，请检查后重试");
             }
         });
     }
@@ -214,20 +214,20 @@ public class PostPresenter implements PostContract.Presenter {
                 mPostView.hideLoading();
                 if (result != null) {
                     if (result.error != null) {
-                        mToastHelper.showToast(result.error.text);
+                        ToastUtils.showToast(result.error.text);
                     } else if (result.status == 200) {
-                        mToastHelper.showToast("发送成功~");
+                        ToastUtils.showToast("发送成功~");
                         mPostView.postSuccess();
                     }
                 } else {
-                    mToastHelper.showToast("您的网络有问题，请检查后重试");
+                    ToastUtils.showToast("您的网络有问题，请检查后重试");
                 }
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
                 mPostView.hideLoading();
-                mToastHelper.showToast("您的网络有问题，请检查后重试");
+                ToastUtils.showToast("您的网络有问题，请检查后重试");
             }
         });
     }

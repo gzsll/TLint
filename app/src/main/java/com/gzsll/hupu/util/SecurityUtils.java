@@ -1,4 +1,4 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,10 +9,10 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by sll on 2015/3/9.
  */
-public class SecurityHelper {
+public class SecurityUtils {
 
 
-    public String getMd5ByteByFile(File file) {
+    public static String getMd5ByteByFile(File file) {
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
@@ -41,7 +41,7 @@ public class SecurityHelper {
     /**
      * 使用MD5算法对传入的key进行加密并返回。
      */
-    public String getMD5(String key) {
+    public static String getMD5(String key) {
         String cacheKey;
         try {
             final MessageDigest mDigest = MessageDigest.getInstance("MD5");
@@ -53,7 +53,7 @@ public class SecurityHelper {
         return cacheKey;
     }
 
-    private String bytesToHexString(byte[] bytes) {
+    private static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
             String hex = Integer.toHexString(0xFF & bytes[i]);

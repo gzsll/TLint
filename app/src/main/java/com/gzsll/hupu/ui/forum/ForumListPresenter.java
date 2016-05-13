@@ -11,12 +11,12 @@ import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.MyForumsResult;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.db.ForumDao;
+import com.gzsll.hupu.injector.PerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -27,12 +27,12 @@ import rx.subjects.PublishSubject;
 /**
  * Created by sll on 2016/3/11.
  */
+@PerActivity
 public class ForumListPresenter implements ForumListContract.Presenter {
 
-    @Inject
-    ForumDao mForumDao;
-    @Inject
-    ForumApi mForumApi;
+
+    private ForumDao mForumDao;
+    private ForumApi mForumApi;
 
 
     private ForumListContract.View mForumListView;
@@ -40,9 +40,10 @@ public class ForumListPresenter implements ForumListContract.Presenter {
     private PublishSubject<List<Forum>> mSubject;
 
 
-    @Singleton
     @Inject
-    public ForumListPresenter() {
+    public ForumListPresenter(ForumDao forumDao, ForumApi forumApi) {
+        mForumDao = forumDao;
+        mForumApi = forumApi;
         mSubject = PublishSubject.create();
     }
 

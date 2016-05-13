@@ -18,9 +18,8 @@ import android.webkit.WebViewClient;
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.MyApplication;
+import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.RequestHelper;
-import com.gzsll.hupu.helper.ToastHelper;
 import com.gzsll.hupu.ui.browser.BrowserActivity;
 import com.gzsll.hupu.ui.content.ContentActivity;
 import com.gzsll.hupu.ui.imagepreview.ImagePreviewActivity;
@@ -29,6 +28,8 @@ import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
 import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
+import com.gzsll.hupu.util.StringUtils;
+import com.gzsll.hupu.util.ToastUtils;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -56,8 +57,6 @@ public class HuPuWebView extends WebView {
     UserStorage mUserStorage;
     @Inject
     RequestHelper mRequestHelper;
-    @Inject
-    ToastHelper mToastHelper;
 
 
     public HuPuWebView(Context context) {
@@ -255,7 +254,7 @@ public class HuPuWebView extends WebView {
                 break;
             case "hupu.ui.copy":
                 String copy = data.getString("content");
-                copy(copy);
+                StringUtils.copy(getContext(), copy);
                 break;
             case "hupu.ui.report":
                 JSONObject reportExtra = data.getJSONObject("extra");
@@ -265,7 +264,7 @@ public class HuPuWebView extends WebView {
                 break;
             case "hupu.user.login":
                 LoginActivity.startActivity(getContext());
-                mToastHelper.showToast("请先登录");
+                ToastUtils.showToast("请先登录");
                 break;
             case "hupu.ui.pageclose":
                 AppManager.getAppManager().finishActivity();
@@ -273,19 +272,6 @@ public class HuPuWebView extends WebView {
         }
     }
 
-    private void copy(String stripped) {
-        int sdk = android.os.Build.VERSION.SDK_INT;
-        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setText(stripped);
-        } else {
-            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData
-                    .newPlainText("content", stripped);
-            clipboard.setPrimaryClip(clip);
-        }
-        mToastHelper.showToast("复制成功");
-    }
 
     private void setUA(int i) {
         if (this.basicUA != null) {

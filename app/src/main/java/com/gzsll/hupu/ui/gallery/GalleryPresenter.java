@@ -7,13 +7,13 @@ import android.support.annotation.NonNull;
 
 import com.gzsll.hupu.bean.Folder;
 import com.gzsll.hupu.bean.Image;
+import com.gzsll.hupu.injector.PerActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -25,6 +25,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/3/9.
  */
+@PerActivity
 public class GalleryPresenter implements GalleryContract.Presenter {
 
     private final String[] IMAGE_PROJECTION = {
@@ -38,13 +39,11 @@ public class GalleryPresenter implements GalleryContract.Presenter {
     private boolean hasFolderGened = false;
 
 
-    @Inject
-    Context mContext;
-
+    private Context mContext;
 
     @Inject
-    @Singleton
-    public GalleryPresenter() {
+    public GalleryPresenter(Context context) {
+        mContext = context;
     }
 
 

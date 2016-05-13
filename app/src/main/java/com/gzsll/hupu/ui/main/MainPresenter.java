@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.gzsll.hupu.AppManager;
-import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.MessageData;
@@ -14,8 +13,7 @@ import com.gzsll.hupu.bean.PmData;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
-import com.gzsll.hupu.helper.SettingPrefHelper;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.otto.AccountChangeEvent;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
@@ -24,13 +22,13 @@ import com.gzsll.hupu.ui.account.AccountActivity;
 import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
+import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -42,35 +40,29 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/3/17.
  */
+@PerActivity
 public class MainPresenter implements MainContract.Presenter {
 
 
-    @Inject
-    SettingPrefHelper mSettingPrefHelper;
-    @Inject
-    UpdateAgent mUpdateAgent;
-    @Inject
-    UserStorage mUserStorage;
-    @Inject
-    UserDao mUserDao;
-    @Inject
-    Bus mBus;
-    @Inject
-    ForumApi mForumApi;
-    @Inject
-    ToastHelper mToastHelper;
-    @Inject
-    Activity mActivity;
-    @Inject
-    GameApi mGameApi;
+    private UserStorage mUserStorage;
+    private UserDao mUserDao;
+    private Bus mBus;
+    private ForumApi mForumApi;
+    private GameApi mGameApi;
+    private Activity mActivity;
 
 
     private MainContract.View mMainView;
     private int count = 0;
 
     @Inject
-    @Singleton
-    public MainPresenter() {
+    public MainPresenter(UserStorage userStorage, UserDao userDao, Bus bus, ForumApi forumApi, GameApi gameApi, Activity activity) {
+        mUserStorage = userStorage;
+        mUserDao = userDao;
+        mBus = bus;
+        mForumApi = forumApi;
+        mGameApi = gameApi;
+        mActivity = activity;
     }
 
 
@@ -80,9 +72,7 @@ public class MainPresenter implements MainContract.Presenter {
         mBus.register(this);
         initUserInfo();
         initNotification();
-        if (mSettingPrefHelper.getAutoUpdate()) {
-            mUpdateAgent.checkUpdate(mActivity);
-        }
+
     }
 
 
@@ -137,7 +127,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void toLogin() {
         LoginActivity.startActivity(mActivity);
-        mToastHelper.showToast("请先登录");
+        ToastUtils.showToast("请先登录");
     }
 
     @Override
@@ -198,7 +188,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     private boolean isCanExit() {
         if (System.currentTimeMillis() - mExitTime > 2000) {
-            mToastHelper.showToast("再按一次退出程序");
+            ToastUtils.showToast("再按一次退出程序");
             mExitTime = System.currentTimeMillis();
             return false;
         }

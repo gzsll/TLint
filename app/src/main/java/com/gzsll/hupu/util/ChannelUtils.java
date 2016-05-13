@@ -1,4 +1,4 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,7 +13,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class ChannelHelper {
+public class ChannelUtils {
 
     private static final String CHANNEL_KEY = "channel";
     private static final String CHANNEL_VERSION_KEY = "channel_version";

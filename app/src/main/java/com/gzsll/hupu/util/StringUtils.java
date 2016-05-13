@@ -1,22 +1,14 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.util;
 
 import android.content.Context;
 
 /**
  * Created by sll on 2016/3/30.
  */
-public class StringHelper {
-
-    private Context mContext;
-    private ToastHelper mToastHelper;
-
-    public StringHelper(Context mContext, ToastHelper mToastHelper) {
-        this.mContext = mContext;
-        this.mToastHelper = mToastHelper;
-    }
+public class StringUtils {
 
 
-    public void copy(String stripped) {
+    public static void copy(Context mContext, String stripped) {
         int sdk = android.os.Build.VERSION.SDK_INT;
         if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -27,6 +19,6 @@ public class StringHelper {
                     .newPlainText("content", stripped);
             clipboard.setPrimaryClip(clip);
         }
-        mToastHelper.showToast("复制成功");
+        ToastUtils.showToast("复制成功");
     }
 }

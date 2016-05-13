@@ -1,11 +1,11 @@
-package com.gzsll.hupu.helper;
+package com.gzsll.hupu.util;
 
 import android.content.Context;
 
 /**
  * Created by sll on 2015/6/17.
  */
-public class DisplayHelper {
+public class DisplayUtils {
     /**
      * 将px值转换为dip或dp值，保证尺寸大小不变
      *

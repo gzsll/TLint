@@ -66,7 +66,8 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportContr
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        DaggerReportComponent.builder().applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule()).reportModule(new ReportModule()).build().inject(this);
     }
 
     @Override

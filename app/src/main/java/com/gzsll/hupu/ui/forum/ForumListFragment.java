@@ -10,6 +10,7 @@ import android.view.View;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.main.MainComponent;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class ForumListFragment extends BaseFragment implements ForumListContract
 
     @Override
     public void initInjector() {
-        mFragmentComponent.inject(this);
+        getComponent(MainComponent.class).inject(this);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.gzsll.hupu.api.forum;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -14,9 +15,9 @@ import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
+import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.RequestHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
+import com.gzsll.hupu.util.SettingPrefUtils;
 
 import org.json.JSONArray;
 
@@ -43,13 +44,13 @@ public class ForumApi {
 
     private ForumService mForumService;
     private RequestHelper mRequestHelper;
-    private SettingPrefHelper mSettingPrefHelper;
     private UserStorage mUserStorage;
+    private Context mContext;
 
-    public ForumApi(RequestHelper mRequestHelper, SettingPrefHelper mSettingPrefHelper, UserStorage mUserStorage, OkHttpClient mOkHttpClient) {
+    public ForumApi(RequestHelper mRequestHelper, UserStorage mUserStorage, OkHttpClient mOkHttpClient, Context context) {
         this.mRequestHelper = mRequestHelper;
-        this.mSettingPrefHelper = mSettingPrefHelper;
         this.mUserStorage = mUserStorage;
+        mContext = context;
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(FastJsonConverterFactory.create()).client(mOkHttpClient).baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
         mForumService = retrofit.create(ForumService.class);
@@ -179,7 +180,7 @@ public class ForumApi {
         if (!TextUtils.isEmpty(pid)) {
             params.put("pid", pid);
         }
-        params.put("nopic", mSettingPrefHelper.getLoadPic() ? "0" : "1");
+        params.put("nopic", SettingPrefUtils.getLoadPic(mContext) ? "0" : "1");
         String sign = mRequestHelper.getRequestSign(params);
         return mForumService.getThreadInfo(sign, params).subscribeOn(Schedulers.io());
     }

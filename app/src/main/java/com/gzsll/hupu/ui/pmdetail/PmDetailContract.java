@@ -32,7 +32,6 @@ public interface PmDetailContract {
     }
 
     interface Presenter extends BasePresenter<View> {
-        void bind(String uid);
 
         void onPmDetailReceive();
 

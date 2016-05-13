@@ -21,6 +21,12 @@ public interface ContentContract {
         void onError(String error);
 
         void onToggleFloatingMenu();
+
+        void showLoginUi();
+
+        void showReportUi();
+
+        void showPostUi(String title);
     }
 
     interface Presenter extends BasePresenter<View> {

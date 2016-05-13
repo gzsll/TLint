@@ -1,12 +1,13 @@
 package com.gzsll.hupu.injector.module;
 
 
+import android.content.Context;
+
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.api.login.CookieApi;
+import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.helper.RequestHelper;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 
 import javax.inject.Singleton;
 
@@ -23,8 +24,8 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public ForumApi provideHuPuApi(UserStorage userStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, SettingPrefHelper settingPrefHelper) {
-        return new ForumApi(requestHelper, settingPrefHelper, userStorage, okHttpClient);
+    public ForumApi provideHuPuApi(UserStorage userStorage, OkHttpClient okHttpClient, RequestHelper requestHelper, Context mContext) {
+        return new ForumApi(requestHelper, userStorage, okHttpClient, mContext);
     }
 
 

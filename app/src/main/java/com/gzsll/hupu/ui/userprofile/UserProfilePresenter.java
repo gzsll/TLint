@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.UserData;
 import com.gzsll.hupu.bean.UserResult;
+import com.gzsll.hupu.injector.PerActivity;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -17,23 +17,24 @@ import rx.functions.Func1;
 /**
  * Created by sll on 2016/3/11.
  */
+@PerActivity
 public class UserProfilePresenter implements UserProfileContract.Presenter {
 
 
-    @Inject
-    GameApi mGameApi;
-
+    private GameApi mGameApi;
+    private String uid;
 
     private Subscription mSubscription;
     private UserProfileContract.View mUserProfileView;
 
-    @Singleton
     @Inject
-    public UserProfilePresenter() {
+    public UserProfilePresenter(GameApi gameApi, String uid) {
+        mGameApi = gameApi;
+        this.uid = uid;
     }
 
     @Override
-    public void receiveUserInfo(String uid) {
+    public void receiveUserInfo() {
         mUserProfileView.showLoading();
         mSubscription = mGameApi.getUserInfo(uid).map(new Func1<UserData, UserResult>() {
             @Override

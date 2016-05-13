@@ -5,13 +5,13 @@ import android.support.annotation.NonNull;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.Message;
 import com.gzsll.hupu.bean.MessageData;
-import com.gzsll.hupu.helper.ToastHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -20,25 +20,23 @@ import rx.functions.Func1;
 /**
  * Created by sll on 2016/3/11.
  */
+@PerActivity
 public class MessageListPresenter implements MessageListContract.Presenter {
 
 
-    @Singleton
-    @Inject
-    public MessageListPresenter() {
-    }
+    private ForumApi mForumApi;
 
-
-    @Inject
-    ForumApi mForumApi;
-    @Inject
-    ToastHelper mToastHelper;
 
     private MessageListContract.View mMessageListView;
     private String lastTid = "";
     private int page = 1;
 
     private List<Message> messages = new ArrayList<>();
+
+    @Inject
+    public MessageListPresenter(ForumApi forumApi) {
+        mForumApi = forumApi;
+    }
 
     @Override
     public void onMessageListReceive() {
@@ -90,7 +88,7 @@ public class MessageListPresenter implements MessageListContract.Presenter {
         if (messages.isEmpty()) {
             mMessageListView.onError();
         } else {
-            mToastHelper.showToast("数据加载失败，请重试");
+            ToastUtils.showToast("数据加载失败，请重试");
             mMessageListView.hideLoading();
             mMessageListView.onRefreshCompleted();
             mMessageListView.onLoadCompleted(true);

@@ -13,8 +13,8 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.helper.StatusBarUtil;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
+import com.gzsll.hupu.util.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
 
     @Override
     public void initInjector() {
-        mActivityComponent.inject(this);
+        DaggerImagePreviewComponent.builder().applicationComponent(getApplicationComponent()).activityModule(getActivityModule()).build().inject(this);
     }
 
     @Override

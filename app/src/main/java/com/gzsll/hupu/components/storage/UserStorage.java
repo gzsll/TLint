@@ -7,8 +7,8 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.helper.SettingPrefHelper;
 import com.gzsll.hupu.service.MessageService;
+import com.gzsll.hupu.util.SettingPrefUtils;
 
 /**
  * Created by sll on 2015/7/11.
@@ -16,12 +16,10 @@ import com.gzsll.hupu.service.MessageService;
 
 public class UserStorage {
 
-    private SettingPrefHelper mSettingPrefHelper;
     private Context mContext;
 
 
-    public UserStorage(SettingPrefHelper mSettingPrefHelper, Context mContext) {
-        this.mSettingPrefHelper = mSettingPrefHelper;
+    public UserStorage(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -38,7 +36,7 @@ public class UserStorage {
 
     public void login(User user) {
         this.user = user;
-        mSettingPrefHelper.setLoginUid(user.getUid());
+        SettingPrefUtils.setLoginUid(mContext, user.getUid());
         Intent intent = new Intent(mContext, MessageService.class);
         intent.setAction(MessageService.ACTION_GET);
         mContext.startService(intent);
@@ -46,8 +44,8 @@ public class UserStorage {
 
 
     public void logout() {
-        if (user.getUid().equals(mSettingPrefHelper.getLoginUid())) {
-            mSettingPrefHelper.setLoginUid("");
+        if (user.getUid().equals(SettingPrefUtils.getLoginUid(mContext))) {
+            SettingPrefUtils.setLoginUid(mContext, "");
         }
         user = null;
         cookie = "";
@@ -66,7 +64,7 @@ public class UserStorage {
     }
 
     public boolean isLogin() {
-        return user != null && mSettingPrefHelper.getLoginUid().equals(user.getUid());
+        return user != null && SettingPrefUtils.getLoginUid(mContext).equals(user.getUid());
     }
 
     public String getToken() {
