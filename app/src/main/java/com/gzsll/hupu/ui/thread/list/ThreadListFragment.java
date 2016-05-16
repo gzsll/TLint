@@ -62,7 +62,6 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
     Activity mActivity;
 
 
-
     @Bind(R.id.backdrop)
     SimpleDraweeView backdrop;
     @Bind(R.id.tvSubTitle)
@@ -160,7 +159,7 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @Override
     public void initData() {
-        mPresenter.onThreadReceive(SettingPrefUtils.getThreadSort(getContext()));
+        mPresenter.onThreadReceive(SettingPrefUtils.getThreadSort(mActivity));
     }
 
     @Override

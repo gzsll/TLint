@@ -1,5 +1,7 @@
 package com.gzsll.hupu.ui.userprofile;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,9 +9,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
@@ -126,7 +126,7 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
 
 
     private void setupViewPager(UserResult userResult) {
-        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+        MyAdapter adapter = new MyAdapter(getFragmentManager());
         adapter.addFragment(BrowserFragment.newInstance(userResult.bbs_msg_url, ""), String.format("发帖(%s)", userResult.bbs_msg_count));
         adapter.addFragment(BrowserFragment.newInstance(userResult.bbs_post_url, ""), String.format("回帖(%s)", userResult.bbs_post_count));
         viewPager.setAdapter(adapter);

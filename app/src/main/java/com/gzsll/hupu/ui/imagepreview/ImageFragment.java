@@ -102,7 +102,7 @@ public class ImageFragment extends BaseFragment {
                             progress.setVisibility(View.GONE);
                         }
                     }
-                }, ResourceUtils.getThemeColor(getContext())))
+                }, ResourceUtils.getThemeColor(getActivity())))
                 .build();
         hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
 

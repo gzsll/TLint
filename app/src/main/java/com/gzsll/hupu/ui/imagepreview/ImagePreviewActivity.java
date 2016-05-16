@@ -1,11 +1,11 @@
 package com.gzsll.hupu.ui.imagepreview;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -79,7 +79,7 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity implements ViewP
     }
 
     private void initViewPager() {
-        mImageViewAdapter = new ImageViewAdapter(getSupportFragmentManager());
+        mImageViewAdapter = new ImageViewAdapter(getFragmentManager());
         viewPager.setAdapter(mImageViewAdapter);
         viewPager.setOnPageChangeListener(this);
     }

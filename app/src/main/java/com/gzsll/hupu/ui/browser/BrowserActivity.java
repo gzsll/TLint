@@ -61,7 +61,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
         initToolBar(toolbar);
         url = getIntent().getStringExtra("url");
         mFragment = BrowserFragment.newInstance(url, "", getIntent().getBooleanExtra("external", true));
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
     }
 
     @Override

@@ -42,7 +42,7 @@ public class SettingActivity extends BaseSwipeBackActivity implements HasCompone
         ButterKnife.bind(this);
         initToolBar(toolbar);
         setTitle("设置");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, new SettingFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content, new SettingFragment()).commit();
     }
 
     @Override

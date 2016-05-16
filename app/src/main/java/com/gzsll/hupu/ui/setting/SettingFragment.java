@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -16,7 +17,6 @@ import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.util.CacheUtils;
 import com.gzsll.hupu.util.FileUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
-import com.gzsll.hupu.widget.PreferenceFragment;
 import com.squareup.otto.Bus;
 
 import java.io.File;
@@ -44,7 +44,6 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         addPreferencesFromResource(R.xml.setting);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 

@@ -38,7 +38,7 @@ public class ThreadListActivity extends BaseSwipeBackActivity implements HasComp
     @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, new ThreadListFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content, new ThreadListFragment()).commit();
     }
 
     @Override

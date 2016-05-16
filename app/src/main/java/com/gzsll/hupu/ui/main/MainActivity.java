@@ -1,5 +1,7 @@
 package com.gzsll.hupu.ui.main;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,8 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         drawerLayout.setDrawerListener(mDrawerToggle);
         StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, ResourceUtils.getThemeColor(this), 0);
         setupDrawerContent();
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_RECOMMEND)).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content, SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_RECOMMEND)).commit();
         mPresenter.attachView(this);
 
     }
@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (mFragment != null) {
                             menuItem.setChecked(true);
                             setTitle(menuItem.getTitle());
-                            final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            final FragmentTransaction ft = getFragmentManager().beginTransaction();
                             ft.replace(R.id.content, mFragment, mFragment.getClass().getSimpleName());
                             ft.addToBackStack(null);
                             ft.commit();

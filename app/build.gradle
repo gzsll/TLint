@@ -73,6 +73,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:cardview-v7:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:support-v13:23.3.0'
+
     compile 'com.jakewharton:butterknife:7.0.1'
     //Dagger
     provided 'javax.annotation:javax.annotation-api:1.2'

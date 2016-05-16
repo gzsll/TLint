@@ -1,10 +1,10 @@
 package com.gzsll.hupu.ui.content;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
@@ -173,7 +173,7 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
     public void renderContent(String url, List<String> urls) {
         totalPage = urls.size();
         if (mAdapter == null) {
-            mAdapter = new MyAdapter(getSupportFragmentManager(), urls);
+            mAdapter = new MyAdapter(getFragmentManager(), urls);
             viewPager.setAdapter(mAdapter);
         }
         viewPager.setCurrentItem(urls.indexOf(url));

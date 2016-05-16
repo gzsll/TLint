@@ -48,7 +48,7 @@ public class PmDetailActivity extends BaseSwipeBackActivity implements HasCompon
         String name = getIntent().getStringExtra("name");
 
         setTitle(name);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, PmDetailFragment.newInstance(uid)).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content, PmDetailFragment.newInstance(uid)).commit();
     }
 
     @Override

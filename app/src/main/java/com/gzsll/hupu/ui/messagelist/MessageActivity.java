@@ -1,12 +1,12 @@
 package com.gzsll.hupu.ui.messagelist;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
@@ -59,7 +59,7 @@ public class MessageActivity extends BaseSwipeBackActivity implements HasCompone
         ButterKnife.bind(this);
         initToolBar(toolbar);
         setTitle("消息中心");
-        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+        MyAdapter adapter = new MyAdapter(getFragmentManager());
         adapter.addFragment(new MessageListFragment(), "回复");
         adapter.addFragment(new PmListFragment(), "PM");
         viewpager.setAdapter(adapter);
