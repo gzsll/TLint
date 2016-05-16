@@ -12,11 +12,13 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.util.CacheUtils;
 import com.gzsll.hupu.util.FileUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
 
 import java.io.File;
@@ -44,9 +46,9 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SettingComponent.class.cast(((HasComponent<SettingComponent>) getActivity()).getComponent()).inject(this);
         addPreferencesFromResource(R.xml.setting);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
 
         pTextSize = (ListPreference) findPreference("pTextSize");
         pTextSize.setOnPreferenceChangeListener(this);
@@ -130,14 +132,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     }
 
 
-
-
     private void modifyImageSavePath() {
         new MaterialDialog.Builder(getActivity()).title("修改图片保存路径").input(null, SettingPrefUtils.getPicSavePath(mContext), new MaterialDialog.InputCallback() {
             @Override
             public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
                 if (TextUtils.isEmpty(charSequence)) {
-                    showToast("路径不能为空");
+                    ToastUtils.showToast("路径不能为空");
                     return;
                 }
                 String path = FileUtils.getSdcardPath() + File.separator + charSequence + File.separator;
@@ -145,9 +145,9 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 if (file.exists() || file.mkdirs()) {
                     SettingPrefUtils.setPicSavePath(mContext, charSequence.toString());
                     pPicSavePath.setSummary("/sdcard" + File.separator + charSequence + File.separator);
-                    showToast("更新成功");
+                    ToastUtils.showToast("更新成功");
                 } else {
-                    showToast("更新失败");
+                    ToastUtils.showToast("更新失败");
                 }
 
             }
@@ -155,7 +155,4 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     }
 
 
-    private void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
 }

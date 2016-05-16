@@ -21,7 +21,6 @@ public class ThreadListActivity extends BaseSwipeBackActivity implements HasComp
     }
 
     private ThreadListComponent mThreadListComponent;
-    private String fid;
 
     @Override
     public int initContentView() {
@@ -30,7 +29,7 @@ public class ThreadListActivity extends BaseSwipeBackActivity implements HasComp
 
     @Override
     public void initInjector() {
-        fid = getIntent().getStringExtra("fid");
+        String fid = getIntent().getStringExtra("fid");
         mThreadListComponent = DaggerThreadListComponent.builder().applicationComponent(getApplicationComponent()).activityModule(getActivityModule())
                 .threadListModule(new ThreadListModule(fid)).build();
     }

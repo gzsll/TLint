@@ -13,6 +13,10 @@ public interface LoginContract {
 
         void hideLoading();
 
+        void showUserNameError(String error);
+
+        void showPassWordError(String error);
+
         void loginSuccess();
     }
 

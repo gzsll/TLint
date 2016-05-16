@@ -8,12 +8,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Thread;
-import com.gzsll.hupu.ui.AnimRecyclerViewAdapter;
 import com.gzsll.hupu.ui.content.ContentActivity;
 import com.gzsll.hupu.util.SettingPrefUtils;
 
@@ -29,12 +30,11 @@ import butterknife.OnClick;
 /**
  * Created by sll on 2016/3/9.
  */
-public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter.ViewHolder> {
+public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.ViewHolder> {
 
 
     @Inject
     Activity mActivity;
-
 
 
     @Inject
@@ -80,6 +80,34 @@ public class ThreadListAdapter extends AnimRecyclerViewAdapter<ThreadListAdapter
             holder.tvSingleTime.setText(thread.time);
         }
         showItemAnim(holder.cardView, position);
+    }
+
+    private int mLastPosition = -1;
+
+
+    public void showItemAnim(final View view, final int position) {
+        if (position > mLastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(view.getContext(),
+                    R.anim.item_bottom_in);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    view.setAlpha(1);
+                }
+
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                }
+
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            view.startAnimation(animation);
+            mLastPosition = position;
+        }
     }
 
 //    protected void buildMultiPic(final GroupThread thread, final GridLayout gridLayout) {

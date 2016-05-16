@@ -40,10 +40,11 @@ import butterknife.OnClick;
 
 /**
  * Created by sll on 2016/3/9.
+ * TODO 待重构
  */
 public class GalleryActivity extends BaseSwipeBackActivity implements GalleryContract.View, ImageAdapter.OnImageItemClickListener, AdapterView.OnItemClickListener {
 
-    public static void startAcitivty(Activity mActivity, ArrayList<String> selectImages) {
+    public static void startActivity(Activity mActivity, ArrayList<String> selectImages) {
         Intent intent = new Intent(mActivity, GalleryActivity.class);
         intent.putExtra("selectImages", selectImages);
         mActivity.startActivityForResult(intent, REQUEST_IMAGE);

@@ -244,7 +244,7 @@ public class PostActivity extends BaseSwipeBackActivity implements PostContract.
         if (id == R.id.action_send) {
             send();
         } else if (id == R.id.action_camera) {
-            GalleryActivity.startAcitivty(this, selectImages);
+            GalleryActivity.startActivity(this, selectImages);
         } else if (id == android.R.id.home) {
             finish();
         }

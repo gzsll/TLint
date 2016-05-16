@@ -1,6 +1,7 @@
 package com.gzsll.hupu.ui.login;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.game.GameApi;
@@ -59,6 +60,14 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void login(final String userName, final String passWord) {
+        if (TextUtils.isEmpty(userName)) {
+            mLoginView.showUserNameError("请输入用户名");
+            return;
+        }
+        if (TextUtils.isEmpty(passWord)) {
+            mLoginView.showPassWordError("请输入密码");
+            return;
+        }
         mLoginView.showLoading();
         mSubscription = mGameApi.login(userName, SecurityUtils.getMD5(passWord)).flatMap(new Func1<LoginData, Observable<UserData>>() {
             @Override

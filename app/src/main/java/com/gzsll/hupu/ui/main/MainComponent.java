@@ -12,7 +12,7 @@ import dagger.Component;
  * Created by sll on 2016/5/13.
  */
 @PerActivity
-@Component(dependencies = ApplicationComponent.class, modules = {ActivityModule.class})
+@Component(dependencies = ApplicationComponent.class, modules = {ActivityModule.class, MainModule.class})
 public interface MainComponent {
 
     void inject(MainActivity activity);

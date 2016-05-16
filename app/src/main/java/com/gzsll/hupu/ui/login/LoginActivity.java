@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,6 +99,18 @@ public class LoginActivity extends BaseSwipeBackActivity implements LoginContrac
     }
 
     @Override
+    public void showUserNameError(String error) {
+        textInputUserName.setError(error);
+        textInputUserName.setErrorEnabled(true);
+    }
+
+    @Override
+    public void showPassWordError(String error) {
+        textInputPassword.setError(error);
+        textInputPassword.setErrorEnabled(true);
+    }
+
+    @Override
     public void loginSuccess() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -128,15 +139,7 @@ public class LoginActivity extends BaseSwipeBackActivity implements LoginContrac
     private void doLogin() {
         String mUserName = etUserName.getText().toString().trim();
         String mPassword = etPassWord.getText().toString().trim();
-        if (TextUtils.isEmpty(mUserName)) {
-            textInputUserName.setError("请输入用户名");
-            textInputUserName.setErrorEnabled(true);
-        } else if (TextUtils.isEmpty(mPassword)) {
-            textInputPassword.setError("请输入密码");
-            textInputPassword.setErrorEnabled(true);
-        } else {
-            mPresenter.login(mUserName, mPassword);
-        }
+        mPresenter.login(mUserName, mPassword);
     }
 
 

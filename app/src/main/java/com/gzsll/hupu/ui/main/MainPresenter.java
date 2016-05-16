@@ -1,15 +1,13 @@
 package com.gzsll.hupu.ui.main;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.view.MenuItem;
 
 import com.gzsll.hupu.AppManager;
-import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.api.game.GameApi;
-import com.gzsll.hupu.bean.MessageData;
-import com.gzsll.hupu.bean.Pm;
-import com.gzsll.hupu.bean.PmData;
+import com.gzsll.hupu.Constants;
+import com.gzsll.hupu.R;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
@@ -19,9 +17,13 @@ import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.ui.account.AccountActivity;
+import com.gzsll.hupu.ui.browser.BrowserFragment;
+import com.gzsll.hupu.ui.forum.ForumListFragment;
 import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
+import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
+import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -35,7 +37,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -48,22 +49,20 @@ public class MainPresenter implements MainContract.Presenter {
     private UserStorage mUserStorage;
     private UserDao mUserDao;
     private Bus mBus;
-    private ForumApi mForumApi;
-    private GameApi mGameApi;
     private Activity mActivity;
+    private Observable<Integer> mNotificationObservable;
 
     private Subscription mSubscription;
     private MainContract.View mMainView;
     private int count = 0;
 
     @Inject
-    public MainPresenter(UserStorage userStorage, UserDao userDao, Bus bus, ForumApi forumApi, GameApi gameApi, Activity activity) {
+    public MainPresenter(UserStorage userStorage, UserDao userDao, Bus bus, Activity activity, Observable<Integer> notificationObservalbe) {
         mUserStorage = userStorage;
         mUserDao = userDao;
         mBus = bus;
-        mForumApi = forumApi;
-        mGameApi = gameApi;
         mActivity = activity;
+        mNotificationObservable = notificationObservalbe;
     }
 
 
@@ -84,24 +83,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     private void initNotification() {
         if (isLogin()) {
-            mSubscription = Observable.zip(mGameApi.queryPmList(""), mForumApi.getMessageList("", 1), new Func2<PmData, MessageData, Integer>() {
-                @Override
-                public Integer call(PmData pmData, MessageData messageData) {
-                    int size = 0;
-                    if (pmData != null) {
-                        for (Pm pm : pmData.result.data) {
-                            if (!TextUtils.isEmpty(pm.unread) && pm.unread.equals("1")) {
-                                size++;
-                            }
-                        }
-                    }
-
-                    if (messageData != null && messageData.status == 200) {
-                        size += messageData.result.list.size();
-                    }
-                    return size;
-                }
-            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+            mSubscription = mNotificationObservable.subscribe(new Action1<Integer>() {
                 @Override
                 public void call(Integer integer) {
                     count = integer;
@@ -116,8 +98,21 @@ public class MainPresenter implements MainContract.Presenter {
         }
     }
 
+
+    private void toLogin() {
+        LoginActivity.startActivity(mActivity);
+        ToastUtils.showToast("请先登录");
+    }
+
+
     @Override
-    public void clickNotification() {
+    public void onNightModelClick() {
+        SettingPrefUtils.setNightModel(mActivity, !SettingPrefUtils.getNightModel(mActivity));
+        mMainView.reload();
+    }
+
+    @Override
+    public void onNotificationClick() {
         if (isLogin()) {
             MessageActivity.startActivity(mActivity);
         } else {
@@ -126,18 +121,71 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void toLogin() {
-        LoginActivity.startActivity(mActivity);
-        ToastUtils.showToast("请先登录");
-    }
-
-    @Override
-    public void clickCover() {
+    public void onCoverClick() {
         if (isLogin()) {
             UserProfileActivity.startActivity(mActivity, mUserStorage.getUid());
         } else {
             toLogin();
         }
+        mMainView.closeDrawers();
+    }
+
+    @Override
+    public void onNavigationClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_recommend:
+            case R.id.nav_collect:
+            case R.id.nav_topic:
+            case R.id.nav_nba:
+            case R.id.nav_my:
+            case R.id.nav_cba:
+            case R.id.nav_gambia:
+            case R.id.nav_equipment:
+            case R.id.nav_fitness:
+            case R.id.nav_football:
+            case R.id.nav_intel_football:
+            case R.id.nav_sport:
+                Fragment mFragment = null;
+                int id = item.getItemId();
+                if (id == R.id.nav_collect) {
+                    if (isLogin()) {
+                        mFragment = SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_COLLECT);
+                    } else {
+                        toLogin();
+                    }
+                } else if (id == R.id.nav_topic) {
+                    if (isLogin()) {
+                        mFragment = BrowserFragment.newInstance(mUserStorage.getUser().getThreadUrl(), "我的帖子");
+                    } else {
+                        toLogin();
+                    }
+                } else if (id == R.id.nav_recommend) {
+                    mFragment = SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_RECOMMEND);
+                } else {
+                    if (isLogin() || id != R.id.nav_my) {
+                        mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(id));
+                    } else {
+                        toLogin();
+                    }
+                }
+                if (mFragment != null) {
+                    item.setChecked(true);
+                    mMainView.setTitle(item.getTitle());
+                    mMainView.showFragment(mFragment);
+                }
+                break;
+            case R.id.nav_setting:
+                mMainView.showSettingUi();
+                break;
+            case R.id.nav_feedback:
+                mMainView.showFeedBackUi();
+
+                break;
+            case R.id.nav_about:
+                mMainView.showAboutUi();
+                break;
+        }
+        mMainView.closeDrawers();
     }
 
     @Override

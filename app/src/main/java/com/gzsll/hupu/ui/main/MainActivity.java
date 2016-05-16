@@ -1,7 +1,6 @@
 package com.gzsll.hupu.ui.main;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,13 +24,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.browser.BrowserActivity;
-import com.gzsll.hupu.ui.browser.BrowserFragment;
-import com.gzsll.hupu.ui.forum.ForumListFragment;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.setting.SettingActivity;
 import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
@@ -69,8 +65,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
 
     @Inject
-    UserStorage mUserStorage;
-    @Inject
     MainPresenter mPresenter;
 
     private MainComponent mMainComponent;
@@ -84,7 +78,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void initInjector() {
         mMainComponent = DaggerMainComponent.builder().applicationComponent(getApplicationComponent())
-                .activityModule(getActivityModule()).build();
+                .activityModule(getActivityModule())
+                .mainModule(new MainModule()).build();
         mMainComponent.inject(this);
     }
 
@@ -118,61 +113,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_collect:
-                    case R.id.nav_topic:
-                    case R.id.nav_recommend:
-                    case R.id.nav_nba:
-                    case R.id.nav_my:
-                    case R.id.nav_cba:
-                    case R.id.nav_gambia:
-                    case R.id.nav_equipment:
-                    case R.id.nav_fitness:
-                    case R.id.nav_football:
-                    case R.id.nav_intel_football:
-                    case R.id.nav_sport:
-                        Fragment mFragment = null;
-                        if (menuItem.getItemId() == R.id.nav_collect) {
-                            if (mPresenter.isLogin()) {
-                                mFragment = SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_COLLECT);
-                            } else {
-                                mPresenter.toLogin();
-                            }
-                        } else if (menuItem.getItemId() == R.id.nav_topic) {
-                            if (mPresenter.isLogin()) {
-                                mFragment = BrowserFragment.newInstance(mUserStorage.getUser().getThreadUrl(), "我的帖子");
-                            } else {
-                                mPresenter.toLogin();
-                            }
-                        } else if (menuItem.getItemId() == R.id.nav_recommend) {
-                            mFragment = SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_RECOMMEND);
-                        } else {
-                            if (mPresenter.isLogin() || menuItem.getItemId() != R.id.nav_my) {
-                                mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(menuItem.getItemId()));
-                            } else {
-                                mPresenter.toLogin();
-                            }
-                        }
-                        if (mFragment != null) {
-                            menuItem.setChecked(true);
-                            setTitle(menuItem.getTitle());
-                            final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            ft.replace(R.id.content, mFragment, mFragment.getClass().getSimpleName());
-                            ft.addToBackStack(null);
-                            ft.commit();
-                        }
-                        break;
-                    case R.id.nav_setting:
-                        SettingActivity.startActivity(MainActivity.this);
-                        break;
-                    case R.id.nav_feedback:
-                        PostActivity.startActivity(MainActivity.this, Constants.TYPE_FEEDBACK, "", "2869008", "", "TLint For Android");
-                        break;
-                    case R.id.nav_about:
-                        BrowserActivity.startActivity(MainActivity.this, "http://www.pursll.com/TLint");
-                        break;
-                }
-                drawerLayout.closeDrawers();
+                mPresenter.onNavigationClick(menuItem);
                 return true;
             }
         });
@@ -224,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.action_notification:
-                mPresenter.clickNotification();
+                mPresenter.onNotificationClick();
                 break;
 
         }
@@ -252,15 +193,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivCover:
-                mPresenter.clickCover();
-                drawerLayout.closeDrawers();
+                mPresenter.onCoverClick();
                 break;
             case R.id.llAccount:
                 mPresenter.showAccountMenu();
                 break;
             case R.id.ivTheme:
-                SettingPrefUtils.setNightModel(this, !SettingPrefUtils.getNightModel(this));
-                reload();
+                mPresenter.onNightModelClick();
                 break;
         }
     }
@@ -300,6 +239,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void renderNotification(int count) {
         this.count = count;
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void closeDrawers() {
+        drawerLayout.closeDrawers();
+    }
+
+    @Override
+    public void showFragment(Fragment fragment) {
+        getFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+    }
+
+    @Override
+    public void showSettingUi() {
+        SettingActivity.startActivity(this);
+    }
+
+    @Override
+    public void showFeedBackUi() {
+        PostActivity.startActivity(MainActivity.this, Constants.TYPE_FEEDBACK, "", "2869008", "", "TLint For Android");
+    }
+
+    @Override
+    public void showAboutUi() {
+        BrowserActivity.startActivity(this, "http://www.pursll.com/TLint");
     }
 
     @Override
