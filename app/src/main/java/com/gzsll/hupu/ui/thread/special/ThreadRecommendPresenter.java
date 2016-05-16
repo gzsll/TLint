@@ -31,13 +31,13 @@ public class ThreadRecommendPresenter implements SpecialThreadListContract.Prese
 
     private List<Thread> threads = new ArrayList<>();
 
-
+    private Subscription mSubscription;
     private SpecialThreadListContract.View mSpecialView;
     private String lastTid = "";
     private String lastTamp = "";
     private boolean hasNextPage = true;
 
-    private Subscription mSubscription;
+
 
     @Inject
     public ThreadRecommendPresenter(ForumApi forumApi) {
@@ -157,6 +157,7 @@ public class ThreadRecommendPresenter implements SpecialThreadListContract.Prese
             mSubscription.unsubscribe();
         }
         threads.clear();
+        mSpecialView = null;
     }
 
 }

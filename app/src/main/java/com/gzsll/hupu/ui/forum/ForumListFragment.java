@@ -101,5 +101,9 @@ public class ForumListFragment extends BaseFragment implements ForumListContract
         mAdapter.bind(forumList, forumId);
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
 }

@@ -9,6 +9,7 @@ import com.gzsll.hupu.util.ToastUtils;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -21,18 +22,18 @@ public class ReportPresenter implements ReportContract.Presenter {
     private ForumApi mForumApi;
 
 
-
     @Inject
     public ReportPresenter(ForumApi forumApi) {
         mForumApi = forumApi;
     }
 
+    private Subscription mSubscription;
     private ReportContract.View mReportView;
 
 
     public void submitReports(String tid, String pid, String type, String content) {
         mReportView.showLoading();
-        mForumApi.submitReports(tid, pid, type, content).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
+        mSubscription = mForumApi.submitReports(tid, pid, type, content).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
             @Override
             public void call(BaseData result) {
                 mReportView.hideLoading();
@@ -60,6 +61,9 @@ public class ReportPresenter implements ReportContract.Presenter {
 
     @Override
     public void detachView() {
-
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+        mReportView = null;
     }
 }

@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -35,6 +36,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
             MediaStore.Images.Media._ID};
 
     private GalleryContract.View mGalleryView;
+    private Subscription mSubscription;
     private List<Folder> folders = new ArrayList<>();
     private boolean hasFolderGened = false;
 
@@ -54,12 +56,15 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     @Override
     public void detachView() {
-
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+        mGalleryView = null;
     }
 
     @Override
     public void onImageAndFolderReceive() {
-        Observable.create(new Observable.OnSubscribe<Cursor>() {
+        mSubscription = Observable.create(new Observable.OnSubscribe<Cursor>() {
             @Override
             public void call(Subscriber<? super Cursor> subscriber) {
                 Cursor cursor = MediaStore.Images.Media.query(mContext.getContentResolver(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION, null, null, IMAGE_PROJECTION[2] + " DESC");

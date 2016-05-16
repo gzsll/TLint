@@ -139,6 +139,7 @@ public class PmListPresenter implements PmListContract.Presenter {
         }
         mPms.clear();
         lastTime = "";
+        mPmListView = null;
     }
 
     @Override

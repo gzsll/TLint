@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func2;
@@ -51,7 +52,7 @@ public class MainPresenter implements MainContract.Presenter {
     private GameApi mGameApi;
     private Activity mActivity;
 
-
+    private Subscription mSubscription;
     private MainContract.View mMainView;
     private int count = 0;
 
@@ -83,7 +84,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     private void initNotification() {
         if (isLogin()) {
-            Observable.zip(mGameApi.queryPmList(""), mForumApi.getMessageList("", 1), new Func2<PmData, MessageData, Integer>() {
+            mSubscription = Observable.zip(mGameApi.queryPmList(""), mForumApi.getMessageList("", 1), new Func2<PmData, MessageData, Integer>() {
                 @Override
                 public Integer call(PmData pmData, MessageData messageData) {
                     int size = 0;
@@ -205,6 +206,10 @@ public class MainPresenter implements MainContract.Presenter {
     public void detachView() {
         mBus.unregister(this);
         count = 0;
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+        mMainView = null;
     }
 
     @Subscribe

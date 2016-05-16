@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -26,7 +27,7 @@ public class MessageListPresenter implements MessageListContract.Presenter {
 
     private ForumApi mForumApi;
 
-
+    private Subscription mSubscription;
     private MessageListContract.View mMessageListView;
     private String lastTid = "";
     private int page = 1;
@@ -45,7 +46,7 @@ public class MessageListPresenter implements MessageListContract.Presenter {
     }
 
     private void loadMessageList(final boolean clear) {
-        mForumApi.getMessageList(lastTid, page).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<MessageData>() {
+        mSubscription = mForumApi.getMessageList(lastTid, page).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<MessageData>() {
             @Override
             public void call(MessageData messageData) {
                 if (clear) {
@@ -148,5 +149,9 @@ public class MessageListPresenter implements MessageListContract.Presenter {
         lastTid = "";
         page = 1;
         messages.clear();
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+        mMessageListView = null;
     }
 }

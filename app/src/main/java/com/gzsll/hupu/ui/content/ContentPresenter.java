@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -31,9 +32,8 @@ public class ContentPresenter implements ContentContract.Presenter {
     private UserStorage mUserStorage;
 
 
-
     private ContentContract.View mContentView;
-
+    private Subscription mSubscription;
 
     private String tid;
     private String fid;
@@ -63,7 +63,7 @@ public class ContentPresenter implements ContentContract.Presenter {
     }
 
     private void loadContent(int page) {
-        mForumApi.getThreadInfo(tid, fid, page, pid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadSchemaInfo>() {
+        mSubscription = mForumApi.getThreadInfo(tid, fid, page, pid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ThreadSchemaInfo>() {
             @Override
             public void call(ThreadSchemaInfo threadSchemaInfo) {
                 if (threadSchemaInfo != null) {
@@ -237,5 +237,9 @@ public class ContentPresenter implements ContentContract.Presenter {
         currentPage = 1;
         isCollected = false;
         shareText = "";
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+        mContentView = null;
     }
 }

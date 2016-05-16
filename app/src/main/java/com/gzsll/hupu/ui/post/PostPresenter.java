@@ -241,5 +241,6 @@ public class PostPresenter implements PostContract.Presenter {
     @Override
     public void detachView() {
         paths.clear();
+        mPostView = null;
     }
 }

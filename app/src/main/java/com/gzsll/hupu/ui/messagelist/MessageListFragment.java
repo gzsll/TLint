@@ -117,4 +117,10 @@ public class MessageListFragment extends BaseFragment implements MessageListCont
     public void onReloadClicked() {
         mPresenter.onReload();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
 }

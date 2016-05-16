@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -25,6 +26,7 @@ public class AccountPresenter implements AccountContract.Presenter {
 
     private UserDao mUserDao;
     private AccountContract.View mAccountView;
+    private Subscription mSubscription;
 
 
     @Inject
@@ -33,7 +35,7 @@ public class AccountPresenter implements AccountContract.Presenter {
     }
 
     private void loadUserList() {
-        Observable.create(new Observable.OnSubscribe<List<User>>() {
+        mSubscription = Observable.create(new Observable.OnSubscribe<List<User>>() {
             @Override
             public void call(Subscriber<? super List<User>> subscriber) {
                 subscriber.onNext(mUserDao.queryBuilder().list());
@@ -54,6 +56,9 @@ public class AccountPresenter implements AccountContract.Presenter {
 
     @Override
     public void detachView() {
-
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+        mAccountView = null;
     }
 }

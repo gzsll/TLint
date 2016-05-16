@@ -211,5 +211,9 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportContr
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
 }

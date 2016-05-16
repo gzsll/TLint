@@ -93,7 +93,7 @@ public class ContentFragment extends BaseFragment implements HuPuWebView.HuPuWeb
         if (Math.abs(dy) > 4) {
             ContentActivity activity = ((ContentActivity) getActivity());
             if (activity != null) {
-                activity.setFLoatingMenuVisibility(dy < 0);
+                activity.setFloatingMenuVisibility(dy < 0);
             }
         }
     }

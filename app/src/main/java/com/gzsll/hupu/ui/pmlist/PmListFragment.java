@@ -123,7 +123,7 @@ public class PmListFragment extends BaseFragment implements PmListContract.View,
 
     @Override
     public void onDestroy() {
-        mPresenter.detachView();
         super.onDestroy();
+        mPresenter.detachView();
     }
 }

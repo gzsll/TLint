@@ -19,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func0;
@@ -36,6 +37,8 @@ public class ForumListPresenter implements ForumListContract.Presenter {
 
 
     private ForumListContract.View mForumListView;
+    private Subscription mSubscription;
+
     private boolean isFirst = true;
     private PublishSubject<List<Forum>> mSubject;
 
@@ -51,7 +54,7 @@ public class ForumListPresenter implements ForumListContract.Presenter {
     @Override
     public void onForumListReceive(final String forumId) {
         mForumListView.showLoading();
-        getForumListObservable(forumId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Forum>>() {
+        mSubscription = getForumListObservable(forumId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<Forum>>() {
             @Override
             public void call(List<Forum> fora) {
                 if (fora == null || fora.isEmpty()) {
@@ -171,6 +174,9 @@ public class ForumListPresenter implements ForumListContract.Presenter {
 
     @Override
     public void detachView() {
-
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+        mForumListView = null;
     }
 }

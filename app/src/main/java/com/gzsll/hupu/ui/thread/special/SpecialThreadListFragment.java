@@ -133,8 +133,8 @@ public class SpecialThreadListFragment extends BaseFragment implements SpecialTh
 
     @Override
     public void onDestroy() {
-        mPresenter.detachView();
         super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override

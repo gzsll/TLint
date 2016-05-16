@@ -96,5 +96,9 @@ public class AccountActivity extends BaseSwipeBackActivity implements AccountCon
         mAdapter.bind(users);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
 }

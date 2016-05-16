@@ -201,5 +201,6 @@ public class PmDetailPresenter implements PmDetailContract.Presenter {
         if (mSubscription != null && mSubscription.isUnsubscribed()) {
             mSubscription.unsubscribe();
         }
+        mPmDetailView = null;
     }
 }

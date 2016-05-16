@@ -303,4 +303,9 @@ public class GalleryActivity extends BaseSwipeBackActivity implements GalleryCon
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
 }

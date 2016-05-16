@@ -71,8 +71,9 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
 
     @Override
     public void detachView() {
-        if (mSubscription != null) {
+        if (!mSubscription.isUnsubscribed()) {
             mSubscription.unsubscribe();
         }
+        mUserProfileView = null;
     }
 }

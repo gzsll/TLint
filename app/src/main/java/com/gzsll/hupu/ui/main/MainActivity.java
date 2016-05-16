@@ -268,8 +268,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
-        mPresenter.detachView();
         super.onDestroy();
+        mPresenter.detachView();
     }
 
 

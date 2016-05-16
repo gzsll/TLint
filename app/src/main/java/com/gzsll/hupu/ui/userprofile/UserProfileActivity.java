@@ -183,8 +183,8 @@ public class UserProfileActivity extends BaseSwipeBackActivity implements UserPr
 
     @Override
     protected void onDestroy() {
-        mPresenter.detachView();
         super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override

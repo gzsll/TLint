@@ -341,8 +341,8 @@ public class ThreadListFragment extends BaseFragment implements ThreadListContra
 
     @Override
     public void onDestroy() {
-        mPresenter.detachView();
         super.onDestroy();
+        mPresenter.detachView();
     }
 
     @Override

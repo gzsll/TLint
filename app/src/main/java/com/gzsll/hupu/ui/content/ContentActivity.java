@@ -333,12 +333,12 @@ public class ContentActivity extends BaseSwipeBackActivity implements ContentCon
 
     @Override
     protected void onDestroy() {
-        mPresenter.detachView();
         super.onDestroy();
+        mPresenter.detachView();
     }
 
 
-    public void setFLoatingMenuVisibility(boolean show) {
+    public void setFloatingMenuVisibility(boolean show) {
         if (show) {
             floatingMenu.showMenu(true);
         } else {

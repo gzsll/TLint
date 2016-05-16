@@ -362,5 +362,6 @@ public class ThreadListPresenter implements ThreadListContract.Presenter {
         lastTamp = "";
         pageIndex = 1;
         hasNextPage = true;
+        mThreadListView = null;
     }
 }
