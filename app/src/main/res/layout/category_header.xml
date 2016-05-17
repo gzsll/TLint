@@ -3,19 +3,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:text="nba"
-        android:textSize="16dp"
-        android:textColor="#ff727272"
-        android:id="@+id/tvCategoryName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="12dp"
-        android:layout_weight="1.0"
-        android:height="40dp"
-        android:gravity="center_vertical|left" />
+  <TextView
+      android:text="nba"
+      android:textSize="16dp"
+      android:textColor="#ff727272"
+      android:id="@+id/tvCategoryName"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingLeft="12dp"
+      android:layout_weight="1.0"
+      android:height="40dp"
+      android:gravity="center_vertical|left"
+      />
 
 
 </RelativeLayout>

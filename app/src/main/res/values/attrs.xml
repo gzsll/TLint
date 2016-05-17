@@ -2,70 +2,70 @@
 <resources>
 
 
-    <attr name="widgetBackground" format="color|reference"/>
-    <attr name="widgetBackgroundDark" format="color|reference"/>
-    <attr name="widgetBackgroundTitle" format="color|reference"/>
+  <attr name="widgetBackground" format="color|reference"/>
+  <attr name="widgetBackgroundDark" format="color|reference"/>
+  <attr name="widgetBackgroundTitle" format="color|reference"/>
 
-    <declare-styleable name="cpb">
-        <attr name="progress_background" format="color"/>
-        <attr name="progress_color" format="color"/>
-        <attr name="radius" format="dimension"/>
-    </declare-styleable>
+  <declare-styleable name="cpb">
+    <attr name="progress_background" format="color"/>
+    <attr name="progress_color" format="color"/>
+    <attr name="radius" format="dimension"/>
+  </declare-styleable>
 
-    <!-- SwipeBackLayout -->
-    <declare-styleable name="SwipeBackLayout">
-        <attr name="edge_size" format="dimension"/>
-        <attr name="edge_flag">
-            <enum name="left" value="0"/>
-            <enum name="right" value="1"/>
-            <enum name="bottom" value="2"/>
-            <enum name="all" value="3"/>
-        </attr>
-        <attr name="shadow_left" format="reference"/>
-        <attr name="shadow_right" format="reference"/>
-        <attr name="shadow_bottom" format="reference"/>
-    </declare-styleable>
-    <attr name="SwipeBackLayoutStyle" format="reference"/>
+  <!-- SwipeBackLayout -->
+  <declare-styleable name="SwipeBackLayout">
+    <attr name="edge_size" format="dimension"/>
+    <attr name="edge_flag">
+      <enum name="left" value="0"/>
+      <enum name="right" value="1"/>
+      <enum name="bottom" value="2"/>
+      <enum name="all" value="3"/>
+    </attr>
+    <attr name="shadow_left" format="reference"/>
+    <attr name="shadow_right" format="reference"/>
+    <attr name="shadow_bottom" format="reference"/>
+  </declare-styleable>
+  <attr name="SwipeBackLayoutStyle" format="reference"/>
 
-    <declare-styleable name="SwipyRefreshLayout">
-        <attr name="direction">
-            <enum name="top" value="0"/>
-            <enum name="bottom" value="1"/>
-            <enum name="both" value="2"/>
-        </attr>
-    </declare-styleable>
+  <declare-styleable name="SwipyRefreshLayout">
+    <attr name="direction">
+      <enum name="top" value="0"/>
+      <enum name="bottom" value="1"/>
+      <enum name="both" value="2"/>
+    </attr>
+  </declare-styleable>
 
-    <declare-styleable name="RefreshView">
-        <attr name="type" format="enum">
-            <enum name="sun" value="0"/>
-        </attr>
-    </declare-styleable>
+  <declare-styleable name="RefreshView">
+    <attr name="type" format="enum">
+      <enum name="sun" value="0"/>
+    </attr>
+  </declare-styleable>
 
-    <declare-styleable name="MaterialNumberPicker">
-        <attr name="npMinValue" format="integer"/>
-        <attr name="npMaxValue" format="integer"/>
-        <attr name="npDefaultValue" format="integer"/>
-        <attr name="npTextSize" format="dimension"/>
-        <attr name="npTextColor" format="color"/>
-        <attr name="npSeparatorColor" format="color"/>
-        <attr name="npFocusValue" format="boolean"/>
-        <attr name="npWrapValue" format="boolean"/>
-        <attr name="npBackground" format="color"/>
-    </declare-styleable>
+  <declare-styleable name="MaterialNumberPicker">
+    <attr name="npMinValue" format="integer"/>
+    <attr name="npMaxValue" format="integer"/>
+    <attr name="npDefaultValue" format="integer"/>
+    <attr name="npTextSize" format="dimension"/>
+    <attr name="npTextColor" format="color"/>
+    <attr name="npSeparatorColor" format="color"/>
+    <attr name="npFocusValue" format="boolean"/>
+    <attr name="npWrapValue" format="boolean"/>
+    <attr name="npBackground" format="color"/>
+  </declare-styleable>
 
-    <declare-styleable name="LabelView">
-        <attr name="label_distance" format="dimension"/>
-        <attr name="label_height" format="dimension"/>
-        <attr name="label_backgroundColor" format="color"/>
-        <attr name="label_text" format="string"/>
-        <attr name="label_textSize" format="dimension"/>
-        <attr name="label_textColor" format="color"/>
-        <attr name="label_visual" format="boolean"/>
-        <attr name="label_orientation" format="enum">
-            <enum name="LEFT_TOP" value="1"/>
-            <enum name="RIGHT_TOP" value="2"/>
-            <enum name="LEFT_BOTTOM" value="3"/>
-            <enum name="RIGHT_BOTTOM" value="4"/>
-        </attr>
-    </declare-styleable>
+  <declare-styleable name="LabelView">
+    <attr name="label_distance" format="dimension"/>
+    <attr name="label_height" format="dimension"/>
+    <attr name="label_backgroundColor" format="color"/>
+    <attr name="label_text" format="string"/>
+    <attr name="label_textSize" format="dimension"/>
+    <attr name="label_textColor" format="color"/>
+    <attr name="label_visual" format="boolean"/>
+    <attr name="label_orientation" format="enum">
+      <enum name="LEFT_TOP" value="1"/>
+      <enum name="RIGHT_TOP" value="2"/>
+      <enum name="LEFT_BOTTOM" value="3"/>
+      <enum name="RIGHT_BOTTOM" value="4"/>
+    </attr>
+  </declare-styleable>
 </resources>

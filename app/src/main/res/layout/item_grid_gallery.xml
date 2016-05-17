@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:fresco="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:id="@+id/flItem">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/flItem"
+    >
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/ivPhoto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:viewAspectRatio="1" />
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/ivPhoto"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      fresco:actualImageScaleType="centerCrop"
+      fresco:viewAspectRatio="1"
+      />
 
 
-    <ImageView
-        android:id="@+id/ivCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/ap_gallery_normal" />
+  <ImageView
+      android:id="@+id/ivCheck"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="top|right"
+      android:layout_marginRight="5dp"
+      android:layout_marginTop="5dp"
+      android:src="@drawable/ap_gallery_normal"
+      />
 
 </FrameLayout>

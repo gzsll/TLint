@@ -1,11 +1,9 @@
 package com.gzsll.hupu.components.storage;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.service.MessageService;
 import com.gzsll.hupu.util.SettingPrefUtils;
@@ -16,84 +14,79 @@ import com.gzsll.hupu.util.SettingPrefUtils;
 
 public class UserStorage {
 
-    private Context mContext;
+  private Context mContext;
 
+  public UserStorage(Context mContext) {
+    this.mContext = mContext;
+  }
 
-    public UserStorage(Context mContext) {
-        this.mContext = mContext;
+  private String cookie;
+  private String token;
+
+  private User user;
+
+  public User getUser() {
+    return user;
+  }
+
+  public void login(User user) {
+    this.user = user;
+    SettingPrefUtils.setLoginUid(mContext, user.getUid());
+    Intent intent = new Intent(mContext, MessageService.class);
+    intent.setAction(MessageService.ACTION_GET);
+    mContext.startService(intent);
+  }
+
+  public void logout() {
+    if (user.getUid().equals(SettingPrefUtils.getLoginUid(mContext))) {
+      SettingPrefUtils.setLoginUid(mContext, "");
     }
+    user = null;
+    cookie = "";
+    token = "";
+    removeCookie();
+    Intent intent = new Intent(mContext, MessageService.class);
+    intent.setAction(MessageService.ACTION_CLOSE);
+    mContext.startService(intent);
+  }
 
+  private void removeCookie() {
+    CookieSyncManager.createInstance(mContext);
+    CookieManager cookieManager = CookieManager.getInstance();
+    cookieManager.removeAllCookie();
+    CookieSyncManager.getInstance().sync();
+  }
 
-    private String cookie;
-    private String token;
+  public boolean isLogin() {
+    return user != null && SettingPrefUtils.getLoginUid(mContext).equals(user.getUid());
+  }
 
-    private User user;
-
-    public User getUser() {
-        return user;
+  public String getToken() {
+    if (!isLogin()) {
+      return token;
     }
+    return user.getToken();
+  }
 
-
-    public void login(User user) {
-        this.user = user;
-        SettingPrefUtils.setLoginUid(mContext, user.getUid());
-        Intent intent = new Intent(mContext, MessageService.class);
-        intent.setAction(MessageService.ACTION_GET);
-        mContext.startService(intent);
+  public String getUid() {
+    if (!isLogin()) {
+      return "";
     }
+    return user.getUid();
+  }
 
-
-    public void logout() {
-        if (user.getUid().equals(SettingPrefUtils.getLoginUid(mContext))) {
-            SettingPrefUtils.setLoginUid(mContext, "");
-        }
-        user = null;
-        cookie = "";
-        token = "";
-        removeCookie();
-        Intent intent = new Intent(mContext, MessageService.class);
-        intent.setAction(MessageService.ACTION_CLOSE);
-        mContext.startService(intent);
+  public String getCookie() {
+    if (isLogin()) {
+      return user.getCookie();
     }
+    return cookie;
+  }
 
-    private void removeCookie() {
-        CookieSyncManager.createInstance(mContext);
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();
-        CookieSyncManager.getInstance().sync();
-    }
+  public void setCookie(String cookie) {
+    this.cookie = cookie;
+  }
 
-    public boolean isLogin() {
-        return user != null && SettingPrefUtils.getLoginUid(mContext).equals(user.getUid());
-    }
-
-    public String getToken() {
-        if (!isLogin()) {
-            return token;
-        }
-        return user.getToken();
-    }
-
-    public String getUid() {
-        if (!isLogin()) {
-            return "";
-        }
-        return user.getUid();
-    }
-
-
-    public String getCookie() {
-        if (isLogin()) {
-            return user.getCookie();
-        }
-        return cookie;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+  public void setToken(String token) {
+    this.token = token;
+  }
 }

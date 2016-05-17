@@ -3,60 +3,66 @@
     android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
-    <LinearLayout
-        android:tag="Bottom2"
-        android:background="#333"
-        android:layout_width="wrap_content"
+  <LinearLayout
+      android:tag="Bottom2"
+      android:background="#333"
+      android:layout_width="wrap_content"
+      android:gravity="center"
+      android:layout_height="match_parent"
+      >
+
+    <TextView
         android:gravity="center"
-        android:layout_height="match_parent">
+        android:text="取消关注"
+        android:id="@+id/tvDel"
+        android:background="#f7e79c"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        />
 
-        <TextView
-            android:gravity="center"
-            android:text="取消关注"
-            android:id="@+id/tvDel"
-            android:background="#f7e79c"
-            android:layout_width="70dp"
-            android:layout_height="match_parent" />
-
-        <!--<TextView-->
-        <!--android:gravity="center"-->
-        <!--android:text="离线"-->
-        <!--android:id="@+id/tvOffline"-->
-        <!--android:background="#4cd964"-->
-        <!--android:layout_width="70dp"-->
-        <!--android:layout_height="match_parent" />-->
-    </LinearLayout>
+    <!--<TextView-->
+    <!--android:gravity="center"-->
+    <!--android:text="离线"-->
+    <!--android:id="@+id/tvOffline"-->
+    <!--android:background="#4cd964"-->
+    <!--android:layout_width="70dp"-->
+    <!--android:layout_height="match_parent" />-->
+  </LinearLayout>
 
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      >
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ivIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
+        />
+
+    <TextView
+        android:text="火箭"
+        android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="15sp"
+        />
 
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/ivIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp" />
-
-        <TextView
-            android:text="火箭"
-            android:id="@+id/tvName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="15sp" />
-
-
-    </LinearLayout>
+  </LinearLayout>
 
 
 </com.daimajia.swipe.SwipeLayout>

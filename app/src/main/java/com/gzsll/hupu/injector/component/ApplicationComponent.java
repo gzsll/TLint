@@ -1,7 +1,6 @@
 package com.gzsll.hupu.injector.component;
 
 import android.content.Context;
-
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
@@ -17,44 +16,38 @@ import com.gzsll.hupu.injector.module.DBModule;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.widget.HuPuWebView;
 import com.squareup.otto.Bus;
-
-import javax.inject.Singleton;
-
 import dagger.Component;
+import javax.inject.Singleton;
 
 /**
  * Created by sll on 2016/3/8.
  */
-@Singleton
-@Component(modules = {ApplicationModule.class, ApiModule.class, DBModule.class})
+@Singleton @Component(modules = { ApplicationModule.class, ApiModule.class, DBModule.class })
 public interface ApplicationComponent {
 
-    Context getContext();
+  Context getContext();
 
-    Bus getBus();
+  Bus getBus();
 
+  ForumApi getForumApi();
 
-    ForumApi getForumApi();
+  GameApi getGameApi();
 
-    GameApi getGameApi();
+  CookieApi getCookieApi();
 
-    CookieApi getCookieApi();
+  UserDao getUserDao();
 
-    UserDao getUserDao();
+  ForumDao getForumDao();
 
-    ForumDao getForumDao();
+  OkHttpHelper getOkHttpHelper();
 
+  RequestHelper getRequestHelper();
 
-    OkHttpHelper getOkHttpHelper();
+  UserStorage getUserStorage();
 
-    RequestHelper getRequestHelper();
+  void inject(MyApplication mApplication);
 
-    UserStorage getUserStorage();
+  void inject(BaseActivity mBaseActivity);
 
-
-    void inject(MyApplication mApplication);
-
-    void inject(BaseActivity mBaseActivity);
-
-    void inject(HuPuWebView mHupuWebView);
+  void inject(HuPuWebView mHupuWebView);
 }

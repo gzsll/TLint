@@ -9,18 +9,17 @@ import com.gzsll.hupu.ui.BaseView;
  */
 public class UserProfileContract {
 
-    interface View extends BaseView {
-        void renderUserData(UserResult userResult);
+  interface View extends BaseView {
+    void renderUserData(UserResult userResult);
 
-        void showLoading();
+    void showLoading();
 
-        void hideLoading();
+    void hideLoading();
 
-        void showError();
-    }
+    void showError();
+  }
 
-    interface Presenter extends BasePresenter<View> {
-        void receiveUserInfo();
-    }
-
+  interface Presenter extends BasePresenter<View> {
+    void receiveUserInfo();
+  }
 }

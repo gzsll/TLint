@@ -4,72 +4,80 @@
     android:layout_height="fill_parent"
     android:background="#ffffff"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <include layout="@layout/base_toolbar_layout" />
+  <include layout="@layout/base_toolbar_layout"/>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputSubject"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/textInputSubject"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
 
-        <EditText
-            android:id="@+id/etSubject"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="标题"
-            android:paddingBottom="8.0dip"
-            android:paddingLeft="5.0dip"
-            android:paddingTop="8.0dip"
-            android:singleLine="true" />
-
-    </android.support.design.widget.TextInputLayout>
-
-
-    <View
+    <EditText
+        android:id="@+id/etSubject"
         android:layout_width="fill_parent"
-        android:layout_height="1.0dip"
-        android:background="#ffe0e0e0"
-        android:paddingBottom="3.0dip"
-        android:paddingTop="3.0dip" />
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="标题"
+        android:paddingBottom="8.0dip"
+        android:paddingLeft="5.0dip"
+        android:paddingTop="8.0dip"
+        android:singleLine="true"
+        />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+  </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/etContent"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:autoLink="web"
-            android:background="@null"
-            android:gravity="left|top"
-            android:hint="内容"
-            android:paddingBottom="8.0dip"
-            android:paddingLeft="5.0dip"
-            android:paddingTop="8.0dip"
-            android:textCursorDrawable="@null" />
 
-    </android.support.design.widget.TextInputLayout>
+  <View
+      android:layout_width="fill_parent"
+      android:layout_height="1.0dip"
+      android:background="#ffe0e0e0"
+      android:paddingBottom="3.0dip"
+      android:paddingTop="3.0dip"
+      />
 
-    <HorizontalScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="80dip">
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/textInputContent"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
 
-        <!--图片展示容器-->
-        <LinearLayout
-            android:id="@+id/llPics"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/etContent"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:autoLink="web"
+        android:background="@null"
+        android:gravity="left|top"
+        android:hint="内容"
+        android:paddingBottom="8.0dip"
+        android:paddingLeft="5.0dip"
+        android:paddingTop="8.0dip"
+        android:textCursorDrawable="@null"
+        />
 
-        </LinearLayout>
-    </HorizontalScrollView>
+  </android.support.design.widget.TextInputLayout>
+
+  <HorizontalScrollView
+      android:id="@+id/scrollView"
+      android:layout_width="match_parent"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
+      android:layout_height="80dip"
+      >
+
+    <!--图片展示容器-->
+    <LinearLayout
+        android:id="@+id/llPics"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+    </LinearLayout>
+  </HorizontalScrollView>
 
 </LinearLayout>

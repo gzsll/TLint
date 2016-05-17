@@ -3,50 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <LinearLayout
-        android:id="@+id/llEmpty"
+  <LinearLayout
+      android:id="@+id/llEmpty"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:gravity="center"
+      android:orientation="vertical"
+      >
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical">
+        android:src="@drawable/error_view_cloud"
+        />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:src="@drawable/error_view_cloud" />
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="暂无数据"
+        android:textColor="?android:attr/textColorSecondary"
+        />
 
-        <TextView
-            android:id="@+id/tvEmpty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="暂无数据"
-            android:textColor="?android:attr/textColorSecondary"/>
+    <Button
+        android:id="@+id/btnReload"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/retry_button_background"
+        android:text="重试"
+        android:textColor="?android:attr/textColorSecondary"
+        android:visibility="visible"
+        />
 
-        <Button
-            android:id="@+id/btnReload"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/retry_button_background"
-            android:text="重试"
-            android:textColor="?android:attr/textColorSecondary"
-            android:visibility="visible" />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="30dp" />
-
-    </LinearLayout>
+  </LinearLayout>
 
 
 </RelativeLayout>

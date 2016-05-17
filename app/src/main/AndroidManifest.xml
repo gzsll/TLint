@@ -2,121 +2,120 @@
     package="com.gzsll.hupu">
 
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
-    <application
-        android:name=".MyApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+  <application
+      android:name=".MyApplication"
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:supportsRtl="true"
+      android:theme="@style/AppThemeLight">
+
+
+    <activity
+        android:name=".ui.splash.SplashActivity"
         android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppThemeLight">
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLaunch">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
 
+    <activity
+        android:name=".ui.main.MainActivity"
+        android:screenOrientation="portrait"
+        android:launchMode="singleTask"
+        android:theme="@style/AppThemeLight.NoTranslucent"/>
 
+    <activity
+        android:name=".ui.content.ContentActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
+    <activity
+        android:name=".ui.post.PostActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="stateHidden|adjustResize"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.splash.SplashActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLaunch">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    <activity
+        android:name=".ui.gallery.GalleryActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            android:theme="@style/AppThemeLight.NoTranslucent" />
+    <activity
+        android:name=".ui.imagepreview.ImagePreviewActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight.FitsStatusBar"/>
+    <activity
+        android:name=".ui.login.LoginActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
+    <activity
+        android:name=".ui.account.AccountActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.content.ContentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
-        <activity
-            android:name=".ui.post.PostActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/AppThemeLight" />
+    <activity
+        android:name=".ui.userprofile.UserProfileActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.gallery.GalleryActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
+    <activity
+        android:name=".ui.thread.list.ThreadListActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
+    <activity
+        android:name=".ui.browser.BrowserActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
+    <activity
+        android:name=".ui.setting.SettingActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.imagepreview.ImagePreviewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight.FitsStatusBar" />
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
-        <activity
-            android:name=".ui.account.AccountActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
+    <activity
+        android:name=".ui.report.ReportActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.userprofile.UserProfileActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
+    <activity
+        android:name=".ui.messagelist.MessageActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.thread.list.ThreadListActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
-        <activity
-            android:name=".ui.browser.BrowserActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
-        <activity
-            android:name=".ui.setting.SettingActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
+    <activity
+        android:name=".ui.pmdetail.PmDetailActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"
+        android:theme="@style/AppThemeLight"/>
 
-        <activity
-            android:name=".ui.report.ReportActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
+    <service
+        android:name="com.gzsll.hupu.service.MessageService"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="com.gzsll.hupu.ACTION_GET"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </service>
 
-        <activity
-            android:name=".ui.messagelist.MessageActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeLight" />
-
-        <activity
-            android:name=".ui.pmdetail.PmDetailActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppThemeLight"/>
-
-        <service
-            android:name="com.gzsll.hupu.service.MessageService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.gzsll.hupu.ACTION_GET" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
-
-    </application>
+  </application>
 
 </manifest>

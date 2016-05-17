@@ -18,126 +18,140 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
+      android:layout_width="match_parent"
+      android:layout_height="256dp"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      >
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginBottom="160dp"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/backdrop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
-                app:actualImageScaleType="centerCrop" />
-
-
-            <TextView
-                android:id="@+id/tvSubTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="32dp"
-                android:layout_marginLeft="48dp"
-                android:layout_marginRight="64dp"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                app:layout_collapseMode="parallax" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refreshLayout"
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/collapsing_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:contentScrim="?attr/colorPrimary"
+        app:expandedTitleMarginBottom="160dp"
+        app:expandedTitleMarginEnd="64dp"
+        app:expandedTitleMarginStart="48dp"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        >
 
-        <com.gzsll.hupu.widget.LoadMoreRecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+      <com.facebook.drawee.view.SimpleDraweeView
+          android:id="@+id/backdrop"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          app:layout_collapseMode="parallax"
+          app:actualImageScaleType="centerCrop"
+          />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+      <TextView
+          android:id="@+id/tvSubTitle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom"
+          android:layout_marginBottom="32dp"
+          android:layout_marginLeft="48dp"
+          android:layout_marginRight="64dp"
+          android:textColor="@android:color/white"
+          android:textSize="16sp"
+          app:layout_collapseMode="parallax"
+          />
+
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          app:layout_collapseMode="pin"
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          />
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+  </android.support.design.widget.AppBarLayout>
+
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/refreshLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <com.gzsll.hupu.widget.LoadMoreRecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        />
+
+  </android.support.v4.widget.SwipeRefreshLayout>
+
+  <FrameLayout
+      android:id="@+id/frameLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
 
 
-        <com.github.clans.fab.FloatingActionMenu
-            android:id="@+id/floatingMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp">
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/floatingMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        >
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/floatingAttention"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_menu_add"
-                app:fab_label="关注"
-                app:fab_size="mini" />
+      <com.github.clans.fab.FloatingActionButton
+          android:id="@+id/floatingAttention"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/ic_menu_add"
+          app:fab_label="关注"
+          app:fab_size="mini"
+          />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/floatingPost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_menu_post"
-                app:fab_label="发帖"
-                app:fab_size="mini" />
+      <com.github.clans.fab.FloatingActionButton
+          android:id="@+id/floatingPost"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/ic_menu_post"
+          app:fab_label="发帖"
+          app:fab_size="mini"
+          />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/floatingSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_menu_switch"
-                app:fab_label="按发帖时间排序"
-                app:fab_size="mini" />
+      <com.github.clans.fab.FloatingActionButton
+          android:id="@+id/floatingSwitch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/ic_menu_switch"
+          app:fab_label="按发帖时间排序"
+          app:fab_size="mini"
+          />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/floatingRefresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_menu_refresh"
-                app:fab_label="刷新"
-                app:fab_size="mini" />
+      <com.github.clans.fab.FloatingActionButton
+          android:id="@+id/floatingRefresh"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/ic_menu_refresh"
+          app:fab_label="刷新"
+          app:fab_size="mini"
+          />
 
 
-        </com.github.clans.fab.FloatingActionMenu>
-    </FrameLayout>
+    </com.github.clans.fab.FloatingActionMenu>
+  </FrameLayout>
 
-    <!--    <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingAttention"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:src="@drawable/ic_menu_add"
-            app:layout_anchor="@id/appbar"
-            app:layout_anchorGravity="bottom|right|end" />-->
+  <!--    <android.support.design.widget.FloatingActionButton
+          android:id="@+id/floatingAttention"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="16dp"
+          android:clickable="true"
+          android:src="@drawable/ic_menu_add"
+          app:layout_anchor="@id/appbar"
+          app:layout_anchorGravity="bottom|right|end" />-->
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="?attr/widgetBackground"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/widgetBackground"
+    android:orientation="vertical"
+    >
 
 
-    <com.gzsll.hupu.widget.HuPuWebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/widgetBackground"
-        android:clipToPadding="true"
-        android:divider="@null"
-        android:saveEnabled="false"/>
+  <com.gzsll.hupu.widget.HuPuWebView
+      android:id="@+id/webView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="?attr/widgetBackground"
+      android:clipToPadding="true"
+      android:divider="@null"
+      android:saveEnabled="false"
+      />
 
 </LinearLayout>

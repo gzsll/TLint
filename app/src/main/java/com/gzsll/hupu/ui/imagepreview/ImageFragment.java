@@ -7,7 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -23,129 +24,107 @@ import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.widget.ImageLoadProgressBar;
 import com.gzsll.hupu.widget.photodraweeview.OnViewTapListener;
 import com.gzsll.hupu.widget.photodraweeview.PhotoDraweeView;
-
-import org.apache.log4j.Logger;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/10.
  */
 public class ImageFragment extends BaseFragment {
 
-    private Logger logger = Logger.getLogger(ImageFragment.class.getSimpleName());
+  private Logger logger = Logger.getLogger(ImageFragment.class.getSimpleName());
 
-    @Bind(R.id.image)
-    PhotoDraweeView image;
-    @Bind(R.id.progress)
-    SmoothProgressBar progress;
-    @Bind(R.id.rlProgress)
-    RelativeLayout rlProgress;
-    @Bind(R.id.tvInfo)
-    TextView tvInfo;
+  @Bind(R.id.image) PhotoDraweeView image;
+  @Bind(R.id.progress) SmoothProgressBar progress;
+  @Bind(R.id.rlProgress) RelativeLayout rlProgress;
+  @Bind(R.id.tvInfo) TextView tvInfo;
 
-    public static ImageFragment newInstance(String url) {
-        ImageFragment mFragment = new ImageFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("url", url);
-        mFragment.setArguments(bundle);
-        return mFragment;
+  public static ImageFragment newInstance(String url) {
+    ImageFragment mFragment = new ImageFragment();
+    Bundle bundle = new Bundle();
+    bundle.putString("url", url);
+    mFragment.setArguments(bundle);
+    return mFragment;
+  }
+
+  private String url;
+
+  @Override public void initInjector() {
+
+  }
+
+  @Override public int initContentView() {
+    return R.layout.preview_item_layout;
+  }
+
+  @Override public void getBundle(Bundle bundle) {
+    url = bundle.getString("url");
+  }
+
+  @Override public void initUI(View view) {
+    ButterKnife.bind(this, view);
+    progress.setIndeterminate(true);
+    image.setOnViewTapListener(new OnViewTapListener() {
+      @Override public void onViewTap(View view, float x, float y) {
+        getActivity().finish();
+      }
+    });
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      rlProgress.setPadding(0, ResourceUtils.getStatusBarHeight(getActivity()), 0, 0);
+    }
+  }
+
+  @Override public void initData() {
+    showContent(true);
+    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
+        .setProgressiveRenderingEnabled(true)
+        .build();
+
+    GenericDraweeHierarchy hierarchy =
+        new GenericDraweeHierarchyBuilder(getResources()).setProgressBarImage(
+            new ImageLoadProgressBar(new ImageLoadProgressBar.OnLevelChangeListener() {
+              @Override public void onChange(int level) {
+                if (level > 100 && progress.getVisibility() == View.VISIBLE) {
+                  progress.setVisibility(View.GONE);
+                }
+              }
+            }, ResourceUtils.getThemeColor(getActivity()))).build();
+    hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+
+    PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+    controller.setControllerListener(listener);
+    controller.setImageRequest(request);
+    controller.setOldController(image.getController());
+    controller.setAutoPlayAnimations(true);
+    image.setHierarchy(hierarchy);
+    image.setController(controller.build());
+  }
+
+  private BaseControllerListener<ImageInfo> listener = new BaseControllerListener<ImageInfo>() {
+
+    @Override public void onFailure(String id, Throwable throwable) {
+      super.onFailure(id, throwable);
+      System.out.println("onFailure:" + throwable.getMessage());
+      progress.setVisibility(View.GONE);
+      tvInfo.setVisibility(View.VISIBLE);
+      tvInfo.setText("图片加载失败");
     }
 
-    private String url;
-
-
-    @Override
-    public void initInjector() {
-
+    @Override public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+      super.onFinalImageSet(id, imageInfo, animatable);
+      System.out.println("onFinalImageSet");
+      if (imageInfo == null) {
+        return;
+      }
+      image.update(imageInfo.getWidth(), imageInfo.getHeight());
+      progress.setVisibility(View.GONE);
     }
 
-    @Override
-    public int initContentView() {
-        return R.layout.preview_item_layout;
+    @Override public void onSubmit(String id, Object callerContext) {
+      super.onSubmit(id, callerContext);
+      System.out.println("onSubmit");
+      progress.setVisibility(View.VISIBLE);
+      tvInfo.setVisibility(View.GONE);
     }
-
-    @Override
-    public void getBundle(Bundle bundle) {
-        url = bundle.getString("url");
-    }
-
-    @Override
-    public void initUI(View view) {
-        ButterKnife.bind(this, view);
-        progress.setIndeterminate(true);
-        image.setOnViewTapListener(new OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                getActivity().finish();
-            }
-        });
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            rlProgress.setPadding(0, ResourceUtils.getStatusBarHeight(getActivity()), 0, 0);
-        }
-    }
-
-    @Override
-    public void initData() {
-        showContent(true);
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
-                .setProgressiveRenderingEnabled(true)
-                .build();
-
-        GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
-                .setProgressBarImage(new ImageLoadProgressBar(new ImageLoadProgressBar.OnLevelChangeListener() {
-                    @Override
-                    public void onChange(int level) {
-                        if (level > 100 && progress.getVisibility() == View.VISIBLE) {
-                            progress.setVisibility(View.GONE);
-                        }
-                    }
-                }, ResourceUtils.getThemeColor(getActivity())))
-                .build();
-        hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
-
-        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
-        controller.setControllerListener(listener);
-        controller.setImageRequest(request);
-        controller.setOldController(image.getController());
-        controller.setAutoPlayAnimations(true);
-        image.setHierarchy(hierarchy);
-        image.setController(controller.build());
-    }
-
-    private BaseControllerListener<ImageInfo> listener = new BaseControllerListener<ImageInfo>() {
-
-        @Override
-        public void onFailure(String id, Throwable throwable) {
-            super.onFailure(id, throwable);
-            System.out.println("onFailure:" + throwable.getMessage());
-            progress.setVisibility(View.GONE);
-            tvInfo.setVisibility(View.VISIBLE);
-            tvInfo.setText("图片加载失败");
-        }
-
-
-        @Override
-        public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-            super.onFinalImageSet(id, imageInfo, animatable);
-            System.out.println("onFinalImageSet");
-            if (imageInfo == null) {
-                return;
-            }
-            image.update(imageInfo.getWidth(), imageInfo.getHeight());
-            progress.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onSubmit(String id, Object callerContext) {
-            super.onSubmit(id, callerContext);
-            System.out.println("onSubmit");
-            progress.setVisibility(View.VISIBLE);
-            tvInfo.setVisibility(View.GONE);
-        }
-    };
-
-
+  };
 }

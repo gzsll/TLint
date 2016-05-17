@@ -2,69 +2,75 @@
 
 
 <com.gzsll.hupu.widget.LabelCardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                                     android:id="@+id/listItem"
-                                     android:layout_width="match_parent"
-                                     android:layout_height="wrap_content"
-                                     android:layout_gravity="center"
-                                     android:layout_marginEnd="8dp"
-                                     android:layout_marginStart="8dp"
-                                     android:layout_marginTop="8dp"
-                                     app:cardCornerRadius="3dp"
-                                     app:cardElevation="5dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/listItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="5dp"
+    >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="8dp">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:layout_margin="8dp"
+      >
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/ivIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:actualImageScaleType="centerCrop"
-            app:failureImage="@drawable/icon_def_head"
-            app:failureImageScaleType="fitCenter"
-            app:placeholderImage="@drawable/icon_def_head"
-            app:placeholderImageScaleType="fitCenter"
-            app:roundAsCircle="true"/>
-
-
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/ivIcon"
-            android:text="pursll"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="@dimen/text_size_12"/>
-
-        <TextView
-            android:id="@+id/tvContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvName"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/ivIcon"
-            android:singleLine="true"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="@dimen/text_size_15"/>
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ivIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:actualImageScaleType="centerCrop"
+        app:failureImage="@drawable/icon_def_head"
+        app:failureImageScaleType="fitCenter"
+        app:placeholderImage="@drawable/icon_def_head"
+        app:placeholderImageScaleType="fitCenter"
+        app:roundAsCircle="true"
+        />
 
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
-            android:text="刚刚"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="@dimen/text_size_12"/>
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/ivIcon"
+        android:text="pursll"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/text_size_12"
+        />
 
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvName"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/ivIcon"
+        android:singleLine="true"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="@dimen/text_size_15"
+        />
+
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:text="刚刚"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/text_size_12"
+        />
+
+  </RelativeLayout>
 
 </com.gzsll.hupu.widget.LabelCardView>
 

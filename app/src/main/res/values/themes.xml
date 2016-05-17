@@ -1,72 +1,69 @@
 <resources>
 
 
-    <!-- App Theme Light -->
-    <style name="BaseAppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowBackground">@color/window_background_light</item>
-        <item name="android:listDivider">@color/list_divider_light</item>
-        <item name="widgetBackground">@color/selectable_item_background_general_light_normal</item>
-        <item name="widgetBackgroundDark">@color/selectable_item_background_general_light_pressed
-        </item>
-        <item name="widgetBackgroundTitle">@android:color/white</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
+  <!-- App Theme Light -->
+  <style name="BaseAppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimary</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="windowActionModeOverlay">true</item>
+    <item name="android:windowBackground">@color/window_background_light</item>
+    <item name="android:listDivider">@color/list_divider_light</item>
+    <item name="widgetBackground">@color/selectable_item_background_general_light_normal</item>
+    <item name="widgetBackgroundDark">@color/selectable_item_background_general_light_pressed
+    </item>
+    <item name="widgetBackgroundTitle">@android:color/white</item>
+    <item name="android:windowIsTranslucent">true</item>
+  </style>
 
-    <style name="AppThemeLight" parent="BaseAppThemeLight" />
+  <style name="AppThemeLight" parent="BaseAppThemeLight"/>
 
-    <style name="AppThemeLight.NoTranslucent" parent="BaseAppThemeLight">
-        <item name="android:windowIsTranslucent">false</item>
-    </style>
+  <style name="AppThemeLight.NoTranslucent" parent="BaseAppThemeLight">
+    <item name="android:windowIsTranslucent">false</item>
+  </style>
 
-    <style name="AppThemeLight.FitsStatusBar" />
+  <style name="AppThemeLight.FitsStatusBar"/>
 
-    <!-- App Theme Dark -->
-    <style name="BaseAppThemeDark" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowBackground">@color/window_background_dark</item>
-        <item name="android:listDivider">@color/list_divider_dark</item>
-        <item name="widgetBackground">@color/selectable_item_background_general_dark_normal</item>
-        <item name="widgetBackgroundDark">@color/selectable_item_background_general_dark_pressed
-        </item>
-        <item name="widgetBackgroundTitle">@color/colorPrimary</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
+  <!-- App Theme Dark -->
+  <style name="BaseAppThemeDark" parent="Theme.AppCompat.NoActionBar">
+    <item name="colorPrimary">@color/colorPrimaryDark</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="windowActionModeOverlay">true</item>
+    <item name="android:windowBackground">@color/window_background_dark</item>
+    <item name="android:listDivider">@color/list_divider_dark</item>
+    <item name="widgetBackground">@color/selectable_item_background_general_dark_normal</item>
+    <item name="widgetBackgroundDark">@color/selectable_item_background_general_dark_pressed
+    </item>
+    <item name="widgetBackgroundTitle">@color/colorPrimary</item>
+    <item name="android:windowIsTranslucent">true</item>
+  </style>
 
-    <style name="AppThemeDark" parent="BaseAppThemeDark" />
+  <style name="AppThemeDark" parent="BaseAppThemeDark"/>
 
-    <style name="AppThemeDark.NoTranslucent" parent="BaseAppThemeDark">
-        <item name="android:windowIsTranslucent">false</item>
-    </style>
+  <style name="AppThemeDark.NoTranslucent" parent="BaseAppThemeDark">
+    <item name="android:windowIsTranslucent">false</item>
+  </style>
 
-    <style name="AppThemeDark.FitsStatusBar" />
+  <style name="AppThemeDark.FitsStatusBar"/>
 
-    <!-- App Theme Launch -->
-    <style name="AppThemeLaunch" parent="BaseAppThemeLight">
-        <item name="android:windowBackground">@color/colorPrimary</item>
-    </style>
+  <!-- App Theme Launch -->
+  <style name="AppThemeLaunch" parent="BaseAppThemeLight">
+    <item name="android:windowBackground">@color/colorPrimary</item>
+  </style>
 
-    <style name="AppWidget" parent="Theme.AppCompat.Light" />
+  <style name="AppWidget" parent="Theme.AppCompat.Light"/>
 
-    <style name="AppWidget.DeepLine">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">?android:attr/listDivider</item>
-    </style>
+  <style name="AppWidget.DeepLine">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:background">?android:attr/listDivider</item>
+  </style>
 
-    <style name="AppWidget.DeepLine.Vertical">
-        <item name="android:layout_width">1dp</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-
-
+  <style name="AppWidget.DeepLine.Vertical">
+    <item name="android:layout_width">1dp</item>
+    <item name="android:layout_height">match_parent</item>
+  </style>
 
 
 </resources>

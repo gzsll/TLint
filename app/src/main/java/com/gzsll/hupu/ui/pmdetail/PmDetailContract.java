@@ -3,7 +3,6 @@ package com.gzsll.hupu.ui.pmdetail;
 import com.gzsll.hupu.bean.PmDetail;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
-
 import java.util.List;
 
 /**
@@ -11,40 +10,38 @@ import java.util.List;
  */
 public interface PmDetailContract {
 
-    interface View extends BaseView {
-        void showLoading();
+  interface View extends BaseView {
+    void showLoading();
 
-        void hideLoading();
+    void hideLoading();
 
-        void isBlock(boolean isBlock);
+    void isBlock(boolean isBlock);
 
-        void renderPmDetailList(List<PmDetail> pmDetails);
+    void renderPmDetailList(List<PmDetail> pmDetails);
 
-        void scrollTo(int position);
+    void scrollTo(int position);
 
-        void onRefreshCompleted();
+    void onRefreshCompleted();
 
-        void onError();
+    void onError();
 
-        void onEmpty();
+    void onEmpty();
 
-        void cleanEditText();
-    }
+    void cleanEditText();
+  }
 
-    interface Presenter extends BasePresenter<View> {
+  interface Presenter extends BasePresenter<View> {
 
-        void onPmDetailReceive();
+    void onPmDetailReceive();
 
-        void onLoadMore();
+    void onLoadMore();
 
+    void onReload();
 
-        void onReload();
+    void send(String content);
 
-        void send(String content);
+    void clear();
 
-        void clear();
-
-        void block();
-    }
-
+    void block();
+  }
 }

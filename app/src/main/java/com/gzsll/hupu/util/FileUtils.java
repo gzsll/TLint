@@ -1,7 +1,6 @@
 package com.gzsll.hupu.util;
 
 import android.os.Environment;
-
 import java.io.IOException;
 
 /**
@@ -9,36 +8,33 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-
-    public static boolean hasSDCard() {
-        boolean mHasSDcard = false;
-        if (Environment.MEDIA_MOUNTED.endsWith(Environment.getExternalStorageState())) {
-            mHasSDcard = true;
-        } else {
-            mHasSDcard = false;
-        }
-
-        return mHasSDcard;
+  public static boolean hasSDCard() {
+    boolean mHasSDcard = false;
+    if (Environment.MEDIA_MOUNTED.endsWith(Environment.getExternalStorageState())) {
+      mHasSDcard = true;
+    } else {
+      mHasSDcard = false;
     }
 
-    public static String getSdcardPath() {
+    return mHasSDcard;
+  }
 
-        if (hasSDCard())
-            return Environment.getExternalStorageDirectory().getAbsolutePath();
+  public static String getSdcardPath() {
 
-        return "/sdcard/";
+    if (hasSDCard()) return Environment.getExternalStorageDirectory().getAbsolutePath();
+
+    return "/sdcard/";
+  }
+
+  public static void chmod(String permission, String path) {
+    try {
+      String command = "chmod " + permission + " " + path;
+      Runtime runtime = Runtime.getRuntime();
+      runtime.exec(command);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
-
-    public static void chmod(String permission, String path) {
-        try {
-            String command = "chmod " + permission + " " + path;
-            Runtime runtime = Runtime.getRuntime();
-            runtime.exec(command);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+  }
 }
 
 

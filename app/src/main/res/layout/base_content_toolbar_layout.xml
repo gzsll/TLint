@@ -2,10 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <include layout="@layout/base_toolbar_layout" />
+  <include layout="@layout/base_toolbar_layout"/>
 
-    <include layout="@layout/base_content_empty" />
+  <include layout="@layout/base_content_empty"/>
 
 </LinearLayout>

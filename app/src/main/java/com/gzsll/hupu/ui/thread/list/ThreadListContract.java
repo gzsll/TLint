@@ -4,59 +4,56 @@ import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
-
 import java.util.List;
 
 /**
  * Created by sll on 2016/5/11.
  */
 public interface ThreadListContract {
-    interface View extends BaseView {
-        void showLoading();
+  interface View extends BaseView {
+    void showLoading();
 
-        void hideLoading();
+    void hideLoading();
 
-        void renderThreadInfo(Forum forum);
+    void renderThreadInfo(Forum forum);
 
-        void renderThreads(List<Thread> threads);
+    void renderThreads(List<Thread> threads);
 
-        void onLoadCompleted(boolean hasMore);
+    void onLoadCompleted(boolean hasMore);
 
-        void onRefreshCompleted();
+    void onRefreshCompleted();
 
-        void attendStatus(boolean isAttention);
+    void attendStatus(boolean isAttention);
 
-        void onError(String error);
+    void onError(String error);
 
-        void onEmpty();
+    void onEmpty();
 
-        void onScrollToTop();
+    void onScrollToTop();
 
-        void onFloatingVisibility(int visibility);
+    void onFloatingVisibility(int visibility);
 
-        void showPostThreadUi(String fid);
+    void showPostThreadUi(String fid);
 
-        void showLoginUi();
+    void showLoginUi();
 
-        void showToast(String msg);
-    }
+    void showToast(String msg);
+  }
 
-    interface Presenter extends BasePresenter<View> {
+  interface Presenter extends BasePresenter<View> {
 
-        void onThreadReceive(String type);
+    void onThreadReceive(String type);
 
-        void onStartSearch(String key, int page);
+    void onStartSearch(String key, int page);
 
-        void onAttentionClick();
+    void onAttentionClick();
 
-        void onPostClick();
+    void onPostClick();
 
-        void onRefresh();
+    void onRefresh();
 
-        void onReload();
+    void onReload();
 
-        void onLoadMore();
-
-
-    }
+    void onLoadMore();
+  }
 }

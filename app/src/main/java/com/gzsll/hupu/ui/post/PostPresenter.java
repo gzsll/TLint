@@ -2,7 +2,6 @@ package com.gzsll.hupu.ui.post;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
@@ -12,12 +11,9 @@ import com.gzsll.hupu.bean.UploadInfo;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,219 +24,206 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/3/9.
  */
-@PerActivity
-public class PostPresenter implements PostContract.Presenter {
+@PerActivity public class PostPresenter implements PostContract.Presenter {
 
+  private ForumApi mForumApi;
+  private Context mContext;
 
-    private ForumApi mForumApi;
-    private Context mContext;
+  @Inject public PostPresenter(ForumApi forumApi, Context context) {
+    mForumApi = forumApi;
+    mContext = context;
+  }
 
+  private PostContract.View mPostView;
+  private ArrayList<String> paths = new ArrayList<>();
+  private int uploadCount = 0;
 
-    @Inject
-    public PostPresenter(ForumApi forumApi, Context context) {
-        mForumApi = forumApi;
-        mContext = context;
-    }
-
-    private PostContract.View mPostView;
-    private ArrayList<String> paths = new ArrayList<>();
-    private int uploadCount = 0;
-
-    @Override
-    public void checkPermission(int type, String fid, String tid) {
-        mForumApi.checkPermission(fid, tid, type == Constants.TYPE_POST ? "threadPublish" : "threadReply").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PermissionData>() {
-            @Override
-            public void call(PermissionData permissionData) {
-                if (permissionData != null) {
-                    if (permissionData.error != null) {
-                        mPostView.renderError(permissionData.error);
-                    } else if (SettingPrefUtils.isNeedExam(mContext)) {
-                        mPostView.renderExam(permissionData.exam);
-                    }
-                }
+  @Override public void checkPermission(int type, String fid, String tid) {
+    mForumApi.checkPermission(fid, tid,
+        type == Constants.TYPE_POST ? "threadPublish" : "threadReply")
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<PermissionData>() {
+          @Override public void call(PermissionData permissionData) {
+            if (permissionData != null) {
+              if (permissionData.error != null) {
+                mPostView.renderError(permissionData.error);
+              } else if (SettingPrefUtils.isNeedExam(mContext)) {
+                mPostView.renderExam(permissionData.exam);
+              }
             }
+          }
         }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                throwable.printStackTrace();
-            }
+          @Override public void call(Throwable throwable) {
+            throwable.printStackTrace();
+          }
         });
-    }
+  }
 
-    @Override
-    public void parse(ArrayList<String> paths) {
-        this.paths = paths;
-    }
+  @Override public void parse(ArrayList<String> paths) {
+    this.paths = paths;
+  }
 
-    @Override
-    public void comment(final String tid, final String fid, final String pid, final String content) {
-        mPostView.showLoading();
-        if (paths != null && !paths.isEmpty()) {
-            final List<String> images = new ArrayList<>();
-            Observable.from(paths).flatMap(new Func1<String, Observable<UploadData>>() {
-                @Override
-                public Observable<UploadData> call(String s) {
-                    return mForumApi.upload(s);
-                }
-            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<UploadData>() {
-                @Override
-                public void onStart() {
-                    uploadCount = 0;
-                    images.clear();
-                }
-
-                @Override
-                public void onCompleted() {
-                    uploadCount++;
-                    if (uploadCount == paths.size()) {
-                        addReply(tid, fid, pid, content, images);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    uploadCount++;
-                    if (uploadCount == paths.size()) {
-                        addReply(tid, fid, pid, content, images);
-                    }
-                }
-
-                @Override
-                public void onNext(UploadData uploadData) {
-                    if (uploadData != null) {
-                        for (UploadInfo info : uploadData.files) {
-                            images.add(info.requestUrl);
-                        }
-                    }
-                }
-            });
-
-        } else {
-            addReply(tid, fid, pid, content, null);
-        }
-    }
-
-
-    private void addReply(String tid, String fid, String pid, String content, List<String> imgs) {
-        StringBuilder buffer = new StringBuilder(content);
-        if (imgs != null) {
-            for (String url : imgs) {
-                buffer.append("<br><br><img src=\"").append(url).append("\"><br><br>");
+  @Override
+  public void comment(final String tid, final String fid, final String pid, final String content) {
+    mPostView.showLoading();
+    if (paths != null && !paths.isEmpty()) {
+      final List<String> images = new ArrayList<>();
+      Observable.from(paths)
+          .flatMap(new Func1<String, Observable<UploadData>>() {
+            @Override public Observable<UploadData> call(String s) {
+              return mForumApi.upload(s);
             }
-        }
-        System.out.println("buffer:" + buffer.toString());
-        mForumApi.addReplyByApp(tid, fid, pid, buffer.toString()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
-            @Override
-            public void call(BaseData result) {
-                mPostView.hideLoading();
-                if (result != null) {
-                    if (result.error != null) {
-                        ToastUtils.showToast(result.error.text);
-                    } else if (result.status == 200) {
-                        ToastUtils.showToast("发送成功~");
-                        mPostView.postSuccess();
-                    }
-                } else {
-                    ToastUtils.showToast("您的网络有问题，请检查后重试");
-                }
+          })
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Subscriber<UploadData>() {
+            @Override public void onStart() {
+              uploadCount = 0;
+              images.clear();
             }
+
+            @Override public void onCompleted() {
+              uploadCount++;
+              if (uploadCount == paths.size()) {
+                addReply(tid, fid, pid, content, images);
+              }
+            }
+
+            @Override public void onError(Throwable e) {
+              uploadCount++;
+              if (uploadCount == paths.size()) {
+                addReply(tid, fid, pid, content, images);
+              }
+            }
+
+            @Override public void onNext(UploadData uploadData) {
+              if (uploadData != null) {
+                for (UploadInfo info : uploadData.files) {
+                  images.add(info.requestUrl);
+                }
+              }
+            }
+          });
+    } else {
+      addReply(tid, fid, pid, content, null);
+    }
+  }
+
+  private void addReply(String tid, String fid, String pid, String content, List<String> imgs) {
+    StringBuilder buffer = new StringBuilder(content);
+    if (imgs != null) {
+      for (String url : imgs) {
+        buffer.append("<br><br><img src=\"").append(url).append("\"><br><br>");
+      }
+    }
+    System.out.println("buffer:" + buffer.toString());
+    mForumApi.addReplyByApp(tid, fid, pid, buffer.toString())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<BaseData>() {
+          @Override public void call(BaseData result) {
+            mPostView.hideLoading();
+            if (result != null) {
+              if (result.error != null) {
+                ToastUtils.showToast(result.error.text);
+              } else if (result.status == 200) {
+                ToastUtils.showToast("发送成功~");
+                mPostView.postSuccess();
+              }
+            } else {
+              ToastUtils.showToast("您的网络有问题，请检查后重试");
+            }
+          }
         }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                mPostView.hideLoading();
-                ToastUtils.showToast("您的网络有问题，请检查后重试");
-            }
+          @Override public void call(Throwable throwable) {
+            mPostView.hideLoading();
+            ToastUtils.showToast("您的网络有问题，请检查后重试");
+          }
         });
-    }
+  }
 
-    @Override
-    public void post(final String fid, final String content, final String title) {
-        mPostView.showLoading();
-        if (paths != null && !paths.isEmpty()) {
-            final List<String> images = new ArrayList<>();
-            Observable.from(paths).flatMap(new Func1<String, Observable<UploadData>>() {
-                @Override
-                public Observable<UploadData> call(String s) {
-                    return mForumApi.upload(s);
-                }
-            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<UploadData>() {
-                @Override
-                public void onStart() {
-                    uploadCount = 0;
-                    images.clear();
-                }
-
-                @Override
-                public void onCompleted() {
-                    uploadCount++;
-                    if (uploadCount == paths.size()) {
-                        addPost(fid, content, title, images);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    uploadCount++;
-                    if (uploadCount == paths.size()) {
-                        addPost(fid, content, title, images);
-                    }
-                }
-
-                @Override
-                public void onNext(UploadData uploadData) {
-                    if (uploadData != null) {
-                        for (UploadInfo info : uploadData.files) {
-                            images.add(info.requestUrl);
-                        }
-                    }
-                }
-            });
-
-        } else {
-            addPost(fid, content, title, null);
-        }
-    }
-
-    private void addPost(String fid, String content, String title, List<String> imgs) {
-        StringBuilder buffer = new StringBuilder(content);
-        if (imgs != null) {
-            for (String url : imgs) {
-                buffer.append("<br><br><img src=\"").append(url).append("\"><br><br>");
+  @Override public void post(final String fid, final String content, final String title) {
+    mPostView.showLoading();
+    if (paths != null && !paths.isEmpty()) {
+      final List<String> images = new ArrayList<>();
+      Observable.from(paths)
+          .flatMap(new Func1<String, Observable<UploadData>>() {
+            @Override public Observable<UploadData> call(String s) {
+              return mForumApi.upload(s);
             }
-        }
-        mForumApi.addThread(title, buffer.toString(), fid).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseData>() {
-            @Override
-            public void call(BaseData result) {
-                mPostView.hideLoading();
-                if (result != null) {
-                    if (result.error != null) {
-                        ToastUtils.showToast(result.error.text);
-                    } else if (result.status == 200) {
-                        ToastUtils.showToast("发送成功~");
-                        mPostView.postSuccess();
-                    }
-                } else {
-                    ToastUtils.showToast("您的网络有问题，请检查后重试");
-                }
+          })
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Subscriber<UploadData>() {
+            @Override public void onStart() {
+              uploadCount = 0;
+              images.clear();
             }
+
+            @Override public void onCompleted() {
+              uploadCount++;
+              if (uploadCount == paths.size()) {
+                addPost(fid, content, title, images);
+              }
+            }
+
+            @Override public void onError(Throwable e) {
+              uploadCount++;
+              if (uploadCount == paths.size()) {
+                addPost(fid, content, title, images);
+              }
+            }
+
+            @Override public void onNext(UploadData uploadData) {
+              if (uploadData != null) {
+                for (UploadInfo info : uploadData.files) {
+                  images.add(info.requestUrl);
+                }
+              }
+            }
+          });
+    } else {
+      addPost(fid, content, title, null);
+    }
+  }
+
+  private void addPost(String fid, String content, String title, List<String> imgs) {
+    StringBuilder buffer = new StringBuilder(content);
+    if (imgs != null) {
+      for (String url : imgs) {
+        buffer.append("<br><br><img src=\"").append(url).append("\"><br><br>");
+      }
+    }
+    mForumApi.addThread(title, buffer.toString(), fid)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<BaseData>() {
+          @Override public void call(BaseData result) {
+            mPostView.hideLoading();
+            if (result != null) {
+              if (result.error != null) {
+                ToastUtils.showToast(result.error.text);
+              } else if (result.status == 200) {
+                ToastUtils.showToast("发送成功~");
+                mPostView.postSuccess();
+              }
+            } else {
+              ToastUtils.showToast("您的网络有问题，请检查后重试");
+            }
+          }
         }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                mPostView.hideLoading();
-                ToastUtils.showToast("您的网络有问题，请检查后重试");
-            }
+          @Override public void call(Throwable throwable) {
+            mPostView.hideLoading();
+            ToastUtils.showToast("您的网络有问题，请检查后重试");
+          }
         });
-    }
+  }
 
+  @Override public void attachView(@NonNull PostContract.View view) {
+    mPostView = view;
+  }
 
-    @Override
-    public void attachView(@NonNull PostContract.View view) {
-        mPostView = view;
-    }
-
-    @Override
-    public void detachView() {
-        paths.clear();
-        mPostView = null;
-    }
+  @Override public void detachView() {
+    paths.clear();
+    mPostView = null;
+  }
 }

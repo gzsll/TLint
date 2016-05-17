@@ -11,53 +11,59 @@
     android:layout_marginTop="8dp"
     android:layout_width="match_parent"
     card_view:cardCornerRadius="3dp"
-    card_view:cardElevation="5dp">
+    card_view:cardElevation="5dp"
+    >
 
-    <RelativeLayout
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      >
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/ivIcon"
+        android:orientation="vertical"
+        >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/ivIcon"
-            android:orientation="vertical">
+      <TextView
+          android:id="@+id/tvCategory"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="pursll"
+          android:textColor="?android:attr/textColorSecondary"
+          android:textSize="@dimen/text_size_12"
+          />
 
-            <TextView
-                android:id="@+id/tvCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="pursll"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_12" />
+      <TextView
+          android:id="@+id/tvInfo"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="5dp"
+          android:textColor="?android:attr/textColorPrimary"
+          android:textSize="@dimen/text_size_15"
+          />
 
-            <TextView
-                android:id="@+id/tvInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="@dimen/text_size_15" />
+    </LinearLayout>
 
-        </LinearLayout>
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="刚刚"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/text_size_12"
+        />
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:text="刚刚"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="@dimen/text_size_12" />
-
-    </RelativeLayout>
+  </RelativeLayout>
 
 </android.support.v7.widget.CardView>
 

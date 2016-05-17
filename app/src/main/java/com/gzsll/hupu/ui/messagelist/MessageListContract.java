@@ -3,36 +3,35 @@ package com.gzsll.hupu.ui.messagelist;
 import com.gzsll.hupu.bean.Message;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
-
 import java.util.List;
 
 /**
  * Created by sll on 2016/5/11.
  */
 public interface MessageListContract {
-    interface View extends BaseView {
-        void showLoading();
+  interface View extends BaseView {
+    void showLoading();
 
-        void hideLoading();
+    void hideLoading();
 
-        void renderMessageList(List<Message> messages);
+    void renderMessageList(List<Message> messages);
 
-        void onRefreshCompleted();
+    void onRefreshCompleted();
 
-        void onLoadCompleted(boolean haMore);
+    void onLoadCompleted(boolean haMore);
 
-        void onError();
+    void onError();
 
-        void onEmpty();
-    }
+    void onEmpty();
+  }
 
-    interface Presenter extends BasePresenter<View> {
-        void onMessageListReceive();
+  interface Presenter extends BasePresenter<View> {
+    void onMessageListReceive();
 
-        void onRefresh();
+    void onRefresh();
 
-        void onReload();
+    void onReload();
 
-        void onLoadMore();
-    }
+    void onLoadMore();
+  }
 }

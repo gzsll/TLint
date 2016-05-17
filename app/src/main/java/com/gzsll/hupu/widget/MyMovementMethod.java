@@ -15,52 +15,51 @@ import android.widget.TextView;
  */
 public class MyMovementMethod extends LinkMovementMethod {
 
-    private static MyMovementMethod sInstance;
+  private static MyMovementMethod sInstance;
 
-    private BackgroundColorSpan mGray;
+  private BackgroundColorSpan mGray;
 
-    private boolean mIsLinkHit = false;
+  private boolean mIsLinkHit = false;
 
-    public static MyMovementMethod getInstance() {
-        if (sInstance == null) {
-            sInstance = new MyMovementMethod();
-        }
-
-        return sInstance;
+  public static MyMovementMethod getInstance() {
+    if (sInstance == null) {
+      sInstance = new MyMovementMethod();
     }
 
-    @Override
-    public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
-        if (mGray == null) {
-            mGray = new BackgroundColorSpan(Color.parseColor("#eaeaea"));
-        }
+    return sInstance;
+  }
 
-        mIsLinkHit = false;
+  @Override public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+    if (mGray == null) {
+      mGray = new BackgroundColorSpan(Color.parseColor("#eaeaea"));
+    }
 
-        int action = event.getAction();
+    mIsLinkHit = false;
 
-        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_UP) {
-            int x = (int) event.getX();
-            int y = (int) event.getY();
+    int action = event.getAction();
 
-			/*if (DEBUG) {
-                Log.d(TAG, "x = " + x + " y = " + y);
-			}*/
-
-            x -= widget.getTotalPaddingLeft();
-            y -= widget.getTotalPaddingTop();
+    if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_UP) {
+      int x = (int) event.getX();
+      int y = (int) event.getY();
 
 			/*if (DEBUG) {
                 Log.d(TAG, "x = " + x + " y = " + y);
 			}*/
 
-            x += widget.getScrollX();
-            y += widget.getScrollY();
+      x -= widget.getTotalPaddingLeft();
+      y -= widget.getTotalPaddingTop();
 
-            int line = widget.getLayout().getLineForVertical(y);
-            int offset = widget.getLayout().getOffsetForHorizontal(line, x);
+			/*if (DEBUG) {
+                Log.d(TAG, "x = " + x + " y = " + y);
+			}*/
 
-            ClickableSpan[] spans = buffer.getSpans(offset, offset, ClickableSpan.class);
+      x += widget.getScrollX();
+      y += widget.getScrollY();
+
+      int line = widget.getLayout().getLineForVertical(y);
+      int offset = widget.getLayout().getOffsetForHorizontal(line, x);
+
+      ClickableSpan[] spans = buffer.getSpans(offset, offset, ClickableSpan.class);
 
 			/*if (DEBUG) {
                 Log.d(TAG, "x = " + x + " y = " + y);
@@ -68,40 +67,40 @@ public class MyMovementMethod extends LinkMovementMethod {
 				Log.d(TAG, "spans.lenth = " + spans.length);
 			}*/
 
-            if (spans.length != 0) {
-                int start = buffer.getSpanStart(spans[0]);
-                int end = buffer.getSpanEnd(spans[0]);
+      if (spans.length != 0) {
+        int start = buffer.getSpanStart(spans[0]);
+        int end = buffer.getSpanEnd(spans[0]);
 
-                mIsLinkHit = true;
+        mIsLinkHit = true;
 
-                if (action == MotionEvent.ACTION_DOWN) {
+        if (action == MotionEvent.ACTION_DOWN) {
                     /*if (DEBUG) {
                         Log.d(TAG, "Down event detected");
 					}*/
 
-                    buffer.setSpan(mGray, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                } else if (action == MotionEvent.ACTION_UP) {
-					/*if (DEBUG) {
-						Log.d(TAG, "Up event detected");
+          buffer.setSpan(mGray, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else if (action == MotionEvent.ACTION_UP) {
+          /*if (DEBUG) {
+            Log.d(TAG, "Up event detected");
 					}*/
 
-                    spans[0].onClick(widget);
+          spans[0].onClick(widget);
 
-                    buffer.removeSpan(mGray);
-                }
-
-                return true;
-            }
-        } else {
-            buffer.removeSpan(mGray);
+          buffer.removeSpan(mGray);
         }
 
-        return Touch.onTouchEvent(widget, buffer, event);
+        return true;
+      }
+    } else {
+      buffer.removeSpan(mGray);
     }
 
-    public boolean isLinkHit() {
-        boolean ret = mIsLinkHit;
-        mIsLinkHit = false;
-        return ret;
-    }
+    return Touch.onTouchEvent(widget, buffer, event);
+  }
+
+  public boolean isLinkHit() {
+    boolean ret = mIsLinkHit;
+    mIsLinkHit = false;
+    return ret;
+  }
 }

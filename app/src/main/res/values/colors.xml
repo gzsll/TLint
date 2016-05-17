@@ -1,80 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Styling -->
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#163b18</color>
-    <color name="colorAccent">#388E3C</color>
+  <!-- Styling -->
+  <color name="colorPrimary">#4CAF50</color>
+  <color name="colorPrimaryDark">#163b18</color>
+  <color name="colorAccent">#388E3C</color>
 
 
-    <color name="window_background_light">#ffeeeeee</color>
-    <color name="window_background_dark">#ff303030</color>
+  <color name="window_background_light">#ffeeeeee</color>
+  <color name="window_background_dark">#ff303030</color>
 
-    <color name="text_color_light">#b3ffffff</color>
-    <color name="text_color_dark">#de000000</color>
+  <color name="text_color_light">#b3ffffff</color>
+  <color name="text_color_dark">#de000000</color>
 
-    <color name="list_divider_light">#ffe0e0e0</color>
-    <color name="list_divider_dark">#ff666666</color>
-
-
-    <color name="selectable_item_background_general_light_normal">@android:color/white</color>
-    <color name="selectable_item_background_general_light_pressed">#ffeeeeee</color>
-    <color name="selectable_item_background_general_light_accent">#ffcccccc</color>
-    <color name="selectable_item_background_general_dark_normal">#ff3c3c3c</color>
-    <color name="selectable_item_background_general_dark_pressed">#ff444444</color>
-    <color name="selectable_item_background_general_dark_accent">#ff666666</color>
+  <color name="list_divider_light">#ffe0e0e0</color>
+  <color name="list_divider_dark">#ff666666</color>
 
 
-    <color name="red">#FFC93437</color>
-    <color name="blue">#FF375BF1</color>
-    <color name="yellow">#FFF7D23E</color>
-    <color name="green">#FF34A350</color>
-
-    <drawable name="mid_green">#1abc9c</drawable>
-    <drawable name="mid_green_highlight">#16a085</drawable>
-
-    <drawable name="light_green">#2ecc71</drawable>
-    <drawable name="light_green_highlight">#27ae60</drawable>
-
-    <drawable name="real_blue">#3498db</drawable>
-    <drawable name="real_blue_highlight">#2980b9</drawable>
-
-    <drawable name="light_blue">#21aabd</drawable>
-    <drawable name="light_blue_highlight">#15707c</drawable>
-
-    <drawable name="purple">#654b6b</drawable>
-    <drawable name="purple_highlight">#443248</drawable>
-
-    <drawable name="navy">#34495e</drawable>
-    <drawable name="navy_highlight">#2c3e50</drawable>
-
-    <drawable name="orange">#e67e22</drawable>
-    <drawable name="orange_highlight">#d35400</drawable>
-
-    <drawable name="red">#e74c3c</drawable>
-    <drawable name="red_highlight">#c0392b</drawable>
+  <color name="selectable_item_background_general_light_normal">@android:color/white</color>
+  <color name="selectable_item_background_general_light_pressed">#ffeeeeee</color>
+  <color name="selectable_item_background_general_light_accent">#ffcccccc</color>
+  <color name="selectable_item_background_general_dark_normal">#ff3c3c3c</color>
+  <color name="selectable_item_background_general_dark_pressed">#ff444444</color>
+  <color name="selectable_item_background_general_dark_accent">#ff666666</color>
 
 
+  <color name="red">#FFC93437</color>
+  <color name="blue">#FF375BF1</color>
+  <color name="yellow">#FFF7D23E</color>
+  <color name="green">#FF34A350</color>
 
-    <color name="retry_button_background">#30000000</color>
-    <color name="retry_button_background_stroke">#50000000</color>
+  <drawable name="mid_green">#1abc9c</drawable>
+  <drawable name="mid_green_highlight">#16a085</drawable>
 
-    <color name="base_text_black">#ff333333</color>
-    <color name="base_text_gray">#ff7f7f7f</color>
-    <color name="base_text_white">#ffffffff</color>
+  <drawable name="light_green">#2ecc71</drawable>
+  <drawable name="light_green_highlight">#27ae60</drawable>
 
-    <color name="transparent">#000000</color>
+  <drawable name="real_blue">#3498db</drawable>
+  <drawable name="real_blue_highlight">#2980b9</drawable>
 
-    <color name="bg_followers_counter">#ff5656</color>
+  <drawable name="light_blue">#21aabd</drawable>
+  <drawable name="light_blue_highlight">#15707c</drawable>
 
-    <integer-array name="gplus_colors">
-        <item>@color/gplus_color_1</item>
-        <item>@color/gplus_color_2</item>
-        <item>@color/gplus_color_3</item>
-        <item>@color/gplus_color_4</item>
-    </integer-array>
+  <drawable name="purple">#654b6b</drawable>
+  <drawable name="purple_highlight">#443248</drawable>
 
-    <color name="gplus_color_1">#3e802f</color>
-    <color name="gplus_color_2">#f4b400</color>
-    <color name="gplus_color_3">#427fed</color>
-    <color name="gplus_color_4">#b23424</color>
+  <drawable name="navy">#34495e</drawable>
+  <drawable name="navy_highlight">#2c3e50</drawable>
+
+  <drawable name="orange">#e67e22</drawable>
+  <drawable name="orange_highlight">#d35400</drawable>
+
+  <drawable name="red">#e74c3c</drawable>
+  <drawable name="red_highlight">#c0392b</drawable>
+
+
+  <color name="retry_button_background">#30000000</color>
+  <color name="retry_button_background_stroke">#50000000</color>
+
+  <color name="base_text_black">#ff333333</color>
+  <color name="base_text_gray">#ff7f7f7f</color>
+  <color name="base_text_white">#ffffffff</color>
+
+  <color name="transparent">#000000</color>
+
+  <color name="bg_followers_counter">#ff5656</color>
+
+  <integer-array name="gplus_colors">
+    <item>@color/gplus_color_1</item>
+    <item>@color/gplus_color_2</item>
+    <item>@color/gplus_color_3</item>
+    <item>@color/gplus_color_4</item>
+  </integer-array>
+
+  <color name="gplus_color_1">#3e802f</color>
+  <color name="gplus_color_2">#f4b400</color>
+  <color name="gplus_color_3">#427fed</color>
+  <color name="gplus_color_4">#b23424</color>
 </resources>
