@@ -32,8 +32,8 @@ android {
     applicationId "com.gzsll.hupu"
     minSdkVersion 14
     targetSdkVersion 22
-    versionCode 40
-    versionName "2.1"
+    versionCode 41
+    versionName "2.2"
   }
 
   signingConfigs {
@@ -91,7 +91,7 @@ dependencies {
   compile 'com.alibaba:fastjson:1.1.46.android'
 
   compile 'io.reactivex:rxandroid:1.1.0'
-  compile 'io.reactivex:rxjava:1.1.1'
+  compile 'io.reactivex:rxjava:1.1.5'
   compile('com.github.afollestad.material-dialogs:core:0.8.5.2@aar') {
     transitive = true
   }
