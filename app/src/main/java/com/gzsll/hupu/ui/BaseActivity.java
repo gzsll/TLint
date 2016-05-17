@@ -17,6 +17,7 @@ import com.gzsll.hupu.injector.module.ActivityModule;
 import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.StatusBarUtil;
+import com.gzsll.hupu.util.ThemeUtils;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -57,23 +58,17 @@ public abstract class BaseActivity extends AppCompatActivity {
   }
 
   private void initTheme() {
-    if (SettingPrefUtils.getNightModel(this)) {
-      int theme;
-
-      try {
-        theme = getPackageManager().getActivityInfo(getComponentName(), 0).theme;
-      } catch (PackageManager.NameNotFoundException e) {
-        return;
-      }
-      if (theme == R.style.AppThemeLight) {
-        theme = R.style.AppThemeDark;
-      } else if (theme == R.style.AppThemeLight_FitsStatusBar) {
-        theme = R.style.AppThemeDark_FitsStatusBar;
-      } else if (theme == R.style.AppThemeLight_NoTranslucent) {
-        theme = R.style.AppThemeDark_NoTranslucent;
-      }
-      setTheme(theme);
+    int theme;
+    try {
+      theme = getPackageManager().getActivityInfo(getComponentName(), 0).theme;
+    } catch (PackageManager.NameNotFoundException e) {
+      return;
     }
+    if (theme != R.style.AppThemeLaunch) {
+      theme = ThemeUtils.themeArr[SettingPrefUtils.getThemeIndex(this)][
+          SettingPrefUtils.getNightModel(this) ? 1 : 0];
+    }
+    setTheme(theme);
   }
 
   /**

@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.injector.HasComponent;
-import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.util.CacheUtils;
 import com.gzsll.hupu.util.FileUtils;
@@ -31,6 +30,7 @@ public class SettingFragment extends PreferenceFragment
   private ListPreference pTextSize;// 字体大小
   private Preference pPicSavePath;// 图片保存路径
   private Preference pClearCache;
+  private Preference pTheme;
   private ListPreference pThreadSort;
   private ListPreference pSwipeBackEdgeMode;// 手势返回方向
 
@@ -68,7 +68,11 @@ public class SettingFragment extends PreferenceFragment
     setListSetting(Integer.parseInt(prefs.getString("pSwipeBackEdgeMode", "0")),
         R.array.swipeBackEdgeMode, pSwipeBackEdgeMode);
 
-    findPreference("pNightMode").setOnPreferenceChangeListener(this);
+    pTheme = findPreference("pTheme");
+    pTheme.setOnPreferenceClickListener(this);
+    pTheme.setSummary(
+        getResources().getStringArray(R.array.mdColorNames)[SettingPrefUtils.getThemeIndex(
+            mContext)]);
 
     //        pOfflineCount = (ListPreference) findPreference("pOfflineCount");
     //        pOfflineCount.setOnPreferenceChangeListener(this);
@@ -87,9 +91,6 @@ public class SettingFragment extends PreferenceFragment
       ((BaseActivity) getActivity()).reload();
     } else if ("pOfflineCount".equals(preference.getKey())) {
       //  setListSetting(Integer.parseInt(newValue.toString()), R.array.offlineCount, pOfflineCount);
-    } else if ("pNightMode".equals(preference.getKey())) {
-      mBus.post(new ChangeThemeEvent());
-      if (getActivity() instanceof BaseActivity) ((BaseActivity) getActivity()).reload();
     }
     return true;
   }
@@ -99,8 +100,9 @@ public class SettingFragment extends PreferenceFragment
       modifyImageSavePath();
     } else if ("pClearCache".equals(preference.getKey())) {
       cleanCache();
+    } else if ("pTheme".equals(preference.getKey())) {
+      ColorsDialogFragment.launch(getActivity());
     }
-
     return true;
   }
 

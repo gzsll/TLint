@@ -12,4 +12,6 @@ import dagger.Component;
 @Component(dependencies = ApplicationComponent.class, modules = { ActivityModule.class })
 public interface SettingComponent {
   void inject(SettingFragment fragment);
+
+  void inject(ColorsDialogFragment fragment);
 }
