@@ -11,7 +11,7 @@ import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.main.MainActivity;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.util.ChannelUtils;
-import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by sll on 2016/3/11.
@@ -33,8 +33,10 @@ public class SplashActivity extends BaseActivity {
 
   @Override public void initUiAndListener() {
     ButterKnife.bind(this);
-    AnalyticsConfig.setAppkey(this, "55f1993be0f55a0fd9004fbc");
-    AnalyticsConfig.setChannel(ChannelUtils.getChannel(this));
+    MobclickAgent.UMAnalyticsConfig config =
+        new MobclickAgent.UMAnalyticsConfig(this, "55f1993be0f55a0fd9004fbc",
+            ChannelUtils.getChannel(this));
+    MobclickAgent.startWithConfigure(config);
     AlphaAnimation aa = new AlphaAnimation(0.7f, 1.0f);
     aa.setDuration(2000);
     splash.startAnimation(aa);
