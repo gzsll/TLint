@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
@@ -44,18 +45,20 @@ import rx.schedulers.Schedulers;
   private Bus mBus;
   private Activity mActivity;
   private Observable<Integer> mNotificationObservable;
+  private UpdateAgent mUpdateAgent;
 
   private Subscription mSubscription;
   private MainContract.View mMainView;
   private int count = 0;
 
   @Inject public MainPresenter(UserStorage userStorage, UserDao userDao, Bus bus, Activity activity,
-      Observable<Integer> notificationObservable) {
+      Observable<Integer> notificationObservable, UpdateAgent mUpdateAgent) {
     mUserStorage = userStorage;
     mUserDao = userDao;
     mBus = bus;
     mActivity = activity;
     mNotificationObservable = notificationObservable;
+    this.mUpdateAgent = mUpdateAgent;
   }
 
   @Override public void attachView(@NonNull MainContract.View view) {
@@ -63,6 +66,9 @@ import rx.schedulers.Schedulers;
     mBus.register(this);
     initUserInfo();
     initNotification();
+    if (SettingPrefUtils.getAutoUpdate(mActivity)) {
+      mUpdateAgent.checkUpdate(mActivity);
+    }
   }
 
   private void initUserInfo() {
@@ -241,7 +247,7 @@ import rx.schedulers.Schedulers;
   @Override public void detachView() {
     mBus.unregister(this);
     count = 0;
-    if (!mSubscription.isUnsubscribed()) {
+    if (mSubscription != null && !mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
     mMainView = null;

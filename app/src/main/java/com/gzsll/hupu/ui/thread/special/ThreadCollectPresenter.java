@@ -128,7 +128,7 @@ import rx.functions.Func1;
   }
 
   @Override public void detachView() {
-    if (!mSubscription.isUnsubscribed()) {
+    if (mSubscription != null && !mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
     mSpecialView = null;

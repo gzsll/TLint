@@ -208,7 +208,7 @@ import rx.functions.Action1;
   }
 
   @Override public void detachView() {
-    if (!mSubscription.isUnsubscribed()) {
+    if (mSubscription != null && !mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
     mContentView = null;

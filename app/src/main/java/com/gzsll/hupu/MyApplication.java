@@ -19,6 +19,7 @@ import com.gzsll.hupu.injector.module.ApplicationModule;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 import java.util.List;
 import javax.inject.Inject;
@@ -41,7 +42,11 @@ public class MyApplication extends Application {
     initComponent();
     initLogger();
     initUser();
-    FileDownloader.init(this);
+    FileDownloader.init(this, new FileDownloadHelper.OkHttpClientCustomMaker() {
+      @Override public OkHttpClient customMake() {
+        return mOkHttpClient;
+      }
+    });
     initFrescoConfig();
     ToastUtils.register(this);
   }

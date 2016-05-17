@@ -152,7 +152,7 @@ import rx.subjects.PublishSubject;
   }
 
   @Override public void detachView() {
-    if (!mSubscription.isUnsubscribed()) {
+    if (mSubscription != null && !mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
     mForumListView = null;
