@@ -131,9 +131,6 @@ import rx.functions.Func1;
   }
 
   @Override public void detachView() {
-    lastTid = "";
-    page = 1;
-    messages.clear();
     if (!mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }

@@ -132,12 +132,9 @@ import rx.functions.Func1;
   }
 
   @Override public void detachView() {
-    lastTamp = "";
-    lastTid = "";
-    if (mSubscription != null) {
+    if (!mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
-    threads.clear();
     mSpecialView = null;
   }
 }

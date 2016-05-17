@@ -182,9 +182,7 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void detachView() {
-    lastMid = "";
-    uid = "";
-    if (mSubscription != null && mSubscription.isUnsubscribed()) {
+    if (!mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
     mPmDetailView = null;

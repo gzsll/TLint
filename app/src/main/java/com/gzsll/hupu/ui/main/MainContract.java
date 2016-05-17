@@ -26,6 +26,8 @@ public interface MainContract {
 
     void showFragment(Fragment fragment);
 
+    void showLoginUi();
+
     void showSettingUi();
 
     void showFeedBackUi();

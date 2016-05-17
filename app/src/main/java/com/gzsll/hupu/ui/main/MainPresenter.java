@@ -18,7 +18,6 @@ import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.ui.account.AccountActivity;
 import com.gzsll.hupu.ui.browser.BrowserFragment;
 import com.gzsll.hupu.ui.forum.ForumListFragment;
-import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
@@ -51,12 +50,12 @@ import rx.schedulers.Schedulers;
   private int count = 0;
 
   @Inject public MainPresenter(UserStorage userStorage, UserDao userDao, Bus bus, Activity activity,
-      Observable<Integer> notificationObservalbe) {
+      Observable<Integer> notificationObservable) {
     mUserStorage = userStorage;
     mUserDao = userDao;
     mBus = bus;
     mActivity = activity;
-    mNotificationObservable = notificationObservalbe;
+    mNotificationObservable = notificationObservable;
   }
 
   @Override public void attachView(@NonNull MainContract.View view) {
@@ -74,8 +73,18 @@ import rx.schedulers.Schedulers;
     if (isLogin()) {
       mSubscription = mNotificationObservable.subscribe(new Action1<Integer>() {
         @Override public void call(Integer integer) {
-          count = integer;
-          mMainView.renderNotification(integer);
+          if (integer == null) {
+            ToastUtils.showToast("登录信息失效，请重新登录");
+            mUserDao.queryBuilder()
+                .where(UserDao.Properties.Uid.eq(mUserStorage.getUid()))
+                .buildDelete()
+                .executeDeleteWithoutDetachingEntities();
+            mUserStorage.logout();
+            mMainView.showLoginUi();
+          } else {
+            count = integer;
+            mMainView.renderNotification(integer);
+          }
         }
       }, new Action1<Throwable>() {
         @Override public void call(Throwable throwable) {
@@ -86,7 +95,7 @@ import rx.schedulers.Schedulers;
   }
 
   private void toLogin() {
-    LoginActivity.startActivity(mActivity);
+    mMainView.showLoginUi();
     ToastUtils.showToast("请先登录");
   }
 

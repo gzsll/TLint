@@ -116,15 +116,13 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void detachView() {
-    if (mSubscription != null && mSubscription.isUnsubscribed()) {
+    if (!mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
-    mPms.clear();
-    lastTime = "";
     mPmListView = null;
   }
 
   @Override public void attachView(@NonNull PmListContract.View view) {
-    this.mPmListView = view;
+    mPmListView = view;
   }
 }

@@ -128,10 +128,9 @@ import rx.functions.Func1;
   }
 
   @Override public void detachView() {
-    if (mSubscription != null) {
+    if (!mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
-    page = 1;
-    threads.clear();
+    mSpecialView = null;
   }
 }

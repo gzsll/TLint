@@ -25,6 +25,9 @@ import rx.schedulers.Schedulers;
           @Override public Integer call(PmData pmData, MessageData messageData) {
             int size = 0;
             if (pmData != null) {
+              if (pmData.is_login == 0) {
+                return null;
+              }
               for (Pm pm : pmData.result.data) {
                 if (!TextUtils.isEmpty(pm.unread) && pm.unread.equals("1")) {
                   size++;

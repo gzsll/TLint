@@ -29,6 +29,7 @@ import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.browser.BrowserActivity;
+import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.setting.SettingActivity;
 import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
@@ -220,6 +221,10 @@ public class MainActivity extends BaseActivity
 
   @Override public void showFragment(Fragment fragment) {
     getFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+  }
+
+  @Override public void showLoginUi() {
+    LoginActivity.startActivity(this);
   }
 
   @Override public void showSettingUi() {

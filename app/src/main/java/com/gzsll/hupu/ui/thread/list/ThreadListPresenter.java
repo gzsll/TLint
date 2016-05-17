@@ -325,14 +325,9 @@ import rx.functions.Func1;
   }
 
   @Override public void detachView() {
-    if (mSubscription != null) {
+    if (!mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
-    threads.clear();
-    lastTid = "";
-    lastTamp = "";
-    pageIndex = 1;
-    hasNextPage = true;
     mThreadListView = null;
   }
 }

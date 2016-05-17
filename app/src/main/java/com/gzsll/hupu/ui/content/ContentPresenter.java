@@ -208,11 +208,6 @@ import rx.functions.Action1;
   }
 
   @Override public void detachView() {
-    urls.clear();
-    totalPage = 1;
-    currentPage = 1;
-    isCollected = false;
-    shareText = "";
     if (!mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }

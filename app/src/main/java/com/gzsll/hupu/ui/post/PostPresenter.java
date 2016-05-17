@@ -16,6 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -34,12 +35,13 @@ import rx.schedulers.Schedulers;
     mContext = context;
   }
 
+  private Subscription mSubscription;
   private PostContract.View mPostView;
   private ArrayList<String> paths = new ArrayList<>();
   private int uploadCount = 0;
 
   @Override public void checkPermission(int type, String fid, String tid) {
-    mForumApi.checkPermission(fid, tid,
+    mSubscription = mForumApi.checkPermission(fid, tid,
         type == Constants.TYPE_POST ? "threadPublish" : "threadReply")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -69,7 +71,7 @@ import rx.schedulers.Schedulers;
     mPostView.showLoading();
     if (paths != null && !paths.isEmpty()) {
       final List<String> images = new ArrayList<>();
-      Observable.from(paths)
+      mSubscription = Observable.from(paths)
           .flatMap(new Func1<String, Observable<UploadData>>() {
             @Override public Observable<UploadData> call(String s) {
               return mForumApi.upload(s);
@@ -118,7 +120,7 @@ import rx.schedulers.Schedulers;
       }
     }
     System.out.println("buffer:" + buffer.toString());
-    mForumApi.addReplyByApp(tid, fid, pid, buffer.toString())
+    mSubscription = mForumApi.addReplyByApp(tid, fid, pid, buffer.toString())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<BaseData>() {
           @Override public void call(BaseData result) {
@@ -146,7 +148,7 @@ import rx.schedulers.Schedulers;
     mPostView.showLoading();
     if (paths != null && !paths.isEmpty()) {
       final List<String> images = new ArrayList<>();
-      Observable.from(paths)
+      mSubscription = Observable.from(paths)
           .flatMap(new Func1<String, Observable<UploadData>>() {
             @Override public Observable<UploadData> call(String s) {
               return mForumApi.upload(s);
@@ -194,7 +196,7 @@ import rx.schedulers.Schedulers;
         buffer.append("<br><br><img src=\"").append(url).append("\"><br><br>");
       }
     }
-    mForumApi.addThread(title, buffer.toString(), fid)
+    mSubscription = mForumApi.addThread(title, buffer.toString(), fid)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<BaseData>() {
           @Override public void call(BaseData result) {
@@ -223,7 +225,9 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void detachView() {
-    paths.clear();
+    if (!mSubscription.isUnsubscribed()) {
+      mSubscription.unsubscribe();
+    }
     mPostView = null;
   }
 }
