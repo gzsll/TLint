@@ -123,9 +123,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
     Level level = this.level;
 
     Request request = chain.request();
-    if (level == Level.NONE || request.url().toString().endsWith(".gif") || request.url()
-        .toString()
-        .endsWith(".jpg") || request.url().toString().endsWith(".png")) {
+    if (level == Level.NONE) {
       return chain.proceed(request);
     }
 

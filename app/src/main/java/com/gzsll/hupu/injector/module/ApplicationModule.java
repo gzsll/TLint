@@ -12,6 +12,7 @@ import com.squareup.otto.Bus;
 import dagger.Module;
 import dagger.Provides;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 
@@ -34,7 +35,8 @@ import okhttp3.OkHttpClient;
     return new Bus();
   }
 
-  @Provides @Singleton OkHttpClient provideOkHttpClient(CookieInterceptor mCookieInterceptor) {
+  @Provides @Singleton @Named("api") OkHttpClient provideApiOkHttpClient(
+      CookieInterceptor mCookieInterceptor) {
     OkHttpClient.Builder builder =
         new OkHttpClient.Builder().connectTimeout(20 * 1000, TimeUnit.MILLISECONDS)
             .readTimeout(20 * 1000, TimeUnit.MILLISECONDS);
@@ -42,6 +44,15 @@ import okhttp3.OkHttpClient;
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
     builder.addInterceptor(logging);
     builder.addInterceptor(mCookieInterceptor);
+    return builder.build();
+  }
+
+  @Provides @Singleton OkHttpClient provideOkHttpClient(@Named("api") OkHttpClient mOkHttpClient) {
+    OkHttpClient.Builder builder = mOkHttpClient.newBuilder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true);
+    builder.interceptors().clear();
     return builder.build();
   }
 
