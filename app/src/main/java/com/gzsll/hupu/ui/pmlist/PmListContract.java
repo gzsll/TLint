@@ -24,6 +24,8 @@ public interface PmListContract {
     void onError();
 
     void onEmpty();
+
+    void showPmDetailUi(String uid, String name);
   }
 
   interface Presenter extends BasePresenter<View> {
@@ -34,5 +36,7 @@ public interface PmListContract {
     void onReload();
 
     void onLoadMore();
+
+    void onPmListClick(Pm pm);
   }
 }

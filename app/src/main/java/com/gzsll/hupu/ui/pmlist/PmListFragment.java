@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.pmlist;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
@@ -10,6 +9,7 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Pm;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.messagelist.MessageComponent;
+import com.gzsll.hupu.ui.pmdetail.PmDetailActivity;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
 import java.util.List;
@@ -20,13 +20,12 @@ import javax.inject.Inject;
  */
 public class PmListFragment extends BaseFragment
     implements PmListContract.View, PullToRefreshView.OnRefreshListener,
-    LoadMoreRecyclerView.LoadMoreListener {
+    LoadMoreRecyclerView.LoadMoreListener, PmListAdapter.OnItemClickListener {
 
   @Bind(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
   @Bind(R.id.refreshLayout) PullToRefreshView refreshLayout;
 
   @Inject PmListPresenter mPresenter;
-  @Inject Activity mActivity;
   @Inject PmListAdapter mAdapter;
 
   @Override public void initInjector() {
@@ -44,11 +43,13 @@ public class PmListFragment extends BaseFragment
   @Override public void initUI(View view) {
     ButterKnife.bind(this, view);
     mPresenter.attachView(this);
-    LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
+    LinearLayoutManager layoutManager =
+        new LinearLayoutManager(getActivity().getApplicationContext());
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(mAdapter);
     recyclerView.setLoadMoreListener(this);
     refreshLayout.setOnRefreshListener(this);
+    mAdapter.setOnItemClickListener(this);
   }
 
   @Override public void initData() {
@@ -84,6 +85,10 @@ public class PmListFragment extends BaseFragment
     showEmpty(true);
   }
 
+  @Override public void showPmDetailUi(String uid, String name) {
+    PmDetailActivity.startActivity(getActivity(), uid, name);
+  }
+
   @Override public void onLoadMore() {
     mPresenter.onLoadMore();
   }
@@ -99,5 +104,9 @@ public class PmListFragment extends BaseFragment
   @Override public void onDestroy() {
     super.onDestroy();
     mPresenter.detachView();
+  }
+
+  @Override public void onPmListClick(Pm pm) {
+    mPresenter.onPmListClick(pm);
   }
 }

@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.messagelist;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,30 +9,29 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.Message;
-import com.gzsll.hupu.otto.MessageReadEvent;
-import com.gzsll.hupu.ui.content.ContentActivity;
-import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import rx.functions.Action1;
 
 /**
  * Created by sll on 2016/3/11.
  */
 public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder> {
 
-  @Inject ForumApi mForumApi;
-  @Inject Activity mActivity;
-  @Inject Bus mBus;
-
   @Inject public MessageListAdapter() {
   }
 
+  public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    this.onItemClickListener = onItemClickListener;
+  }
+
+  public interface OnItemClickListener {
+    void onMessageClick(Message message);
+  }
+
   private List<Message> messages = new ArrayList<>();
+  private OnItemClickListener onItemClickListener;
 
   public void bind(List<Message> messages) {
     this.messages = messages;
@@ -57,6 +55,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     return messages.size();
   }
 
+  public void remove(Message message) {
+    messages.remove(message);
+    notifyDataSetChanged();
+  }
+
   class ViewHolder extends RecyclerView.ViewHolder {
 
     @Bind(R.id.tvCategory) TextView tvCategory;
@@ -66,21 +69,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     Message message;
 
     @OnClick(R.id.listItem) void listItemClick() {
-      ContentActivity.startActivity(mActivity, "", message.tid, message.pid,
-          Integer.valueOf(message.page));
-      mForumApi.delMessage(message.id).subscribe(new Action1<BaseData>() {
-        @Override public void call(BaseData baseData) {
-          if (baseData != null && baseData.status == 200) {
-            messages.remove(message);
-            notifyDataSetChanged();
-            mBus.post(new MessageReadEvent());
-          }
-        }
-      }, new Action1<Throwable>() {
-        @Override public void call(Throwable throwable) {
-
-        }
-      });
+      if (onItemClickListener != null) {
+        onItemClickListener.onMessageClick(message);
+      }
     }
 
     public ViewHolder(View itemView) {

@@ -2,10 +2,13 @@ package com.gzsll.hupu.ui.messagelist;
 
 import android.support.annotation.NonNull;
 import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.Message;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.util.ToastUtils;
+import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -20,6 +23,7 @@ import rx.functions.Func1;
 @PerActivity public class MessageListPresenter implements MessageListContract.Presenter {
 
   private ForumApi mForumApi;
+  private Bus mBus;
 
   private Subscription mSubscription;
   private MessageListContract.View mMessageListView;
@@ -28,8 +32,9 @@ import rx.functions.Func1;
 
   private List<Message> messages = new ArrayList<>();
 
-  @Inject public MessageListPresenter(ForumApi forumApi) {
-    mForumApi = forumApi;
+  @Inject public MessageListPresenter(ForumApi mForumApi, Bus mBus) {
+    this.mForumApi = mForumApi;
+    this.mBus = mBus;
   }
 
   @Override public void onMessageListReceive() {
@@ -124,6 +129,22 @@ import rx.functions.Func1;
   @Override public void onLoadMore() {
     page++;
     loadMessageList(false);
+  }
+
+  @Override public void onMessageClick(final Message message) {
+    mMessageListView.showContentUi(message.tid, message.pid, Integer.valueOf(message.page));
+    mForumApi.delMessage(message.id).subscribe(new Action1<BaseData>() {
+      @Override public void call(BaseData baseData) {
+        if (baseData != null && baseData.status == 200) {
+          mMessageListView.removeMessage(message);
+          mBus.post(new MessageReadEvent());
+        }
+      }
+    }, new Action1<Throwable>() {
+      @Override public void call(Throwable throwable) {
+
+      }
+    });
   }
 
   @Override public void attachView(@NonNull MessageListContract.View view) {

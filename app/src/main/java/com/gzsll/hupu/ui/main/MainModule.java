@@ -1,11 +1,15 @@
 package com.gzsll.hupu.ui.main;
 
+import android.content.Context;
 import android.text.TextUtils;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.Pm;
 import com.gzsll.hupu.bean.PmData;
+import com.gzsll.hupu.components.okhttp.OkHttpHelper;
+import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.UpdateAgent;
 import dagger.Module;
 import dagger.Provides;
 import rx.Observable;
@@ -18,7 +22,7 @@ import rx.schedulers.Schedulers;
  */
 @Module public class MainModule {
 
-  @Provides Observable<Integer> provideNotificationObservable(GameApi mGameApi,
+  @Provides @PerActivity Observable<Integer> provideNotificationObservable(GameApi mGameApi,
       ForumApi mForumApi) {
     return Observable.zip(mGameApi.queryPmList(""), mForumApi.getMessageList("", 1),
         new Func2<PmData, MessageData, Integer>() {
@@ -40,5 +44,10 @@ import rx.schedulers.Schedulers;
             return size;
           }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+  }
+
+  @Provides @PerActivity UpdateAgent provideUpdateAgent(OkHttpHelper mOkHttpHelper,
+      Context mContext) {
+    return new UpdateAgent(mOkHttpHelper, mContext);
   }
 }

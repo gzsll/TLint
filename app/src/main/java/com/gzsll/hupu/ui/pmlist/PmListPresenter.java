@@ -115,6 +115,10 @@ import rx.schedulers.Schedulers;
     loadPmList(false);
   }
 
+  @Override public void onPmListClick(Pm pm) {
+    mPmListView.showPmDetailUi(pm.puid, pm.nickname);
+  }
+
   @Override public void detachView() {
     if (mSubscription != null && !mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();

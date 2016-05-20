@@ -23,6 +23,10 @@ public interface MessageListContract {
     void onError();
 
     void onEmpty();
+
+    void showContentUi(String tid, String pid, int page);
+
+    void removeMessage(Message message);
   }
 
   interface Presenter extends BasePresenter<View> {
@@ -33,5 +37,7 @@ public interface MessageListContract {
     void onReload();
 
     void onLoadMore();
+
+    void onMessageClick(Message message);
   }
 }

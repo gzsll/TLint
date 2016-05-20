@@ -14,6 +14,8 @@ public interface AccountContract {
   }
 
   interface Presenter extends BasePresenter<View> {
+    void onAccountDelClick(User user);
 
+    void onAccountClick(User user);
   }
 }

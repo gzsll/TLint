@@ -3,6 +3,7 @@ package com.gzsll.hupu.ui.forum;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import com.gzsll.hupu.api.forum.ForumApi;
+import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.bean.Forums;
 import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.ForumsResult;
@@ -11,6 +12,9 @@ import com.gzsll.hupu.bean.MyForumsResult;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.db.ForumDao;
 import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.otto.DelForumAttentionEvent;
+import com.gzsll.hupu.util.ToastUtils;
+import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -28,6 +32,7 @@ import rx.subjects.PublishSubject;
 
   private ForumDao mForumDao;
   private ForumApi mForumApi;
+  private Bus mBus;
 
   private ForumListContract.View mForumListView;
   private Subscription mSubscription;
@@ -35,9 +40,10 @@ import rx.subjects.PublishSubject;
   private boolean isFirst = true;
   private PublishSubject<List<Forum>> mSubject;
 
-  @Inject public ForumListPresenter(ForumDao forumDao, ForumApi forumApi) {
-    mForumDao = forumDao;
-    mForumApi = forumApi;
+  @Inject public ForumListPresenter(ForumDao mForumDao, ForumApi mForumApi, Bus mBus) {
+    this.mForumDao = mForumDao;
+    this.mForumApi = mForumApi;
+    this.mBus = mBus;
     mSubject = PublishSubject.create();
   }
 
@@ -59,6 +65,28 @@ import rx.subjects.PublishSubject;
         });
 
     getForumObservable(forumId);
+  }
+
+  @Override public void onForumAttentionDelClick(final Forum forum) {
+    mForumApi.delAttention(forum.getFid())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<AttendStatusData>() {
+          @Override public void call(AttendStatusData result) {
+            if (result.status == 200 && result.result == 1) {
+              ToastUtils.showToast("取消关注成功");
+              mBus.post(new DelForumAttentionEvent(forum.getFid()));
+              mForumListView.removeForum(forum);
+            }
+          }
+        }, new Action1<Throwable>() {
+          @Override public void call(Throwable throwable) {
+            ToastUtils.showToast("取消关注失败，请重试");
+          }
+        });
+  }
+
+  @Override public void onForumClick(Forum forum) {
+    mForumListView.showThreadUi(forum.getFid());
   }
 
   private Observable<List<Forum>> getForumListObservable(final String forumId) {

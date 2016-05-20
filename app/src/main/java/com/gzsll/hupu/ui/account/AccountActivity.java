@@ -19,7 +19,8 @@ import javax.inject.Inject;
 /**
  * Created by sll on 2016/3/10.
  */
-public class AccountActivity extends BaseSwipeBackActivity implements AccountContract.View {
+public class AccountActivity extends BaseSwipeBackActivity
+    implements AccountContract.View, AccountAdapter.OnItemClickListener {
 
   public static void startActivity(Activity mActivity) {
     Intent intent = new Intent(mActivity, AccountActivity.class);
@@ -53,6 +54,7 @@ public class AccountActivity extends BaseSwipeBackActivity implements AccountCon
     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(mAdapter);
+    mAdapter.setOnItemClickListener(this);
   }
 
   @Override protected boolean isApplyStatusBarTranslucency() {
@@ -83,5 +85,14 @@ public class AccountActivity extends BaseSwipeBackActivity implements AccountCon
   @Override protected void onDestroy() {
     super.onDestroy();
     mPresenter.detachView();
+  }
+
+  @Override public void onAccountItemDelClicked(User user) {
+    mPresenter.onAccountDelClick(user);
+  }
+
+  @Override public void onAccountItemClicked(User user) {
+    mPresenter.onAccountClick(user);
+    mPresenter.onAccountClick(user);
   }
 }

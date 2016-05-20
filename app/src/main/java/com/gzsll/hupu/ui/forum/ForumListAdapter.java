@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.forum;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,20 +13,12 @@ import butterknife.OnClick;
 import com.daimajia.swipe.SwipeLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.db.Forum;
-import com.gzsll.hupu.otto.DelForumAttentionEvent;
-import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
-import com.gzsll.hupu.util.ToastUtils;
-import com.squareup.otto.Bus;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.log4j.Logger;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by sll on 2016/3/11.
@@ -37,19 +28,24 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
 
   Logger logger = Logger.getLogger(ForumListAdapter.class.getSimpleName());
 
-  @Inject Activity mActivity;
-  @Inject Bus mBus;
-  @Inject ForumApi mForumApi;
+  public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    this.onItemClickListener = onItemClickListener;
+  }
+
+  public interface OnItemClickListener {
+    void onForumDelAttentionClick(Forum forum);
+
+    void onForumClick(Forum forum);
+  }
+
+  private List<Forum> forums = new ArrayList<>();
+  private OnItemClickListener onItemClickListener;
 
   @Inject public ForumListAdapter() {
   }
 
-  private List<Forum> forums = new ArrayList<>();
-  private String forumId;
-
-  public void bind(List<Forum> forums, String forumId) {
+  public void bind(List<Forum> forums) {
     this.forums = forums;
-    this.forumId = forumId;
     notifyDataSetChanged();
   }
 
@@ -65,7 +61,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
       holder.ivIcon.setImageURI(Uri.parse(forum.getLogo()));
     }
     holder.tvName.setText(forum.getName());
-    holder.swipeLayout.setSwipeEnabled(forumId.equals("0"));
+    holder.swipeLayout.setSwipeEnabled(forum.getForumId().equals("0"));
   }
 
   @Override public long getHeaderId(int position) {
@@ -83,6 +79,11 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
 
   @Override public int getItemCount() {
     return forums.size();
+  }
+
+  public void remove(Forum forum) {
+    forums.remove(forum);
+    notifyDataSetChanged();
   }
 
   class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -105,28 +106,17 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
 
     @OnClick(R.id.swipeLayout) void swipeLayoutClick() {
       if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close) {
-        ThreadListActivity.startActivity(mActivity, forum.getFid());
+        if (onItemClickListener != null) {
+          onItemClickListener.onForumClick(forum);
+        }
       }
     }
 
     @OnClick(R.id.tvDel) void tvDelClick() {
       swipeLayout.close();
-      mForumApi.delAttention(forum.getFid())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Action1<AttendStatusData>() {
-            @Override public void call(AttendStatusData result) {
-              if (result.status == 200 && result.result == 1) {
-                ToastUtils.showToast("取消关注成功");
-                mBus.post(new DelForumAttentionEvent(forum.getFid()));
-                forums.remove(forum);
-                notifyDataSetChanged();
-              }
-            }
-          }, new Action1<Throwable>() {
-            @Override public void call(Throwable throwable) {
-              ToastUtils.showToast("取消关注失败，请重试");
-            }
-          });
+      if (onItemClickListener != null) {
+        onItemClickListener.onForumDelAttentionClick(forum);
+      }
     }
 
     public ViewHolder(View itemView) {

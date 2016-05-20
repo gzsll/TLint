@@ -17,10 +17,18 @@ public interface ForumListContract {
     void onError();
 
     void renderForumList(List<Forum> forumList);
+
+    void showThreadUi(String fid);
+
+    void removeForum(Forum forum);
   }
 
   interface Presenter extends BasePresenter<View> {
 
     void onForumListReceive(String forumId);
+
+    void onForumAttentionDelClick(Forum forum);
+
+    void onForumClick(Forum forum);
   }
 }

@@ -41,10 +41,12 @@ import org.apache.log4j.Logger;
 public class PmDetailAdapter extends RecyclerView.Adapter<PmDetailAdapter.ViewHolder> {
   Logger logger = Logger.getLogger(PmDetailAdapter.class.getSimpleName());
 
-  @Inject UserStorage mUserStorage;
-  @Inject Activity mActivity;
+  private UserStorage mUserStorage;
+  private Activity mActivity;
 
-  @Inject public PmDetailAdapter() {
+  @Inject public PmDetailAdapter(UserStorage mUserStorage, Activity mActivity) {
+    this.mUserStorage = mUserStorage;
+    this.mActivity = mActivity;
   }
 
   private static final int TYPE_USER = 1;

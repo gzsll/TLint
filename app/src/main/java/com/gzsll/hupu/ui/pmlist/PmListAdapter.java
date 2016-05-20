@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.pmlist;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,7 +13,6 @@ import butterknife.OnClick;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Pm;
-import com.gzsll.hupu.ui.pmdetail.PmDetailActivity;
 import com.gzsll.hupu.widget.LabelCardView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,12 +25,20 @@ import javax.inject.Inject;
  */
 public class PmListAdapter extends RecyclerView.Adapter<PmListAdapter.ViewHolder> {
 
-  @Inject Activity mActivity;
+  public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    this.onItemClickListener = onItemClickListener;
+  }
+
+  public interface OnItemClickListener {
+    void onPmListClick(Pm pm);
+  }
 
   @Inject public PmListAdapter() {
+
   }
 
   private List<Pm> pms = new ArrayList<>();
+  private OnItemClickListener onItemClickListener;
 
   public void bind(List<Pm> pms) {
     this.pms = pms;
@@ -78,7 +84,9 @@ public class PmListAdapter extends RecyclerView.Adapter<PmListAdapter.ViewHolder
     @Bind(R.id.listItem) LabelCardView cardView;
 
     @OnClick(R.id.listItem) void listItemClick() {
-      PmDetailActivity.startActivity(mActivity, mPm.puid, mPm.nickname);
+      if (onItemClickListener != null) {
+        onItemClickListener.onPmListClick(mPm);
+      }
     }
 
     public ViewHolder(View itemView) {

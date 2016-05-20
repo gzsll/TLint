@@ -1,9 +1,14 @@
 package com.gzsll.hupu.ui.account;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.otto.AccountChangeEvent;
+import com.squareup.otto.Bus;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -19,11 +24,19 @@ import rx.schedulers.Schedulers;
 @PerActivity public class AccountPresenter implements AccountContract.Presenter {
 
   private UserDao mUserDao;
+  private Activity mActivity;
+  private UserStorage mUserStorage;
+  private Bus mBus;
+
   private AccountContract.View mAccountView;
   private Subscription mSubscription;
 
-  @Inject public AccountPresenter(UserDao userDao) {
-    mUserDao = userDao;
+  @Inject public AccountPresenter(UserDao mUserDao, Activity mActivity, UserStorage mUserStorage,
+      Bus mBus) {
+    this.mUserDao = mUserDao;
+    this.mActivity = mActivity;
+    this.mUserStorage = mUserStorage;
+    this.mBus = mBus;
   }
 
   private void loadUserList() {
@@ -51,5 +64,31 @@ import rx.schedulers.Schedulers;
       mSubscription.unsubscribe();
     }
     mAccountView = null;
+  }
+
+  @Override public void onAccountDelClick(final User user) {
+    new MaterialDialog.Builder(mActivity).title("提示")
+        .content("确认删除账号?")
+        .positiveText("确定")
+        .negativeText("取消")
+        .callback(new MaterialDialog.ButtonCallback() {
+          @Override public void onPositive(MaterialDialog dialog) {
+            mUserDao.delete(user);
+            if (String.valueOf(user.getUid()).equals(mUserStorage.getUid())) {
+              mUserStorage.logout();
+            }
+            mBus.post(new AccountChangeEvent());
+            loadUserList();
+          }
+        })
+        .show();
+  }
+
+  @Override public void onAccountClick(User user) {
+    if (!String.valueOf(user.getUid()).equals(mUserStorage.getUid())) {
+      mUserStorage.login(user);
+      mBus.post(new AccountChangeEvent());
+      mActivity.finish();
+    }
   }
 }

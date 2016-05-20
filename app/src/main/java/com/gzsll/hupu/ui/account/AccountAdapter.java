@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.account;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,14 +10,9 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
-import com.gzsll.hupu.db.UserDao;
-import com.gzsll.hupu.otto.AccountChangeEvent;
-import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -28,15 +22,17 @@ import javax.inject.Inject;
  */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
 
-  @Inject UserStorage mUserStorage;
-  @Inject Activity mActivity;
-  @Inject UserDao mUserDao;
-  @Inject Bus mBus;
+  public interface OnItemClickListener {
+    void onAccountItemDelClicked(User user);
 
-  @Inject public AccountAdapter() {
+    void onAccountItemClicked(User user);
   }
 
   private List<User> users = new ArrayList<>();
+  private OnItemClickListener onItemClickListener;
+
+  @Inject public AccountAdapter() {
+  }
 
   public void bind(List<User> users) {
     this.users = users;
@@ -62,6 +58,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     return users.size();
   }
 
+  public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    this.onItemClickListener = onItemClickListener;
+  }
+
   class ViewHolder extends RecyclerView.ViewHolder {
 
     @Bind(R.id.tvName) TextView tvName;
@@ -71,22 +71,15 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     User user;
 
     @OnClick(R.id.rlDel) void rlDelClick() {
-      new MaterialDialog.Builder(mActivity).title("提示")
-          .content("确认删除账号?")
-          .positiveText("确定")
-          .negativeText("取消")
-          .callback(new MaterialDialog.ButtonCallback() {
-            @Override public void onPositive(MaterialDialog dialog) {
-              mUserDao.delete(user);
-              if (String.valueOf(user.getUid()).equals(mUserStorage.getUid())) {
-                mUserStorage.logout();
-              }
-              mBus.post(new AccountChangeEvent());
-              users.remove(user);
-              notifyDataSetChanged();
-            }
-          })
-          .show();
+      if (onItemClickListener != null) {
+        onItemClickListener.onAccountItemDelClicked(user);
+      }
+    }
+
+    @OnClick(R.id.llItem) void llItemClick() {
+      if (onItemClickListener != null) {
+        onItemClickListener.onAccountItemClicked(user);
+      }
     }
 
     public ViewHolder(View itemView) {

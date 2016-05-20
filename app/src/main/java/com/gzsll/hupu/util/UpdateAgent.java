@@ -1,4 +1,4 @@
-package com.gzsll.hupu;
+package com.gzsll.hupu.util;
 
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -12,19 +12,16 @@ import android.text.Html;
 import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.fastjson.JSON;
+import com.gzsll.hupu.BuildConfig;
+import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.UpdateInfo;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.ui.main.MainActivity;
-import com.gzsll.hupu.util.FileUtils;
-import com.gzsll.hupu.util.FormatUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.yalantis.phoenix.util.Logger;
 import java.io.File;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -36,12 +33,8 @@ import rx.schedulers.Schedulers;
  */
 public class UpdateAgent {
 
-  @Inject @Singleton public UpdateAgent() {
-
-  }
-
-  @Inject OkHttpHelper mOkHttpHelper;
-  @Inject Context mContext;
+  private OkHttpHelper mOkHttpHelper;
+  private Context mContext;
 
   private NotificationManager mNotifyManager;
   private NotificationCompat.Builder mBuilder;
@@ -53,6 +46,11 @@ public class UpdateAgent {
   private Activity mActivity;
 
   private static final String UPDATE_URL = "http://www.pursll.com/update.json";
+
+  public UpdateAgent(OkHttpHelper mOkHttpHelper, Context mContext) {
+    this.mOkHttpHelper = mOkHttpHelper;
+    this.mContext = mContext;
+  }
 
   public void checkUpdate(Activity mActivity) {
     this.mActivity = mActivity;

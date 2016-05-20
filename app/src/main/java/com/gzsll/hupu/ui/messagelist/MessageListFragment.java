@@ -9,6 +9,7 @@ import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Message;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.content.ContentActivity;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
 import java.util.List;
@@ -19,7 +20,7 @@ import javax.inject.Inject;
  */
 public class MessageListFragment extends BaseFragment
     implements MessageListContract.View, PullToRefreshView.OnRefreshListener,
-    LoadMoreRecyclerView.LoadMoreListener {
+    LoadMoreRecyclerView.LoadMoreListener, MessageListAdapter.OnItemClickListener {
 
   @Bind(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
   @Bind(R.id.refreshLayout) PullToRefreshView refreshLayout;
@@ -47,6 +48,7 @@ public class MessageListFragment extends BaseFragment
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(mAdapter);
     recyclerView.setLoadMoreListener(this);
+    mAdapter.setOnItemClickListener(this);
   }
 
   @Override public void initData() {
@@ -82,6 +84,14 @@ public class MessageListFragment extends BaseFragment
     showEmpty(true);
   }
 
+  @Override public void showContentUi(String tid, String pid, int page) {
+    ContentActivity.startActivity(mActivity, "", tid, pid, page);
+  }
+
+  @Override public void removeMessage(Message message) {
+    mAdapter.remove(message);
+  }
+
   @Override public void onRefresh() {
     mPresenter.onRefresh();
   }
@@ -97,5 +107,9 @@ public class MessageListFragment extends BaseFragment
   @Override public void onDestroy() {
     super.onDestroy();
     mPresenter.detachView();
+  }
+
+  @Override public void onMessageClick(Message message) {
+    mPresenter.onMessageClick(message);
   }
 }

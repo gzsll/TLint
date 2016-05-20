@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.UpdateAgent;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
@@ -24,6 +23,7 @@ import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.UpdateAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import java.util.List;
@@ -221,6 +221,7 @@ import rx.schedulers.Schedulers;
       mUserStorage.login(users.get(position));
       initUserInfo();
     }
+    mMainView.closeDrawers();
   }
 
   @Override public void exist() {
