@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
 public class UpdateAgent {
 
   private OkHttpHelper mOkHttpHelper;
-  private Context mContext;
+  private Activity mActivity;
 
   private NotificationManager mNotifyManager;
   private NotificationCompat.Builder mBuilder;
@@ -43,17 +43,20 @@ public class UpdateAgent {
   public static final String SDCARD_ROOT =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/gzsll/hupu";
 
-  private Activity mActivity;
+
 
   private static final String UPDATE_URL = "http://www.pursll.com/update.json";
 
-  public UpdateAgent(OkHttpHelper mOkHttpHelper, Context mContext) {
+  public UpdateAgent(OkHttpHelper mOkHttpHelper, Activity mActivity) {
     this.mOkHttpHelper = mOkHttpHelper;
-    this.mContext = mContext;
+    this.mActivity = mActivity;
   }
 
-  public void checkUpdate(Activity mActivity) {
-    this.mActivity = mActivity;
+  public void checkUpdate() {
+    this.checkUpdate(true);
+  }
+
+  public void checkUpdate(final boolean show) {
     mNotifyManager = (NotificationManager) mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
     mBuilder = new NotificationCompat.Builder(mActivity);
     Observable.just(UPDATE_URL).subscribeOn(Schedulers.io()).map(new Func1<String, UpdateInfo>() {
@@ -68,20 +71,24 @@ public class UpdateAgent {
       }
     }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UpdateInfo>() {
       @Override public void call(UpdateInfo updateInfo) {
-        checkUpdateFinished(updateInfo);
-        if (updateInfo != null && updateInfo.extra != null) {
-          SettingPrefUtils.setNeedExam(mContext, updateInfo.extra.needExam == 1);
+        if (updateInfo != null) {
+          checkUpdateFinished(updateInfo, show);
+          if (updateInfo.extra != null) {
+            SettingPrefUtils.setNeedExam(mActivity, updateInfo.extra.needExam == 1);
+          }
+          SettingPrefUtils.setHuPuSign(mActivity, updateInfo.hupuSign);
         }
       }
     }, new Action1<Throwable>() {
       @Override public void call(Throwable throwable) {
-
+        throwable.printStackTrace();
       }
     });
   }
 
-  private void checkUpdateFinished(UpdateInfo updateInfo) {
-    if (updateInfo != null && updateInfo.versionCode > BuildConfig.VERSION_CODE) {
+  private void checkUpdateFinished(UpdateInfo updateInfo, boolean show) {
+    if (updateInfo.versionCode > BuildConfig.VERSION_CODE && SettingPrefUtils.getAutoUpdate(
+        mActivity) && show) {
       showUpdateDialog(updateInfo);
     }
   }

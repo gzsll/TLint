@@ -146,4 +146,14 @@ public class SettingPrefUtils {
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
     return prefs.getBoolean("needExam", false);
   }
+
+  public static String getHuPuSign(Context context) {
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    return prefs.getString("hupuSign", "");
+  }
+
+  public static void setHuPuSign(Context context, String hupuSign) {
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    prefs.edit().putString("hupuSign", hupuSign).apply();
+  }
 }

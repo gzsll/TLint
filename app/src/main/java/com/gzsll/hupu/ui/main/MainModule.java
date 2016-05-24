@@ -1,6 +1,5 @@
 package com.gzsll.hupu.ui.main;
 
-import android.content.Context;
 import android.text.TextUtils;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
@@ -21,6 +20,12 @@ import rx.schedulers.Schedulers;
  * Created by sll on 2016/5/13.
  */
 @Module public class MainModule {
+
+  private MainActivity mActivity;
+
+  public MainModule(MainActivity mActivity) {
+    this.mActivity = mActivity;
+  }
 
   @Provides @PerActivity Observable<Integer> provideNotificationObservable(GameApi mGameApi,
       ForumApi mForumApi) {
@@ -46,8 +51,7 @@ import rx.schedulers.Schedulers;
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
   }
 
-  @Provides @PerActivity UpdateAgent provideUpdateAgent(OkHttpHelper mOkHttpHelper,
-      Context mContext) {
-    return new UpdateAgent(mOkHttpHelper, mContext);
+  @Provides @PerActivity UpdateAgent provideUpdateAgent(OkHttpHelper mOkHttpHelper) {
+    return new UpdateAgent(mOkHttpHelper, mActivity);
   }
 }

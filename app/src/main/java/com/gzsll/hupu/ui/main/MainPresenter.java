@@ -1,8 +1,9 @@
 package com.gzsll.hupu.ui.main;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
@@ -15,12 +16,9 @@ import com.gzsll.hupu.otto.AccountChangeEvent;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.MessageReadEvent;
-import com.gzsll.hupu.ui.account.AccountActivity;
 import com.gzsll.hupu.ui.browser.BrowserFragment;
 import com.gzsll.hupu.ui.forum.ForumListFragment;
-import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
-import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.gzsll.hupu.util.UpdateAgent;
@@ -43,22 +41,22 @@ import rx.schedulers.Schedulers;
   private UserStorage mUserStorage;
   private UserDao mUserDao;
   private Bus mBus;
-  private Activity mActivity;
   private Observable<Integer> mNotificationObservable;
   private UpdateAgent mUpdateAgent;
+  private Context mContext;
 
   private Subscription mSubscription;
   private MainContract.View mMainView;
   private int count = 0;
 
-  @Inject public MainPresenter(UserStorage userStorage, UserDao userDao, Bus bus, Activity activity,
-      Observable<Integer> notificationObservable, UpdateAgent mUpdateAgent) {
-    mUserStorage = userStorage;
-    mUserDao = userDao;
-    mBus = bus;
-    mActivity = activity;
-    mNotificationObservable = notificationObservable;
+  @Inject public MainPresenter(UserStorage mUserStorage, UserDao mUserDao, Bus mBus,
+      Observable<Integer> mNotificationObservable, UpdateAgent mUpdateAgent, Context mContext) {
+    this.mUserStorage = mUserStorage;
+    this.mUserDao = mUserDao;
+    this.mBus = mBus;
+    this.mNotificationObservable = mNotificationObservable;
     this.mUpdateAgent = mUpdateAgent;
+    this.mContext = mContext;
   }
 
   @Override public void attachView(@NonNull MainContract.View view) {
@@ -66,9 +64,7 @@ import rx.schedulers.Schedulers;
     mBus.register(this);
     initUserInfo();
     initNotification();
-    if (SettingPrefUtils.getAutoUpdate(mActivity)) {
-      mUpdateAgent.checkUpdate(mActivity);
-    }
+    mUpdateAgent.checkUpdate();
   }
 
   private void initUserInfo() {
@@ -76,7 +72,7 @@ import rx.schedulers.Schedulers;
   }
 
   private void initNotification() {
-    if (isLogin()) {
+    if (isLogin() && !TextUtils.isEmpty(SettingPrefUtils.getHuPuSign(mContext))) {
       mSubscription = mNotificationObservable.subscribe(new Action1<Integer>() {
         @Override public void call(Integer integer) {
           if (integer == null) {
@@ -106,13 +102,13 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void onNightModelClick() {
-    SettingPrefUtils.setNightModel(mActivity, !SettingPrefUtils.getNightModel(mActivity));
+    SettingPrefUtils.setNightModel(mContext, !SettingPrefUtils.getNightModel(mContext));
     mMainView.reload();
   }
 
   @Override public void onNotificationClick() {
     if (isLogin()) {
-      MessageActivity.startActivity(mActivity);
+      mMainView.showMessageUi();
     } else {
       toLogin();
     }
@@ -120,7 +116,7 @@ import rx.schedulers.Schedulers;
 
   @Override public void onCoverClick() {
     if (isLogin()) {
-      UserProfileActivity.startActivity(mActivity, mUserStorage.getUid());
+      mMainView.showUserProfileUi(mUserStorage.getUid());
     } else {
       toLogin();
     }
@@ -216,7 +212,7 @@ import rx.schedulers.Schedulers;
   public void onAccountItemClick(int position, final List<User> users, final String[] items) {
     if (position == items.length - 1) {
       // 账号管理
-      AccountActivity.startActivity(mActivity);
+      mMainView.showAccountUi();
     } else {
       mUserStorage.login(users.get(position));
       initUserInfo();
@@ -226,7 +222,7 @@ import rx.schedulers.Schedulers;
 
   @Override public void exist() {
     if (isCanExit()) {
-      AppManager.getAppManager().AppExit(mActivity);
+      AppManager.getAppManager().AppExit(mContext);
     }
   }
 

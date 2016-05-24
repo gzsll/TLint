@@ -28,11 +28,14 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseActivity;
+import com.gzsll.hupu.ui.account.AccountActivity;
 import com.gzsll.hupu.ui.browser.BrowserActivity;
 import com.gzsll.hupu.ui.login.LoginActivity;
+import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.setting.SettingActivity;
 import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
+import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.StatusBarUtil;
@@ -68,8 +71,7 @@ public class MainActivity extends BaseActivity
   @Override public void initInjector() {
     mMainComponent = DaggerMainComponent.builder()
         .applicationComponent(getApplicationComponent())
-        .activityModule(getActivityModule())
-        .mainModule(new MainModule())
+        .activityModule(getActivityModule()).mainModule(new MainModule(this))
         .build();
     mMainComponent.inject(this);
   }
@@ -223,8 +225,20 @@ public class MainActivity extends BaseActivity
     getFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
   }
 
+  @Override public void showMessageUi() {
+    MessageActivity.startActivity(this);
+  }
+
+  @Override public void showUserProfileUi(String uid) {
+    UserProfileActivity.startActivity(this, uid);
+  }
+
   @Override public void showLoginUi() {
     LoginActivity.startActivity(this);
+  }
+
+  @Override public void showAccountUi() {
+    AccountActivity.startActivity(this);
   }
 
   @Override public void showSettingUi() {

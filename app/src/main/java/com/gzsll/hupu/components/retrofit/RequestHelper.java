@@ -73,7 +73,7 @@ public class RequestHelper {
       Map.Entry<String, String> map1 = list.get(i);
       builder.append(map1.getKey()).append("=").append(map1.getValue());
     }
-    builder.append("HUPU_SALT_AKJfoiwer394Jeiow4u309");
+    builder.append(SettingPrefUtils.getHuPuSign(mContext));
     return SecurityUtils.getMD5(builder.toString());
   }
 }

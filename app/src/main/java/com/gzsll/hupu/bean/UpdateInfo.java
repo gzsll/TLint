@@ -8,4 +8,5 @@ public class UpdateInfo {
   public String updateInfo;
   public String updateUrl;
   public UpdateExtra extra;
+  public String hupuSign;
 }

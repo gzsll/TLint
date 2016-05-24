@@ -26,7 +26,13 @@ public interface MainContract {
 
     void showFragment(Fragment fragment);
 
+    void showMessageUi();
+
+    void showUserProfileUi(String uid);
+
     void showLoginUi();
+
+    void showAccountUi();
 
     void showSettingUi();
 

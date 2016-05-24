@@ -11,7 +11,9 @@ import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.ui.main.MainActivity;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.util.ChannelUtils;
+import com.gzsll.hupu.util.UpdateAgent;
 import com.umeng.analytics.MobclickAgent;
+import javax.inject.Inject;
 
 /**
  * Created by sll on 2016/3/11.
@@ -23,16 +25,24 @@ public class SplashActivity extends BaseActivity {
 
   @Bind(R.id.splash) FrameLayout splash;
 
+  @Inject UpdateAgent mUpdateAgent;
+
   @Override public int initContentView() {
     return R.layout.activity_splash;
   }
 
   @Override public void initInjector() {
-
+    DaggerSplashComponent.builder()
+        .applicationComponent(getApplicationComponent())
+        .activityModule(getActivityModule())
+        .splashModule(new SplashModule(this))
+        .build()
+        .inject(this);
   }
 
   @Override public void initUiAndListener() {
     ButterKnife.bind(this);
+    mUpdateAgent.checkUpdate(false);
     MobclickAgent.UMAnalyticsConfig config =
         new MobclickAgent.UMAnalyticsConfig(this, "55f1993be0f55a0fd9004fbc",
             ChannelUtils.getChannel(this));
