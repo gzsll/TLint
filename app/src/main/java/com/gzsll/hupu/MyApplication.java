@@ -20,6 +20,7 @@ import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
+import com.squareup.leakcanary.LeakCanary;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 import java.util.List;
 import javax.inject.Inject;
@@ -49,6 +50,7 @@ public class MyApplication extends Application {
     });
     initFrescoConfig();
     ToastUtils.register(this);
+    LeakCanary.install(this);
   }
 
   private void initComponent() {
