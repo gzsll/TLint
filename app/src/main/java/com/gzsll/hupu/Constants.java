@@ -54,4 +54,6 @@ public class Constants {
       mNavMap.put(NAV_IDS[i], FORUMS_IDS[i]);
     }
   }
+
+  public static final String UPDATE_URL = "http://www.pursll.com/update.json";
 }

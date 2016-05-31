@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.fastjson.JSON;
 import com.gzsll.hupu.BuildConfig;
+import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.UpdateInfo;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
@@ -45,7 +46,7 @@ public class UpdateAgent {
 
 
 
-  private static final String UPDATE_URL = "http://www.pursll.com/update.json";
+
 
   public UpdateAgent(OkHttpHelper mOkHttpHelper, Activity mActivity) {
     this.mOkHttpHelper = mOkHttpHelper;
@@ -59,10 +60,12 @@ public class UpdateAgent {
   public void checkUpdate(final boolean show) {
     mNotifyManager = (NotificationManager) mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
     mBuilder = new NotificationCompat.Builder(mActivity);
-    Observable.just(UPDATE_URL).subscribeOn(Schedulers.io()).map(new Func1<String, UpdateInfo>() {
+    Observable.just(Constants.UPDATE_URL)
+        .subscribeOn(Schedulers.io())
+        .map(new Func1<String, UpdateInfo>() {
       @Override public UpdateInfo call(String s) {
         try {
-          String result = mOkHttpHelper.getStringFromServer(UPDATE_URL);
+          String result = mOkHttpHelper.getStringFromServer(Constants.UPDATE_URL);
           return JSON.parseObject(result, UpdateInfo.class);
         } catch (Exception e) {
           e.printStackTrace();
