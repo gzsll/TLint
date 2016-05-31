@@ -10,12 +10,15 @@ import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.PermissionData;
+import com.gzsll.hupu.bean.ThreadLightReplyData;
 import com.gzsll.hupu.bean.ThreadListData;
+import com.gzsll.hupu.bean.ThreadReplyData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
 import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import java.io.File;
 import java.util.HashMap;
@@ -155,7 +158,8 @@ public class ForumApi {
    * @param page 页数
    * @param pid 回复id
    */
-  public Observable<ThreadSchemaInfo> getThreadInfo(String tid, String fid, int page, String pid) {
+  public Observable<ThreadSchemaInfo> getThreadSchemaInfo(String tid, String fid, int page,
+      String pid) {
     Map<String, String> params = mRequestHelper.getHttpRequestMap();
     if (!TextUtils.isEmpty(tid)) {
       params.put("tid", tid);
@@ -169,8 +173,72 @@ public class ForumApi {
     }
     params.put("nopic", SettingPrefUtils.getLoadPic(mContext) ? "0" : "1");
     String sign = mRequestHelper.getRequestSign(params);
-    return mForumService.getThreadInfo(sign, params).subscribeOn(Schedulers.io());
+    return mForumService.getThreadSchemaInfo(sign, params).subscribeOn(Schedulers.io());
   }
+
+  public Observable<ThreadInfo> getThreadInfo(String tid, String fid, int page, String pid) {
+    Map<String, String> params = mRequestHelper.getHttpRequestMap();
+    if (!TextUtils.isEmpty(tid)) {
+      params.put("tid", tid);
+    }
+    if (!TextUtils.isEmpty(fid)) {
+      params.put("fid", fid);
+    }
+    params.put("page", page + "");
+    if (!TextUtils.isEmpty(pid)) {
+      params.put("pid", pid);
+    }
+
+    return mForumService.getThreadInfo(params).subscribeOn(Schedulers.io());
+  }
+
+  public Observable<ThreadReplyData> getThreadReplyList(String tid, String fid, int page) {
+    Map<String, String> params = mRequestHelper.getHttpRequestMap();
+    if (!TextUtils.isEmpty(tid)) {
+      params.put("tid", tid);
+    }
+    if (!TextUtils.isEmpty(fid)) {
+      params.put("fid", fid);
+    }
+    params.put("page", page + "");
+    return mForumService.getsThreadReplyList(params).subscribeOn(Schedulers.io());
+  }
+
+  public Observable<ThreadLightReplyData> getThreadLightReplyList(String tid, String fid) {
+    Map<String, String> params = mRequestHelper.getHttpRequestMap();
+    if (!TextUtils.isEmpty(tid)) {
+      params.put("tid", tid);
+    }
+    if (!TextUtils.isEmpty(fid)) {
+      params.put("fid", fid);
+    }
+    return mForumService.getThreadLightReplyList(params).subscribeOn(Schedulers.io());
+  }
+
+  public Observable<BaseData> addLight(String tid, String fid, String pid) {
+    Map<String, String> params = mRequestHelper.getHttpRequestMap();
+    if (!TextUtils.isEmpty(tid)) {
+      params.put("tid", tid);
+    }
+    if (!TextUtils.isEmpty(fid)) {
+      params.put("fid", fid);
+    }
+    params.put("pid", pid);
+    return mForumService.addLight(params).subscribeOn(Schedulers.io());
+  }
+
+  public Observable<BaseData> addRuLight(String tid, String fid, String pid) {
+    Map<String, String> params = mRequestHelper.getHttpRequestMap();
+    if (!TextUtils.isEmpty(tid)) {
+      params.put("tid", tid);
+    }
+    if (!TextUtils.isEmpty(fid)) {
+      params.put("fid", fid);
+    }
+    params.put("pid", pid);
+    return mForumService.addRuLight(params).subscribeOn(Schedulers.io());
+  }
+
 
   /**
    * 发新帖

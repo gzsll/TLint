@@ -7,7 +7,7 @@ import android.view.View;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.main.MainComponent;
 import com.gzsll.hupu.ui.thread.ThreadListAdapter;
@@ -61,7 +61,6 @@ public class SpecialThreadListFragment extends BaseFragment
 
   @Override public void initUI(View view) {
     ButterKnife.bind(this, view);
-
     mPresenter.attachView(this);
     refreshLayout.setOnRefreshListener(this);
     LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
@@ -75,7 +74,15 @@ public class SpecialThreadListFragment extends BaseFragment
   }
 
   @Override public void showLoading() {
-    showProgress(true);
+    if (type == TYPE_COLLECT) {
+      showProgress(true);
+    } else {
+      refreshLayout.postDelayed(new Runnable() {
+        @Override public void run() {
+          refreshLayout.setRefreshing(true);
+        }
+      }, 150);
+    }
   }
 
   @Override public void hideLoading() {

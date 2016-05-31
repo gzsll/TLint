@@ -23,7 +23,7 @@ public class LoadMoreRecyclerView extends RecyclerView {
   public final static int TYPE_LIST = 2;
   public final static int TYPE_STAGGER = 3;
 
-  private boolean mIsFooterEnable = true;//是否允许加载更多
+  private boolean mIsFooterEnable = false;//是否允许加载更多
 
   private AutoLoadAdapter mAutoLoadAdapter;
 

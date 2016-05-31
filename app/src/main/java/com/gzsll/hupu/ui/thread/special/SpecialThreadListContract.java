@@ -1,6 +1,6 @@
 package com.gzsll.hupu.ui.thread.special;
 
-import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
 import java.util.List;

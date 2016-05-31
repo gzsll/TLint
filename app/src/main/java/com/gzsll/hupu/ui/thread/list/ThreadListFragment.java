@@ -33,8 +33,8 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.db.Forum;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
@@ -44,6 +44,7 @@ import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/9.
@@ -51,6 +52,8 @@ import javax.inject.Inject;
 public class ThreadListFragment extends BaseFragment
     implements ThreadListContract.View, SwipeRefreshLayout.OnRefreshListener,
     AppBarLayout.OnOffsetChangedListener, LoadMoreRecyclerView.LoadMoreListener {
+
+  Logger logger = Logger.getLogger(ThreadListFragment.class.getSimpleName());
 
   @Inject ThreadListPresenter mPresenter;
   @Inject ThreadListAdapter mAdapter;
@@ -135,10 +138,14 @@ public class ThreadListFragment extends BaseFragment
   }
 
   @Override public void showLoading() {
-    showProgress(true);
+    refreshLayout.postDelayed(new Runnable() {
+      @Override public void run() {
+        refreshLayout.setRefreshing(true);
+      }
+    }, 150);
   }
 
-  @Override public void hideLoading() {
+  @Override public void showContent() {
     showContent(true);
   }
 

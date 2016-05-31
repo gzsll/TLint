@@ -1,8 +1,6 @@
 package com.gzsll.hupu.ui.splash;
 
 import android.text.TextUtils;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,26 +51,11 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
   }
 
   @Override public void showMainUi() {
-    AlphaAnimation aa = new AlphaAnimation(0.7f, 1.0f);
-    aa.setDuration(2000);
-    splash.startAnimation(aa);
-    aa.setAnimationListener(new Animation.AnimationListener() {
-      @Override public void onAnimationStart(Animation animation) {
-
-      }
-
-      @Override public void onAnimationEnd(Animation animation) {
-        MainActivity.startActivity(SplashActivity.this);
-        String action = getIntent().getAction();
-        if (TextUtils.equals(action, ACTION_NOTIFICATION_MESSAGE)) {
-          MessageActivity.startActivity(SplashActivity.this);
-        }
-        finish();
-      }
-
-      @Override public void onAnimationRepeat(Animation animation) {
-
-      }
-    });
+    MainActivity.startActivity(SplashActivity.this);
+    String action = getIntent().getAction();
+    if (TextUtils.equals(action, ACTION_NOTIFICATION_MESSAGE)) {
+      MessageActivity.startActivity(SplashActivity.this);
+    }
+    finish();
   }
 }

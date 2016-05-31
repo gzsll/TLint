@@ -16,7 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.content.ContentActivity;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ import javax.inject.Inject;
  */
 public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.ViewHolder> {
 
-  @Inject Activity mActivity;
+  private Activity mActivity;
 
-  @Inject public ThreadListAdapter() {
-
+  @Inject public ThreadListAdapter(Activity mActivity) {
+    this.mActivity = mActivity;
   }
 
   private List<Thread> threads = new ArrayList<>();
@@ -52,21 +52,21 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
     holder.thread = thread;
     holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,
         SettingPrefUtils.getTitleSize(mActivity));
-    if (thread.lightReply > 0) {
-      holder.tvLight.setText(String.valueOf(thread.lightReply));
+    if (thread.getLightReply() != null && thread.getLightReply() > 0) {
+      holder.tvLight.setText(String.valueOf(thread.getLightReply()));
       holder.tvLight.setVisibility(View.VISIBLE);
     } else {
       holder.tvLight.setVisibility(View.GONE);
     }
-    holder.tvReply.setText(thread.replies);
-    holder.tvTitle.setText(Html.fromHtml(thread.title));
+    holder.tvReply.setText(thread.getReplies());
+    holder.tvTitle.setText(Html.fromHtml(thread.getTitle()));
     holder.tvSingleTime.setVisibility(View.VISIBLE);
     holder.tvSummary.setVisibility(View.GONE);
     holder.grid.setVisibility(View.GONE);
-    if (thread.forum != null) {
-      holder.tvSingleTime.setText(thread.forum.getName());
+    if (thread.getForum() != null) {
+      holder.tvSingleTime.setText(thread.getForum().getName());
     } else {
-      holder.tvSingleTime.setText(thread.time);
+      holder.tvSingleTime.setText(thread.getTime());
     }
     showItemAnim(holder.cardView, position);
   }
@@ -139,7 +139,7 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
     Thread thread;
 
     @OnClick(R.id.llThreadItem) void llThreadItemClick() {
-      ContentActivity.startActivity(mActivity, thread.fid, thread.tid, "", 1);
+      ContentActivity.startActivity(mActivity, thread.getFid(), thread.getTid(), "", 1);
     }
 
     public ViewHolder(View view) {

@@ -14,4 +14,6 @@ import dagger.Component;
 }) public interface ContentComponent extends ActivityComponent {
 
   void inject(ContentActivity activity);
+
+  void inject(ContentFragment mFragment);
 }

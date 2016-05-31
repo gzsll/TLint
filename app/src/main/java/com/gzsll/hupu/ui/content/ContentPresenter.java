@@ -54,7 +54,7 @@ import rx.functions.Action1;
   }
 
   private void loadContent(int page) {
-    mSubscription = mForumApi.getThreadInfo(tid, fid, page, pid)
+    mSubscription = mForumApi.getThreadSchemaInfo(tid, fid, page, pid)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<ThreadSchemaInfo>() {
           @Override public void call(ThreadSchemaInfo threadSchemaInfo) {
@@ -68,7 +68,7 @@ import rx.functions.Action1;
                     threadSchemaInfo.pageSize);
                 shareText = threadSchemaInfo.share.weibo;
                 title = threadSchemaInfo.share.wechat_moments;
-                mContentView.renderContent(threadSchemaInfo.url, urls);
+                mContentView.renderContent(currentPage, totalPage);
                 isCollected = threadSchemaInfo.isCollected == 1;
                 mContentView.isCollected(isCollected);
                 mContentView.hideLoading();
@@ -107,7 +107,6 @@ import rx.functions.Action1;
     if (currentPage >= totalPage) {
       currentPage = totalPage;
     }
-    mContentView.renderContent(urls.get(currentPage - 1), urls);
   }
 
   @Override public void onPagePre() {
@@ -115,12 +114,10 @@ import rx.functions.Action1;
     if (currentPage <= 1) {
       currentPage = 1;
     }
-    mContentView.renderContent(urls.get(currentPage - 1), urls);
   }
 
   @Override public void onPageSelected(int page) {
     currentPage = page;
-    mContentView.renderContent(urls.get(page - 1), urls);
   }
 
   @Override public void onCommendClick() {

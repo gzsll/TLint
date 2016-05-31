@@ -19,6 +19,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
@@ -28,8 +29,6 @@ import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.widget.PagePicker;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.VerticalViewPager;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
@@ -37,7 +36,8 @@ import org.apache.log4j.Logger;
  * Created by sll on 2016/3/9.
  */
 public class ContentActivity extends BaseSwipeBackActivity
-    implements ContentContract.View, PagePicker.OnJumpListener, ViewPager.OnPageChangeListener {
+    implements ContentContract.View, PagePicker.OnJumpListener, ViewPager.OnPageChangeListener,
+    HasComponent<ContentComponent> {
 
   private Logger logger = Logger.getLogger(ContentActivity.class.getSimpleName());
 
@@ -78,18 +78,18 @@ public class ContentActivity extends BaseSwipeBackActivity
   private PagePicker mPagePicker;
   private int totalPage;
   private MyAdapter mAdapter;
+  private ContentComponent mContentComponent;
 
   @Override public int initContentView() {
     return R.layout.activity_content;
   }
 
   @Override public void initInjector() {
-    DaggerContentComponent.builder()
+    mContentComponent = DaggerContentComponent.builder()
         .applicationComponent(getApplicationComponent())
         .activityModule(getActivityModule())
-        .contentModule(new ContentModule())
-        .build()
-        .inject(this);
+        .contentModule(new ContentModule()).build();
+    mContentComponent.inject(this);
   }
 
   @Override public void initUiAndListener() {
@@ -140,14 +140,14 @@ public class ContentActivity extends BaseSwipeBackActivity
     rlError.setVisibility(View.GONE);
   }
 
-  @Override public void renderContent(String url, List<String> urls) {
-    totalPage = urls.size();
+  @Override public void renderContent(int page, int totalPage) {
+    this.totalPage = totalPage;
     if (mAdapter == null) {
-      mAdapter = new MyAdapter(getFragmentManager(), urls);
+      mAdapter = new MyAdapter(getFragmentManager(), totalPage);
       viewPager.setAdapter(mAdapter);
     }
-    viewPager.setCurrentItem(urls.indexOf(url));
-    onUpdatePager(viewPager.getCurrentItem() + 1, totalPage);
+    viewPager.setCurrentItem(page - 1);
+    onUpdatePager(page, totalPage);
   }
 
   @Override
@@ -185,21 +185,25 @@ public class ContentActivity extends BaseSwipeBackActivity
 
   }
 
-  public static class MyAdapter extends FragmentPagerAdapter {
-    private List<String> urls = new ArrayList<>();
+  @Override public ContentComponent getComponent() {
+    return mContentComponent;
+  }
 
-    public MyAdapter(FragmentManager fm, List<String> urls) {
+  public class MyAdapter extends FragmentPagerAdapter {
+    private int totalPage;
+
+    public MyAdapter(FragmentManager fm, int totalPage) {
       super(fm);
-      this.urls = urls;
+      this.totalPage = totalPage;
       notifyDataSetChanged();
     }
 
     @Override public Fragment getItem(int position) {
-      return ContentFragment.newInstance(urls.get(position));
+      return ContentFragment.newInstance(fid, tid, pid, position + 1);
     }
 
     @Override public int getCount() {
-      return urls.size();
+      return totalPage;
     }
   }
 

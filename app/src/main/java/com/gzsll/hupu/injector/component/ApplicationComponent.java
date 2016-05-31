@@ -9,6 +9,9 @@ import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.ForumDao;
+import com.gzsll.hupu.db.ThreadDao;
+import com.gzsll.hupu.db.ThreadInfoDao;
+import com.gzsll.hupu.db.ThreadReplyDao;
 import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.injector.module.ApiModule;
 import com.gzsll.hupu.injector.module.ApplicationModule;
@@ -38,6 +41,12 @@ public interface ApplicationComponent {
   UserDao getUserDao();
 
   ForumDao getForumDao();
+
+  ThreadDao getThreadDao();
+
+  ThreadInfoDao getThreadInfoDao();
+
+  ThreadReplyDao getThreadReplyDao();
 
   OkHttpHelper getOkHttpHelper();
 
