@@ -78,10 +78,8 @@ import rx.subjects.PublishSubject;
   }
 
   @Override public void onThreadReceive(String type) {
-    mThreadListView.showContent();
     mThreadListView.showLoading();
     mThreadListView.onFloatingVisibility(View.VISIBLE);
-    getAttendStatus();
     this.type = type;
     loadType = TYPE_LIST;
     mRxThread.getThreadListObservable(Integer.valueOf(fid), mThreadSubject)
@@ -95,6 +93,7 @@ import rx.subjects.PublishSubject;
               }
               isFirst = false;
             } else {
+              mThreadListView.showContent();
               lastTid = threads.get(threads.size() - 1).getTid();
               mThreadListView.renderThreads(threads);
               mThreadListView.onRefreshCompleted();
@@ -102,7 +101,8 @@ import rx.subjects.PublishSubject;
             }
           }
         });
-    loadThreadList(lastTid);
+    loadThreadList("");
+    getAttendStatus();
   }
 
   @Override public void onStartSearch(String key, int page) {
@@ -125,6 +125,9 @@ import rx.subjects.PublishSubject;
               ThreadListResult data = threadListData.result;
               lastTamp = data.stamp;
               hasNextPage = data.nextPage;
+              if (TextUtils.isEmpty(last)) {
+                mThreadListView.onScrollToTop();
+              }
             }
           }
         }, new Action1<Throwable>() {
@@ -340,6 +343,7 @@ import rx.subjects.PublishSubject;
 
   @Override public void attachView(@NonNull ThreadListContract.View view) {
     mThreadListView = view;
+    mThreadListView.showProgress();
   }
 
   @Override public void detachView() {

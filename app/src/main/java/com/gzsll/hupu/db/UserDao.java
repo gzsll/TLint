@@ -153,7 +153,7 @@ public class UserDao extends AbstractDao<User, Long> {
     /** @inheritdoc */
     @Override public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     /** @inheritdoc */
     @Override public User readEntity(Cursor cursor, int offset) {
@@ -191,7 +191,7 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setPostUrl(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setNickNameUrl(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
     }
-
+    
     /** @inheritdoc */
     @Override protected Long updateKeyAfterInsert(User entity, long rowId) {
         entity.setId(rowId);

@@ -145,6 +145,10 @@ public class ThreadListFragment extends BaseFragment
     }, 150);
   }
 
+  @Override public void showProgress() {
+    showProgress(true);
+  }
+
   @Override public void showContent() {
     showContent(true);
   }

@@ -29,6 +29,8 @@ public interface ForumListContract {
 
     void onForumAttentionDelClick(Forum forum);
 
+    void onForumOfflineClick(Forum forum);
+
     void onForumClick(Forum forum);
   }
 }

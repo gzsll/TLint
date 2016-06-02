@@ -101,6 +101,10 @@ public class ForumListFragment extends BaseFragment
     mPresenter.onForumAttentionDelClick(forum);
   }
 
+  @Override public void onForumOfflineClick(Forum forum) {
+    mPresenter.onForumOfflineClick(forum);
+  }
+
   @Override public void onForumClick(Forum forum) {
     mPresenter.onForumClick(forum);
   }

@@ -7,6 +7,7 @@ import com.gzsll.hupu.bean.ThreadLightReplyData;
 import com.gzsll.hupu.bean.ThreadReplyData;
 import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
+import com.gzsll.hupu.util.HtmlUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,8 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(new Action1<ThreadInfo>() {
             @Override public void call(ThreadInfo threadInfo) {
+              String content = threadInfo.getContent();
+              threadInfo.setContent(HtmlUtils.transImgToLocal(content));
               mContentView.sendMessageToJS("addThreadInfo", threadInfo);
               loadLightReplies(tid, fid);
               loadReplies(tid, fid, page);

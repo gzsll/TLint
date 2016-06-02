@@ -1,5 +1,7 @@
 package com.gzsll.hupu.ui.forum;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import com.gzsll.hupu.api.forum.ForumApi;
@@ -13,6 +15,7 @@ import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.db.ForumDao;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.otto.DelForumAttentionEvent;
+import com.gzsll.hupu.service.OffLineService;
 import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import rx.subjects.PublishSubject;
   private ForumDao mForumDao;
   private ForumApi mForumApi;
   private Bus mBus;
+  private Context mContext;
 
   private ForumListContract.View mForumListView;
   private Subscription mSubscription;
@@ -40,10 +44,12 @@ import rx.subjects.PublishSubject;
   private boolean isFirst = true;
   private PublishSubject<List<Forum>> mSubject;
 
-  @Inject public ForumListPresenter(ForumDao mForumDao, ForumApi mForumApi, Bus mBus) {
+  @Inject
+  public ForumListPresenter(ForumDao mForumDao, ForumApi mForumApi, Bus mBus, Context mContext) {
     this.mForumDao = mForumDao;
     this.mForumApi = mForumApi;
     this.mBus = mBus;
+    this.mContext = mContext;
     mSubject = PublishSubject.create();
   }
 
@@ -83,6 +89,15 @@ import rx.subjects.PublishSubject;
             ToastUtils.showToast("取消关注失败，请重试");
           }
         });
+  }
+
+  @Override public void onForumOfflineClick(Forum forum) {
+    Intent intent = new Intent(mContext, OffLineService.class);
+    ArrayList<Forum> forums = new ArrayList<>();
+    forums.add(forum);
+    intent.putExtra(OffLineService.EXTRA_FORUMS, forums);
+    intent.setAction(OffLineService.START_DOWNLOAD);
+    mContext.startService(intent);
   }
 
   @Override public void onForumClick(Forum forum) {

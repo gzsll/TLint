@@ -13,6 +13,8 @@ public interface ThreadListContract {
   interface View extends BaseView {
     void showLoading();
 
+    void showProgress();
+
     void showContent();
 
     void renderThreadInfo(Forum forum);

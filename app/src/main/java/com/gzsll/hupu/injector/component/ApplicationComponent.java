@@ -1,5 +1,6 @@
 package com.gzsll.hupu.injector.component;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.api.forum.ForumApi;
@@ -53,6 +54,8 @@ public interface ApplicationComponent {
   RequestHelper getRequestHelper();
 
   UserStorage getUserStorage();
+
+  NotificationManager getNotificationManager();
 
   void inject(MyApplication mApplication);
 

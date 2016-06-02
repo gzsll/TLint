@@ -16,12 +16,16 @@ import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.component.DaggerApplicationComponent;
 import com.gzsll.hupu.injector.module.ApplicationModule;
+import com.gzsll.hupu.util.ConfigUtils;
+import com.gzsll.hupu.util.FileUtils;
+import com.gzsll.hupu.util.HtmlUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.squareup.leakcanary.LeakCanary;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
+import java.io.File;
 import java.util.List;
 import javax.inject.Inject;
 import okhttp3.OkHttpClient;
@@ -51,6 +55,7 @@ public class MyApplication extends Application {
     initFrescoConfig();
     ToastUtils.register(this);
     LeakCanary.install(this);
+    initAssertFile();
   }
 
   private void initComponent() {
@@ -117,5 +122,24 @@ public class MyApplication extends Application {
         .setDownsampleEnabled(true)
         .build();
     Fresco.initialize(this, config);
+  }
+
+  private void initAssertFile() {
+    new Thread(new Runnable() {
+      @Override public void run() {
+        copyAssertFile("hupu_thread.html");
+        copyAssertFile("hupu_thread.js");
+        copyAssertFile("jockey.js");
+        copyAssertFile("zepto.js");
+        HtmlUtils.getHtmlString(MyApplication.this);
+      }
+    }).start();
+  }
+
+  private void copyAssertFile(String fileName) {
+    File file = new File(ConfigUtils.getCachePath() + File.separator + fileName);
+    if (!file.exists()) {
+      FileUtils.copyAssets(this, fileName, ConfigUtils.getCachePath());
+    }
   }
 }

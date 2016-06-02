@@ -116,6 +116,12 @@
       </intent-filter>
     </service>
 
+    <service android:name=".service.OffLineService">
+      <intent-filter>
+        <action android:name="com.gzsll.hupu.action.START_DOWNLOAD"/>
+      </intent-filter>
+    </service>
+
   </application>
 
 </manifest>

@@ -122,7 +122,7 @@ public class ForumDao extends AbstractDao<Forum, Long> {
     /** @inheritdoc */
     @Override public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     /** @inheritdoc */
     @Override public Forum readEntity(Cursor cursor, int offset) {
@@ -152,7 +152,7 @@ public class ForumDao extends AbstractDao<Forum, Long> {
         entity.setCategoryName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setWeight(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
     }
-
+    
     /** @inheritdoc */
     @Override protected Long updateKeyAfterInsert(Forum entity, long rowId) {
         entity.setId(rowId);

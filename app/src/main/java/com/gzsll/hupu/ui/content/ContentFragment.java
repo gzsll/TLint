@@ -14,10 +14,14 @@ import butterknife.ButterKnife;
 import com.alibaba.fastjson.JSON;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
+import com.gzsll.hupu.bean.ImagePreview;
 import com.gzsll.hupu.components.jockeyjs.JockeyHandler;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.imagepreview.ImagePreviewActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
+import com.gzsll.hupu.util.ConfigUtils;
+import com.gzsll.hupu.util.HtmlUtils;
 import com.gzsll.hupu.widget.H5Callback;
 import com.gzsll.hupu.widget.JockeyJsWebView;
 import java.util.Map;
@@ -82,7 +86,8 @@ public class ContentFragment extends BaseFragment
   }
 
   @Override public void initData() {
-    webView.loadUrl("file:///android_asset/hupu_thread.html");
+    webView.loadDataWithBaseURL(String.format("file://%s", ConfigUtils.getCachePath()),
+        HtmlUtils.getHtmlString(getActivity()), "text/html", "utf-8", null);
   }
 
   @Override public void onReloadClicked() {
@@ -155,7 +160,9 @@ public class ContentFragment extends BaseFragment
   @Override public void setJockeyEvents() {
     webView.onJSEvent("showImg", new JockeyHandler() {
       @Override protected void doPerform(Map<Object, Object> payload) {
-        logger.debug("showImg:" + JSON.toJSON(payload));
+        ImagePreview preview = JSON.parseObject(JSON.toJSONString(payload), ImagePreview.class);
+        ImagePreviewActivity.startActivity(getActivity(), preview.imgs.get(preview.index),
+            preview.imgs);
       }
     });
     webView.onJSEvent("showUrl", new JockeyHandler() {

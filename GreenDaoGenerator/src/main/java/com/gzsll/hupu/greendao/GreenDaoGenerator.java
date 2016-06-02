@@ -74,6 +74,7 @@ public class GreenDaoGenerator {
     threadInfo.addStringProperty("forumName");
 
     Entity reply = schema.addEntity("ThreadReply");
+    reply.addStringProperty("tid");
     reply.addStringProperty("pid");
     reply.addStringProperty("puid");
     reply.addStringProperty("via");
@@ -92,7 +93,7 @@ public class GreenDaoGenerator {
     reply.addBooleanProperty("isLight");
     reply.addStringProperty("quoteHeader");
     reply.addStringProperty("quoteContent");
-    reply.addStringProperty("toggleContent");
+    reply.addStringProperty("quoteToggle");
 
     File f = new File(GREEN_DAO_CODE_PATH);
     if (!f.exists()) {
