@@ -1,4 +1,4 @@
-package com.gzsll.hupu.components.rx;
+package com.gzsll.hupu.data;
 
 import android.text.TextUtils;
 import com.gzsll.hupu.Constants;
@@ -8,6 +8,7 @@ import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.db.ThreadDao;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -16,14 +17,14 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 /**
- * Created by sll on 2016/5/30.
+ * Created by sll on 2016/6/3.
  */
-public class RxThread {
+@Singleton public class ThreadRepository {
 
   private ThreadDao mThreadDao;
   private ForumApi mForumApi;
 
-  @Inject public RxThread(ThreadDao mThreadDao, ForumApi mForumApi) {
+  @Inject public ThreadRepository(ThreadDao mThreadDao, ForumApi mForumApi) {
     this.mThreadDao = mThreadDao;
     this.mForumApi = mForumApi;
   }

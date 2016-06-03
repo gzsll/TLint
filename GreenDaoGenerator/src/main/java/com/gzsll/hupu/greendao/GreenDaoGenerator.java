@@ -94,6 +94,7 @@ public class GreenDaoGenerator {
     reply.addStringProperty("quoteHeader");
     reply.addStringProperty("quoteContent");
     reply.addStringProperty("quoteToggle");
+    reply.addIntProperty("pageIndex");
 
     File f = new File(GREEN_DAO_CODE_PATH);
     if (!f.exists()) {

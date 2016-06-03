@@ -81,7 +81,7 @@ public class SpecialThreadListFragment extends BaseFragment
         @Override public void run() {
           refreshLayout.setRefreshing(true);
         }
-      }, 150);
+      }, 5);
     }
   }
 

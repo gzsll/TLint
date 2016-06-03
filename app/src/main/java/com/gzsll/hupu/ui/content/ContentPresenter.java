@@ -10,8 +10,6 @@ import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.util.ShareUtils;
 import com.gzsll.hupu.util.ToastUtils;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,9 +30,8 @@ import rx.functions.Action1;
   private String tid;
   private String fid;
   private String pid;
-  private int totalPage;
+  private int totalPage = 1;
   private int currentPage = 1;
-  private List<String> urls = new ArrayList<>();
   private boolean isCollected;
   private String title;
   private String shareText;
@@ -64,8 +61,6 @@ import rx.functions.Action1;
               } else {
                 totalPage = threadSchemaInfo.pageSize;
                 currentPage = threadSchemaInfo.page;
-                urls = createPageList(threadSchemaInfo.url, threadSchemaInfo.page,
-                    threadSchemaInfo.pageSize);
                 shareText = threadSchemaInfo.share.weibo;
                 title = threadSchemaInfo.share.wechat_moments;
                 mContentView.renderContent(currentPage, totalPage);
@@ -79,18 +74,10 @@ import rx.functions.Action1;
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            mContentView.onError("加载失败");
+            mContentView.renderContent(currentPage, totalPage);
+            mContentView.hideLoading();
           }
         });
-  }
-
-  private List<String> createPageList(String url, int page, int pageSize) {
-    List<String> urls = new ArrayList<>();
-    for (int i = 1; i <= pageSize; i++) {
-      String newUrl = url.replace("page=" + page, "page=" + i);
-      urls.add(newUrl);
-    }
-    return urls;
   }
 
   @Override public void onReload() {

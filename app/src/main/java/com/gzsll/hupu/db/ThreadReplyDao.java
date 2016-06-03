@@ -56,6 +56,8 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
             new Property(18, String.class, "quoteContent", false, "QUOTE_CONTENT");
         public final static Property QuoteToggle =
             new Property(19, String.class, "quoteToggle", false, "QUOTE_TOGGLE");
+        public final static Property PageIndex =
+            new Property(20, Integer.class, "pageIndex", false, "PAGE_INDEX");
     }
 
     ;
@@ -92,7 +94,8 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
             "'IS_LIGHT' INTEGER," + // 16: isLight
             "'QUOTE_HEADER' TEXT," + // 17: quoteHeader
             "'QUOTE_CONTENT' TEXT," + // 18: quoteContent
-            "'QUOTE_TOGGLE' TEXT);"); // 19: quoteToggle
+            "'QUOTE_TOGGLE' TEXT," + // 19: quoteToggle
+            "'PAGE_INDEX' INTEGER);"); // 20: pageIndex
     }
 
     /** Drops the underlying database table. */
@@ -204,12 +207,17 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
         if (quoteToggle != null) {
             stmt.bindString(20, quoteToggle);
         }
+
+        Integer pageIndex = entity.getPageIndex();
+        if (pageIndex != null) {
+            stmt.bindLong(21, pageIndex);
+        }
     }
 
     /** @inheritdoc */
     @Override public Void readKey(Cursor cursor, int offset) {
         return null;
-    }
+    }    
 
     /** @inheritdoc */
     @Override public ThreadReply readEntity(Cursor cursor, int offset) {
@@ -233,7 +241,8 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
             cursor.isNull(offset + 16) ? null : cursor.getShort(offset + 16) != 0, // isLight
             cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // quoteHeader
             cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // quoteContent
-            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19) // quoteToggle
+            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // quoteToggle
+            cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20) // pageIndex
         );
         return entity;
     }
@@ -260,8 +269,9 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
         entity.setQuoteHeader(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
         entity.setQuoteContent(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
         entity.setQuoteToggle(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
+        entity.setPageIndex(cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20));
     }
-
+    
     /** @inheritdoc */
     @Override protected Void updateKeyAfterInsert(ThreadReply entity, long rowId) {
         // Unsupported or missing PK type

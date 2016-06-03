@@ -11,8 +11,8 @@ import com.gzsll.hupu.bean.SearchData;
 import com.gzsll.hupu.bean.SearchResult;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
-import com.gzsll.hupu.components.rx.RxThread;
 import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.data.ThreadRepository;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.db.ForumDao;
 import com.gzsll.hupu.db.Thread;
@@ -41,7 +41,7 @@ import rx.subjects.PublishSubject;
   private Logger logger = Logger.getLogger(ThreadListPresenter.class.getSimpleName());
 
   private String fid;
-  private RxThread mRxThread;
+  private ThreadRepository mThreadRepository;
   private GameApi mGameApi;
   private UserStorage mUserStorage;
   private ForumApi mForumApi;
@@ -66,10 +66,11 @@ import rx.subjects.PublishSubject;
 
   private Subscription mSubscription;
 
-  @Inject public ThreadListPresenter(String fid, RxThread mRxThread, GameApi mGameApi,
+  @Inject
+  public ThreadListPresenter(String fid, ThreadRepository mThreadRepository, GameApi mGameApi,
       UserStorage mUserStorage, ForumApi mForumApi, ForumDao mForumDao) {
     this.fid = fid;
-    this.mRxThread = mRxThread;
+    this.mThreadRepository = mThreadRepository;
     this.mGameApi = mGameApi;
     this.mUserStorage = mUserStorage;
     this.mForumApi = mForumApi;
@@ -82,7 +83,7 @@ import rx.subjects.PublishSubject;
     mThreadListView.onFloatingVisibility(View.VISIBLE);
     this.type = type;
     loadType = TYPE_LIST;
-    mRxThread.getThreadListObservable(Integer.valueOf(fid), mThreadSubject)
+    mThreadRepository.getThreadListObservable(Integer.valueOf(fid), mThreadSubject)
         .subscribe(new Action1<List<Thread>>() {
           @Override public void call(List<Thread> threads) {
             logger.debug("getThreadListObservable:" + threads.size());
@@ -118,7 +119,7 @@ import rx.subjects.PublishSubject;
   }
 
   private void loadThreadList(final String last) {
-    mSubscription = mRxThread.getThreadsList(fid, last, lastTamp, type, mThreadSubject)
+    mSubscription = mThreadRepository.getThreadsList(fid, last, lastTamp, type, mThreadSubject)
         .subscribe(new Action1<ThreadListData>() {
           @Override public void call(ThreadListData threadListData) {
             if (threadListData != null && threadListData.result != null) {

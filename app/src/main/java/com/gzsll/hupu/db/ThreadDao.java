@@ -128,7 +128,7 @@ public class ThreadDao extends AbstractDao<Thread, Void> {
     /** @inheritdoc */
     @Override public Void readKey(Cursor cursor, int offset) {
         return null;
-    }
+    }    
 
     /** @inheritdoc */
     @Override public Thread readEntity(Cursor cursor, int offset) {
@@ -160,7 +160,7 @@ public class ThreadDao extends AbstractDao<Thread, Void> {
         entity.setLightReply(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
         entity.setType(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
     }
-
+    
     /** @inheritdoc */
     @Override protected Void updateKeyAfterInsert(Thread entity, long rowId) {
         // Unsupported or missing PK type

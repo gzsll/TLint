@@ -3,8 +3,7 @@ package com.gzsll.hupu.ui.content;
 import android.support.annotation.NonNull;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
-import com.gzsll.hupu.bean.ThreadLightReplyData;
-import com.gzsll.hupu.bean.ThreadReplyData;
+import com.gzsll.hupu.data.ContentRepository;
 import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.util.HtmlUtils;
@@ -12,6 +11,7 @@ import com.gzsll.hupu.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.log4j.Logger;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -21,6 +21,10 @@ import rx.functions.Action1;
  */
 public class ContentPagerPresenter implements ContentPagerContract.Presenter {
 
+  private static final Logger logger =
+      Logger.getLogger(ContentPagerPresenter.class.getSimpleName());
+
+  private ContentRepository mContentRepository;
   private ForumApi mForumApi;
 
   private ContentPagerContract.View mContentView;
@@ -34,7 +38,8 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   private String fid;
   private String tid;
 
-  @Inject public ContentPagerPresenter(ForumApi mForumApi) {
+  @Inject public ContentPagerPresenter(ContentRepository mContentRepository, ForumApi mForumApi) {
+    this.mContentRepository = mContentRepository;
     this.mForumApi = mForumApi;
   }
 
@@ -43,12 +48,15 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
     this.fid = fid;
     this.tid = tid;
     if (page == 1) {
-      mInfoSubscription = mForumApi.getThreadInfo(tid, fid, page, pid)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Action1<ThreadInfo>() {
+      mInfoSubscription = mContentRepository.getThreadInfo(fid, tid)
+          .observeOn(AndroidSchedulers.mainThread()).doOnNext(new Action1<ThreadInfo>() {
             @Override public void call(ThreadInfo threadInfo) {
               String content = threadInfo.getContent();
               threadInfo.setContent(HtmlUtils.transImgToLocal(content));
+            }
+          }).subscribe(new Action1<ThreadInfo>() {
+            @Override public void call(ThreadInfo threadInfo) {
+              logger.debug("threadInfo:" + threadInfo.getFid());
               mContentView.sendMessageToJS("addThreadInfo", threadInfo);
               loadLightReplies(tid, fid);
               loadReplies(tid, fid, page);
@@ -56,7 +64,8 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
             }
           }, new Action1<Throwable>() {
             @Override public void call(Throwable throwable) {
-
+              throwable.printStackTrace();
+              mContentView.onError();
             }
           });
     } else {
@@ -124,8 +133,8 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
 
   public class AddLight {
 
-    private int light;
-    private String pid;
+    public int light;
+    public String pid;
 
     public AddLight(int light, String pid) {
       this.light = light;
@@ -134,19 +143,16 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   }
 
   private void loadLightReplies(String tid, String fid) {
-    mLightSubscription = mForumApi.getThreadLightReplyList(tid, fid)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<ThreadLightReplyData>() {
-          @Override public void call(ThreadLightReplyData threadLightReplyData) {
-            if (threadLightReplyData != null && threadLightReplyData.status == 200) {
-              lightReplies = threadLightReplyData.list;
-              if (threadLightReplyData.all_count > 0) {
-                mContentView.sendMessageToJS("addLightTitle", "\"这些回帖亮了\"");
-                for (int i = 0; i < threadLightReplyData.list.size(); i++) {
-                  ThreadReply reply = threadLightReplyData.list.get(i);
-                  reply.setIndex(i);
-                  mContentView.sendMessageToJS("addLightPost", reply);
-                }
+    mLightSubscription = mContentRepository.getLightReplies(fid, tid)
+        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<ThreadReply>>() {
+          @Override public void call(List<ThreadReply> threadReplies) {
+            lightReplies = threadReplies;
+            if (!threadReplies.isEmpty()) {
+              mContentView.sendMessageToJS("addLightTitle", "\"这些回帖亮了\"");
+              for (int i = 0; i < threadReplies.size(); i++) {
+                ThreadReply reply = threadReplies.get(i);
+                reply.setIndex(i);
+                mContentView.sendMessageToJS("addLightPost", reply);
               }
             }
           }
@@ -158,20 +164,17 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   }
 
   private void loadReplies(String tid, String fid, final int page) {
-    mReplySubscription = mForumApi.getThreadReplyList(tid, fid, page)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<ThreadReplyData>() {
-          @Override public void call(ThreadReplyData threadReplyData) {
-            if (threadReplyData != null && threadReplyData.status == 200) {
-              replies = threadReplyData.result.list;
-              if (page == 1) {
-                mContentView.sendMessageToJS("addReplyTitle", "\"全部回帖\"");
-              }
-              for (int i = 0; i < threadReplyData.result.list.size(); i++) {
-                ThreadReply reply = threadReplyData.result.list.get(i);
-                reply.setIndex(i);
-                mContentView.sendMessageToJS("addReply", reply);
-              }
+    mReplySubscription = mContentRepository.getReplies(fid, tid, page)
+        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<ThreadReply>>() {
+          @Override public void call(List<ThreadReply> threadReplies) {
+            replies = threadReplies;
+            if (page == 1) {
+              mContentView.sendMessageToJS("addReplyTitle", "\"全部回帖\"");
+            }
+            for (int i = 0; i < threadReplies.size(); i++) {
+              ThreadReply reply = threadReplies.get(i);
+              reply.setIndex(i);
+              mContentView.sendMessageToJS("addReply", reply);
             }
             mContentView.hideLoading();
           }

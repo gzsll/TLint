@@ -2,10 +2,9 @@ package com.gzsll.hupu.ui.thread.special;
 
 import android.support.annotation.NonNull;
 import com.gzsll.hupu.Constants;
-import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
-import com.gzsll.hupu.components.rx.RxThread;
+import com.gzsll.hupu.data.ThreadRepository;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.util.ToastUtils;
@@ -25,8 +24,8 @@ import rx.subjects.PublishSubject;
 @PerActivity public class ThreadRecommendPresenter implements SpecialThreadListContract.Presenter {
 
   Logger logger = Logger.getLogger(ThreadRecommendPresenter.class.getSimpleName());
-  private ForumApi mForumApi;
-  private RxThread mRxThread;
+
+  private ThreadRepository mThreadRepository;
 
   private PublishSubject<List<Thread>> mThreadSubject;
   private boolean isFirst = true;
@@ -38,15 +37,14 @@ import rx.subjects.PublishSubject;
   private String lastTamp = "";
   private boolean hasNextPage = true;
 
-  @Inject public ThreadRecommendPresenter(ForumApi mForumApi, RxThread mRxThread) {
-    this.mForumApi = mForumApi;
-    this.mRxThread = mRxThread;
+  @Inject public ThreadRecommendPresenter(ThreadRepository mThreadRepository) {
+    this.mThreadRepository = mThreadRepository;
     mThreadSubject = PublishSubject.create();
   }
 
   @Override public void onThreadReceive() {
     mSpecialView.hideLoading();
-    mRxThread.getThreadListObservable(Constants.TYPE_RECOMMEND, mThreadSubject)
+    mThreadRepository.getThreadListObservable(Constants.TYPE_RECOMMEND, mThreadSubject)
         .doOnSubscribe(new Action0() {
           @Override public void call() {
             mSpecialView.showLoading();
@@ -63,6 +61,7 @@ import rx.subjects.PublishSubject;
               }
               isFirst = false;
             } else {
+              mSpecialView.hideLoading();
               if (!threads.isEmpty()) {
                 lastTid = threads.get(threads.size() - 1).getTid();
               }
@@ -76,7 +75,7 @@ import rx.subjects.PublishSubject;
   }
 
   private void loadRecommendList() {
-    mSubscription = mRxThread.getRecommendThreadList(lastTid, lastTamp, mThreadSubject)
+    mSubscription = mThreadRepository.getRecommendThreadList(lastTid, lastTamp, mThreadSubject)
         .subscribe(new Action1<ThreadListData>() {
           @Override public void call(ThreadListData threadListData) {
             if (threadListData != null && threadListData.result != null) {
@@ -87,6 +86,7 @@ import rx.subjects.PublishSubject;
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
+            logger.debug("threads.size():" + threads.size());
             if (threads.isEmpty()) {
               mSpecialView.onError("数据加载失败，请重试");
             } else {

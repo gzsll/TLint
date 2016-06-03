@@ -191,7 +191,7 @@ public class ThreadInfoDao extends AbstractDao<ThreadInfo, Void> {
     /** @inheritdoc */
     @Override public Void readKey(Cursor cursor, int offset) {
         return null;
-    }
+    }    
 
     /** @inheritdoc */
     @Override public ThreadInfo readEntity(Cursor cursor, int offset) {
@@ -239,7 +239,7 @@ public class ThreadInfoDao extends AbstractDao<ThreadInfo, Void> {
         entity.setTotalPage(cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16));
         entity.setForumName(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
     }
-
+    
     /** @inheritdoc */
     @Override protected Void updateKeyAfterInsert(ThreadInfo entity, long rowId) {
         // Unsupported or missing PK type

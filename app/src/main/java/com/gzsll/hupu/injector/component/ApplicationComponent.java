@@ -9,6 +9,9 @@ import com.gzsll.hupu.api.login.CookieApi;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.data.ContentRepository;
+import com.gzsll.hupu.data.ForumRepository;
+import com.gzsll.hupu.data.ThreadRepository;
 import com.gzsll.hupu.db.ForumDao;
 import com.gzsll.hupu.db.ThreadDao;
 import com.gzsll.hupu.db.ThreadInfoDao;
@@ -17,6 +20,7 @@ import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.injector.module.ApiModule;
 import com.gzsll.hupu.injector.module.ApplicationModule;
 import com.gzsll.hupu.injector.module.DBModule;
+import com.gzsll.hupu.injector.module.RepositoryModule;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.widget.HuPuWebView;
 import com.squareup.otto.Bus;
@@ -26,8 +30,9 @@ import javax.inject.Singleton;
 /**
  * Created by sll on 2016/3/8.
  */
-@Singleton @Component(modules = { ApplicationModule.class, ApiModule.class, DBModule.class })
-public interface ApplicationComponent {
+@Singleton @Component(modules = {
+    ApplicationModule.class, ApiModule.class, DBModule.class, RepositoryModule.class
+}) public interface ApplicationComponent {
 
   Context getContext();
 
@@ -56,6 +61,12 @@ public interface ApplicationComponent {
   UserStorage getUserStorage();
 
   NotificationManager getNotificationManager();
+
+  ContentRepository getContentRepository();
+
+  ThreadRepository getThreadRepository();
+
+  ForumRepository getForumRepository();
 
   void inject(MyApplication mApplication);
 

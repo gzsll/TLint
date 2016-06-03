@@ -189,7 +189,7 @@ public class ForumApi {
       params.put("pid", pid);
     }
 
-    return mForumService.getThreadInfo(params).subscribeOn(Schedulers.io());
+    return mForumService.getThreadInfo(params);
   }
 
   public Observable<ThreadReplyData> getThreadReplyList(String tid, String fid, int page) {
@@ -201,7 +201,7 @@ public class ForumApi {
       params.put("fid", fid);
     }
     params.put("page", page + "");
-    return mForumService.getsThreadReplyList(params).subscribeOn(Schedulers.io());
+    return mForumService.getsThreadReplyList(params);
   }
 
   public Observable<ThreadLightReplyData> getThreadLightReplyList(String tid, String fid) {
@@ -212,7 +212,7 @@ public class ForumApi {
     if (!TextUtils.isEmpty(fid)) {
       params.put("fid", fid);
     }
-    return mForumService.getThreadLightReplyList(params).subscribeOn(Schedulers.io());
+    return mForumService.getThreadLightReplyList(params);
   }
 
   public Observable<BaseData> addLight(String tid, String fid, String pid) {
