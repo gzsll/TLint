@@ -9,14 +9,18 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.gzsll.hupu.components.jockeyjs.Jockey;
 import com.gzsll.hupu.components.jockeyjs.JockeyAsyncHandler;
 import com.gzsll.hupu.components.jockeyjs.JockeyCallback;
 import com.gzsll.hupu.components.jockeyjs.JockeyHandler;
 import com.gzsll.hupu.components.jockeyjs.JockeyImpl;
+import com.gzsll.hupu.util.NetWorkUtils;
+
+import org.apache.log4j.Logger;
+
 import java.net.URI;
 import java.util.Map;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2015/6/17.
@@ -56,6 +60,7 @@ public class JockeyJsWebView extends WebView {
     settings.setAppCacheEnabled(true);
     settings.setLoadWithOverviewMode(true);
     settings.setDomStorageEnabled(true);
+    settings.setCacheMode(NetWorkUtils.isNetworkConnected(getContext()) ? WebSettings.LOAD_DEFAULT : WebSettings.LOAD_CACHE_ELSE_NETWORK);
     settings.setCacheMode(2);
     if (Build.VERSION.SDK_INT > 11) {
       setLayerType(0, null);

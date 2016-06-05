@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.MenuItem;
+
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
@@ -18,14 +19,18 @@ import com.gzsll.hupu.otto.LoginSuccessEvent;
 import com.gzsll.hupu.otto.MessageReadEvent;
 import com.gzsll.hupu.ui.browser.BrowserFragment;
 import com.gzsll.hupu.ui.forum.ForumListFragment;
-import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
+import com.gzsll.hupu.ui.thread.collect.CollectThreadListFragment;
+import com.gzsll.hupu.ui.thread.recommend.RecommendThreadListFragment;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.gzsll.hupu.util.UpdateAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -142,7 +147,7 @@ import rx.schedulers.Schedulers;
         if (id == R.id.nav_collect) {
           if (isLogin()) {
             mFragment =
-                SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_COLLECT);
+                    new CollectThreadListFragment();
           } else {
             toLogin();
           }
@@ -154,7 +159,7 @@ import rx.schedulers.Schedulers;
           }
         } else if (id == R.id.nav_recommend) {
           mFragment =
-              SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_RECOMMEND);
+                  new RecommendThreadListFragment();
         } else {
           if (isLogin() || id != R.id.nav_my) {
             mFragment = ForumListFragment.newInstance(Constants.mNavMap.get(id));

@@ -14,6 +14,10 @@ public interface ContentContract {
 
     void renderContent(int page, int totalPage);
 
+    void onUpdatePager(int page, int totalPage);
+
+    void setCurrentItem(int index);
+
     void isCollected(boolean isCollected);
 
     void onError(String error);

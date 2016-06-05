@@ -3,6 +3,7 @@ package com.gzsll.hupu.ui.forum;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+
 import com.gzsll.hupu.data.ForumRepository;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.injector.PerActivity;
@@ -10,9 +11,12 @@ import com.gzsll.hupu.otto.DelForumAttentionEvent;
 import com.gzsll.hupu.service.OffLineService;
 import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -49,7 +53,7 @@ import rx.functions.Action1;
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-
+            throwable.printStackTrace();
           }
         });
   }

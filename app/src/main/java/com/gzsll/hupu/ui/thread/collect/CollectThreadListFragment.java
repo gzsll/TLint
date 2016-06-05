@@ -1,11 +1,10 @@
-package com.gzsll.hupu.ui.thread.special;
+package com.gzsll.hupu.ui.thread.collect;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-import butterknife.Bind;
-import butterknife.ButterKnife;
+
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.BaseFragment;
@@ -13,38 +12,30 @@ import com.gzsll.hupu.ui.main.MainComponent;
 import com.gzsll.hupu.ui.thread.ThreadListAdapter;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by sll on 2016/5/11.
  */
-public class SpecialThreadListFragment extends BaseFragment
-    implements SpecialThreadListContract.View, PullToRefreshView.OnRefreshListener,
+public class CollectThreadListFragment extends BaseFragment
+        implements CollectThreadListContract.View, PullToRefreshView.OnRefreshListener,
     LoadMoreRecyclerView.LoadMoreListener {
 
-  public static final int TYPE_RECOMMEND = 1;
-  public static final int TYPE_COLLECT = 2;
-
-  public static SpecialThreadListFragment newInstance(int type) {
-    SpecialThreadListFragment mFragment = new SpecialThreadListFragment();
-    Bundle bundle = new Bundle();
-    bundle.putInt("type", type);
-    mFragment.setArguments(bundle);
-    return mFragment;
-  }
 
   @Inject ThreadListAdapter mAdapter;
   @Inject Activity mActivity;
-  @Inject ThreadRecommendPresenter mRecommendPresenter;
   @Inject ThreadCollectPresenter mCollectPresenter;
 
-  private SpecialThreadListContract.Presenter mPresenter;
 
   @Bind(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
   @Bind(R.id.refreshLayout) PullToRefreshView refreshLayout;
 
-  private int type;
 
   @Override public void initInjector() {
     getComponent(MainComponent.class).inject(this);
@@ -55,13 +46,12 @@ public class SpecialThreadListFragment extends BaseFragment
   }
 
   @Override public void getBundle(Bundle bundle) {
-    type = bundle.getInt("type");
-    mPresenter = (type == TYPE_COLLECT) ? mCollectPresenter : mRecommendPresenter;
+
   }
 
   @Override public void initUI(View view) {
     ButterKnife.bind(this, view);
-    mPresenter.attachView(this);
+    mCollectPresenter.attachView(this);
     refreshLayout.setOnRefreshListener(this);
     LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity.getApplicationContext());
     recyclerView.setLayoutManager(layoutManager);
@@ -70,19 +60,11 @@ public class SpecialThreadListFragment extends BaseFragment
   }
 
   @Override public void initData() {
-    mPresenter.onThreadReceive();
+    mCollectPresenter.onThreadReceive();
   }
 
   @Override public void showLoading() {
-    if (type == TYPE_COLLECT) {
       showProgress(true);
-    } else {
-      refreshLayout.postDelayed(new Runnable() {
-        @Override public void run() {
-          refreshLayout.setRefreshing(true);
-        }
-      }, 5);
-    }
   }
 
   @Override public void hideLoading() {
@@ -99,7 +81,7 @@ public class SpecialThreadListFragment extends BaseFragment
   }
 
   @Override public void onEmpty() {
-    setEmptyText(type == TYPE_COLLECT ? "没有收藏的帖子" : "没有推荐帖子");
+    setEmptyText("没有收藏的帖子");
     showEmpty(true);
   }
 
@@ -112,19 +94,19 @@ public class SpecialThreadListFragment extends BaseFragment
   }
 
   @Override public void onRefresh() {
-    mPresenter.onRefresh();
+    mCollectPresenter.onRefresh();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    mPresenter.detachView();
+    mCollectPresenter.detachView();
   }
 
   @Override public void onReloadClicked() {
-    mPresenter.onReload();
+    mCollectPresenter.onReload();
   }
 
   @Override public void onLoadMore() {
-    mPresenter.onLoadMore();
+    mCollectPresenter.onLoadMore();
   }
 }

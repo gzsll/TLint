@@ -2,6 +2,7 @@ package com.gzsll.hupu;
 
 import android.app.Application;
 import android.os.Environment;
+
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
@@ -24,12 +25,15 @@ import com.gzsll.hupu.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.squareup.leakcanary.LeakCanary;
-import de.mindpipe.android.logging.log4j.LogConfigurator;
-import java.io.File;
-import java.util.List;
-import javax.inject.Inject;
-import okhttp3.OkHttpClient;
+
 import org.apache.log4j.Level;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import de.mindpipe.android.logging.log4j.LogConfigurator;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by sll on 2016/3/8.
@@ -137,9 +141,6 @@ public class MyApplication extends Application {
   }
 
   private void copyAssertFile(String fileName) {
-    File file = new File(ConfigUtils.getCachePath() + File.separator + fileName);
-    if (!file.exists()) {
       FileUtils.copyAssets(this, fileName, ConfigUtils.getCachePath());
-    }
   }
 }

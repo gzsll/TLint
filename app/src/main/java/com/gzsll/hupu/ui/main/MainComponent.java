@@ -4,7 +4,9 @@ import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.module.ActivityModule;
 import com.gzsll.hupu.ui.forum.ForumListFragment;
-import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
+import com.gzsll.hupu.ui.thread.collect.CollectThreadListFragment;
+import com.gzsll.hupu.ui.thread.recommend.RecommendThreadListFragment;
+
 import dagger.Component;
 
 /**
@@ -16,7 +18,9 @@ import dagger.Component;
 
   void inject(MainActivity activity);
 
-  void inject(SpecialThreadListFragment fragment);
+  void inject(CollectThreadListFragment fragment);
+
+  void inject(RecommendThreadListFragment fragment);
 
   void inject(ForumListFragment fragment);
 }

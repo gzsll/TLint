@@ -41,12 +41,12 @@ var addLightTitle = function(title) {
 var addLightPost = function(replyEntity) {
     var author = "";
     var quoteContent = "";
-    if (replyEntity.quote && $.isArray(replyEntity.quote) && replyEntity.quote.length > 0) {
-        quoteContent = "<div class=\"reply-quote-content\">" + " <div class=\"reply-quote-hd\">" + replyEntity.quote[0].header[0] + "</div>";
-        if (replyEntity.quote[0].togglecontent) {
-            quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quote[0].togglecontent + "</div>" + "<div class=\"reply-quote-bd J_allContent\">" + replyEntity.quote[0].content + "</div>" + "<div class=\"button-open-inner\">" + "<a class=\"button-open J_buttonOpenAll\" title=\"展开\">显示全部 <s class=\"arrow\"></s></a> </div>";
+    if (replyEntity.quoteContent) {
+        quoteContent = "<div class=\"reply-quote-content\">" + " <div class=\"reply-quote-hd\">" + replyEntity.quoteHeader + "</div>";
+        if (replyEntity.quoteToggle) {
+            quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quoteToggle + "</div>" + "<div class=\"reply-quote-bd J_allContent\">" + replyEntity.quoteContent + "</div>" + "<div class=\"button-open-inner\">" + "<a class=\"button-open J_buttonOpenAll\" title=\"展开\">显示全部 <s class=\"arrow\"></s></a> </div>";
         } else {
-            quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quote[0].content + "</div>";
+            quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quoteContent + "</div>";
         }
         quoteContent = quoteContent + " </div>"
     }
@@ -61,15 +61,15 @@ var addReplyTitle = function(title) {
 var addReply = function(replyEntity) {
     var author = "";
     var quoteContent = "";
-    if (replyEntity.quote && $.isArray(replyEntity.quote) && replyEntity.quote.length > 0) {
-        quoteContent = "<div class=\"reply-quote-content\">" + " <div class=\"reply-quote-hd\">" + replyEntity.quote[0].header[0] + "</div>";
-        if (replyEntity.quote[0].togglecontent) {
-            quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quote[0].togglecontent + "</div>" + "<div class=\"reply-quote-bd J_allContent\">" + replyEntity.quote[0].content + "</div>" + "<div class=\"button-open-inner\">" + "<a class=\"button-open J_buttonOpenAll\" title=\"展开\">显示全部 <s class=\"arrow\"></s></a> </div>";
-        } else {
-            quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quote[0].content + "</div>";
+     if (replyEntity.quoteContent) {
+            quoteContent = "<div class=\"reply-quote-content\">" + " <div class=\"reply-quote-hd\">" + replyEntity.quoteHeader + "</div>";
+            if (replyEntity.quoteToggle) {
+                quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quoteToggle + "</div>" + "<div class=\"reply-quote-bd J_allContent\">" + replyEntity.quoteContent + "</div>" + "<div class=\"button-open-inner\">" + "<a class=\"button-open J_buttonOpenAll\" title=\"展开\">显示全部 <s class=\"arrow\"></s></a> </div>";
+            } else {
+                quoteContent = quoteContent + "<div class=\"short-quote-content\">" + replyEntity.quoteContent + "</div>";
+            }
+            quoteContent = quoteContent + " </div>"
         }
-        quoteContent = quoteContent + " </div>"
-    }
     var content = "<div class=\"reply-inner\">" + "<dl class=\"reply-list\" data-pid=\"" + replyEntity.pid + "\" data-uid=\"" + replyEntity.puid + "\" data-area=\"1\" data-index=\"" + replyEntity.floor + "\">" + "<dd class=\"operations-user\">" + "<a href=\"kanqiu://people/" + replyEntity.puid + "\" class=\"user-avatar\" >" + "<img src=\"" + replyEntity.userImg + "\" alt=\"" + replyEntity.userName + "\">" + "<span class=\"mod-mask mask\"></span>" + "</a>" + "<div class=\"user-info\">" + "<div class=\"user-name clearfix\">" + "<span class=\"fl ellipsis\"><a href=\"kanqiu://people/" + replyEntity.puid + "\" target=\"_blank\"><font color=\"#326ca6\">" + replyEntity.userName + "</font></a></span>" + author + "</div>" + "<div class=\"source-left\">" + "<span class=\"floor\">" + replyEntity.floor + "楼</span>" + " " + "<span class=\"postdate\">" + replyEntity.time + "</span>" + "</div>" + "</div>" + "<span  class=\"reply-light\" id=\"hupu_" + replyEntity.pid + "_1\">亮了(" + replyEntity.light_count + ")</span>" + "</dd>" + "<dt class=\"reply-content\">" + quoteContent + "<div class=\"current-content\">" + "<span class=\"short-content\">" + replyEntity.content + "</span>" + "</div>" + "</dt>" + "</dl>" + "</div>";
     var html = $('#general-reply').html();
     $('#general-reply').html(html + "" + content);

@@ -3,14 +3,20 @@ package com.gzsll.hupu.ui.content;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.otto.UpdateContentPageEvent;
 import com.gzsll.hupu.util.ShareUtils;
 import com.gzsll.hupu.util.ToastUtils;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import javax.inject.Inject;
+
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -23,6 +29,7 @@ import rx.functions.Action1;
   private ForumApi mForumApi;
   private Context mContext;
   private UserStorage mUserStorage;
+  private Bus mBus;
 
   private ContentContract.View mContentView;
   private Subscription mSubscription;
@@ -35,11 +42,14 @@ import rx.functions.Action1;
   private boolean isCollected;
   private String title;
   private String shareText;
+  private boolean isSuccess;
 
-  @Inject public ContentPresenter(ForumApi forumApi, Context context, UserStorage userStorage) {
+  @Inject
+  public ContentPresenter(ForumApi forumApi, Context context, UserStorage userStorage, Bus mBus) {
     mForumApi = forumApi;
     mContext = context;
     mUserStorage = userStorage;
+    this.mBus = mBus;
   }
 
   @Override public void onThreadInfoReceive(String tid, String fid, String pid, int page) {
@@ -67,6 +77,7 @@ import rx.functions.Action1;
                 isCollected = threadSchemaInfo.isCollected == 1;
                 mContentView.isCollected(isCollected);
                 mContentView.hideLoading();
+                isSuccess = true;
               }
             } else {
               mContentView.onError("加载失败");
@@ -94,6 +105,7 @@ import rx.functions.Action1;
     if (currentPage >= totalPage) {
       currentPage = totalPage;
     }
+    mContentView.setCurrentItem(currentPage - 1);
   }
 
   @Override public void onPagePre() {
@@ -101,10 +113,12 @@ import rx.functions.Action1;
     if (currentPage <= 1) {
       currentPage = 1;
     }
+    mContentView.setCurrentItem(currentPage - 1);
   }
 
   @Override public void onPageSelected(int page) {
     currentPage = page;
+    mContentView.setCurrentItem(currentPage - 1);
   }
 
   @Override public void onCommendClick() {
@@ -149,6 +163,7 @@ import rx.functions.Action1;
 
   public void updatePage(int page) {
     currentPage = page;
+    mContentView.onUpdatePager(currentPage, totalPage);
   }
 
   private void addCollect() {
@@ -189,12 +204,24 @@ import rx.functions.Action1;
 
   @Override public void attachView(@NonNull ContentContract.View view) {
     mContentView = view;
+    mBus.register(this);
   }
 
   @Override public void detachView() {
     if (mSubscription != null && !mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
+    mBus.unregister(this);
     mContentView = null;
+  }
+
+  @Subscribe
+  public void onUpdateContentPageEvent(UpdateContentPageEvent event) {
+    if (!isSuccess) {
+      currentPage = event.getPage();
+      totalPage = event.getTotalPage();
+      mContentView.renderContent(currentPage, totalPage);
+      isSuccess = true;
+    }
   }
 }
