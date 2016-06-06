@@ -12,7 +12,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.gzsll.hupu.Constants;
@@ -27,14 +29,8 @@ import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.widget.PagePicker;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.VerticalViewPager;
-
-import org.apache.log4j.Logger;
-
 import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/9.
@@ -90,8 +86,7 @@ public class ContentActivity extends BaseSwipeBackActivity
   @Override public void initInjector() {
     mContentComponent = DaggerContentComponent.builder()
         .applicationComponent(getApplicationComponent())
-        .activityModule(getActivityModule())
-        .contentModule(new ContentModule()).build();
+        .activityModule(getActivityModule()).contentModule(new ContentModule()).build();
     mContentComponent.inject(this);
   }
 
@@ -144,14 +139,13 @@ public class ContentActivity extends BaseSwipeBackActivity
   }
 
   @Override public void renderContent(int page, int totalPage) {
-      mAdapter = new MyAdapter(getFragmentManager(), totalPage);
-      viewPager.setAdapter(mAdapter);
+    mAdapter = new MyAdapter(getFragmentManager(), totalPage);
+    viewPager.setAdapter(mAdapter);
     viewPager.setCurrentItem(page - 1);
     onUpdatePager(page, totalPage);
   }
 
-  @Override
-  public void setCurrentItem(int index) {
+  @Override public void setCurrentItem(int index) {
     viewPager.setCurrentItem(index);
   }
 
@@ -163,8 +157,7 @@ public class ContentActivity extends BaseSwipeBackActivity
     mPresenter.updatePage(position + 1);
   }
 
-  @Override
-  public void onUpdatePager(int page, int totalPage) {
+  @Override public void onUpdatePager(int page, int totalPage) {
     mPagePicker.setMin(1);
     mPagePicker.setMax(totalPage);
     mPagePicker.setValue(page);

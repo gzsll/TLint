@@ -6,7 +6,7 @@ import com.gzsll.hupu.db.ThreadInfoDao;
 import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.db.ThreadReplyDao;
 import java.util.List;
-import javax.inject.Singleton;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
@@ -14,11 +14,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/6/3.
  */
-@Singleton public class ContentLocalDataSource implements ContentDataSource {
+public class ContentLocalDataSource implements ContentDataSource {
 
   private final ThreadInfoDao mThreadInfoDao;
   private final ThreadReplyDao mThreadReplyDao;
 
+  @Inject
   public ContentLocalDataSource(ThreadInfoDao mThreadInfoDao, ThreadReplyDao mThreadReplyDao) {
     this.mThreadInfoDao = mThreadInfoDao;
     this.mThreadReplyDao = mThreadReplyDao;
@@ -31,6 +32,8 @@ import rx.schedulers.Schedulers;
             mThreadInfoDao.queryBuilder().where(ThreadInfoDao.Properties.Tid.eq(tid)).list();
         if (!threadInfos.isEmpty()) {
           subscriber.onNext(threadInfos.get(0));
+        } else {
+          subscriber.onNext(null);
         }
         subscriber.onCompleted();
       }

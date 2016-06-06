@@ -1,19 +1,14 @@
 package com.gzsll.hupu.data;
 
 import android.text.TextUtils;
-
 import com.gzsll.hupu.bean.ThreadReplyQuote;
 import com.gzsll.hupu.data.local.ContentLocalDataSource;
 import com.gzsll.hupu.data.remote.ContentRemoteDataSource;
 import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.util.HtmlUtils;
-
 import java.util.List;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -21,7 +16,7 @@ import rx.functions.Func1;
 /**
  * Created by sll on 2016/6/3.
  */
-@Singleton public class ContentRepository implements ContentDataSource {
+public class ContentRepository implements ContentDataSource {
 
   private final ContentRemoteDataSource mContentRemoteDataSource;
   private final ContentLocalDataSource mContentLocalDataSource;
@@ -40,9 +35,9 @@ import rx.functions.Func1;
       @Override public void call(ThreadInfo threadInfo) {
         if (threadInfo != null) {
           threadInfo.setForumName(threadInfo.getForum().getName());
-            String content = threadInfo.getContent();
-            threadInfo.setContent(HtmlUtils.transImgToLocal(content));
           mContentLocalDataSource.saveThreadInfo(threadInfo);
+          String content = threadInfo.getContent();
+          threadInfo.setContent(HtmlUtils.transImgToLocal(content));
         }
       }
     });
@@ -59,19 +54,18 @@ import rx.functions.Func1;
     Observable<List<ThreadReply>> local = mContentLocalDataSource.getReplies(fid, tid, page);
 
     Observable<List<ThreadReply>> remoteWithLocalUpdate =
-            remote.doOnNext(new Action1<List<ThreadReply>>() {
-                @Override
-                public void call(List<ThreadReply> threadReplies) {
-                    if (threadReplies != null) {
-                        for (ThreadReply reply : threadReplies) {
-                            reply.setTid(tid);
-                            reply.setIsLight(false);
-                            reply.setPageIndex(page);
-                            saveReply(reply);
-                        }
-                    }
-                }
-            });
+        remote.doOnNext(new Action1<List<ThreadReply>>() {
+          @Override public void call(List<ThreadReply> threadReplies) {
+            if (threadReplies != null) {
+              for (ThreadReply reply : threadReplies) {
+                reply.setTid(tid);
+                reply.setIsLight(false);
+                reply.setPageIndex(page);
+                saveReply(reply);
+              }
+            }
+          }
+        });
 
     return Observable.concat(remoteWithLocalUpdate, local)
         .first(new Func1<List<ThreadReply>, Boolean>() {
@@ -86,18 +80,18 @@ import rx.functions.Func1;
     Observable<List<ThreadReply>> local = mContentLocalDataSource.getLightReplies(fid, tid);
 
     Observable<List<ThreadReply>> remoteWithLocalUpdate =
-            remote.doOnNext(new Action1<List<ThreadReply>>() {
-                @Override
-                public void call(List<ThreadReply> threadReplies) {
-                    if (threadReplies != null) {
-                        for (ThreadReply reply : threadReplies) {
-                            reply.setTid(tid);
-                            reply.setIsLight(true);
-                            saveReply(reply);
-                        }
-                    }
+        remote.doOnNext(new Action1<List<ThreadReply>>() {
+          @Override public void call(List<ThreadReply> threadReplies) {
+            if (threadReplies != null) {
+              for (ThreadReply reply : threadReplies) {
+                reply.setTid(tid);
+
+                reply.setIsLight(true);
+                saveReply(reply);
+              }
+            }
           }
-            });
+        });
     return Observable.concat(remoteWithLocalUpdate, local)
         .first(new Func1<List<ThreadReply>, Boolean>() {
           @Override public Boolean call(List<ThreadReply> threadReplies) {
@@ -113,10 +107,10 @@ import rx.functions.Func1;
       if (!TextUtils.isEmpty(quote.togglecontent)) {
         reply.setQuoteToggle(quote.togglecontent);
       }
-        reply.setQuoteContent(HtmlUtils.transImgToLocal(quote.content));
+      reply.setQuoteContent(HtmlUtils.transImgToLocal(quote.content));
     }
-      String content = reply.getContent();
-      reply.setContent(HtmlUtils.transImgToLocal(content));
     mContentLocalDataSource.saveThreadReply(reply);
+    String content = reply.getContent();
+    reply.setContent(HtmlUtils.transImgToLocal(content));
   }
 }

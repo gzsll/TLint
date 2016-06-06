@@ -8,7 +8,6 @@ import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.db.ThreadDao;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -19,7 +18,7 @@ import rx.subjects.PublishSubject;
 /**
  * Created by sll on 2016/6/3.
  */
-@Singleton public class ThreadRepository {
+public class ThreadRepository {
 
   private ThreadDao mThreadDao;
   private ForumApi mForumApi;

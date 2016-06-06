@@ -1,11 +1,8 @@
 package com.gzsll.hupu.ui.content;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.ConsoleMessage;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -69,7 +66,6 @@ public class ContentFragment extends BaseFragment
     fid = bundle.getString("fid");
     pid = bundle.getString("pid");
     page = bundle.getInt("page");
-    logger.debug("page:" + page);
   }
 
   @Override public void initUI(View view) {
@@ -77,12 +73,7 @@ public class ContentFragment extends BaseFragment
     mContentPresenter.attachView(this);
     webView.setCallback(this);
     webView.initJockey();
-    webView.setWebChromeClient(new WebChromeClient() {
-      @Override public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-        logger.debug("consoleMessage:" + consoleMessage.message());
-        return super.onConsoleMessage(consoleMessage);
-      }
-    });
+    webView.setOnScrollChangedCallback(this);
   }
 
   @Override public void initData() {
@@ -101,18 +92,6 @@ public class ContentFragment extends BaseFragment
         activity.setFloatingMenuVisibility(dy < 0);
       }
     }
-  }
-
-  @Override public void onDestroyView() {
-    if (webView != null) {
-      if (Build.VERSION.SDK_INT > 17) {
-        String str = "about:blank";
-        webView.loadUrl(str);
-      } else {
-        webView.clearView();
-      }
-    }
-    super.onDestroyView();
   }
 
   @Override public void showLoading() {
@@ -145,6 +124,7 @@ public class ContentFragment extends BaseFragment
   }
 
   @Override public void onPageFinished(WebView webView, String str) {
+    logger.debug("onPageFinished:" + page);
     mContentPresenter.onThreadInfoReceive(tid, fid, pid, page);
   }
 
@@ -205,6 +185,9 @@ public class ContentFragment extends BaseFragment
 
   @Override public void onDestroy() {
     super.onDestroy();
+    if (webView != null) {
+      webView.destroy();
+    }
     mContentPresenter.detachView();
   }
 }

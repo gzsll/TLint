@@ -3,20 +3,16 @@ package com.gzsll.hupu.ui.content;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.otto.UpdateContentPageEvent;
 import com.gzsll.hupu.util.ShareUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
 import javax.inject.Inject;
-
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -24,7 +20,7 @@ import rx.functions.Action1;
 /**
  * Created by sll on 2016/3/9.
  */
-@PerActivity public class ContentPresenter implements ContentContract.Presenter {
+public class ContentPresenter implements ContentContract.Presenter {
 
   private ForumApi mForumApi;
   private Context mContext;

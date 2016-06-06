@@ -7,7 +7,7 @@ import com.gzsll.hupu.data.ContentDataSource;
 import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
 import java.util.List;
-import javax.inject.Singleton;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -15,10 +15,11 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sll on 2016/6/3.
  */
-@Singleton public class ContentRemoteDataSource implements ContentDataSource {
+public class ContentRemoteDataSource implements ContentDataSource {
 
   private final ForumApi mForumApi;
 
+  @Inject
   public ContentRemoteDataSource(ForumApi mForumApi) {
     this.mForumApi = mForumApi;
   }

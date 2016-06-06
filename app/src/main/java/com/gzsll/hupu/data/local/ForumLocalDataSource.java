@@ -3,9 +3,8 @@ package com.gzsll.hupu.data.local;
 import com.gzsll.hupu.data.ForumDataSource;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.db.ForumDao;
-
 import java.util.List;
-
+import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
@@ -16,7 +15,7 @@ import rx.schedulers.Schedulers;
 public class ForumLocalDataSource implements ForumDataSource {
   private final ForumDao mForumDao;
 
-  public ForumLocalDataSource(ForumDao mForumDao) {
+  @Inject public ForumLocalDataSource(ForumDao mForumDao) {
     this.mForumDao = mForumDao;
   }
 
@@ -33,7 +32,8 @@ public class ForumLocalDataSource implements ForumDataSource {
 
   public void saveForum(Forum forum) {
     mForumDao.queryBuilder()
-            .where(ForumDao.Properties.ForumId.eq(forum.getForumId()), ForumDao.Properties.Fid.eq(forum.getFid()))
+        .where(ForumDao.Properties.ForumId.eq(forum.getForumId()),
+            ForumDao.Properties.Fid.eq(forum.getFid()))
         .buildDelete()
         .executeDeleteWithoutDetachingEntities();
     mForumDao.insert(forum);

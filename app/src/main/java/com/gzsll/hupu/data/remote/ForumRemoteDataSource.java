@@ -10,6 +10,7 @@ import com.gzsll.hupu.data.ForumDataSource;
 import com.gzsll.hupu.db.Forum;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -20,6 +21,7 @@ public class ForumRemoteDataSource implements ForumDataSource {
 
   private final ForumApi mForumApi;
 
+  @Inject
   public ForumRemoteDataSource(ForumApi mForumApi) {
     this.mForumApi = mForumApi;
   }

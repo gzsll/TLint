@@ -129,8 +129,10 @@ public abstract class JockeyImpl implements Jockey {
   }
 
   @SuppressLint("SetJavaScriptEnabled") @Override public void configure(WebView webView) {
-    webView.getSettings().setJavaScriptEnabled(true);
-    webView.setWebViewClient(this.getWebViewClient());
+    if (webView != null) {
+      webView.getSettings().setJavaScriptEnabled(true);
+      webView.setWebViewClient(this.getWebViewClient());
+    }
   }
 
   protected ForwardingWebViewClient getWebViewClient() {

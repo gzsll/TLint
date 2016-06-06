@@ -3,14 +3,9 @@ package com.gzsll.hupu.data;
 import com.gzsll.hupu.data.local.ForumLocalDataSource;
 import com.gzsll.hupu.data.remote.ForumRemoteDataSource;
 import com.gzsll.hupu.db.Forum;
-
-import org.apache.log4j.Logger;
-
 import java.util.List;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -18,7 +13,7 @@ import rx.functions.Func1;
 /**
  * Created by sll on 2016/6/3.
  */
-@Singleton public class ForumRepository implements ForumDataSource {
+public class ForumRepository implements ForumDataSource {
 
   private final Logger logger = Logger.getLogger(ForumRepository.class.getSimpleName());
 
