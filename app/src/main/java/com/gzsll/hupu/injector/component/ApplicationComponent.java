@@ -8,6 +8,7 @@ import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.ForumDao;
+import com.gzsll.hupu.db.ReadThreadDao;
 import com.gzsll.hupu.db.ThreadDao;
 import com.gzsll.hupu.db.ThreadInfoDao;
 import com.gzsll.hupu.db.ThreadReplyDao;
@@ -46,6 +47,8 @@ import javax.inject.Singleton;
   ThreadInfoDao getThreadInfoDao();
 
   ThreadReplyDao getThreadReplyDao();
+
+  ReadThreadDao getReadThreadDao();
 
   OkHttpHelper getOkHttpHelper();
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import com.gzsll.hupu.db.DaoMaster;
 import com.gzsll.hupu.db.DaoSession;
 import com.gzsll.hupu.db.ForumDao;
+import com.gzsll.hupu.db.ReadThreadDao;
 import com.gzsll.hupu.db.ThreadDao;
 import com.gzsll.hupu.db.ThreadInfoDao;
 import com.gzsll.hupu.db.ThreadReplyDao;
@@ -47,5 +48,9 @@ import javax.inject.Singleton;
 
   @Provides @Singleton ThreadReplyDao getThreadReplyDao(DaoSession session) {
     return session.getThreadReplyDao();
+  }
+
+  @Provides @Singleton ReadThreadDao getReadThreadDao(DaoSession session) {
+    return session.getReadThreadDao();
   }
 }

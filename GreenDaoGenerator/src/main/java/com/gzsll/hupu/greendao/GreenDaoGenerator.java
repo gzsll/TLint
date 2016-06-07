@@ -96,6 +96,10 @@ public class GreenDaoGenerator {
     reply.addStringProperty("quoteToggle");
     reply.addIntProperty("pageIndex");
 
+    Entity readThread = schema.addEntity("ReadThread");
+    readThread.addIdProperty();
+    readThread.addStringProperty("tid");
+
     File f = new File(GREEN_DAO_CODE_PATH);
     if (!f.exists()) {
       f.mkdirs();

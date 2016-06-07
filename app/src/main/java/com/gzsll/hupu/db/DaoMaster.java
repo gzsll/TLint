@@ -23,15 +23,17 @@ public class DaoMaster extends AbstractDaoMaster {
         ThreadDao.createTable(db, ifNotExists);
         ThreadInfoDao.createTable(db, ifNotExists);
         ThreadReplyDao.createTable(db, ifNotExists);
+        ReadThreadDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
         ForumDao.dropTable(db, ifExists);
-        UserDao.dropTable(db, ifExists);
+        // UserDao.dropTable(db, ifExists);
         ThreadDao.dropTable(db, ifExists);
         ThreadInfoDao.dropTable(db, ifExists);
         ThreadReplyDao.dropTable(db, ifExists);
+        ReadThreadDao.dropTable(db, ifExists);
     }
 
     public static abstract class OpenHelper extends SQLiteOpenHelper {
@@ -42,7 +44,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
         @Override public void onCreate(SQLiteDatabase db) {
             Log.i("greenDAO", "Creating tables for schema version " + SCHEMA_VERSION);
-            createAllTables(db, false);
+            createAllTables(db, true);
         }
     }
 
@@ -70,6 +72,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(ThreadDao.class);
         registerDaoClass(ThreadInfoDao.class);
         registerDaoClass(ThreadReplyDao.class);
+        registerDaoClass(ReadThreadDao.class);
     }
 
     public DaoSession newSession() {

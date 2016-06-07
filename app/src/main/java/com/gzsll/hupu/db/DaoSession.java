@@ -21,12 +21,14 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig threadDaoConfig;
     private final DaoConfig threadInfoDaoConfig;
     private final DaoConfig threadReplyDaoConfig;
+    private final DaoConfig readThreadDaoConfig;
 
     private final ForumDao forumDao;
     private final UserDao userDao;
     private final ThreadDao threadDao;
     private final ThreadInfoDao threadInfoDao;
     private final ThreadReplyDao threadReplyDao;
+    private final ReadThreadDao readThreadDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type,
         Map<Class<? extends AbstractDao<?, ?>>, DaoConfig> daoConfigMap) {
@@ -47,17 +49,22 @@ public class DaoSession extends AbstractDaoSession {
         threadReplyDaoConfig = daoConfigMap.get(ThreadReplyDao.class).clone();
         threadReplyDaoConfig.initIdentityScope(type);
 
+        readThreadDaoConfig = daoConfigMap.get(ReadThreadDao.class).clone();
+        readThreadDaoConfig.initIdentityScope(type);
+
         forumDao = new ForumDao(forumDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
         threadDao = new ThreadDao(threadDaoConfig, this);
         threadInfoDao = new ThreadInfoDao(threadInfoDaoConfig, this);
         threadReplyDao = new ThreadReplyDao(threadReplyDaoConfig, this);
+        readThreadDao = new ReadThreadDao(readThreadDaoConfig, this);
 
         registerDao(Forum.class, forumDao);
         registerDao(User.class, userDao);
         registerDao(Thread.class, threadDao);
         registerDao(ThreadInfo.class, threadInfoDao);
         registerDao(ThreadReply.class, threadReplyDao);
+        registerDao(ReadThread.class, readThreadDao);
     }
 
     public void clear() {
@@ -66,6 +73,7 @@ public class DaoSession extends AbstractDaoSession {
         threadDaoConfig.getIdentityScope().clear();
         threadInfoDaoConfig.getIdentityScope().clear();
         threadReplyDaoConfig.getIdentityScope().clear();
+        readThreadDaoConfig.getIdentityScope().clear();
     }
 
     public ForumDao getForumDao() {
@@ -86,6 +94,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public ThreadReplyDao getThreadReplyDao() {
         return threadReplyDao;
+    }
+
+    public ReadThreadDao getReadThreadDao() {
+        return readThreadDao;
     }
 
 }

@@ -232,11 +232,11 @@ public class ThreadReply {
         this.pageIndex = pageIndex;
     }
 
-  public List<ThreadReplyQuote> getQuote() {
-    return quote;
-  }
+    public List<ThreadReplyQuote> getQuote() {
+        return quote;
+    }
 
-  public void setQuote(List<ThreadReplyQuote> quote) {
-    this.quote = quote;
-  }
+    public void setQuote(List<ThreadReplyQuote> quote) {
+        this.quote = quote;
+    }
 }
