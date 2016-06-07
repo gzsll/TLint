@@ -57,7 +57,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
           .subscribe(new Action1<ThreadInfo>() {
             @Override public void call(ThreadInfo threadInfo) {
               mContentView.sendMessageToJS("addThreadInfo", threadInfo);
-              //loadLightReplies(tid, fid);
+              loadLightReplies(tid, fid);
               loadReplies(tid, fid, page);
               mContentView.hideLoading();
               mBus.post(

@@ -14,9 +14,11 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.ImagePreview;
 import com.gzsll.hupu.components.jockeyjs.JockeyHandler;
 import com.gzsll.hupu.ui.BaseFragment;
+import com.gzsll.hupu.ui.browser.BrowserActivity;
 import com.gzsll.hupu.ui.imagepreview.ImagePreviewActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
+import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 import com.gzsll.hupu.util.ConfigUtils;
 import com.gzsll.hupu.util.HtmlUtils;
 import com.gzsll.hupu.widget.H5Callback;
@@ -148,11 +150,13 @@ public class ContentFragment extends BaseFragment
     webView.onJSEvent("showUrl", new JockeyHandler() {
       @Override protected void doPerform(Map<Object, Object> payload) {
         logger.debug("showUrl:" + JSON.toJSON(payload));
+        BrowserActivity.startActivity(getActivity(), ((String) payload.get("url")));
       }
     });
     webView.onJSEvent("showUser", new JockeyHandler() {
       @Override protected void doPerform(Map<Object, Object> payload) {
         logger.debug("showUser:" + JSON.toJSON(payload));
+        UserProfileActivity.startActivity(getActivity(), ((String) payload.get("uid")));
       }
     });
     webView.onJSEvent("showMenu", new JockeyHandler() {
