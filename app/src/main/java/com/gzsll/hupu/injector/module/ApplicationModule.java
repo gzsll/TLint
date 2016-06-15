@@ -38,7 +38,8 @@ import okhttp3.OkHttpClient;
   @Provides @Singleton @Named("api") OkHttpClient provideApiOkHttpClient(
       CookieInterceptor mCookieInterceptor) {
     OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS);
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS);
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
     builder.addInterceptor(logging);

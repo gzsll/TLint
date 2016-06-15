@@ -2,7 +2,6 @@ package com.gzsll.hupu;
 
 import android.app.Application;
 import android.os.Environment;
-
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
@@ -17,23 +16,16 @@ import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.component.DaggerApplicationComponent;
 import com.gzsll.hupu.injector.module.ApplicationModule;
-import com.gzsll.hupu.util.ConfigUtils;
-import com.gzsll.hupu.util.FileUtils;
-import com.gzsll.hupu.util.HtmlUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.squareup.leakcanary.LeakCanary;
-
-import org.apache.log4j.Level;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
 import de.mindpipe.android.logging.log4j.LogConfigurator;
+import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
+import org.apache.log4j.Level;
 
 /**
  * Created by sll on 2016/3/8.
@@ -59,7 +51,6 @@ public class MyApplication extends Application {
     initFrescoConfig();
     ToastUtils.register(this);
     LeakCanary.install(this);
-    initAssertFile();
   }
 
   private void initComponent() {
@@ -126,21 +117,5 @@ public class MyApplication extends Application {
         .setDownsampleEnabled(true)
         .build();
     Fresco.initialize(this, config);
-  }
-
-  private void initAssertFile() {
-    new Thread(new Runnable() {
-      @Override public void run() {
-        copyAssertFile("hupu_thread.html");
-        copyAssertFile("hupu_thread.js");
-        copyAssertFile("jockey.js");
-        copyAssertFile("zepto.js");
-        HtmlUtils.getHtmlString(MyApplication.this);
-      }
-    }).start();
-  }
-
-  private void copyAssertFile(String fileName) {
-      FileUtils.copyAssets(this, fileName, ConfigUtils.getCachePath());
   }
 }

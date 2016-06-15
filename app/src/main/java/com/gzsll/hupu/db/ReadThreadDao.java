@@ -14,93 +14,94 @@ import de.greenrobot.dao.internal.DaoConfig;
  */
 public class ReadThreadDao extends AbstractDao<ReadThread, Long> {
 
-  public static final String TABLENAME = "READ_THREAD";
+    public static final String TABLENAME = "READ_THREAD";
 
-  /**
-   * Properties of entity ReadThread.<br/>
-   * Can be used for QueryBuilder and for referencing column names.
-   */
-  public static class Properties {
-    public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-    public final static Property Tid = new Property(1, String.class, "tid", false, "TID");
-  }
-
-  ;
-
-  public ReadThreadDao(DaoConfig config) {
-    super(config);
-  }
-
-  public ReadThreadDao(DaoConfig config, DaoSession daoSession) {
-    super(config, daoSession);
-  }
-
-  /** Creates the underlying database table. */
-  public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-    String constraint = ifNotExists ? "IF NOT EXISTS " : "";
-    db.execSQL("CREATE TABLE " + constraint + "'READ_THREAD' (" + //
-        "'_id' INTEGER PRIMARY KEY ," + // 0: id
-        "'TID' TEXT);"); // 1: tid
-  }
-
-  /** Drops the underlying database table. */
-  public static void dropTable(SQLiteDatabase db, boolean ifExists) {
-    String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'READ_THREAD'";
-    db.execSQL(sql);
-  }
-
-  /** @inheritdoc */
-  @Override protected void bindValues(SQLiteStatement stmt, ReadThread entity) {
-    stmt.clearBindings();
-
-    Long id = entity.getId();
-    if (id != null) {
-      stmt.bindLong(1, id);
+    /**
+     * Properties of entity ReadThread.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Tid = new Property(1, String.class, "tid", false, "TID");
     }
 
-    String tid = entity.getTid();
-    if (tid != null) {
-      stmt.bindString(2, tid);
+    ;
+
+
+    public ReadThreadDao(DaoConfig config) {
+        super(config);
     }
-  }
 
-  /** @inheritdoc */
-  @Override public Long readKey(Cursor cursor, int offset) {
-    return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-  }
-
-  /** @inheritdoc */
-  @Override public ReadThread readEntity(Cursor cursor, int offset) {
-    ReadThread entity = new ReadThread( //
-        cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-        cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // tid
-    );
-    return entity;
-  }
-
-  /** @inheritdoc */
-  @Override public void readEntity(Cursor cursor, ReadThread entity, int offset) {
-    entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-    entity.setTid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-  }
-
-  /** @inheritdoc */
-  @Override protected Long updateKeyAfterInsert(ReadThread entity, long rowId) {
-    entity.setId(rowId);
-    return rowId;
-  }
-
-  /** @inheritdoc */
-  @Override public Long getKey(ReadThread entity) {
-    if (entity != null) {
-      return entity.getId();
-    } else {
-      return null;
+    public ReadThreadDao(DaoConfig config, DaoSession daoSession) {
+        super(config, daoSession);
     }
-  }
 
-  /** @inheritdoc */
-  @Override protected boolean isEntityUpdateable() {
-    return true;
-  }
+    /** Creates the underlying database table. */
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        db.execSQL("CREATE TABLE " + constraint + "'READ_THREAD' (" + //
+            "'_id' INTEGER PRIMARY KEY ," + // 0: id
+            "'TID' TEXT);"); // 1: tid
+    }
+
+    /** Drops the underlying database table. */
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
+        String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'READ_THREAD'";
+        db.execSQL(sql);
+    }
+
+    /** @inheritdoc */
+    @Override protected void bindValues(SQLiteStatement stmt, ReadThread entity) {
+        stmt.clearBindings();
+
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+
+        String tid = entity.getTid();
+        if (tid != null) {
+            stmt.bindString(2, tid);
+        }
+    }
+
+    /** @inheritdoc */
+    @Override public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
+    }
+
+    /** @inheritdoc */
+    @Override public ReadThread readEntity(Cursor cursor, int offset) {
+        ReadThread entity = new ReadThread( //
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // tid
+        );
+        return entity;
+    }
+
+    /** @inheritdoc */
+    @Override public void readEntity(Cursor cursor, ReadThread entity, int offset) {
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setTid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+    }
+
+    /** @inheritdoc */
+    @Override protected Long updateKeyAfterInsert(ReadThread entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
+    }
+
+    /** @inheritdoc */
+    @Override public Long getKey(ReadThread entity) {
+        if (entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
+    }
+
+    /** @inheritdoc */
+    @Override protected boolean isEntityUpdateable() {
+        return true;
+    }
 }

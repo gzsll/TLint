@@ -100,6 +100,11 @@ public class GreenDaoGenerator {
     readThread.addIdProperty();
     readThread.addStringProperty("tid");
 
+    Entity image = schema.addEntity("ImageCache");
+    image.addIdProperty();
+    image.addStringProperty("url");
+    image.addStringProperty("path");
+
     File f = new File(GREEN_DAO_CODE_PATH);
     if (!f.exists()) {
       f.mkdirs();

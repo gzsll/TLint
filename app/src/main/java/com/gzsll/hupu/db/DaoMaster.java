@@ -14,73 +14,75 @@ import de.greenrobot.dao.identityscope.IdentityScopeType;
  * Master of DAO (schema version 53): knows all DAOs.
  */
 public class DaoMaster extends AbstractDaoMaster {
-    public static final int SCHEMA_VERSION = 53;
+  public static final int SCHEMA_VERSION = 53;
 
-    /** Creates underlying database table using DAOs. */
-    public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
-        ForumDao.createTable(db, ifNotExists);
-        UserDao.createTable(db, ifNotExists);
-        ThreadDao.createTable(db, ifNotExists);
-        ThreadInfoDao.createTable(db, ifNotExists);
-        ThreadReplyDao.createTable(db, ifNotExists);
-        ReadThreadDao.createTable(db, ifNotExists);
+  /** Creates underlying database table using DAOs. */
+  public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
+    ForumDao.createTable(db, ifNotExists);
+    UserDao.createTable(db, ifNotExists);
+    ThreadDao.createTable(db, ifNotExists);
+    ThreadInfoDao.createTable(db, ifNotExists);
+    ThreadReplyDao.createTable(db, ifNotExists);
+    ReadThreadDao.createTable(db, ifNotExists);
+    ImageCacheDao.createTable(db, ifNotExists);
+  }
+
+  /** Drops underlying database table using DAOs. */
+  public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
+    // ForumDao.dropTable(db, ifExists);
+    // UserDao.dropTable(db, ifExists);
+    ThreadDao.dropTable(db, ifExists);
+    ThreadInfoDao.dropTable(db, ifExists);
+    ThreadReplyDao.dropTable(db, ifExists);
+    ReadThreadDao.dropTable(db, ifExists);
+    ImageCacheDao.dropTable(db, ifExists);
+  }
+
+  public static abstract class OpenHelper extends SQLiteOpenHelper {
+
+    public OpenHelper(Context context, String name, CursorFactory factory) {
+      super(context, name, factory, SCHEMA_VERSION);
     }
 
-    /** Drops underlying database table using DAOs. */
-    public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
-        ForumDao.dropTable(db, ifExists);
-        // UserDao.dropTable(db, ifExists);
-        ThreadDao.dropTable(db, ifExists);
-        ThreadInfoDao.dropTable(db, ifExists);
-        ThreadReplyDao.dropTable(db, ifExists);
-        ReadThreadDao.dropTable(db, ifExists);
+    @Override public void onCreate(SQLiteDatabase db) {
+      Log.i("greenDAO", "Creating tables for schema version " + SCHEMA_VERSION);
+      createAllTables(db, true);
+    }
+  }
+
+  /** WARNING: Drops all table on Upgrade! Use only during development. */
+  public static class DevOpenHelper extends OpenHelper {
+    public DevOpenHelper(Context context, String name, CursorFactory factory) {
+      super(context, name, factory);
     }
 
-    public static abstract class OpenHelper extends SQLiteOpenHelper {
-
-        public OpenHelper(Context context, String name, CursorFactory factory) {
-            super(context, name, factory, SCHEMA_VERSION);
-        }
-
-        @Override public void onCreate(SQLiteDatabase db) {
-            Log.i("greenDAO", "Creating tables for schema version " + SCHEMA_VERSION);
-            createAllTables(db, true);
-        }
+    @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+      Log.i("greenDAO", "Upgrading schema from version "
+          + oldVersion
+          + " to "
+          + newVersion
+          + " by dropping all tables");
+      dropAllTables(db, true);
+      onCreate(db);
     }
+  }
 
-    /** WARNING: Drops all table on Upgrade! Use only during development. */
-    public static class DevOpenHelper extends OpenHelper {
-        public DevOpenHelper(Context context, String name, CursorFactory factory) {
-            super(context, name, factory);
-        }
+  public DaoMaster(SQLiteDatabase db) {
+    super(db, SCHEMA_VERSION);
+    registerDaoClass(ForumDao.class);
+    registerDaoClass(UserDao.class);
+    registerDaoClass(ThreadDao.class);
+    registerDaoClass(ThreadInfoDao.class);
+    registerDaoClass(ThreadReplyDao.class);
+    registerDaoClass(ReadThreadDao.class);
+    registerDaoClass(ImageCacheDao.class);
+  }
 
-        @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.i("greenDAO", "Upgrading schema from version "
-                + oldVersion
-                + " to "
-                + newVersion
-                + " by dropping all tables");
-            dropAllTables(db, true);
-            onCreate(db);
-        }
-    }
+  public DaoSession newSession() {
+    return new DaoSession(db, IdentityScopeType.Session, daoConfigMap);
+  }
 
-    public DaoMaster(SQLiteDatabase db) {
-        super(db, SCHEMA_VERSION);
-        registerDaoClass(ForumDao.class);
-        registerDaoClass(UserDao.class);
-        registerDaoClass(ThreadDao.class);
-        registerDaoClass(ThreadInfoDao.class);
-        registerDaoClass(ThreadReplyDao.class);
-        registerDaoClass(ReadThreadDao.class);
-    }
-
-    public DaoSession newSession() {
-        return new DaoSession(db, IdentityScopeType.Session, daoConfigMap);
-    }
-
-    public DaoSession newSession(IdentityScopeType type) {
-        return new DaoSession(db, type, daoConfigMap);
-    }
-    
+  public DaoSession newSession(IdentityScopeType type) {
+    return new DaoSession(db, type, daoConfigMap);
+  }
 }

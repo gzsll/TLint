@@ -4,6 +4,7 @@ import android.content.Context;
 import com.gzsll.hupu.db.DaoMaster;
 import com.gzsll.hupu.db.DaoSession;
 import com.gzsll.hupu.db.ForumDao;
+import com.gzsll.hupu.db.ImageCacheDao;
 import com.gzsll.hupu.db.ReadThreadDao;
 import com.gzsll.hupu.db.ThreadDao;
 import com.gzsll.hupu.db.ThreadInfoDao;
@@ -52,5 +53,9 @@ import javax.inject.Singleton;
 
   @Provides @Singleton ReadThreadDao getReadThreadDao(DaoSession session) {
     return session.getReadThreadDao();
+  }
+
+  @Provides @Singleton ImageCacheDao getImageCache(DaoSession session) {
+    return session.getImageCacheDao();
   }
 }

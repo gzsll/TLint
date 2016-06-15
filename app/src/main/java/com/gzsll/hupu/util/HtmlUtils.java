@@ -35,7 +35,7 @@ public class HtmlUtils {
     while (localMatcher.find()) {
       String imageUrl = localMatcher.group(4);
       String localUrl = transToLocal(imageUrl);
-      String localPath = ConfigUtils.getCachePath() + File.separator + localUrl;
+      String localPath = "file://" + ConfigUtils.getCachePath() + File.separator + localUrl;
       if (FileUtils.exist(localPath)) {
         content = content.replace(imageUrl, localUrl);
       }

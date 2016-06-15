@@ -16,7 +16,11 @@ public interface ContentPagerContract {
 
     void onError();
 
+    void loadDataWithBaseUrl(String html);
+
     void sendMessageToJS(String handlerName, Object object);
+
+    void loadUrl(String url);
 
     void showReplyUi(String fid, String tid, String pid, String title);
 
@@ -34,5 +38,7 @@ public interface ContentPagerContract {
     void addLight(int area, int index);
 
     void addRuLight(int area, int index);
+
+    ContentPagerPresenter.HupuBridge getJavaScriptInterface();
   }
 }

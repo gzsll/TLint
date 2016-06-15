@@ -36,8 +36,6 @@ public class ContentRepository implements ContentDataSource {
         if (threadInfo != null) {
           threadInfo.setForumName(threadInfo.getForum().getName());
           mContentLocalDataSource.saveThreadInfo(threadInfo);
-          String content = threadInfo.getContent();
-          threadInfo.setContent(HtmlUtils.transImgToLocal(content));
         }
       }
     });
@@ -85,7 +83,6 @@ public class ContentRepository implements ContentDataSource {
             if (threadReplies != null) {
               for (ThreadReply reply : threadReplies) {
                 reply.setTid(tid);
-
                 reply.setIsLight(true);
                 saveReply(reply);
               }
@@ -110,7 +107,5 @@ public class ContentRepository implements ContentDataSource {
       reply.setQuoteContent(HtmlUtils.transImgToLocal(quote.content));
     }
     mContentLocalDataSource.saveThreadReply(reply);
-    String content = reply.getContent();
-    reply.setContent(HtmlUtils.transImgToLocal(content));
   }
 }

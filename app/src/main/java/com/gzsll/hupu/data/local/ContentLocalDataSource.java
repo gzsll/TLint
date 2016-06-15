@@ -5,6 +5,7 @@ import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadInfoDao;
 import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.db.ThreadReplyDao;
+import com.gzsll.hupu.util.HtmlUtils;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -31,7 +32,10 @@ public class ContentLocalDataSource implements ContentDataSource {
         List<ThreadInfo> threadInfos =
             mThreadInfoDao.queryBuilder().where(ThreadInfoDao.Properties.Tid.eq(tid)).list();
         if (!threadInfos.isEmpty()) {
-          subscriber.onNext(threadInfos.get(0));
+          ThreadInfo threadInfo = threadInfos.get(0);
+          String content = threadInfo.getContent();
+          threadInfo.setContent(HtmlUtils.transImgToLocal(content));
+          subscriber.onNext(threadInfo);
         } else {
           subscriber.onNext(null);
         }
@@ -58,7 +62,11 @@ public class ContentLocalDataSource implements ContentDataSource {
                 ThreadReplyDao.Properties.PageIndex.eq(page))
             .orderAsc(ThreadReplyDao.Properties.Floor)
             .list();
-        subscriber.onNext(replies);
+        if (replies.isEmpty() && page > 1) {
+          subscriber.onNext(null);
+        } else {
+          subscriber.onNext(replies);
+        }
         subscriber.onCompleted();
       }
     }).subscribeOn(Schedulers.io());

@@ -22,6 +22,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig threadInfoDaoConfig;
     private final DaoConfig threadReplyDaoConfig;
     private final DaoConfig readThreadDaoConfig;
+    private final DaoConfig imageCacheDaoConfig;
 
     private final ForumDao forumDao;
     private final UserDao userDao;
@@ -29,6 +30,7 @@ public class DaoSession extends AbstractDaoSession {
     private final ThreadInfoDao threadInfoDao;
     private final ThreadReplyDao threadReplyDao;
     private final ReadThreadDao readThreadDao;
+    private final ImageCacheDao imageCacheDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type,
         Map<Class<? extends AbstractDao<?, ?>>, DaoConfig> daoConfigMap) {
@@ -52,12 +54,16 @@ public class DaoSession extends AbstractDaoSession {
         readThreadDaoConfig = daoConfigMap.get(ReadThreadDao.class).clone();
         readThreadDaoConfig.initIdentityScope(type);
 
+        imageCacheDaoConfig = daoConfigMap.get(ImageCacheDao.class).clone();
+        imageCacheDaoConfig.initIdentityScope(type);
+
         forumDao = new ForumDao(forumDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
         threadDao = new ThreadDao(threadDaoConfig, this);
         threadInfoDao = new ThreadInfoDao(threadInfoDaoConfig, this);
         threadReplyDao = new ThreadReplyDao(threadReplyDaoConfig, this);
         readThreadDao = new ReadThreadDao(readThreadDaoConfig, this);
+        imageCacheDao = new ImageCacheDao(imageCacheDaoConfig, this);
 
         registerDao(Forum.class, forumDao);
         registerDao(User.class, userDao);
@@ -65,6 +71,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(ThreadInfo.class, threadInfoDao);
         registerDao(ThreadReply.class, threadReplyDao);
         registerDao(ReadThread.class, readThreadDao);
+        registerDao(ImageCache.class, imageCacheDao);
     }
 
     public void clear() {
@@ -74,6 +81,7 @@ public class DaoSession extends AbstractDaoSession {
         threadInfoDaoConfig.getIdentityScope().clear();
         threadReplyDaoConfig.getIdentityScope().clear();
         readThreadDaoConfig.getIdentityScope().clear();
+        imageCacheDaoConfig.getIdentityScope().clear();
     }
 
     public ForumDao getForumDao() {
@@ -98,6 +106,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public ReadThreadDao getReadThreadDao() {
         return readThreadDao;
+    }
+
+    public ImageCacheDao getImageCacheDao() {
+        return imageCacheDao;
     }
 
 }

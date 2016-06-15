@@ -19,8 +19,6 @@ import com.gzsll.hupu.ui.imagepreview.ImagePreviewActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
-import com.gzsll.hupu.util.ConfigUtils;
-import com.gzsll.hupu.util.HtmlUtils;
 import com.gzsll.hupu.widget.H5Callback;
 import com.gzsll.hupu.widget.JockeyJsWebView;
 import java.util.Map;
@@ -76,11 +74,11 @@ public class ContentFragment extends BaseFragment
     webView.setCallback(this);
     webView.initJockey();
     webView.setOnScrollChangedCallback(this);
+    webView.addJavascriptInterface(mContentPresenter.getJavaScriptInterface(), "HuPu");
   }
 
   @Override public void initData() {
-    webView.loadDataWithBaseURL(String.format("file://%s", ConfigUtils.getCachePath()),
-        HtmlUtils.getHtmlString(getActivity()), "text/html", "utf-8", null);
+    webView.loadUrl("file:///android_asset/hupu_thread.html");
   }
 
   @Override public void onReloadClicked() {
@@ -109,8 +107,17 @@ public class ContentFragment extends BaseFragment
     showError(true);
   }
 
+  @Override public void loadDataWithBaseUrl(String html) {
+
+  }
+
   @Override public void sendMessageToJS(String handlerName, Object object) {
     webView.sendMessageToJS(handlerName, object);
+  }
+
+  @Override public void loadUrl(String url) {
+    logger.debug("loadUrl:" + url);
+    webView.loadUrl(url);
   }
 
   @Override public void showReplyUi(String fid, String tid, String pid, String title) {
@@ -189,9 +196,9 @@ public class ContentFragment extends BaseFragment
 
   @Override public void onDestroy() {
     super.onDestroy();
+    mContentPresenter.detachView();
     if (webView != null) {
       webView.destroy();
     }
-    mContentPresenter.detachView();
   }
 }
