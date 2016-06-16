@@ -122,6 +122,10 @@
       </intent-filter>
     </service>
 
+    <provider
+        android:name=".provider.LocalImageProvider"
+        android:authorities="com.gzsll.hupu"/>
+
   </application>
 
 </manifest>

@@ -74,7 +74,7 @@ public class ContentFragment extends BaseFragment
     webView.setCallback(this);
     webView.initJockey();
     webView.setOnScrollChangedCallback(this);
-    webView.addJavascriptInterface(mContentPresenter.getJavaScriptInterface(), "HuPu");
+    webView.addJavascriptInterface(mContentPresenter.getJavaScriptInterface(), "HuPuBridge");
   }
 
   @Override public void initData() {
@@ -107,9 +107,6 @@ public class ContentFragment extends BaseFragment
     showError(true);
   }
 
-  @Override public void loadDataWithBaseUrl(String html) {
-
-  }
 
   @Override public void sendMessageToJS(String handlerName, Object object) {
     webView.sendMessageToJS(handlerName, object);

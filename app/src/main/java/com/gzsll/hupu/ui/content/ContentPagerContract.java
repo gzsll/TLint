@@ -16,8 +16,6 @@ public interface ContentPagerContract {
 
     void onError();
 
-    void loadDataWithBaseUrl(String html);
-
     void sendMessageToJS(String handlerName, Object object);
 
     void loadUrl(String url);

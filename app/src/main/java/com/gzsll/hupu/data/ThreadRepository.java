@@ -8,6 +8,7 @@ import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.db.ThreadDao;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -19,6 +20,8 @@ import rx.subjects.PublishSubject;
  * Created by sll on 2016/6/3.
  */
 public class ThreadRepository {
+
+  private Logger logger = Logger.getLogger(ThreadRepository.class.getSimpleName());
 
   private ThreadDao mThreadDao;
   private ForumApi mForumApi;
@@ -79,6 +82,7 @@ public class ThreadRepository {
 
   private void cacheThreadList(int type, boolean clear, List<Thread> threads) {
     if (clear) {
+      logger.debug("cacheThreadList clear");
       mThreadDao.queryBuilder()
           .where(ThreadDao.Properties.Type.eq(type))
           .buildDelete()

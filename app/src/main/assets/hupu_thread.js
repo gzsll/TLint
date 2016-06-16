@@ -49,8 +49,9 @@ var contentImageArray = function () {
         var $this = $(this);
         var url = $this.attr('data_url');
         var gif = $this.attr('data-gif');
-var src = $this.attr('src');
+        var src = $this.attr('src');
         $this.attr('data-index', i);
+        var index = i;
         i++;
         $this.attr('class', 'normal_img');
 
@@ -60,7 +61,7 @@ var src = $this.attr('src');
         } else if (gif && gif.length > 0) {
             $images.push(gif);
         }
-        $this.attr('src',window.HuPu.replaceImage(src,i));
+        $this.attr('src',window.HuPuBridge.replaceImage(src,index));
     });
     $('.J-article-content .normal_img').off('tap').on('tap',
         function (e) {
