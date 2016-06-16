@@ -51,6 +51,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
   private ConcurrentHashMap<String, String> imageMap = new ConcurrentHashMap<>();
+  private List<String> taskArray = new ArrayList<>();
 
   private List<ThreadReply> lightReplies = new ArrayList<>();
   private List<ThreadReply> replies = new ArrayList<>();
@@ -208,6 +209,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
               reply.setIndex(i);
               mContentView.sendMessageToJS("addReply", reply);
             }
+            mContentView.loadUrl("javascript:reloadStuff();");
             mContentView.hideLoading();
           }
         }, new Action1<Throwable>() {
@@ -234,6 +236,8 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   public class HupuBridge {
 
     @JavascriptInterface public String replaceImage(final String imageUrl, final int index) {
+      logger.debug("replaceImage:" + imageUrl);
+      logger.debug("replaceImage:" + index);
       if (imageMap.contains(imageUrl)) {
         return LocalImageProvider.constructUri(imageMap.get(imageUrl));
       } else {
@@ -249,57 +253,60 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
           }
         }
 
-        Subscription mSubscription = Observable.create(new Observable.OnSubscribe<String>() {
-          @Override public void call(Subscriber<? super String> subscriber) {
-            try {
-              // 下载图片
-              File imgFile = new File(
-                  ConfigUtils.getCachePath() + File.separator + FormatUtils.getFileNameFromUrl(
-                      imageUrl));
+        if (taskArray.indexOf(imageUrl) < 0) {
+          taskArray.add(imageUrl);
+          Subscription mSubscription = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override public void call(Subscriber<? super String> subscriber) {
+              try {
+                // 下载图片
+                File imgFile = new File(
+                    ConfigUtils.getCachePath() + File.separator + FormatUtils.getFileNameFromUrl(
+                        imageUrl));
 
-              logger.debug("imgFile:" + imgFile.getName());
-              if (!imgFile.exists()) {
-                mOkHttpHelper.httpDownload(imageUrl, imgFile);
+                logger.debug("imgFile:" + imgFile.getName());
+                if (!imgFile.exists()) {
+                  mOkHttpHelper.httpDownload(imageUrl, imgFile);
+                }
+                String path = imgFile.getAbsolutePath();
+                if (!TextUtils.isEmpty(path)) {
+                  imageMap.put(imageUrl, path);
+                  mImageCacheDao.queryBuilder()
+                      .where(ImageCacheDao.Properties.Url.eq(imageUrl))
+                      .buildDelete()
+                      .executeDeleteWithoutDetachingEntities();
+                  ImageCache cache = new ImageCache(null, imageUrl, path);
+                  mImageCacheDao.insert(cache);
+                }
+                subscriber.onNext(path);
+                subscriber.onCompleted();
+              } catch (Exception e) {
+                subscriber.onError(e);
               }
-              String path = imgFile.getAbsolutePath();
-              if (!TextUtils.isEmpty(path)) {
-                imageMap.put(imageUrl, path);
-                mImageCacheDao.queryBuilder()
-                    .where(ImageCacheDao.Properties.Url.eq(imageUrl))
-                    .buildDelete()
-                    .executeDeleteWithoutDetachingEntities();
-                ImageCache cache = new ImageCache(null, imageUrl, path);
-                mImageCacheDao.insert(cache);
-              }
-              subscriber.onNext(path);
-              subscriber.onCompleted();
-            } catch (Exception e) {
-              subscriber.onError(e);
             }
-          }
-        })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Action1<String>() {
-              @Override public void call(String s) {
-                if (!TextUtils.isEmpty(s)) {
+          })
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(new Action1<String>() {
+                @Override public void call(String s) {
+                  if (!TextUtils.isEmpty(s)) {
+                    mContentView.loadUrl("javascript:replaceImage(\""
+                        + LocalImageProvider.constructUri(s)
+                        + "\","
+                        + index
+                        + ");");
+                  }
+                }
+              }, new Action1<Throwable>() {
+                @Override public void call(Throwable throwable) {
                   mContentView.loadUrl("javascript:replaceImage(\""
-                      + LocalImageProvider.constructUri(s)
+                      + LocalImageProvider.constructUri(imageUrl)
                       + "\","
                       + index
                       + ");");
                 }
-              }
-            }, new Action1<Throwable>() {
-              @Override public void call(Throwable throwable) {
-                mContentView.loadUrl("javascript:replaceImage(\""
-                    + LocalImageProvider.constructUri(imageUrl)
-                    + "\","
-                    + index
-                    + ");");
-              }
-            });
-        mCompositeSubscription.add(mSubscription);
+              });
+          mCompositeSubscription.add(mSubscription);
+        }
         return "file:///android_asset/hupu_thread_default.png";
       }
     }

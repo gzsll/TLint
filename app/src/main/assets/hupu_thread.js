@@ -1,7 +1,6 @@
 Jockey.on('addThreadInfo',
     function (payload) {
         addThreadContent(payload);
-        reloadStuff();
     });
 
 Jockey.on('addLightTitle',
@@ -12,8 +11,7 @@ Jockey.on('addLightTitle',
 Jockey.on('addLightPost',
     function (payload) {
         addLightPost(payload);
-        reloadStuff();
-        replyListClick();
+
     });
 
 Jockey.on('addReplyTitle',
@@ -24,8 +22,7 @@ Jockey.on('addReplyTitle',
 Jockey.on('addReply',
     function (payload) {
         addReply(payload);
-        reloadStuff();
-        replyListClick();
+
     });
 
 Jockey.on('addLight',
@@ -37,53 +34,76 @@ Jockey.on('addLight',
 var addThreadContent = function (threadEntity) {
     var threadContent = "<header class=\"article-title\">" + "<h1 class=\"headline\">" + threadEntity.title + "</h1>" + "<div class=\"article-info\">" + "<span class=\"times\">" + threadEntity.time + "</span>" + "<span class=\"post-board\">" + "<a href=\"kanqiu://bbs/board/" + threadEntity.fid + "\" target=\"_blank\">" + threadEntity.forumName + "</a>" + "</span>" + "</div>" + "<div class=\"line\"></div>" + "</header>" + "<article class=\"article-content\">" + "<div class=\"article-author clearfix\">" + "<img src=\"" + threadEntity.userImg + "\" class=\"author-icon\">" + "<a href=\"kanqiu://people/" + threadEntity.author_puid + "\" target=\"_blank\"><font color=\"#326ca6\">" + threadEntity.username + "</font></a>" + "<span class=\"mod-mask mask\"></span>" + "</div>" + "<div class=\"J-article-content\">" + threadEntity.content + "</div>" + "</article>";
     $('#detail-content').html(threadContent);
-    contentImageArray();
+    initImage('.J-article-content img');
 };
 
 var $images = [];
 
-var contentImageArray = function () {
-    $images = [];
-    var i = 0;
-    $('.J-article-content img').each(function (e) {
-        var $this = $(this);
-        var url = $this.attr('data_url');
-        var gif = $this.attr('data-gif');
-        var src = $this.attr('src');
-        $this.attr('data-index', i);
-        var index = i;
-        i++;
-        $this.attr('class', 'normal_img');
+var reloadImage = function () {
+        $images = [];
+        var i = 0;
+        $('img').each(function (e) {
+            var $this = $(this);
+            var url = $this.attr('data_url');
+            var gif = $this.attr('data-gif');
+            var origin;
 
-        if (url && url.length > 0) {
-            $images.push(url);
+            if ((url && url.length > 0) || (gif && gif.length > 0)) {
+                $this.attr('data-index', i);
+                var index = i;
+                i++;
+                $this.attr('class', 'normal_img');
+                if (url && url.length > 0) {
+                    origin = url;
+                } else {
+                    origin = gif;
+                }
+                $images.push(origin);
+                if (inviewport(this) && $this.attr('data-src') && $this.attr('data-src').startsWith('http://')) {
+                    var src = $this.attr('data-src');
+                    $this.attr('src', window.HuPuBridge.replaceImage(src, index));
+                    $this.removeAttr('data-src');
+                }
 
-        } else if (gif && gif.length > 0) {
-            $images.push(gif);
-        }
-        $this.attr('src',window.HuPuBridge.replaceImage(src,index));
-    });
-    $('.J-article-content .normal_img').off('tap').on('tap',
-        function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            var index = $(this).attr('data-index'),
-                param = {
-                    index: parseInt(index),
-                    imgs: $images
-                };
-            Jockey.send('showImg', param);
+            }
+
         });
+        $('.normal_img').off('tap').on('tap',
+            function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var index = $(this).attr('data-index'),
+                    param = {
+                        index: parseInt(index),
+                        imgs: $images
+                    };
+                Jockey.send('showImg', param);
+            });
+    }
+
+    ;
+
+// 要加载的图片是不是在指定窗口内
+function inviewport(el) {
+    // 当前窗口的顶部
+    var top = window.pageYOffset;
+    // 当前窗口的底部
+    var btm = window.pageYOffset + window.innerHeight;
+    // 元素所在整体页面内的y轴位置
+    var eltop = $(el).offset().top;
+    // 判断元素，是否在当前窗口，或者当前窗口延伸100像素内
+    return eltop >= top && eltop - 100 <= btm
 };
 
-var replaceImage= function(src, index){
-  $('.J-article-content img').each(function (e) {
-      var $this = $(this);
-       var i = $this.attr('data-index');
-       if(i==index){
-         $this.attr('src',src);
-       }
-  });
+
+var replaceImage = function (src, index) {
+    $('img').each(function (e) {
+        var $this = $(this);
+        var i = $this.attr('data-index');
+        if (i&&i == index) {
+            $this.attr('src', src);
+        }
+    });
 };
 
 var addLightTitle = function (title) {
@@ -105,40 +125,8 @@ var addLightPost = function (replyEntity) {
     var content = "<div class=\"reply-inner\">" + "<dl class=\"reply-list\" data-pid=\"" + replyEntity.pid + "\" data-uid=\"" + replyEntity.puid + "\" data-area=\"0\" data-index=\"" + replyEntity.index + "\">" + "<dd class=\"operations-user\">" + "<a href=\"kanqiu://people/" + replyEntity.puid + "\" class=\"user-avatar\" >" + "<img src=\"" + replyEntity.userImg + "\" alt=\"" + replyEntity.userName + "\">" + "<span class=\"mod-mask mask\"></span>" + "</a>" + "<div class=\"user-info\">" + "<div class=\"user-name clearfix\">" + "<span class=\"fl ellipsis\"><a href=\"kanqiu://people/" + replyEntity.puid + "\" target=\"_blank\"><font color=\"#326ca6\">" + replyEntity.userName + "</font></a></span>" + author + "</div>" + "<div class=\"source-left\">" + "<span class=\"postdate\">" + replyEntity.time + "</span>" + "</div>" + "</div>" + "<span class=\"reply-light\" id=\"hupu_" + replyEntity.pid + "_0\">亮了(" + replyEntity.light_count + ")</span>" + "</dd>" + "<dt class=\"reply-content\">" + quoteContent + "<div class=\"current-content\">" + "<span class=\"short-content\">" + replyEntity.content + "</span>" + "</div>" + "</dt>" + "</dl>" + "</div>";
     var html = $('#bright-reply').html();
     $('#bright-reply').html(html + "" + content);
-    lightImageArray();
 };
 
-
-var $lightImages = [];
-
-var lightImageArray = function () {
-    $lightImages = [];
-    var i = 0;
-    $('#bright-reply .reply-content img').each(function (e) {
-        var $this = $(this);
-        var url = $this.attr('data_url');
-        var gif = $this.attr('data-gif');
-        $this.attr('data-index', i);
-        i++;
-        $this.attr('class', 'normal_img');
-        if (url && url.length > 0) {
-            $lightImages.push(url);
-        } else if (gif && gif.length > 0) {
-            $lightImages.push(gif);
-        }
-    });
-    $('#bright-reply .reply-content .normal_img').off('tap').on('tap',
-        function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            var index = $(this).attr('data-index'),
-                param = {
-                    index: parseInt(index),
-                    imgs: $lightImages
-                };
-            Jockey.send('showImg', param);
-        });
-};
 
 var addReplyTitle = function (title) {
     $('#general-reply').html("<div class=\"title\">" + "<h2>" + title + "</h2>" + "</div>");
@@ -158,40 +146,9 @@ var addReply = function (replyEntity) {
     var content = "<div class=\"reply-inner\">" + "<dl class=\"reply-list\" data-pid=\"" + replyEntity.pid + "\" data-uid=\"" + replyEntity.puid + "\" data-area=\"1\" data-index=\"" + replyEntity.index + "\">" + "<dd class=\"operations-user\">" + "<a href=\"kanqiu://people/" + replyEntity.puid + "\" class=\"user-avatar\" >" + "<img src=\"" + replyEntity.userImg + "\" alt=\"" + replyEntity.userName + "\">" + "<span class=\"mod-mask mask\"></span>" + "</a>" + "<div class=\"user-info\">" + "<div class=\"user-name clearfix\">" + "<span class=\"fl ellipsis\"><a href=\"kanqiu://people/" + replyEntity.puid + "\" target=\"_blank\"><font color=\"#326ca6\">" + replyEntity.userName + "</font></a></span>" + author + "</div>" + "<div class=\"source-left\">" + "<span class=\"floor\">" + replyEntity.floor + "楼</span>" + " " + "<span class=\"postdate\">" + replyEntity.time + "</span>" + "</div>" + "</div>" + "<span  class=\"reply-light\" id=\"hupu_" + replyEntity.pid + "_1\">亮了(" + replyEntity.light_count + ")</span>" + "</dd>" + "<dt class=\"reply-content\">" + quoteContent + "<div class=\"current-content\">" + "<span class=\"short-content\">" + replyEntity.content + "</span>" + "</div>" + "</dt>" + "</dl>" + "</div>";
     var html = $('#general-reply').html();
     $('#general-reply').html(html + "" + content);
-    replyImageArray();
+
 };
 
-
-var $replyImages = [];
-
-var replyImageArray = function () {
-    $replyImages = [];
-    var i = 0;
-    $('#general-reply .reply-content img').each(function (e) {
-        var $this = $(this);
-        var url = $this.attr('data_url');
-        var gif = $this.attr('data-gif');
-        $this.attr('data-index', i);
-        i++;
-        $this.attr('class', 'normal_img');
-        if (url && url.length > 0) {
-            $replyImages.push(url);
-        } else if (gif && gif.length > 0) {
-            $replyImages.push(gif);
-        }
-    });
-    $('#general-reply .reply-content .normal_img').off('tap').on('tap',
-        function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            var index = $(this).attr('data-index'),
-                param = {
-                    index: parseInt(index),
-                    imgs: $replyImages
-                };
-            Jockey.send('showImg', param);
-        });
-};
 
 var getHTML = function () {
     return $('body').html();
@@ -214,6 +171,22 @@ var lightSuccess = function (addLightEntity) {
 var reloadStuff = function () {
     reloadHref();
     reloadAvatar();
+    replyListClick();
+    initImage('.reply-content img');
+    reloadImage();
+};
+
+var initImage = function (el) {
+    $(el).each(function (e) {
+        var $this = $(this);
+        var url = $this.attr('data_url');
+        var gif = $this.attr('data-gif');
+        if ((url && url.length > 0) || (gif && gif.length > 0)) {
+            var src = $this.attr('src');
+            $this.attr('data-src', src);
+            $this.attr('src', 'file:///android_asset/hupu_thread_default.png');
+        }
+    });
 };
 
 var reloadHref = function () {
@@ -247,7 +220,6 @@ var reloadAvatar = function () {
 };
 
 var replyListClick = function () {
-
     $('.reply-list').off('tap').on('tap',
         function (e) {
             e.stopPropagation();
@@ -316,6 +288,7 @@ var replyListClick = function () {
 
 $(window).on('scroll',
     function () {
+        reloadImage();
         hideTip();
     });
 

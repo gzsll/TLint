@@ -113,7 +113,6 @@ public class ContentFragment extends BaseFragment
   }
 
   @Override public void loadUrl(String url) {
-    logger.debug("loadUrl:" + url);
     webView.loadUrl(url);
   }
 
