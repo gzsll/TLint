@@ -23,6 +23,16 @@ public interface ContentPagerContract {
     void showReplyUi(String fid, String tid, String pid, String title);
 
     void showReportUi(String tid, String pid);
+
+    void showBrowserUi(String url);
+
+    void showContentUi(String tid, String pid, int page);
+
+    void showThreadListUi(String fid);
+
+    void showUserProfileUi(String uid);
+
+    void showLoginUi();
   }
 
   interface Presenter extends BasePresenter<View> {
@@ -36,6 +46,8 @@ public interface ContentPagerContract {
     void addLight(int area, int index);
 
     void addRuLight(int area, int index);
+
+    void handlerUrl(String url);
 
     ContentPagerPresenter.HupuBridge getJavaScriptInterface();
   }

@@ -16,8 +16,10 @@ import com.gzsll.hupu.components.jockeyjs.JockeyHandler;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.browser.BrowserActivity;
 import com.gzsll.hupu.ui.imagepreview.ImagePreviewActivity;
+import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
+import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 import com.gzsll.hupu.widget.H5Callback;
 import com.gzsll.hupu.widget.JockeyJsWebView;
@@ -107,7 +109,6 @@ public class ContentFragment extends BaseFragment
     showError(true);
   }
 
-
   @Override public void sendMessageToJS(String handlerName, Object object) {
     webView.sendMessageToJS(handlerName, object);
   }
@@ -122,6 +123,26 @@ public class ContentFragment extends BaseFragment
 
   @Override public void showReportUi(String tid, String pid) {
     ReportActivity.startActivity(getActivity(), tid, pid);
+  }
+
+  @Override public void showBrowserUi(String url) {
+    BrowserActivity.startActivity(getActivity(), url);
+  }
+
+  @Override public void showContentUi(String tid, String pid, int page) {
+    ContentActivity.startActivity(getActivity(), "", fid, pid, page);
+  }
+
+  @Override public void showThreadListUi(String fid) {
+    ThreadListActivity.startActivity(getActivity(), fid);
+  }
+
+  @Override public void showUserProfileUi(String uid) {
+    UserProfileActivity.startActivity(getActivity(), uid);
+  }
+
+  @Override public void showLoginUi() {
+    LoginActivity.startActivity(getActivity());
   }
 
   @Override public void doPerform(Map<Object, Object> map) {
@@ -153,7 +174,7 @@ public class ContentFragment extends BaseFragment
     webView.onJSEvent("showUrl", new JockeyHandler() {
       @Override protected void doPerform(Map<Object, Object> payload) {
         logger.debug("showUrl:" + JSON.toJSON(payload));
-        BrowserActivity.startActivity(getActivity(), ((String) payload.get("url")));
+        mContentPresenter.handlerUrl(((String) payload.get("url")));
       }
     });
     webView.onJSEvent("showUser", new JockeyHandler() {
@@ -187,7 +208,7 @@ public class ContentFragment extends BaseFragment
   }
 
   @Override public void openBrowser(String url) {
-    logger.debug("openBrowser:" + url);
+    mContentPresenter.handlerUrl(url);
   }
 
   @Override public void onDestroy() {

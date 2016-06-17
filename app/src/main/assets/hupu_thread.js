@@ -224,6 +224,8 @@ var replyListClick = function () {
         function (e) {
             e.stopPropagation();
             e.preventDefault();
+            var $this = $(this);
+            $this.attr('class','reply-list reply-active');
             var area = $(this).attr('data-area');
             var index = $(this).attr('data-index');
             if (area && index) {
@@ -300,6 +302,7 @@ var showTip = function () {
 
 var hideTip = function () {
     $('.m-reply .reply-tips').hide();
+    $('.reply-active').attr('class','reply-list');
 }
 
 var nightMode = function () {

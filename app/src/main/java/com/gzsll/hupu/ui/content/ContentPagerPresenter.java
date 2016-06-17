@@ -1,11 +1,13 @@
 package com.gzsll.hupu.ui.content;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
+import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.data.ContentRepository;
 import com.gzsll.hupu.db.ImageCache;
 import com.gzsll.hupu.db.ImageCacheDao;
@@ -45,6 +47,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   private Bus mBus;
   private ImageCacheDao mImageCacheDao;
   private OkHttpHelper mOkHttpHelper;
+  private UserStorage mUserStorage;
 
   private ContentPagerContract.View mContentView;
 
@@ -60,12 +63,13 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
 
   @Inject
   public ContentPagerPresenter(ContentRepository mContentRepository, ForumApi mForumApi, Bus mBus,
-      ImageCacheDao mImageCacheDao, OkHttpHelper mOkHttpHelper) {
+      ImageCacheDao mImageCacheDao, OkHttpHelper mOkHttpHelper, UserStorage mUserStorage) {
     this.mContentRepository = mContentRepository;
     this.mForumApi = mForumApi;
     this.mBus = mBus;
     this.mImageCacheDao = mImageCacheDao;
     this.mOkHttpHelper = mOkHttpHelper;
+    this.mUserStorage = mUserStorage;
   }
 
   @Override
@@ -107,6 +111,12 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   }
 
   @Override public void addLight(int area, int index) {
+    if (!mUserStorage.isLogin()) {
+      ToastUtils.showToast("请先登录!!");
+      mContentView.showLoginUi();
+      return;
+    }
+
     final ThreadReply reply = area == 0 ? lightReplies.get(index) : replies.get(index);
     mForumApi.addLight(tid, fid, reply.getPid())
         .observeOn(AndroidSchedulers.mainThread())
@@ -132,6 +142,11 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   }
 
   @Override public void addRuLight(int area, int index) {
+    if (!mUserStorage.isLogin()) {
+      ToastUtils.showToast("请先登录!!");
+      mContentView.showLoginUi();
+      return;
+    }
     final ThreadReply reply = area == 0 ? lightReplies.get(index) : replies.get(index);
     mForumApi.addRuLight(tid, fid, reply.getPid())
         .observeOn(AndroidSchedulers.mainThread())
@@ -154,6 +169,29 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
             ToastUtils.showToast("点灭失败，请检查网络后重试");
           }
         });
+  }
+
+  @Override public void handlerUrl(String url) {
+    if (!TextUtils.isEmpty(url)) {
+      Uri uri = Uri.parse(url);
+      String scheme = uri.getScheme();
+      if (scheme.startsWith("http")) {
+        mContentView.showBrowserUi(url);
+      } else if (scheme.equalsIgnoreCase("kanqiu")) {
+        if (url.contains("topic")) {
+          String tid = uri.getLastPathSegment();
+          String page = uri.getQueryParameter("page");
+          String pid = uri.getQueryParameter("pid");
+          mContentView.showContentUi(tid, pid, TextUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
+        } else if (url.contains("board")) {
+          String boardId = url.substring(url.lastIndexOf("/") + 1);
+          mContentView.showThreadListUi(boardId);
+        } else if (url.contains("people")) {
+          String uid = url.substring(url.lastIndexOf("/") + 1);
+          mContentView.showUserProfileUi(uid);
+        }
+      }
+    }
   }
 
   @Override public HupuBridge getJavaScriptInterface() {
