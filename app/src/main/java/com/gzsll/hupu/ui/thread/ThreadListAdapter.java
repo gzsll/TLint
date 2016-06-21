@@ -22,9 +22,10 @@ import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.content.ContentActivity;
 import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -36,19 +37,21 @@ import rx.schedulers.Schedulers;
  */
 public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.ViewHolder> {
 
+  Logger logger = Logger.getLogger(ThreadListAdapter.class.getSimpleName());
+
   private Activity mActivity;
   private ReadThreadDao mReadThreadDao;
 
   @Inject public ThreadListAdapter(Activity mActivity, ReadThreadDao mReadThreadDao) {
     this.mActivity = mActivity;
     this.mReadThreadDao = mReadThreadDao;
+    threads = Collections.emptyList();
   }
 
-  private List<Thread> threads = new ArrayList<>();
+  private List<Thread> threads;
 
   public void bind(List<Thread> threads) {
     this.threads = threads;
-    notifyDataSetChanged();
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,6 +65,7 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
     holder.thread = thread;
     holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,
         SettingPrefUtils.getTitleSize(mActivity));
+    holder.tvTitle.setText(Html.fromHtml(thread.getTitle()));
     if (thread.getLightReply() != null && thread.getLightReply() > 0) {
       holder.tvLight.setText(String.valueOf(thread.getLightReply()));
       holder.tvLight.setVisibility(View.VISIBLE);
@@ -96,7 +100,6 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
               holder.tvTitle.setTextColor(
                   ResourceUtils.getThemeAttrColor(mActivity, android.R.attr.textColorPrimary));
             }
-            holder.tvTitle.setText(Html.fromHtml(thread.getTitle()));
           }
         });
     showItemAnim(holder.cardView, position);

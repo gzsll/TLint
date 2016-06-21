@@ -97,8 +97,6 @@ import rx.subjects.PublishSubject;
               mThreadListView.showContent();
               lastTid = threads.get(threads.size() - 1).getTid();
               mThreadListView.renderThreads(threads);
-              mThreadListView.onRefreshCompleted();
-              mThreadListView.onLoadCompleted(hasNextPage);
             }
           }
         });
@@ -130,6 +128,8 @@ import rx.subjects.PublishSubject;
                 mThreadListView.onScrollToTop();
               }
             }
+            mThreadListView.onRefreshCompleted();
+            mThreadListView.onLoadCompleted(hasNextPage);
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {

@@ -133,8 +133,8 @@ public class OffLineService extends Service {
       if (isCanceled()) {
         return;
       }
-      mForumApi.getThreadsList(forum.getFid(), "", 100, "",
-          SettingPrefUtils.getThreadSort(OffLineService.this), null)
+      mForumApi.getThreadsList(forum.getFid(), "", "",
+          SettingPrefUtils.getThreadSort(OffLineService.this))
           .doOnNext(new Action1<ThreadListData>() {
             @Override public void call(ThreadListData threadListData) {
               if (threadListData != null && threadListData.result != null) {

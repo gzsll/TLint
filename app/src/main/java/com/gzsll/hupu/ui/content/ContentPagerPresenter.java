@@ -101,22 +101,25 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   }
 
   @Override public void onReply(int area, int index) {
+    if (!isLogin()) {
+      return;
+    }
     ThreadReply reply = area == 0 ? lightReplies.get(index) : replies.get(index);
     mContentView.showReplyUi(fid, tid, reply.getPid(), reply.getContent());
   }
 
   @Override public void onReport(int area, int index) {
+    if (!isLogin()) {
+      return;
+    }
     ThreadReply reply = area == 0 ? lightReplies.get(index) : replies.get(index);
     mContentView.showReportUi(tid, reply.getPid());
   }
 
   @Override public void addLight(int area, int index) {
-    if (!mUserStorage.isLogin()) {
-      ToastUtils.showToast("请先登录!!");
-      mContentView.showLoginUi();
+    if (!isLogin()) {
       return;
     }
-
     final ThreadReply reply = area == 0 ? lightReplies.get(index) : replies.get(index);
     mForumApi.addLight(tid, fid, reply.getPid())
         .observeOn(AndroidSchedulers.mainThread())
@@ -142,9 +145,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   }
 
   @Override public void addRuLight(int area, int index) {
-    if (!mUserStorage.isLogin()) {
-      ToastUtils.showToast("请先登录!!");
-      mContentView.showLoginUi();
+    if (!isLogin()) {
       return;
     }
     final ThreadReply reply = area == 0 ? lightReplies.get(index) : replies.get(index);
@@ -169,6 +170,15 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
             ToastUtils.showToast("点灭失败，请检查网络后重试");
           }
         });
+  }
+
+  private boolean isLogin() {
+    if (!mUserStorage.isLogin()) {
+      ToastUtils.showToast("请先登录!!");
+      mContentView.showLoginUi();
+      return false;
+    }
+    return true;
   }
 
   @Override public void handlerUrl(String url) {

@@ -63,7 +63,7 @@ public class ThreadRepository {
 
   public Observable<ThreadListData> getThreadsList(final String fid, final String lastTid,
       String lastTamp, String type, final PublishSubject<List<Thread>> mSubject) {
-    return mForumApi.getThreadsList(fid, lastTid, 20, lastTamp, type, null)
+    return mForumApi.getThreadsList(fid, lastTid, lastTamp, type)
         .doOnNext(new Action1<ThreadListData>() {
           @Override public void call(ThreadListData threadListData) {
             if (threadListData != null && threadListData.result != null) {

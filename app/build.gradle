@@ -30,7 +30,7 @@ android {
 
   defaultConfig {
     applicationId "com.gzsll.hupu"
-    minSdkVersion 14
+    minSdkVersion 15
     targetSdkVersion 22
     versionCode 42
     versionName "2.2"

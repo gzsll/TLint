@@ -225,6 +225,7 @@ var replyListClick = function () {
             e.stopPropagation();
             e.preventDefault();
             var $this = $(this);
+            $('.reply-active').attr('class','reply-list');
             $this.attr('class','reply-list reply-active');
             var area = $(this).attr('data-area');
             var index = $(this).attr('data-index');

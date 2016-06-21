@@ -169,6 +169,7 @@ public class ThreadListFragment extends BaseFragment
 
   @Override public void renderThreads(List<Thread> threads) {
     mAdapter.bind(threads);
+    recyclerView.getAdapter().notifyDataSetChanged();
   }
 
   @Override public void onLoadCompleted(boolean hasMore) {

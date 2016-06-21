@@ -22,13 +22,11 @@ import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import org.json.JSONArray;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Observable;
@@ -83,30 +81,19 @@ public class ForumApi {
    *
    * @param fid 论坛id，通过getForums接口获取
    * @param lastTid 最后一篇帖子的id
-   * @param limit 分页大小
    * @param lastTamp 时间戳
    * @param type 加载类型  1 按发帖时间排序  2 按回帖时间排序
-   * @param list 未知 ，暂时没使用
    */
-  public Observable<ThreadListData> getThreadsList(String fid, String lastTid, int limit,
-      String lastTamp, String type, List<String> list) {
+  public Observable<ThreadListData> getThreadsList(String fid, String lastTid, String lastTamp,
+      String type) {
     Map<String, String> params = mRequestHelper.getHttpRequestMap();
     params.put("fid", fid);
     params.put("lastTid", lastTid);
-    params.put("limit", String.valueOf(limit));
     params.put("isHome", "1");
     params.put("stamp", lastTamp);
     params.put("password", "0");
-    if (list == null) {
-      params.put("special", "0");
-      params.put("type", type);
-    } else {
-      JSONArray jSONArray = new JSONArray();
-      for (String str : list) {
-        jSONArray.put(str);
-      }
-      params.put("gids", jSONArray.toString());
-    }
+    params.put("special", "0");
+    params.put("type", type);
     String sign = mRequestHelper.getRequestSign(params);
     return mForumService.getThreadsList(sign, params).subscribeOn(Schedulers.io());
   }
@@ -238,7 +225,6 @@ public class ForumApi {
     params.put("pid", pid);
     return mForumService.addRuLight(params).subscribeOn(Schedulers.io());
   }
-
 
   /**
    * 发新帖

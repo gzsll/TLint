@@ -1,7 +1,6 @@
 package com.gzsll.hupu.ui.thread.recommend;
 
 import android.support.annotation.NonNull;
-
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
@@ -9,14 +8,10 @@ import com.gzsll.hupu.data.ThreadRepository;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.util.ToastUtils;
-
-import org.apache.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
+import org.apache.log4j.Logger;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
@@ -64,9 +59,7 @@ public class ThreadRecommendPresenter implements RecommendThreadListContract.Pre
                 lastTid = threads.get(threads.size() - 1).getTid();
               }
               mRecommendView.renderThreads(threads);
-              mRecommendView.onRefreshCompleted();
-              logger.debug("onRefreshCompleted");
-              mRecommendView.onLoadCompleted(hasNextPage);
+
             }
           }
         });
@@ -82,6 +75,8 @@ public class ThreadRecommendPresenter implements RecommendThreadListContract.Pre
               lastTamp = data.stamp;
               hasNextPage = data.nextPage;
             }
+            mRecommendView.onRefreshCompleted();
+            mRecommendView.onLoadCompleted(hasNextPage);
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {

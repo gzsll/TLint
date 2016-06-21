@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.BaseFragment;
@@ -12,13 +13,8 @@ import com.gzsll.hupu.ui.main.MainComponent;
 import com.gzsll.hupu.ui.thread.ThreadListAdapter;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by sll on 2016/5/11.
@@ -73,6 +69,7 @@ public class CollectThreadListFragment extends BaseFragment
 
   @Override public void renderThreads(List<Thread> threads) {
     mAdapter.bind(threads);
+    recyclerView.getAdapter().notifyDataSetChanged();
   }
 
   @Override public void onError(String error) {
