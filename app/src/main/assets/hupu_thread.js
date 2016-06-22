@@ -100,7 +100,7 @@ var replaceImage = function (src, index) {
     $('img').each(function (e) {
         var $this = $(this);
         var i = $this.attr('data-index');
-        if (i&&i == index) {
+        if (i && i == index) {
             $this.attr('src', src);
         }
     });
@@ -149,6 +149,11 @@ var addReply = function (replyEntity) {
 
 };
 
+var addReplyEmpty = function () {
+    var content = "<div class=\"reply-inner\"><div class=\"reply-empty\">暂无回复~</div></div>";
+    var html = $('#general-reply').html();
+    $('#general-reply').html(html + "" + content);
+};
 
 var getHTML = function () {
     return $('body').html();
@@ -189,6 +194,18 @@ var initImage = function (el) {
     });
 };
 
+// var reloadContentHref = function () {
+//     reloadHref('.J-article-content a');
+// };
+//
+// var reloadLightReplyHref = function () {
+//   reloadHref('#bright-reply a')  ;
+// };
+//
+// var reloadReplyHref = function () {
+//   reloadHref('#general-reply a')
+// };
+
 var reloadHref = function () {
     $('a').off('click').on('click',
         function (e) {
@@ -225,8 +242,8 @@ var replyListClick = function () {
             e.stopPropagation();
             e.preventDefault();
             var $this = $(this);
-            $('.reply-active').attr('class','reply-list');
-            $this.attr('class','reply-list reply-active');
+            $('.reply-active').attr('class', 'reply-list');
+            $this.attr('class', 'reply-list reply-active');
             var area = $(this).attr('data-area');
             var index = $(this).attr('data-index');
             if (area && index) {
@@ -303,7 +320,7 @@ var showTip = function () {
 
 var hideTip = function () {
     $('.m-reply .reply-tips').hide();
-    $('.reply-active').attr('class','reply-list');
+    $('.reply-active').attr('class', 'reply-list');
 }
 
 var nightMode = function () {

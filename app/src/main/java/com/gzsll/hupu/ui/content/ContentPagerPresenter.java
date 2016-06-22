@@ -249,13 +249,17 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
         .subscribe(new Action1<List<ThreadReply>>() {
           @Override public void call(List<ThreadReply> threadReplies) {
             replies = threadReplies;
-            if (page == 1 && !threadReplies.isEmpty()) {
+            if (page == 1) {
               mContentView.sendMessageToJS("addReplyTitle", "\"全部回帖\"");
             }
-            for (int i = 0; i < threadReplies.size(); i++) {
-              ThreadReply reply = threadReplies.get(i);
-              reply.setIndex(i);
-              mContentView.sendMessageToJS("addReply", reply);
+            if (threadReplies.isEmpty()) {
+              mContentView.loadUrl("javascript:addReplyEmpty();");
+            } else {
+              for (int i = 0; i < threadReplies.size(); i++) {
+                ThreadReply reply = threadReplies.get(i);
+                reply.setIndex(i);
+                mContentView.sendMessageToJS("addReply", reply);
+              }
             }
             mContentView.loadUrl("javascript:reloadStuff();");
             mContentView.hideLoading();
@@ -284,8 +288,6 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   public class HupuBridge {
 
     @JavascriptInterface public String replaceImage(final String imageUrl, final int index) {
-      logger.debug("replaceImage:" + imageUrl);
-      logger.debug("replaceImage:" + index);
       if (imageMap.contains(imageUrl)) {
         return LocalImageProvider.constructUri(imageMap.get(imageUrl));
       } else {
