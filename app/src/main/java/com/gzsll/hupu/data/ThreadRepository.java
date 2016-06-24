@@ -82,7 +82,6 @@ public class ThreadRepository {
 
   private void cacheThreadList(int type, boolean clear, List<Thread> threads) {
     if (clear) {
-      logger.debug("cacheThreadList clear");
       mThreadDao.queryBuilder()
           .where(ThreadDao.Properties.Type.eq(type))
           .buildDelete()

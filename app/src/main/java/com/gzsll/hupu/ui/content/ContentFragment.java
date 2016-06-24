@@ -84,7 +84,7 @@ public class ContentFragment extends BaseFragment
   }
 
   @Override public void onReloadClicked() {
-
+    mContentPresenter.onReload();
   }
 
   @Override public void onScroll(int dx, int dy) {

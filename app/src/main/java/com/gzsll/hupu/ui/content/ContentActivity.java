@@ -86,7 +86,9 @@ public class ContentActivity extends BaseSwipeBackActivity
   @Override public void initInjector() {
     mContentComponent = DaggerContentComponent.builder()
         .applicationComponent(getApplicationComponent())
-        .activityModule(getActivityModule()).contentModule(new ContentModule()).build();
+        .activityModule(getActivityModule())
+        .contentModule(new ContentModule())
+        .build();
     mContentComponent.inject(this);
   }
 
@@ -99,7 +101,6 @@ public class ContentActivity extends BaseSwipeBackActivity
     pid = getIntent().getStringExtra("pid");
     initPicker();
     initFloatingButton();
-    viewPager.setOffscreenPageLimit(1);
     viewPager.setOnPageChangeListener(this);
     progressBar.setBackgroundColor(ResourceUtils.getThemeColor(this));
     mPresenter.onThreadInfoReceive(tid, fid, pid, page);

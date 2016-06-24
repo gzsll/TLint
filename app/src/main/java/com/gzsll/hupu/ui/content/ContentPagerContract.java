@@ -49,6 +49,8 @@ public interface ContentPagerContract {
 
     void handlerUrl(String url);
 
+    void onReload();
+
     ContentPagerPresenter.HupuBridge getJavaScriptInterface();
   }
 }

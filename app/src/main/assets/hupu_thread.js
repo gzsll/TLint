@@ -35,6 +35,9 @@ var addThreadContent = function (threadEntity) {
     var threadContent = "<header class=\"article-title\">" + "<h1 class=\"headline\">" + threadEntity.title + "</h1>" + "<div class=\"article-info\">" + "<span class=\"times\">" + threadEntity.time + "</span>" + "<span class=\"post-board\">" + "<a href=\"kanqiu://bbs/board/" + threadEntity.fid + "\" target=\"_blank\">" + threadEntity.forumName + "</a>" + "</span>" + "</div>" + "<div class=\"line\"></div>" + "</header>" + "<article class=\"article-content\">" + "<div class=\"article-author clearfix\">" + "<img src=\"" + threadEntity.userImg + "\" class=\"author-icon\">" + "<a href=\"kanqiu://people/" + threadEntity.author_puid + "\" target=\"_blank\"><font color=\"#326ca6\">" + threadEntity.username + "</font></a>" + "<span class=\"mod-mask mask\"></span>" + "</div>" + "<div class=\"J-article-content\">" + threadEntity.content + "</div>" + "</article>";
     $('#detail-content').html(threadContent);
     initImage('.J-article-content img');
+    reloadImage();
+    reloadHref();
+    reloadAvatar();
 };
 
 var $images = [];
@@ -173,12 +176,19 @@ var lightSuccess = function (addLightEntity) {
     $("#hupu_" + addLightEntity.pid + "_1").text("亮了(" + addLightEntity.light + ")");
 };
 
-var reloadStuff = function () {
+var reloadReplyStuff = function () {
     reloadHref();
     reloadAvatar();
-    replyListClick();
+    replyListClick('#general-reply .reply-list');
     initImage('.reply-content img');
     reloadImage();
+};
+
+var reloadLightStuff = function(){
+   reloadHref();
+   reloadAvatar();
+   replyListClick('#bright-reply .reply-list');
+
 };
 
 var initImage = function (el) {
@@ -194,17 +204,6 @@ var initImage = function (el) {
     });
 };
 
-// var reloadContentHref = function () {
-//     reloadHref('.J-article-content a');
-// };
-//
-// var reloadLightReplyHref = function () {
-//   reloadHref('#bright-reply a')  ;
-// };
-//
-// var reloadReplyHref = function () {
-//   reloadHref('#general-reply a')
-// };
 
 var reloadHref = function () {
     $('a').off('click').on('click',
@@ -236,8 +235,8 @@ var reloadAvatar = function () {
         });
 };
 
-var replyListClick = function () {
-    $('.reply-list').off('tap').on('tap',
+var replyListClick = function (el) {
+    $(el).off('tap').on('tap',
         function (e) {
             e.stopPropagation();
             e.preventDefault();

@@ -31,16 +31,15 @@ public class ForumRepository implements ForumDataSource {
     Observable<List<Forum>> remote = mForumRemoteDataSource.getForumList(forumId);
     Observable<List<Forum>> local = mForumLocalDataSource.getForumList(forumId);
 
-    Observable<List<Forum>> remoteWithLocalUpdate =
-        remote.flatMap(new Func1<List<Forum>, Observable<Forum>>() {
-          @Override public Observable<Forum> call(List<Forum> fora) {
-            return Observable.from(fora);
-          }
-        }).doOnNext(new Action1<Forum>() {
-          @Override public void call(Forum forum) {
+    Observable<List<Forum>> remoteWithLocalUpdate = remote.doOnNext(new Action1<List<Forum>>() {
+      @Override public void call(List<Forum> fora) {
+        if (fora != null) {
+          for (Forum forum : fora) {
             mForumLocalDataSource.saveForum(forum);
           }
-        }).toList();
+        }
+      }
+    });
     if (forumId.equals("0")) {  //我的论坛强制刷新
       return remoteWithLocalUpdate;
     }

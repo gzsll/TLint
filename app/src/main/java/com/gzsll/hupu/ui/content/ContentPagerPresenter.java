@@ -60,6 +60,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   private List<ThreadReply> replies = new ArrayList<>();
   private String fid;
   private String tid;
+  private int page;
 
   @Inject
   public ContentPagerPresenter(ContentRepository mContentRepository, ForumApi mForumApi, Bus mBus,
@@ -76,6 +77,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
   public void onThreadInfoReceive(final String tid, final String fid, String pid, final int page) {
     this.fid = fid;
     this.tid = tid;
+    this.page = page;
     if (page == 1) {
       Subscription mSubscription = mContentRepository.getThreadInfo(fid, tid)
           .observeOn(AndroidSchedulers.mainThread())
@@ -204,6 +206,11 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
     }
   }
 
+  @Override public void onReload() {
+    mContentView.showLoading();
+    onThreadInfoReceive(tid, fid, "", page);
+  }
+
   @Override public HupuBridge getJavaScriptInterface() {
     return new HupuBridge();
   }
@@ -232,6 +239,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
                 reply.setIndex(i);
                 mContentView.sendMessageToJS("addLightPost", reply);
               }
+              mContentView.loadUrl("javascript:reloadLightStuff();");
             }
           }
         }, new Action1<Throwable>() {
@@ -261,7 +269,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
                 mContentView.sendMessageToJS("addReply", reply);
               }
             }
-            mContentView.loadUrl("javascript:reloadStuff();");
+            mContentView.loadUrl("javascript:reloadReplyStuff();");
             mContentView.hideLoading();
           }
         }, new Action1<Throwable>() {

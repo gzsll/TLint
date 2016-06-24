@@ -142,7 +142,7 @@ public class ThreadListFragment extends BaseFragment
       @Override public void run() {
         refreshLayout.setRefreshing(true);
       }
-    }, 150);
+    }, 5);
   }
 
   @Override public void showProgress() {
