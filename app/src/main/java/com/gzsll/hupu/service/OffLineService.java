@@ -40,17 +40,21 @@ import com.gzsll.hupu.util.NetWorkUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func3;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sll on 2016/5/30.
@@ -90,6 +94,13 @@ public class OffLineService extends Service {
   private int offlinePictureCount = 0;// 离线的图片数量
 
   private LinkedBlockingQueue<Thread> threadList = new LinkedBlockingQueue<>();// 线程安全队列
+
+  private Map<String, String> lastTidMap = new HashMap<>();
+  private Map<String, String> lastStmMap = new HashMap<>();
+  private Map<String, Integer> threadCountMap = new HashMap<>();
+  private static final int TOTAL_COUNT = 100;
+
+  private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -133,48 +144,67 @@ public class OffLineService extends Service {
       if (isCanceled()) {
         return;
       }
-      mForumApi.getThreadsList(forum.getFid(), "", "",
-          SettingPrefUtils.getThreadSort(OffLineService.this))
-          .doOnNext(new Action1<ThreadListData>() {
-            @Override public void call(ThreadListData threadListData) {
-              if (threadListData != null && threadListData.result != null) {
-                List<Thread> threads = threadListData.result.data;
-                offlineThreadsCount += threads.size();
-                offlineThreadsLength += JSON.toJSONString(threadListData).length();
-                threadList.addAll(threads);
-                if (!threads.isEmpty()) {
-                  int type = Integer.valueOf(threads.get(0).getFid());
+      getThreadList(forum, "", "");
+    }
+  }
+
+  private void getThreadList(final Forum forum, final String lastTid, final String lastStm) {
+    final String fid = forum.getFid();
+    if (threadCountMap.get(fid) != null && threadCountMap.get(fid) >= TOTAL_COUNT) {
+      mOfflineNotifier.notifyThreads(forum, offlineThreadsLength);
+      unOfflineForums.remove(forum);
+      prepareReplies();
+      return;
+    }
+    Subscription mSubscription = mForumApi.getThreadsList(fid, lastTid, lastStm,
+        SettingPrefUtils.getThreadSort(OffLineService.this))
+        .doOnNext(new Action1<ThreadListData>() {
+          @Override public void call(ThreadListData threadListData) {
+            if (threadListData != null && threadListData.result != null) {
+              List<Thread> threads = threadListData.result.data;
+              offlineThreadsCount += threads.size();
+              offlineThreadsLength += JSON.toJSONString(threadListData).length();
+              lastStmMap.put(fid, threadListData.result.stamp);
+              threadList.addAll(threads);
+              lastTidMap.put(fid, threads.get(threads.size() - 1).getTid());
+              Integer count = threadCountMap.get(fid);
+              if (count == null) {
+                count = 0;
+              }
+              threadCountMap.put(fid, count + threads.size());
+              if (!threads.isEmpty()) {
+                int type = Integer.valueOf(threads.get(0).getFid());
+                if (TextUtils.isEmpty(lastTid) && TextUtils.isEmpty(lastStm)) {
                   mThreadDao.queryBuilder()
                       .where(ThreadDao.Properties.Type.eq(type))
                       .buildDelete()
                       .executeDeleteWithoutDetachingEntities();
-                  for (Thread thread : threads) {
-                    if (mThreadDao.queryBuilder()
-                        .where(ThreadDao.Properties.Tid.eq(thread.getTid()),
-                            ThreadDao.Properties.Type.eq(type))
-                        .count() == 0) {
-                      thread.setType(type);
-                      mThreadDao.insert(thread);
-                    }
+                }
+                for (Thread thread : threads) {
+                  if (mThreadDao.queryBuilder()
+                      .where(ThreadDao.Properties.Tid.eq(thread.getTid()),
+                          ThreadDao.Properties.Type.eq(type))
+                      .count() == 0) {
+                    thread.setType(type);
+                    mThreadDao.insert(thread);
                   }
                 }
               }
             }
-          })
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Action1<ThreadListData>() {
-            @Override public void call(ThreadListData threadListData) {
-              mOfflineNotifier.notifyThreads(forum, offlineThreadsLength);
-              unOfflineForums.remove(forum);
-              prepareReplies();
-            }
-          }, new Action1<Throwable>() {
-            @Override public void call(Throwable throwable) {
-              unOfflineForums.remove(forum);
-              prepareReplies();
-            }
-          });
-    }
+          }
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<ThreadListData>() {
+          @Override public void call(ThreadListData threadListData) {
+            getThreadList(forum, lastTidMap.get(fid), lastStmMap.get(fid));
+          }
+        }, new Action1<Throwable>() {
+          @Override public void call(Throwable throwable) {
+            throwable.printStackTrace();
+            getThreadList(forum, lastTidMap.get(fid), lastStmMap.get(fid));
+          }
+        });
+    mCompositeSubscription.add(mSubscription);
   }
 
   private boolean isCanceled() {
@@ -190,55 +220,61 @@ public class OffLineService extends Service {
       stopSelf();
     } else {
       for (final Thread thread : threadList) {
-        Observable.zip(mForumApi.getThreadInfo(thread.getTid(), thread.getFid(), 1, ""),
-            mForumApi.getThreadReplyList(thread.getTid(), thread.getFid(), 1),
-            mForumApi.getThreadLightReplyList(thread.getTid(), thread.getFid()),
-            new Func3<ThreadInfo, ThreadReplyData, ThreadLightReplyData, Boolean>() {
-              @Override public Boolean call(ThreadInfo threadInfo, ThreadReplyData threadReplyData,
-                  ThreadLightReplyData threadLightReplyData) {
-                if (threadInfo != null) {
-                  offlineRepliesLength += JSON.toJSONString(threadInfo).length();
-                  threadInfo.setForumName(threadInfo.getForum().getName());
-                  if (mThreadInfoDao.queryBuilder()
-                      .where(ThreadInfoDao.Properties.Tid.eq(thread.getTid()))
-                      .count() == 0) {
-                    mThreadInfoDao.insert(threadInfo);
-                    transImgToLocal(threadInfo.getContent());
-                  }
-                }
-
-                if (threadReplyData != null && threadReplyData.status == 200) {
-                  offlineRepliesLength += JSON.toJSONString(threadReplyData).length();
-                  ThreadReplyResult result = threadReplyData.result;
-                  if (result != null && !result.list.isEmpty()) {
-                    for (ThreadReply reply : result.list) {
-                      saveReply(reply, false);
+        Subscription mSubscription =
+            Observable.zip(mForumApi.getThreadInfo(thread.getTid(), thread.getFid(), 1, ""),
+                mForumApi.getThreadReplyList(thread.getTid(), thread.getFid(), 1),
+                mForumApi.getThreadLightReplyList(thread.getTid(), thread.getFid()),
+                new Func3<ThreadInfo, ThreadReplyData, ThreadLightReplyData, Boolean>() {
+                  @Override
+                  public Boolean call(ThreadInfo threadInfo, ThreadReplyData threadReplyData,
+                      ThreadLightReplyData threadLightReplyData) {
+                    if (threadInfo != null) {
+                      offlineRepliesLength += JSON.toJSONString(threadInfo).length();
+                      threadInfo.setForumName(threadInfo.getForum().getName());
+                      mThreadInfoDao.queryBuilder()
+                          .where(ThreadInfoDao.Properties.Tid.eq(thread.getTid()))
+                          .buildDelete()
+                          .executeDeleteWithoutDetachingEntities();
+                      mThreadInfoDao.insert(threadInfo);
+                      transImgToLocal(threadInfo.getContent());
                     }
-                  }
-                }
 
-                if (threadLightReplyData != null && threadLightReplyData.status == 200) {
-                  offlineRepliesLength += JSON.toJSONString(threadLightReplyData).length();
-                  if (!threadLightReplyData.list.isEmpty()) {
-                    for (ThreadReply reply : threadLightReplyData.list) {
-                      saveReply(reply, true);
+                    if (threadReplyData != null && threadReplyData.status == 200) {
+                      offlineRepliesLength += JSON.toJSONString(threadReplyData).length();
+                      ThreadReplyResult result = threadReplyData.result;
+                      if (result != null && !result.list.isEmpty()) {
+                        for (ThreadReply reply : result.list) {
+                          reply.setTid(thread.getTid());
+                          reply.setPageIndex(1);
+                          saveReply(reply, false);
+                        }
+                      }
                     }
+
+                    if (threadLightReplyData != null && threadLightReplyData.status == 200) {
+                      offlineRepliesLength += JSON.toJSONString(threadLightReplyData).length();
+                      if (!threadLightReplyData.list.isEmpty()) {
+                        for (ThreadReply reply : threadLightReplyData.list) {
+                          saveReply(reply, true);
+                        }
+                      }
+                    }
+                    return true;
                   }
-                }
-                return true;
-              }
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Action1<Boolean>() {
-              @Override public void call(Boolean aBoolean) {
-                offlineReplyComplete(thread);
-              }
-            }, new Action1<Throwable>() {
-              @Override public void call(Throwable throwable) {
-                offlineReplyComplete(thread);
-              }
-            });
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
+                  @Override public void call(Boolean aBoolean) {
+                    offlineReplyComplete(thread);
+                  }
+                }, new Action1<Throwable>() {
+                  @Override public void call(Throwable throwable) {
+                    throwable.printStackTrace();
+                    offlineReplyComplete(thread);
+                  }
+                });
+        mCompositeSubscription.add(mSubscription);
       }
     }
   }
@@ -282,34 +318,59 @@ public class OffLineService extends Service {
       reply.setQuoteContent(quote.content);
     }
     reply.setIsLight(isLight);
-    if (mReplyDao.queryBuilder().where(ThreadReplyDao.Properties.Pid.eq(reply.getPid())).count()
-        == 0) {
-      mReplyDao.insert(reply);
-    }
+    mReplyDao.queryBuilder()
+        .where(ThreadReplyDao.Properties.Pid.eq(reply.getPid()))
+        .buildDelete()
+        .executeDeleteWithoutDetachingEntities();
+    mReplyDao.insert(reply);
+
     transImgToLocal(reply.getContent());
     transImgToLocal(reply.getQuoteContent());
+    transGifToLocal(reply.getContent());
+    transGifToLocal(reply.getQuoteContent());
   }
 
   private void transImgToLocal(String content) {
+    if (TextUtils.isEmpty(content)) {
+      return;
+    }
     Pattern pattern = Pattern.compile("<img(.+?)data_url=\"(.+?)\"(.+?)src=\"(.+?)\"(.+?)>");
     Matcher matcher = pattern.matcher(content);
     while (matcher.find()) {
       String thumb = matcher.group(4);
       String original = matcher.group(2);
-      cacheImage(original);
-      String localUrl = thumb.substring(thumb.lastIndexOf("/") + 1);
-      String localPath = ConfigUtils.getCachePath() + File.separator + localUrl;
-      if (!FileUtils.exist(localPath)) {
-        try {
-          mOkHttpHelper.httpDownload(thumb, new File(localPath));
-        } catch (Exception e) {
-          Log.d("HtmlUtils", "图片下载失败:" + thumb);
-        }
-        offlinePictureCount++;
-        offlinePictureLength += new File(localPath).length();
-      }
+      cacheImage(thumb, original);
     }
     matcher.reset();
+  }
+
+  private void transGifToLocal(String content) {
+    if (TextUtils.isEmpty(content)) {
+      return;
+    }
+    Pattern pattern = Pattern.compile("<img(.+?)data-gif=\"(.+?)\"(.+?)src=\"(.+?)\"(.+?)>");
+    Matcher matcher = pattern.matcher(content);
+    while (matcher.find()) {
+      String thumb = matcher.group(4);
+      String original = matcher.group(2);
+      cacheImage(thumb, original);
+    }
+    matcher.reset();
+  }
+
+  private void cacheImage(String thumb, String original) {
+    cacheImage(original);
+    String localUrl = thumb.substring(thumb.lastIndexOf("/") + 1);
+    String localPath = ConfigUtils.getCachePath() + File.separator + localUrl;
+    if (!FileUtils.exist(localPath)) {
+      try {
+        mOkHttpHelper.httpDownload(thumb, new File(localPath));
+      } catch (Exception e) {
+        Log.d("HtmlUtils", "图片下载失败:" + thumb);
+      }
+      offlinePictureCount++;
+      offlinePictureLength += new File(localPath).length();
+    }
   }
 
   private void cacheImage(String url) {
@@ -337,5 +398,8 @@ public class OffLineService extends Service {
     logger.debug("onDestroy");
     mOfflineNotifier.notifyPictureSuccess(offlinePictureCount, offlinePictureLength);
     mCurrentStatus = FINISHED;
+    if (mCompositeSubscription != null && !mCompositeSubscription.isUnsubscribed()) {
+      mCompositeSubscription.unsubscribe();
+    }
   }
 }
