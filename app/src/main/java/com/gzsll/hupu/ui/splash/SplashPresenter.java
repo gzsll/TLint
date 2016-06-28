@@ -13,10 +13,10 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -43,20 +43,18 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void initHuPuSign() {
-    mSubscription = Observable.just(Constants.UPDATE_URL)
-        .timeout(2, TimeUnit.SECONDS)
+    mSubscription = Observable.create(new Observable.OnSubscribe<UpdateInfo>() {
+      @Override public void call(Subscriber<? super UpdateInfo> subscriber) {
+        try {
+          String result = mOkHttpHelper.getStringFromServer(Constants.UPDATE_URL);
+          subscriber.onNext(JSON.parseObject(result, UpdateInfo.class));
+        } catch (Exception e) {
+          subscriber.onError(e);
+        }
+        subscriber.onCompleted();
+      }
+    }).timeout(5, TimeUnit.SECONDS)
         .subscribeOn(Schedulers.io())
-        .map(new Func1<String, UpdateInfo>() {
-          @Override public UpdateInfo call(String s) {
-            try {
-              String result = mOkHttpHelper.getStringFromServer(Constants.UPDATE_URL);
-              return JSON.parseObject(result, UpdateInfo.class);
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
-            return null;
-          }
-        })
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<UpdateInfo>() {
           @Override public void call(UpdateInfo updateInfo) {

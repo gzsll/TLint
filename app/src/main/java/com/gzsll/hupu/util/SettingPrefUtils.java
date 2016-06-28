@@ -149,7 +149,7 @@ public class SettingPrefUtils {
 
   public static String getHuPuSign(Context context) {
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-    return prefs.getString("hupuSign", "");
+    return prefs.getString("hupuSign", "HUPU_SALT_AKJfoiwer394Jeiow4u309");
   }
 
   public static void setHuPuSign(Context context, String hupuSign) {

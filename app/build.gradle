@@ -7,7 +7,7 @@ buildscript {
   }
   dependencies {
     // replace with the current version of the Android plugin
-    classpath 'com.android.tools.build:gradle:2.1.0'
+    classpath 'com.android.tools.build:gradle:2.1.2'
     // Since Android's Gradle plugin 0.11, you have to use android-apt >= 1.3
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     classpath 'com.droidtitan:lint-cleaner-plugin:0.3.0'
