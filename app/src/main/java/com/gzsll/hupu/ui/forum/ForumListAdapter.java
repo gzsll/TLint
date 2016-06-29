@@ -35,6 +35,8 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
   public interface OnItemClickListener {
     void onForumDelAttentionClick(Forum forum);
 
+    void onForumOfflineClick(Forum forum);
+
     void onForumClick(Forum forum);
   }
 
@@ -116,6 +118,13 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
       swipeLayout.close();
       if (onItemClickListener != null) {
         onItemClickListener.onForumDelAttentionClick(forum);
+      }
+    }
+
+    @OnClick(R.id.tvOffline) void tvOfflineClick() {
+      swipeLayout.close();
+      if (onItemClickListener != null) {
+        onItemClickListener.onForumOfflineClick(forum);
       }
     }
 

@@ -1,19 +1,20 @@
-package com.gzsll.hupu.ui.thread.special;
+package com.gzsll.hupu.ui.thread.recommend;
 
-import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
+
 import java.util.List;
 
 /**
  * Created by sll on 2016/5/11.
  */
-public interface SpecialThreadListContract {
+public interface RecommendThreadListContract {
   interface View extends BaseView {
 
     void showLoading();
 
-    void hideLoading();
+    void showContent();
 
     void renderThreads(List<Thread> threads);
 

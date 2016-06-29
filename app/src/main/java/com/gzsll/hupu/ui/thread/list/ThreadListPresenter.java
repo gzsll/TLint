@@ -9,21 +9,29 @@ import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.bean.Search;
 import com.gzsll.hupu.bean.SearchData;
 import com.gzsll.hupu.bean.SearchResult;
-import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
 import com.gzsll.hupu.components.storage.UserStorage;
+import com.gzsll.hupu.data.ThreadRepository;
+import com.gzsll.hupu.db.Forum;
+import com.gzsll.hupu.db.ForumDao;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.util.ToastUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.log4j.Logger;
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by sll on 2016/3/9.
@@ -33,10 +41,14 @@ import rx.functions.Func1;
   private Logger logger = Logger.getLogger(ThreadListPresenter.class.getSimpleName());
 
   private String fid;
-  private ForumApi mForumApi;
+  private ThreadRepository mThreadRepository;
   private GameApi mGameApi;
   private UserStorage mUserStorage;
+  private ForumApi mForumApi;
+  private ForumDao mForumDao;
 
+  private boolean isFirst = true;
+  private PublishSubject<List<Thread>> mThreadSubject;
   private ThreadListContract.View mThreadListView;
   private List<Thread> threads = new ArrayList<>();
 
@@ -54,12 +66,16 @@ import rx.functions.Func1;
 
   private Subscription mSubscription;
 
-  @Inject public ThreadListPresenter(String fid, ForumApi forumApi, GameApi gameApi,
-      UserStorage userStorage) {
+  @Inject
+  public ThreadListPresenter(String fid, ThreadRepository mThreadRepository, GameApi mGameApi,
+      UserStorage mUserStorage, ForumApi mForumApi, ForumDao mForumDao) {
     this.fid = fid;
-    mForumApi = forumApi;
-    mGameApi = gameApi;
-    mUserStorage = userStorage;
+    this.mThreadRepository = mThreadRepository;
+    this.mGameApi = mGameApi;
+    this.mUserStorage = mUserStorage;
+    this.mForumApi = mForumApi;
+    this.mForumDao = mForumDao;
+    mThreadSubject = PublishSubject.create();
   }
 
   @Override public void onThreadReceive(String type) {
@@ -67,7 +83,24 @@ import rx.functions.Func1;
     mThreadListView.onFloatingVisibility(View.VISIBLE);
     this.type = type;
     loadType = TYPE_LIST;
-    loadThreadList("", true);
+    mThreadRepository.getThreadListObservable(Integer.valueOf(fid), mThreadSubject)
+        .subscribe(new Action1<List<Thread>>() {
+          @Override public void call(List<Thread> threads) {
+            logger.debug("getThreadListObservable:" + threads.size());
+            ThreadListPresenter.this.threads = threads;
+            if (threads.isEmpty()) {
+              if (!isFirst) {
+                mThreadListView.onError("数据加载失败");
+              }
+              isFirst = false;
+            } else {
+              mThreadListView.showContent();
+              lastTid = threads.get(threads.size() - 1).getTid();
+              mThreadListView.renderThreads(threads);
+            }
+          }
+        });
+    loadThreadList("");
     getAttendStatus();
   }
 
@@ -83,40 +116,30 @@ import rx.functions.Func1;
     loadSearchList();
   }
 
-  private void loadThreadList(String last, final boolean clear) {
-    mSubscription = mForumApi.getThreadsList(fid, last, 20, lastTamp, type, null)
-        .map(new Func1<ThreadListData, List<Thread>>() {
-          @Override public List<Thread> call(ThreadListData result) {
-            if (result != null && result.result != null) {
-              if (clear) {
-                threads.clear();
-              }
-              ThreadListResult data = result.result;
+  private void loadThreadList(final String last) {
+    mSubscription = mThreadRepository.getThreadsList(fid, last, lastTamp, type, mThreadSubject)
+        .subscribe(new Action1<ThreadListData>() {
+          @Override public void call(ThreadListData threadListData) {
+            if (threadListData != null && threadListData.result != null) {
+              ThreadListResult data = threadListData.result;
               lastTamp = data.stamp;
               hasNextPage = data.nextPage;
-              return addThreads(data.data);
-            }
-            return null;
-          }
-        })
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<List<Thread>>() {
-          @Override public void call(List<Thread> threads) {
-            if (threads != null) {
-              mThreadListView.hideLoading();
-              mThreadListView.renderThreads(threads);
-              mThreadListView.onRefreshCompleted();
-              mThreadListView.onLoadCompleted(hasNextPage);
-              if (clear) {
+              if (TextUtils.isEmpty(last)) {
                 mThreadListView.onScrollToTop();
               }
-            } else {
-              loadThreadError();
             }
+            mThreadListView.onRefreshCompleted();
+            mThreadListView.onLoadCompleted(hasNextPage);
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            loadThreadError();
+            if (threads.isEmpty()) {
+              mThreadListView.onError("数据加载失败，请重试");
+            } else {
+              mThreadListView.onRefreshCompleted();
+              mThreadListView.onLoadCompleted(hasNextPage);
+              ToastUtils.showToast("数据加载失败，请重试");
+            }
           }
         });
   }
@@ -133,19 +156,17 @@ import rx.functions.Func1;
           hasNextPage = result.hasNextPage == 1;
           for (Search search : result.data) {
             Thread thread = new Thread();
-            thread.fid = search.fid;
-            thread.tid = search.id;
-            thread.lightReply = Integer.valueOf(search.lights);
-            thread.replies = search.replies;
-            thread.userName = search.username;
-            thread.title = search.title;
+            thread.setFid(search.fid);
+            thread.setTid(search.id);
+            thread.setLightReply(Integer.valueOf(search.lights));
+            thread.setReplies(search.replies);
+            thread.setUserName(search.username);
+            thread.setTitle(search.title);
             long time = Long.valueOf(search.addtime);
             Date date = new Date(time);
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            thread.time = format.format(date);
-            if (!contains(thread)) {
-              threads.add(thread);
-            }
+            thread.setTime(format.format(date));
+            threads.add(thread);
           }
           return threads;
         }
@@ -159,7 +180,7 @@ import rx.functions.Func1;
           if (threads.isEmpty()) {
             mThreadListView.onEmpty();
           } else {
-            mThreadListView.hideLoading();
+            mThreadListView.showContent();
             mThreadListView.renderThreads(threads);
             mThreadListView.onRefreshCompleted();
             mThreadListView.onLoadCompleted(hasNextPage);
@@ -180,32 +201,11 @@ import rx.functions.Func1;
     if (threads.isEmpty()) {
       mThreadListView.onError("数据加载失败");
     } else {
-      mThreadListView.hideLoading();
+      mThreadListView.showContent();
       mThreadListView.onRefreshCompleted();
       mThreadListView.onLoadCompleted(true);
       mThreadListView.showToast("数据加载失败");
     }
-  }
-
-  private List<Thread> addThreads(List<Thread> threadList) {
-    for (Thread thread : threadList) {
-      if (!contains(thread)) {
-        threads.add(thread);
-      }
-    }
-    lastTid = threads.get(threads.size() - 1).tid;
-    return threads;
-  }
-
-  private boolean contains(Thread thread) {
-    boolean isContain = false;
-    for (Thread thread1 : threads) {
-      if (thread.tid.equals(thread1.tid)) {
-        isContain = true;
-        break;
-      }
-    }
-    return isContain;
   }
 
   private void getAttendStatus() {
@@ -221,7 +221,28 @@ import rx.functions.Func1;
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
+            getForumInfo();
+          }
+        });
+  }
 
+  private void getForumInfo() {
+    Observable.create(new Observable.OnSubscribe<Forum>() {
+      @Override public void call(Subscriber<? super Forum> subscriber) {
+        List<Forum> forumList =
+            mForumDao.queryBuilder().where(ForumDao.Properties.Fid.eq(fid)).list();
+        if (!forumList.isEmpty()) {
+          subscriber.onNext(forumList.get(0));
+        }
+      }
+    })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<Forum>() {
+          @Override public void call(Forum forum) {
+            if (forum != null && mThreadListView != null) {
+              mThreadListView.renderThreadInfo(forum);
+            }
           }
         });
   }
@@ -289,7 +310,7 @@ import rx.functions.Func1;
   @Override public void onRefresh() {
     mThreadListView.onScrollToTop();
     if (loadType == TYPE_LIST) {
-      loadThreadList("", true);
+      loadThreadList("");
     } else {
       pageIndex = 1;
       loadSearchList();
@@ -297,9 +318,10 @@ import rx.functions.Func1;
   }
 
   @Override public void onReload() {
+    mThreadListView.showContent();
     mThreadListView.showLoading();
     if (loadType == TYPE_LIST) {
-      loadThreadList(lastTid, false);
+      loadThreadList(lastTid);
     } else {
       loadSearchList();
     }
@@ -313,7 +335,7 @@ import rx.functions.Func1;
     }
 
     if (loadType == TYPE_LIST) {
-      loadThreadList(lastTid, false);
+      loadThreadList(lastTid);
     } else {
       pageIndex++;
       loadSearchList();
@@ -322,6 +344,7 @@ import rx.functions.Func1;
 
   @Override public void attachView(@NonNull ThreadListContract.View view) {
     mThreadListView = view;
+    mThreadListView.showProgress();
   }
 
   @Override public void detachView() {

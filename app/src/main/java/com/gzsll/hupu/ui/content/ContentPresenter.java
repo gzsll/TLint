@@ -7,11 +7,11 @@ import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.injector.PerActivity;
+import com.gzsll.hupu.otto.UpdateContentPageEvent;
 import com.gzsll.hupu.util.ShareUtils;
 import com.gzsll.hupu.util.ToastUtils;
-import java.util.ArrayList;
-import java.util.List;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -20,11 +20,12 @@ import rx.functions.Action1;
 /**
  * Created by sll on 2016/3/9.
  */
-@PerActivity public class ContentPresenter implements ContentContract.Presenter {
+public class ContentPresenter implements ContentContract.Presenter {
 
   private ForumApi mForumApi;
   private Context mContext;
   private UserStorage mUserStorage;
+  private Bus mBus;
 
   private ContentContract.View mContentView;
   private Subscription mSubscription;
@@ -32,17 +33,19 @@ import rx.functions.Action1;
   private String tid;
   private String fid;
   private String pid;
-  private int totalPage;
+  private int totalPage = 1;
   private int currentPage = 1;
-  private List<String> urls = new ArrayList<>();
   private boolean isCollected;
   private String title;
   private String shareText;
+  private boolean isSuccess;
 
-  @Inject public ContentPresenter(ForumApi forumApi, Context context, UserStorage userStorage) {
+  @Inject
+  public ContentPresenter(ForumApi forumApi, Context context, UserStorage userStorage, Bus mBus) {
     mForumApi = forumApi;
     mContext = context;
     mUserStorage = userStorage;
+    this.mBus = mBus;
   }
 
   @Override public void onThreadInfoReceive(String tid, String fid, String pid, int page) {
@@ -54,7 +57,7 @@ import rx.functions.Action1;
   }
 
   private void loadContent(int page) {
-    mSubscription = mForumApi.getThreadInfo(tid, fid, page, pid)
+    mSubscription = mForumApi.getThreadSchemaInfo(tid, fid, page, pid)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<ThreadSchemaInfo>() {
           @Override public void call(ThreadSchemaInfo threadSchemaInfo) {
@@ -64,14 +67,13 @@ import rx.functions.Action1;
               } else {
                 totalPage = threadSchemaInfo.pageSize;
                 currentPage = threadSchemaInfo.page;
-                urls = createPageList(threadSchemaInfo.url, threadSchemaInfo.page,
-                    threadSchemaInfo.pageSize);
                 shareText = threadSchemaInfo.share.weibo;
                 title = threadSchemaInfo.share.wechat_moments;
-                mContentView.renderContent(threadSchemaInfo.url, urls);
+                mContentView.renderContent(currentPage, totalPage);
                 isCollected = threadSchemaInfo.isCollected == 1;
                 mContentView.isCollected(isCollected);
                 mContentView.hideLoading();
+                isSuccess = true;
               }
             } else {
               mContentView.onError("加载失败");
@@ -79,18 +81,10 @@ import rx.functions.Action1;
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            mContentView.onError("加载失败");
+            mContentView.renderContent(currentPage, totalPage);
+            mContentView.hideLoading();
           }
         });
-  }
-
-  private List<String> createPageList(String url, int page, int pageSize) {
-    List<String> urls = new ArrayList<>();
-    for (int i = 1; i <= pageSize; i++) {
-      String newUrl = url.replace("page=" + page, "page=" + i);
-      urls.add(newUrl);
-    }
-    return urls;
   }
 
   @Override public void onReload() {
@@ -107,7 +101,7 @@ import rx.functions.Action1;
     if (currentPage >= totalPage) {
       currentPage = totalPage;
     }
-    mContentView.renderContent(urls.get(currentPage - 1), urls);
+    mContentView.setCurrentItem(currentPage - 1);
   }
 
   @Override public void onPagePre() {
@@ -115,12 +109,12 @@ import rx.functions.Action1;
     if (currentPage <= 1) {
       currentPage = 1;
     }
-    mContentView.renderContent(urls.get(currentPage - 1), urls);
+    mContentView.setCurrentItem(currentPage - 1);
   }
 
   @Override public void onPageSelected(int page) {
     currentPage = page;
-    mContentView.renderContent(urls.get(page - 1), urls);
+    mContentView.setCurrentItem(currentPage - 1);
   }
 
   @Override public void onCommendClick() {
@@ -165,6 +159,7 @@ import rx.functions.Action1;
 
   public void updatePage(int page) {
     currentPage = page;
+    mContentView.onUpdatePager(currentPage, totalPage);
   }
 
   private void addCollect() {
@@ -205,12 +200,24 @@ import rx.functions.Action1;
 
   @Override public void attachView(@NonNull ContentContract.View view) {
     mContentView = view;
+    mBus.register(this);
   }
 
   @Override public void detachView() {
     if (mSubscription != null && !mSubscription.isUnsubscribed()) {
       mSubscription.unsubscribe();
     }
+    mBus.unregister(this);
     mContentView = null;
+  }
+
+  @Subscribe
+  public void onUpdateContentPageEvent(UpdateContentPageEvent event) {
+    if (!isSuccess) {
+      currentPage = event.getPage();
+      totalPage = event.getTotalPage();
+      mContentView.renderContent(currentPage, totalPage);
+      isSuccess = true;
+    }
   }
 }

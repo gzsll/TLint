@@ -1,0 +1,732 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Untitled Document</title>
+    <meta name="viewport"
+          content="initial-scale=1, maximum-scale=1, user-scalable=0, width=device-width">
+    <style type="text/css">
+        *{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+        html {
+        font-family:sans-serif;
+        -ms-text-size-adjust:100%;
+        -webkit-text-size-adjust:100%;
+        overflow-y:scroll;
+        -webkit-overflow-scrolling:touch
+        }
+
+        article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary {
+        display:block
+        }
+        audio,canvas,progress,video {
+        display:inline-block;
+        vertical-align:baseline
+        }
+        body {
+        background: #fff;
+        overflow:hidden;
+        font-size:16px;
+        line-height:1.5;
+        -webkit-tap-highlight-color: transparent;
+        margin: 0;
+        color: #444;
+        }
+
+        .article-title {
+        padding:10px
+        }
+        .article-title .headline {
+        color:#434141;
+        font-size:20px;
+        line-height:32px;
+        padding-bottom:10px;
+        font-weight:700;
+        text-align:left;
+        word-wrap:break-word;
+        word-break:break-all
+        }
+        .article-title .article-info {
+        display:-webkit-box;
+        display:-ms-flexbox;
+        display:-webkit-flex;
+        display:-moz-flex;
+        display:flex;
+        color:#a9a9b2;
+        padding-bottom:10px
+        }
+        .article-title .article-info .post-board {
+        display:block;
+        -webkit-box-flex:1;
+        -ms-flex:1;
+        -webkit-flex:1;
+        -moz-flex:1;
+        flex:1;
+        text-align:right
+        }
+        .article-title .article-info a {
+        color:#1e88e2
+        }
+        .article-title .line {
+        height:1px;
+        background-color:#eeebeb;
+        -webkit-transform:scaleY(0.5);
+        -webkit-transform-origin:0 0;
+        overflow:hidden
+        }
+        .article-content {
+        padding:0px 10px 10px;
+        word-wrap:break-word;
+        font-size:17px;
+        line-height: 1.6;
+        color:#434141
+        }
+        .article-content .J-article-content {
+        padding-top: 10px;
+        text-align: justify;
+        word-wrap: break-word
+        }
+
+        .article-content .article-author {
+        font-size:16px;
+        color:#434141;
+        line-height:30px;
+        height:30px;
+        overflow:hidden;
+        position:relative
+        }
+        .article-content .article-author a,.article-content .article-author a:hover,.article-content
+        .article-author a:focus {
+        color: #434141;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent
+        }
+        .article-content .article-author .mask {
+        width:30px;
+        height:30px;
+        border-radius:50%;
+        position:absolute;
+        z-index:5;
+        left:0;
+        top:0
+        }
+        .article-content .author-icon {
+        width:30px;
+        height:30px;
+        border-radius:50%;
+        display:inline-block;
+        overflow:hidden;
+        float:left;
+        margin-right:10px
+        }
+
+
+        .article-content p {
+        padding:10px 0
+        }
+        .article-content a,.article-content a:hover {
+        color: #005eac
+        }
+        .article-content .bbs-link {
+        color:#326ca6
+        }
+        .article-content img {
+        display:block;
+        max-width:90%;
+        margin:0 auto
+        }
+        .article-content table {
+        width:100%!important
+        }
+        .article-content .m-x-scroll {
+        overflow-x:scroll;
+        -webkit-overflow-scrolling:touch
+        }
+        .article-content .m-x-scroll::-webkit-scrollbar {
+        display:none
+        }
+        .article-content .m-x-scroll th,.article-content .m-x-scroll td {
+        min-width:80px;
+        max-width:200px;
+        padding:5px
+        }
+
+        body.night {
+        background-color:#2c2c2c
+        }
+
+        body.night #general-reply {
+        background:#2c2c2c;
+        }
+
+        body.night #bright-reply {
+        background:#2c2c2c;
+        }
+
+        body.night .article-title {
+        border-bottom-color:#1f1f1f
+        }
+        body.night .article-title .headline {
+        color:#959595
+        }
+        body.night .article-title .line {
+        background-color:#1f1f1f
+        }
+        body.night .article-info .times {
+        color:#5a5a5f
+        }
+        body.night .article-info a {
+        color:#3c678c
+        }
+        body.night .article-content,body.night .article-author {
+        color:#959595
+        }
+        body.night .mod-mask {
+        background-color:rgba(0,0,0,.3)
+        }
+        .clearfix:after {
+        content:"";
+        display:block;
+        height:0;
+        visibility:hidden;
+        clear:both
+        }
+        .fl {
+        float:left
+        }
+        .fr {
+        float:right
+        }
+
+        .general-reply {
+        background: #fff
+        }
+
+        .m-reply {
+        word-wrap: break-word;
+        -webkit-tap-highlight-color: rgba(255,255,255,0)
+        }
+
+        .general-reply-more {
+        line-height: 65px;
+        height: 65px;
+        font-size: 16px;
+        color: #a9a9b2;
+        text-align: center;
+        border-top: 1px solid #e8e8e8;
+        display: none
+        }
+
+        .m-reply .reply-active {
+        background: #e5e5e5
+        }
+
+        .m-reply table {
+        width: 100%!important
+        }
+
+        .m-reply .title {
+        background: #fff;
+        border-top: 1px solid #eeebeb;
+        border-bottom: 1px solid #eeebeb
+        }
+
+        .m-reply .title h2 {
+        border-left: 4px solid #c80c00;
+        display: inline-block;
+        padding-left: 6px;
+        font-size: 16px;
+        font-style: normal;
+        line-height: 34px;
+        height: 34px;
+        color: #c01e2f
+        }
+
+        .user-avatar,.user-avatar img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%
+        }
+
+        .m-reply .operations-user {
+        padding: 0 10px;
+        display: -moz-box;
+        display: -webkit-box;
+        display: box;
+        border-top: 1px solid #e8e8e8
+        }
+
+        .reply-list:first-child .operations-user {
+        border-top: 0
+        }
+
+        .m-reply .user-avatar {
+        display: block;
+        margin-right: 10px;
+        padding-top: 10px;
+        position: relative
+        }
+
+        .m-reply .user-avatar .mask {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        position: absolute;
+        z-index: 5;
+        left: 0;
+        top: 10px
+        }
+
+        .m-reply .user-info {
+        padding-top: 5px
+        }
+
+        .m-reply .user-name {
+        line-height: 26px
+        }
+
+        .m-reply .user-name span {
+        display: inline-block;
+        max-width: 200px
+        }
+
+        .m-reply .user-name .ellipsis {
+        max-width: 145px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis
+        }
+
+        .m-reply .user-name a {
+        color: #434141;
+        font-size: 14px
+        }
+
+        .m-reply .user-name i {
+        position: relative;
+        top: 4px;
+        font-style: normal;
+        padding: 0 8px;
+        line-height: 16px;
+        height: 16px;
+        font-size: 12px;
+        display: inline-block;
+        margin-left: 6px;
+        border-radius: 8px;
+        background: #cfcfcf;
+        color: #626466
+        }
+
+        .m-reply .reply-light {
+        color: #abaeb2;
+        font-size: 14px;
+        line-height: 30px;
+        height: 30px;
+        display: block;
+        -moz-box-flex: 1;
+        -webkit-box-flex: 1;
+        box-flex: 1;
+        text-align: right
+        }
+
+        .m-reply .source-left {
+        font-size: 12px;
+        line-height: 18px;
+        height: 18px;
+        color: #abaeb2
+        }
+
+        .m-reply .reply-content {
+        padding: 7px 10px 10px 50px;
+        font-size: 16px
+        }
+
+        .m-reply .reply-content a {
+        color: #005eac
+        }
+
+        .m-reply .reply-content img {
+        max-width: 100%
+        }
+
+        .m-reply .reply-quote-content {
+        position: relative;
+        padding: 8px;
+        background: #eeebeb;
+        color: #a9a9b3;
+        margin-bottom: 10px
+        }
+
+        .m-reply .reply-quote-content .reply-quote-hd {
+        position: relative;
+        font-size: 14px;
+        color: #434341
+        }
+
+        .m-reply .reply-quote-content .reply-quote-bd {
+        display: none;
+        padding-top: 5px
+        }
+
+        .m-reply .reply-quote-content .current-content {
+        position: relative;
+        padding: 0
+        }
+
+        .m-reply .reply-quote-content center {
+        text-align: left
+        }
+
+        .m-reply .reply-quote-content .all-content {
+        display: none
+        }
+
+        .m-reply .reply-quote-content .button-open-inner {
+        text-align: right
+        }
+
+        .m-reply .reply-quote-content .button-open {
+        position: relative;
+        display: inline-block;
+        height: 16px;
+        line-height: 16px;
+        padding: 0 20px 0 5px;
+        font-size: 14px;
+        color: #434141;
+        border: 1px solid #a9a9b2;
+        -webkit-border-radius: 4px;
+        border-radius: 4px
+        }
+
+        .m-reply .reply-quote-content .button-open .arrow {
+        position: absolute;
+        top: 5px;
+        right: 5px
+        }
+
+        .m-reply .reply-quote-content .button-open .arrow:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-color: rgba(255,255,255,0);
+        border-color: transparent\0;
+        *border-color: transparent;
+        _border-color: tomato;
+        _filter: chroma(color=tomato);
+        border-style: solid;
+        overflow: hidden;
+        border-width: 6px 6px 0;
+        border-top-color: #a9a9b2;
+        left: inherit;
+        right: 0;
+        z-index: 1
+        }
+
+        .m-reply .reply-quote-content .button-open .arrow:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-color: rgba(255,255,255,0);
+        border-color: transparent\0;
+        *border-color: transparent;
+        _border-color: tomato;
+        _filter: chroma(color=tomato);
+        border-style: solid;
+        overflow: hidden;
+        border-width: 5px 5px 0;
+        border-top-color: #eeebeb;
+        left: inherit;
+        right: 1px;
+        z-index: 2
+        }
+
+        .m-reply .reply-bt {
+        padding: 0 8px;
+        color: #999;
+        display: -webkit-flex;
+        display: flex
+        }
+
+        .m-reply .reply-bt a {
+        color: #999
+        }
+
+        .m-reply .reply-bt .times {
+        -webkit-flex: 1;
+        flex: 1;
+        text-align: right
+        }
+
+        .m-reply .reply-bt .floor {
+        margin-right: 5px
+        }
+
+        .m-reply .bright-reply .reply-quote-content {
+        border: 0
+        }
+
+        .m-reply .bright-reply .reply-quote-content:before {
+        display: none
+        }
+
+        .m-reply .button-inner {
+        padding: 12px 0;
+        text-align: center;
+        background: #fff;
+        border-top: 1px solid #f5f5f5
+        }
+
+        .m-reply .not-login-button {
+        border-top: 0
+        }
+
+        .m-reply .button-viewMore,.m-reply .finish-loading {
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 18px;
+        background: #d8544c;
+        text-align: center;
+        font-size: 16px;
+        color: #fff;
+        -webkit-border-radius: 20px;
+        border-radius: 20px
+        }
+
+        .m-reply .finish-loading {
+        background: #f8f8f8;
+        color: #999
+        }
+
+        .finish-loading.fn-hide {
+        display: none
+        }
+
+        .m-reply .general-not-reply .title {
+        display: none
+        }
+
+        .m-reply .reply-empty {
+        text-align: center;
+        color: #a9a9b2;
+        line-height: 80px;
+        height: 80px;
+        font-size: 16px
+        }
+        .lazy-gif {
+        position:relative;
+        display:block;
+        min-width:80px;
+        min-height:80px;
+        overflow:hidden
+        }
+
+        .m-reply .reply-tips {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        margin-left: -135px;
+        margin-top: -24px;
+        min-width: 270px;
+        height: 24px;
+        padding: 8px 5px;
+        line-height: 24px;
+        background: rgba(46,46,46,.9);
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: flex
+        }
+
+        .m-reply .reply-tips:after,.m-reply .reply-tips:before {
+        position: absolute;
+        left: 135px;
+        bottom: -9px;
+        z-index: 2;
+        content: "";
+        width: 0;
+        height: 0;
+        border-width: 5px;
+        border-style: solid dashed dashed solid;
+        border-color: #2e2e2e transparent transparent #2e2e2e;
+        opacity: .9
+        }
+
+        .m-reply .reply-tips li {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        -webkit-flex: 1;
+        -moz-flex: 1;
+        flex: 1;
+        width: 37px;
+        background-position: 0 center;
+        background-repeat: no-repeat;
+        background-size: 45%;
+        padding-left: 30px;
+        font-size: 14px;
+        color: #fff;
+        border-right: 1px solid #000
+        }
+
+        .m-reply .reply-tips li:last-child {
+        border-right: 0!important
+        }
+
+        .m-reply .reply-tips .reply-ico {
+        background-image:
+        url(http://w3.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_comment_5b602fd.png)
+        }
+
+        .m-reply .reply-tips .copy-ico {
+        background-image:
+        url(http://w3.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_copy_77ef9de.png)
+        }
+
+        .m-reply .reply-tips .report-ico {
+        background-image:
+        url(http://w2.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_report_b29b1e6.png)
+        }
+
+        .m-reply .reply-tips .light-ico {
+        background-image:
+        url(http://w3.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_light_up_7bdc161.png)
+        }
+
+        .m-reply .reply-tips .rulight-ico {
+        background-image:
+        url(http://w2.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_rulights_1b91a43.png)
+        }
+
+        .m-reply .reply-tips .locked {
+        color: #919191;
+        background-image:
+        url(http://w3.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_rulights_dark_96bcc71.png)
+        }
+
+        .m-reply .reply-active .reply-ico {
+        color: red;
+        background-image:
+        url(http://w3.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_comment_down_c1b17f8.png)
+        }
+
+        .m-reply .copy-active .copy-ico {
+        color: red;
+        background-image:
+        url(http://w1.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_copy_down_a663cc3.png)
+        }
+
+        .m-reply .report-active .report-ico {
+        color: red;
+        background-image:
+        url(http://w3.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_report_down_dc746a9.png)
+        }
+
+        .m-reply .light-active .light-ico {
+        color: red;
+        background-image:
+        url(http://w1.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_light_down_de96137.png)
+        }
+
+        .m-reply .rulight-active .rulight-ico {
+        color: red;
+        background-image:
+        url(http://w2.hoopchina.com.cn/hybrid/static/bbs/widget/reply/img/btn_rulights_1b91a43.png)
+        }
+
+
+        body.night .m-reply .title {
+        color:#99222c;
+        border-top-color:#1f1f1f;
+        border-bottom-color:#1f1f1f;
+        border-left-color:#99222c;
+        background-color:#2c2c2c
+        }
+        body.night .m-reply .title h2 {
+        color:#99222c
+        }
+        body.night .m-reply .operations-user {
+        border-top-color:#1f1f1f
+        }
+        body.night .m-reply .user-name {
+        color:#959595
+        }
+        body.night .m-reply .user-name i {
+        color:#5a5a5f;
+        background-color:#1f1f1f
+        }
+        body.night .m-reply .source-left {
+        color:#5a5a5f
+        }
+        body.night .m-reply .reply-quote-content {
+        color:#5a5a5f;
+        background-color:#1f1f1f;
+        border:1px solid #111
+        }
+        body.night .m-reply .reply-quote-hd {
+        color:#959595
+        }
+        body.night .m-reply .reply-quote-hd a {
+        color:#3c678c
+        }
+        body.night .m-reply .reply-content a {
+        color:#3c678c
+        }
+        body.night .m-reply .current-content {
+        color:#959595
+        }
+        body.night .m-reply .reply-active {
+        background-color:#1f1f1f
+        }
+        body.night .m-reply .reply-light {
+        color:#5a5a5f
+        }
+        body.night .m-reply .reply-empty {
+        color:#959595
+        }
+
+        ul,ol,li,dl,dd {
+        margin: 0;
+        padding: 0
+        }
+        .user-name a {
+        text-decoration:none;
+        }
+        .article-author a {
+        text-decoration:none;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+<div class="hupu_container">
+    <div id="detail-content"></div>
+    <div class="m-reply">
+        <div id="bright-reply"></div>
+        <div id="general-reply"></div>
+        <ul class="reply-tips" style="top: 315px; display: none;">
+            <li class="reply-ico" dace-node="replyQuote">回复</li>
+            <li class="report-ico" dace-node="replyReport">举报</li>
+            <li class="light-ico" dace-node="replyLight">亮了</li>
+            <li class="rulight-ico">灭了</li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript" src="file:///android_asset/zepto.js"></script>
+<script type="text/javascript" src="file:///android_asset/jockey.js"></script>
+<script type="text/javascript" src="file:///android_asset/hupu_thread.js"></script>
+
+</body>
+</html>

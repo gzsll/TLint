@@ -16,29 +16,42 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gzsll.hupu.R;
-import com.gzsll.hupu.bean.Thread;
+import com.gzsll.hupu.db.ReadThread;
+import com.gzsll.hupu.db.ReadThreadDao;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.content.ContentActivity;
+import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.log4j.Logger;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sll on 2016/3/9.
  */
 public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.ViewHolder> {
 
-  @Inject Activity mActivity;
+  Logger logger = Logger.getLogger(ThreadListAdapter.class.getSimpleName());
 
-  @Inject public ThreadListAdapter() {
+  private Activity mActivity;
+  private ReadThreadDao mReadThreadDao;
 
+  @Inject public ThreadListAdapter(Activity mActivity, ReadThreadDao mReadThreadDao) {
+    this.mActivity = mActivity;
+    this.mReadThreadDao = mReadThreadDao;
+    threads = Collections.emptyList();
   }
 
-  private List<Thread> threads = new ArrayList<>();
+  private List<Thread> threads;
 
   public void bind(List<Thread> threads) {
     this.threads = threads;
-    notifyDataSetChanged();
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,27 +60,48 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
     return new ViewHolder(v);
   }
 
-  @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    Thread thread = threads.get(position);
+  @Override public void onBindViewHolder(final ViewHolder holder, int position) {
+    final Thread thread = threads.get(position);
     holder.thread = thread;
     holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,
         SettingPrefUtils.getTitleSize(mActivity));
-    if (thread.lightReply > 0) {
-      holder.tvLight.setText(String.valueOf(thread.lightReply));
+    holder.tvTitle.setText(Html.fromHtml(thread.getTitle()));
+    if (thread.getLightReply() != null && thread.getLightReply() > 0) {
+      holder.tvLight.setText(String.valueOf(thread.getLightReply()));
       holder.tvLight.setVisibility(View.VISIBLE);
     } else {
       holder.tvLight.setVisibility(View.GONE);
     }
-    holder.tvReply.setText(thread.replies);
-    holder.tvTitle.setText(Html.fromHtml(thread.title));
+    holder.tvReply.setText(thread.getReplies());
+
     holder.tvSingleTime.setVisibility(View.VISIBLE);
     holder.tvSummary.setVisibility(View.GONE);
     holder.grid.setVisibility(View.GONE);
-    if (thread.forum != null) {
-      holder.tvSingleTime.setText(thread.forum.getName());
+    if (thread.getForum() != null) {
+      holder.tvSingleTime.setText(thread.getForum().getName());
     } else {
-      holder.tvSingleTime.setText(thread.time);
+      holder.tvSingleTime.setText(thread.getTime());
     }
+    Observable.just(thread.getTid())
+        .map(new Func1<String, Boolean>() {
+          @Override public Boolean call(String s) {
+            return mReadThreadDao.queryBuilder().where(ReadThreadDao.Properties.Tid.eq(s)).count()
+                > 0;
+          }
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<Boolean>() {
+          @Override public void call(Boolean aBoolean) {
+            if (aBoolean) {
+              holder.tvTitle.setTextColor(
+                  ResourceUtils.getThemeAttrColor(mActivity, android.R.attr.textColorSecondary));
+            } else {
+              holder.tvTitle.setTextColor(
+                  ResourceUtils.getThemeAttrColor(mActivity, android.R.attr.textColorPrimary));
+            }
+          }
+        });
     showItemAnim(holder.cardView, position);
   }
 
@@ -139,7 +173,25 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
     Thread thread;
 
     @OnClick(R.id.llThreadItem) void llThreadItemClick() {
-      ContentActivity.startActivity(mActivity, thread.fid, thread.tid, "", 1);
+      Observable.just(thread.getTid())
+          .doOnNext(new Action1<String>() {
+            @Override public void call(String s) {
+              mReadThreadDao.queryBuilder()
+                  .where(ReadThreadDao.Properties.Tid.eq(s))
+                  .buildDelete()
+                  .executeDeleteWithoutDetachingEntities();
+              ReadThread readThread = new ReadThread(null, s);
+              mReadThreadDao.insert(readThread);
+            }
+          })
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Action1<String>() {
+            @Override public void call(String s) {
+              notifyDataSetChanged();
+              ContentActivity.startActivity(mActivity, thread.getFid(), thread.getTid(), "", 1);
+            }
+          });
     }
 
     public ViewHolder(View view) {

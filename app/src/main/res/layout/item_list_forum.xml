@@ -23,13 +23,14 @@
         android:layout_height="match_parent"
         />
 
-    <!--<TextView-->
-    <!--android:gravity="center"-->
-    <!--android:text="离线"-->
-    <!--android:id="@+id/tvOffline"-->
-    <!--android:background="#4cd964"-->
-    <!--android:layout_width="70dp"-->
-    <!--android:layout_height="match_parent" />-->
+    <TextView
+        android:id="@+id/tvOffline"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:background="#4cd964"
+        android:gravity="center"
+        android:text="离线"
+        />
   </LinearLayout>
 
 

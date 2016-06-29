@@ -66,6 +66,7 @@ public class PmListFragment extends BaseFragment
 
   @Override public void renderPmList(List<Pm> pms) {
     mAdapter.bind(pms);
+    recyclerView.getAdapter().notifyDataSetChanged();
   }
 
   @Override public void onRefreshCompleted() {

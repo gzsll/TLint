@@ -24,9 +24,9 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.yalantis.phoenix.util.Logger;
 import java.io.File;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -44,10 +44,6 @@ public class UpdateAgent {
   public static final String SDCARD_ROOT =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/gzsll/hupu";
 
-
-
-
-
   public UpdateAgent(OkHttpHelper mOkHttpHelper, Activity mActivity) {
     this.mOkHttpHelper = mOkHttpHelper;
     this.mActivity = mActivity;
@@ -60,33 +56,34 @@ public class UpdateAgent {
   public void checkUpdate(final boolean show) {
     mNotifyManager = (NotificationManager) mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
     mBuilder = new NotificationCompat.Builder(mActivity);
-    Observable.just(Constants.UPDATE_URL)
-        .subscribeOn(Schedulers.io())
-        .map(new Func1<String, UpdateInfo>() {
-      @Override public UpdateInfo call(String s) {
+    Observable.create(new Observable.OnSubscribe<UpdateInfo>() {
+      @Override public void call(Subscriber<? super UpdateInfo> subscriber) {
         try {
           String result = mOkHttpHelper.getStringFromServer(Constants.UPDATE_URL);
-          return JSON.parseObject(result, UpdateInfo.class);
+          subscriber.onNext(JSON.parseObject(result, UpdateInfo.class));
+          subscriber.onCompleted();
         } catch (Exception e) {
-          e.printStackTrace();
+          subscriber.onError(e);
         }
-        return null;
       }
-    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<UpdateInfo>() {
-      @Override public void call(UpdateInfo updateInfo) {
-        if (updateInfo != null) {
-          checkUpdateFinished(updateInfo, show);
-          if (updateInfo.extra != null) {
-            SettingPrefUtils.setNeedExam(mActivity, updateInfo.extra.needExam == 1);
+    })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<UpdateInfo>() {
+          @Override public void call(UpdateInfo updateInfo) {
+            if (updateInfo != null) {
+              checkUpdateFinished(updateInfo, show);
+              if (updateInfo.extra != null) {
+                SettingPrefUtils.setNeedExam(mActivity, updateInfo.extra.needExam == 1);
+              }
+              SettingPrefUtils.setHuPuSign(mActivity, updateInfo.hupuSign);
+            }
           }
-          SettingPrefUtils.setHuPuSign(mActivity, updateInfo.hupuSign);
-        }
-      }
-    }, new Action1<Throwable>() {
-      @Override public void call(Throwable throwable) {
-        throwable.printStackTrace();
-      }
-    });
+        }, new Action1<Throwable>() {
+          @Override public void call(Throwable throwable) {
+            throwable.printStackTrace();
+          }
+        });
   }
 
   private void checkUpdateFinished(UpdateInfo updateInfo, boolean show) {

@@ -2,7 +2,6 @@ package com.gzsll.hupu.ui.content;
 
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
-import java.util.List;
 
 /**
  * Created by sll on 2016/5/11.
@@ -13,7 +12,11 @@ public interface ContentContract {
 
     void hideLoading();
 
-    void renderContent(String url, List<String> urls);
+    void renderContent(int page, int totalPage);
+
+    void onUpdatePager(int page, int totalPage);
+
+    void setCurrentItem(int index);
 
     void isCollected(boolean isCollected);
 

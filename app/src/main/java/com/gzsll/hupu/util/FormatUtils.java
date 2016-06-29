@@ -8,14 +8,9 @@ import java.io.File;
 public class FormatUtils {
 
   public static String getFileNameFromUrl(String url) {
-    // 通过 ‘？’ 和 ‘/’ 判断文件名
-    int index = url.lastIndexOf('?');
-    String filename;
-    if (index > 1) {
-      filename = url.substring(url.lastIndexOf('/') + 1, index);
-    } else {
-      filename = url.substring(url.lastIndexOf('/') + 1);
-    }
+
+    String filename = url.substring(url.lastIndexOf('/') + 1);
+
     return filename;
   }
 

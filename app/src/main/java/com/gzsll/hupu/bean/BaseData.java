@@ -15,6 +15,6 @@ public class BaseData {
   public int status;
   public String data;
   public String msg;
-  public String result;
+  public int result;
   public BaseError error;
 }

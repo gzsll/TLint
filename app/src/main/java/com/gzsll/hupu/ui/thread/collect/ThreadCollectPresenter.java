@@ -1,28 +1,32 @@
-package com.gzsll.hupu.ui.thread.special;
+package com.gzsll.hupu.ui.thread.collect;
 
 import android.support.annotation.NonNull;
+
 import com.gzsll.hupu.api.game.GameApi;
-import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.util.ToastUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-
 /**
  * Created by sll on 2016/3/11.
  */
-@PerActivity public class ThreadCollectPresenter implements SpecialThreadListContract.Presenter {
+@PerActivity
+public class ThreadCollectPresenter implements CollectThreadListContract.Presenter {
 
   private GameApi mGameApi;
 
-  private SpecialThreadListContract.View mSpecialView;
+  private CollectThreadListContract.View mSpecialView;
   private Subscription mSubscription;
   private List<Thread> threads = new ArrayList<>();
   private int page = 1;
@@ -47,7 +51,8 @@ import rx.functions.Func1;
         if (result != null && result.result != null) {
           ThreadListResult data = result.result;
           hasNextPage = data.nextDataExists == 1;
-          return addThreads(data.data);
+          threads.addAll(data.data);
+          return threads;
         }
         return null;
       }
@@ -84,26 +89,6 @@ import rx.functions.Func1;
     }
   }
 
-  private List<Thread> addThreads(List<Thread> threadList) {
-    for (Thread thread : threadList) {
-      if (!contains(thread)) {
-        threads.add(thread);
-      }
-    }
-    return threads;
-  }
-
-  private boolean contains(Thread thread) {
-    boolean isContain = false;
-    for (Thread thread1 : threads) {
-      if (thread.tid.equals(thread1.tid)) {
-        isContain = true;
-        break;
-      }
-    }
-    return isContain;
-  }
-
   public void onRefresh() {
     page = 1;
     loadCollectList(page);
@@ -123,7 +108,8 @@ import rx.functions.Func1;
     loadCollectList(++page);
   }
 
-  @Override public void attachView(@NonNull SpecialThreadListContract.View view) {
+  @Override
+  public void attachView(@NonNull CollectThreadListContract.View view) {
     mSpecialView = view;
   }
 

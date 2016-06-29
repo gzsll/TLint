@@ -1,7 +1,7 @@
 package com.gzsll.hupu.ui.thread.list;
 
-import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.db.Forum;
+import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
 import java.util.List;
@@ -13,7 +13,9 @@ public interface ThreadListContract {
   interface View extends BaseView {
     void showLoading();
 
-    void hideLoading();
+    void showProgress();
+
+    void showContent();
 
     void renderThreadInfo(Forum forum);
 

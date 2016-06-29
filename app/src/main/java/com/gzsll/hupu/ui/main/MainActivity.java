@@ -19,8 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.Bind;
-import butterknife.ButterKnife;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
@@ -34,13 +33,18 @@ import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.setting.SettingActivity;
-import com.gzsll.hupu.ui.thread.special.SpecialThreadListFragment;
+import com.gzsll.hupu.ui.thread.recommend.RecommendThreadListFragment;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 import com.gzsll.hupu.util.ResourceUtils;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.StatusBarUtil;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by sll on 2016/3/9.
@@ -100,7 +104,7 @@ public class MainActivity extends BaseActivity
     setupDrawerContent();
     getFragmentManager().beginTransaction()
         .replace(R.id.content,
-            SpecialThreadListFragment.newInstance(SpecialThreadListFragment.TYPE_RECOMMEND))
+                new RecommendThreadListFragment())
         .commit();
     mPresenter.attachView(this);
   }

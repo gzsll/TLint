@@ -90,6 +90,7 @@ public class MessageListFragment extends BaseFragment
 
   @Override public void removeMessage(Message message) {
     mAdapter.remove(message);
+    recyclerView.getAdapter().notifyDataSetChanged();
   }
 
   @Override public void onRefresh() {
