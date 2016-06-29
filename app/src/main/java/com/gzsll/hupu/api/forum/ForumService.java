@@ -7,6 +7,7 @@ import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.PermissionData;
+import com.gzsll.hupu.bean.PostData;
 import com.gzsll.hupu.bean.ThreadLightReplyData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadReplyData;
@@ -56,10 +57,10 @@ public interface ForumService {
   @GET("threads/getThreadsSchemaInfo") Observable<ThreadSchemaInfo> getThreadSchemaInfo(
       @Query("sign") String sign, @QueryMap Map<String, String> params);
 
-  @POST("threads/threadPublish") @FormUrlEncoded Observable<BaseData> addThread(
+  @POST("threads/threadPublish") @FormUrlEncoded Observable<PostData> addThread(
       @FieldMap Map<String, String> params);
 
-  @POST("threads/threadReply") @FormUrlEncoded Observable<BaseData> addReplyByApp(
+  @POST("threads/threadReply") @FormUrlEncoded Observable<PostData> addReplyByApp(
       @FieldMap Map<String, String> params);
 
   @POST("threads/threadCollectAdd") @FormUrlEncoded Observable<CollectData> addCollect(

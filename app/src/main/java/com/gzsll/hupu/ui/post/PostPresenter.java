@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.PermissionData;
+import com.gzsll.hupu.bean.PostData;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.bean.UploadInfo;
 import com.gzsll.hupu.injector.PerActivity;
@@ -121,14 +121,13 @@ import rx.schedulers.Schedulers;
     }
     System.out.println("buffer:" + buffer.toString());
     mSubscription = mForumApi.addReplyByApp(tid, fid, pid, buffer.toString())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<BaseData>() {
-          @Override public void call(BaseData result) {
+        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PostData>() {
+          @Override public void call(PostData data) {
             mPostView.hideLoading();
-            if (result != null) {
-              if (result.error != null) {
-                ToastUtils.showToast(result.error.text);
-              } else if (result.status == 200) {
+            if (data != null) {
+              if (data.error != null) {
+                ToastUtils.showToast(data.error.text);
+              } else if (data.status == 200) {
                 ToastUtils.showToast("发送成功~");
                 mPostView.postSuccess();
               }
@@ -197,14 +196,13 @@ import rx.schedulers.Schedulers;
       }
     }
     mSubscription = mForumApi.addThread(title, buffer.toString(), fid)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<BaseData>() {
-          @Override public void call(BaseData result) {
+        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PostData>() {
+          @Override public void call(PostData data) {
             mPostView.hideLoading();
-            if (result != null) {
-              if (result.error != null) {
-                ToastUtils.showToast(result.error.text);
-              } else if (result.status == 200) {
+            if (data != null) {
+              if (data.error != null) {
+                ToastUtils.showToast(data.error.text);
+              } else if (data.status == 200) {
                 ToastUtils.showToast("发送成功~");
                 mPostView.postSuccess();
               }

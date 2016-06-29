@@ -10,6 +10,7 @@ import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.PermissionData;
+import com.gzsll.hupu.bean.PostData;
 import com.gzsll.hupu.bean.ThreadLightReplyData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadReplyData;
@@ -233,7 +234,7 @@ public class ForumApi {
    * @param content 内容
    * @param fid 论坛id
    */
-  public Observable<BaseData> addThread(String title, String content, String fid) {
+  public Observable<PostData> addThread(String title, String content, String fid) {
     Map<String, String> params = mRequestHelper.getHttpRequestMap();
     params.put("title", title);
     params.put("content", content);
@@ -251,7 +252,7 @@ public class ForumApi {
    * @param pid 回复id（评论时为空，回复某条回复的为回复的id）
    * @param content 内容
    */
-  public Observable<BaseData> addReplyByApp(String tid, String fid, String pid, String content) {
+  public Observable<PostData> addReplyByApp(String tid, String fid, String pid, String content) {
     Map<String, String> params = mRequestHelper.getHttpRequestMap();
     params.put("tid", tid);
     params.put("content", content);
