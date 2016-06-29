@@ -17,8 +17,8 @@
 [本地下载](http://www.pursll.com/TLint_2.1.apk)
 
 ## TODO ##
-- [ ] 离线功能([todo-offline分支](https://github.com/gzsll/TLint/tree/todo-offline))
-- [ ] MVP分层细节优化([todo-offline分支](https://github.com/gzsll/TLint/tree/todo-offline))
+- [X] 离线功能
+- [X] MVP分层细节优化
 - [ ] 代码优化
 
 
