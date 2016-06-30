@@ -21,6 +21,7 @@ import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
 import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import com.gzsll.hupu.widget.H5Callback;
 import com.gzsll.hupu.widget.JockeyJsWebView;
 import java.util.Map;
@@ -31,7 +32,6 @@ import javax.inject.Inject;
  */
 public class ContentFragment extends BaseFragment
     implements ContentPagerContract.View, H5Callback, JockeyJsWebView.OnScrollChangedCallback {
-
 
   public static ContentFragment newInstance(String fid, String tid, String pid, int page) {
     ContentFragment mFragment = new ContentFragment();
@@ -78,7 +78,9 @@ public class ContentFragment extends BaseFragment
   }
 
   @Override public void initData() {
-    webView.loadUrl("file:///android_asset/hupu_thread.html");
+    webView.loadUrl(SettingPrefUtil.getNightModel(getActivity())
+        ? "file:///android_asset/hupu_thread_night.html"
+        : "file:///android_asset/hupu_thread.html");
   }
 
   @Override public void onReloadClicked() {
