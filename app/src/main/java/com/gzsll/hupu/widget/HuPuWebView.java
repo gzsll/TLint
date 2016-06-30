@@ -25,8 +25,8 @@ import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
 import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
-import com.gzsll.hupu.util.StringUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.StringUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -233,7 +233,7 @@ public class HuPuWebView extends WebView {
         break;
       case "hupu.ui.copy":
         String copy = data.getString("content");
-        StringUtils.copy(getContext(), copy);
+        StringUtil.copy(getContext(), copy);
         break;
       case "hupu.ui.report":
         JSONObject reportExtra = data.getJSONObject("extra");
@@ -243,7 +243,7 @@ public class HuPuWebView extends WebView {
         break;
       case "hupu.user.login":
         LoginActivity.startActivity(getContext());
-        ToastUtils.showToast("请先登录");
+        ToastUtil.showToast("请先登录");
         break;
       case "hupu.ui.pageclose":
         AppManager.getAppManager().finishActivity();

@@ -14,10 +14,10 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.injector.component.ActivityComponent;
 import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.module.ActivityModule;
-import com.gzsll.hupu.util.ResourceUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ResourceUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import com.gzsll.hupu.util.StatusBarUtil;
-import com.gzsll.hupu.util.ThemeUtils;
+import com.gzsll.hupu.util.ThemeUtil;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -65,8 +65,8 @@ public abstract class BaseActivity extends AppCompatActivity {
       return;
     }
     if (theme != R.style.AppThemeLaunch) {
-      theme = ThemeUtils.themeArr[SettingPrefUtils.getThemeIndex(this)][
-          SettingPrefUtils.getNightModel(this) ? 1 : 0];
+      theme = ThemeUtil.themeArr[SettingPrefUtil.getThemeIndex(this)][
+          SettingPrefUtil.getNightModel(this) ? 1 : 0];
     }
     setTheme(theme);
   }
@@ -115,7 +115,7 @@ public abstract class BaseActivity extends AppCompatActivity {
    */
   public void setStatusBarColor(boolean on) {
     if (on) {
-      StatusBarUtil.setColor(this, ResourceUtils.getThemeColor(this), 0);
+      StatusBarUtil.setColor(this, ResourceUtil.getThemeColor(this), 0);
     }
   }
 
@@ -129,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity {
   }
 
   public int getStatusBarHeight() {
-    return ResourceUtils.getStatusBarHeight(this);
+    return ResourceUtil.getStatusBarHeight(this);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

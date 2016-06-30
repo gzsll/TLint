@@ -6,7 +6,7 @@ import com.gzsll.hupu.data.local.ContentLocalDataSource;
 import com.gzsll.hupu.data.remote.ContentRemoteDataSource;
 import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
-import com.gzsll.hupu.util.HtmlUtils;
+import com.gzsll.hupu.util.HtmlUtil;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -104,7 +104,7 @@ public class ContentRepository implements ContentDataSource {
       if (!TextUtils.isEmpty(quote.togglecontent)) {
         reply.setQuoteToggle(quote.togglecontent);
       }
-      reply.setQuoteContent(HtmlUtils.transImgToLocal(quote.content));
+      reply.setQuoteContent(HtmlUtil.transImgToLocal(quote.content));
     }
     mContentLocalDataSource.saveThreadReply(reply);
   }

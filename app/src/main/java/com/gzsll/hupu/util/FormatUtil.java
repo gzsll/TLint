@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * Created by sll on 2015/3/7.
  */
-public class FormatUtils {
+public class FormatUtil {
 
   public static String getFileNameFromUrl(String url) {
 

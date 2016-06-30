@@ -74,9 +74,9 @@ public class UpdateAgent {
             if (updateInfo != null) {
               checkUpdateFinished(updateInfo, show);
               if (updateInfo.extra != null) {
-                SettingPrefUtils.setNeedExam(mActivity, updateInfo.extra.needExam == 1);
+                SettingPrefUtil.setNeedExam(mActivity, updateInfo.extra.needExam == 1);
               }
-              SettingPrefUtils.setHuPuSign(mActivity, updateInfo.hupuSign);
+              SettingPrefUtil.setHuPuSign(mActivity, updateInfo.hupuSign);
             }
           }
         }, new Action1<Throwable>() {
@@ -87,7 +87,7 @@ public class UpdateAgent {
   }
 
   private void checkUpdateFinished(UpdateInfo updateInfo, boolean show) {
-    if (updateInfo.versionCode > BuildConfig.VERSION_CODE && SettingPrefUtils.getAutoUpdate(
+    if (updateInfo.versionCode > BuildConfig.VERSION_CODE && SettingPrefUtil.getAutoUpdate(
         mActivity) && show) {
       showUpdateDialog(updateInfo);
     }
@@ -106,10 +106,10 @@ public class UpdateAgent {
                 .setSmallIcon(mActivity.getPackageManager()
                     .getPackageInfo(mActivity.getPackageName(), 0).applicationInfo.icon);
             destinationUri =
-                Uri.parse(SDCARD_ROOT + File.separator + FormatUtils.getFileNameFromUrl(url));
+                Uri.parse(SDCARD_ROOT + File.separator + FormatUtil.getFileNameFromUrl(url));
             FileDownloader.getImpl()
                 .create(url)
-                .setPath(SDCARD_ROOT + File.separator + FormatUtils.getFileNameFromUrl(url))
+                .setPath(SDCARD_ROOT + File.separator + FormatUtil.getFileNameFromUrl(url))
                 .setListener(listener)
                 .start();
             Toast.makeText(mActivity, "开始下载新版本，稍后会开始安装", Toast.LENGTH_SHORT).show();
@@ -144,7 +144,7 @@ public class UpdateAgent {
     @Override protected void completed(BaseDownloadTask task) {
       Intent installAPKIntent = new Intent(Intent.ACTION_VIEW);
       //如果没有设置SDCard写权限，或者没有sdcard,apk文件保存在内存中，需要授予权限才能安装
-      FileUtils.chmod("777", destinationUri.getPath());
+      FileUtil.chmod("777", destinationUri.getPath());
       installAPKIntent.setDataAndType(Uri.parse("file://" + destinationUri.getPath()),
           "application/vnd.android.package-archive");
       PendingIntent pendingIntent = PendingIntent.getActivity(mActivity, 0, installAPKIntent,

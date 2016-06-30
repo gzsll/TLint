@@ -15,7 +15,7 @@ import com.gzsll.hupu.components.jockeyjs.JockeyAsyncHandler;
 import com.gzsll.hupu.components.jockeyjs.JockeyCallback;
 import com.gzsll.hupu.components.jockeyjs.JockeyHandler;
 import com.gzsll.hupu.components.jockeyjs.JockeyImpl;
-import com.gzsll.hupu.util.NetWorkUtils;
+import com.gzsll.hupu.util.NetWorkUtil;
 import java.net.URI;
 import java.util.Map;
 
@@ -56,7 +56,7 @@ public class JockeyJsWebView extends WebView {
     settings.setAppCacheEnabled(true);
     settings.setLoadWithOverviewMode(true);
     settings.setDomStorageEnabled(true);
-    settings.setCacheMode(NetWorkUtils.isNetworkConnected(getContext()) ? WebSettings.LOAD_DEFAULT
+    settings.setCacheMode(NetWorkUtil.isNetworkConnected(getContext()) ? WebSettings.LOAD_DEFAULT
         : WebSettings.LOAD_CACHE_ELSE_NETWORK);
     settings.setCacheMode(2);
     if (Build.VERSION.SDK_INT > 11) {

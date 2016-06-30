@@ -15,8 +15,8 @@ import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.injector.component.ApplicationComponent;
 import com.gzsll.hupu.injector.component.DaggerApplicationComponent;
 import com.gzsll.hupu.injector.module.ApplicationModule;
-import com.gzsll.hupu.util.SettingPrefUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.SettingPrefUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.squareup.leakcanary.LeakCanary;
@@ -45,7 +45,7 @@ public class MyApplication extends Application {
       }
     });
     initFrescoConfig();
-    ToastUtils.register(this);
+    ToastUtil.register(this);
     LeakCanary.install(this);
   }
 
@@ -63,7 +63,7 @@ public class MyApplication extends Application {
 
   private void initUser() {
     List<User> users = mUserDao.queryBuilder()
-        .where(UserDao.Properties.Uid.eq(SettingPrefUtils.getLoginUid(this)))
+        .where(UserDao.Properties.Uid.eq(SettingPrefUtil.getLoginUid(this)))
         .list();
     if (!users.isEmpty()) {
       mUserStorage.login(users.get(0));

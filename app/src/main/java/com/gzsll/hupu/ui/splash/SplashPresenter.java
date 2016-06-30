@@ -7,8 +7,8 @@ import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.bean.UpdateInfo;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ChannelUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ChannelUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import com.umeng.analytics.MobclickAgent;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -38,7 +38,7 @@ import rx.schedulers.Schedulers;
   @Override public void initUmeng() {
     MobclickAgent.UMAnalyticsConfig config =
         new MobclickAgent.UMAnalyticsConfig(mContext, "55f1993be0f55a0fd9004fbc",
-            ChannelUtils.getChannel(mContext));
+            ChannelUtil.getChannel(mContext));
     MobclickAgent.startWithConfigure(config);
   }
 
@@ -60,9 +60,9 @@ import rx.schedulers.Schedulers;
           @Override public void call(UpdateInfo updateInfo) {
             if (updateInfo != null) {
               if (updateInfo.extra != null) {
-                SettingPrefUtils.setNeedExam(mContext, updateInfo.extra.needExam == 1);
+                SettingPrefUtil.setNeedExam(mContext, updateInfo.extra.needExam == 1);
               }
-              SettingPrefUtils.setHuPuSign(mContext, updateInfo.hupuSign);
+              SettingPrefUtil.setHuPuSign(mContext, updateInfo.hupuSign);
             }
             mSplashView.showMainUi();
           }

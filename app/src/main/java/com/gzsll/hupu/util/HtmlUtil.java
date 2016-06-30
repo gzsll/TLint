@@ -9,15 +9,15 @@ import java.util.regex.Pattern;
 /**
  * Created by sll on 2016/6/2.
  */
-public class HtmlUtils {
+public class HtmlUtil {
   private static String htmlString;
 
   public static String getHtmlString(Context mContext) {
     if (!TextUtils.isEmpty(htmlString)) {
       return htmlString;
     }
-    String assetHtml = FileUtils.stringFromAssetsFile(mContext, "hupu_thread.html");
-    String cachePath = ConfigUtils.getCachePath();
+    String assetHtml = FileUtil.stringFromAssetsFile(mContext, "hupu_thread.html");
+    String cachePath = ConfigUtil.getCachePath();
     if (!TextUtils.isEmpty(assetHtml)) {
       htmlString = assetHtml.replace("{hupu.js}",
           String.format("file://%s", cachePath + File.separator + "hupu_thread.js"))
@@ -35,8 +35,8 @@ public class HtmlUtils {
     while (localMatcher.find()) {
       String imageUrl = localMatcher.group(4);
       String localUrl = transToLocal(imageUrl);
-      String localPath = "file://" + ConfigUtils.getCachePath() + File.separator + localUrl;
-      if (FileUtils.exist(localPath)) {
+      String localPath = "file://" + ConfigUtil.getCachePath() + File.separator + localUrl;
+      if (FileUtil.exist(localPath)) {
         content = content.replace(imageUrl, localUrl);
       }
     }

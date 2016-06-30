@@ -19,7 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.Constants;
@@ -35,16 +36,11 @@ import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.setting.SettingActivity;
 import com.gzsll.hupu.ui.thread.recommend.RecommendThreadListFragment;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
-import com.gzsll.hupu.util.ResourceUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ResourceUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import com.gzsll.hupu.util.StatusBarUtil;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by sll on 2016/3/9.
@@ -92,15 +88,14 @@ public class MainActivity extends BaseActivity
     navigationView.getHeaderView(0).findViewById(R.id.llAccount).setOnClickListener(this);
     ivTheme = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ivTheme);
     ivTheme.setOnClickListener(this);
-    ivTheme.setImageResource(
-        SettingPrefUtils.getNightModel(this) ? R.drawable.ic_wb_sunny_white_24dp
+    ivTheme.setImageResource(SettingPrefUtil.getNightModel(this) ? R.drawable.ic_wb_sunny_white_24dp
             : R.drawable.ic_brightness_3_white_24dp);
     //创建返回键，并实现打开关/闭监听
     ActionBarDrawerToggle mDrawerToggle =
         new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
     mDrawerToggle.syncState();
     drawerLayout.setDrawerListener(mDrawerToggle);
-    StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, ResourceUtils.getThemeColor(this), 0);
+    StatusBarUtil.setColorForDrawerLayout(this, drawerLayout, ResourceUtil.getThemeColor(this), 0);
     setupDrawerContent();
     getFragmentManager().beginTransaction()
         .replace(R.id.content,

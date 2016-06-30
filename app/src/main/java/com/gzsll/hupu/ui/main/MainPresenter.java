@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.MenuItem;
-
 import com.gzsll.hupu.AppManager;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
@@ -21,16 +20,13 @@ import com.gzsll.hupu.ui.browser.BrowserFragment;
 import com.gzsll.hupu.ui.forum.ForumListFragment;
 import com.gzsll.hupu.ui.thread.collect.CollectThreadListFragment;
 import com.gzsll.hupu.ui.thread.recommend.RecommendThreadListFragment;
-import com.gzsll.hupu.util.SettingPrefUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.SettingPrefUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import com.gzsll.hupu.util.UpdateAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -77,11 +73,11 @@ import rx.schedulers.Schedulers;
   }
 
   private void initNotification() {
-    if (isLogin() && !TextUtils.isEmpty(SettingPrefUtils.getHuPuSign(mContext))) {
+    if (isLogin() && !TextUtils.isEmpty(SettingPrefUtil.getHuPuSign(mContext))) {
       mSubscription = mNotificationObservable.subscribe(new Action1<Integer>() {
         @Override public void call(Integer integer) {
           if (integer == null) {
-            ToastUtils.showToast("登录信息失效，请重新登录");
+            ToastUtil.showToast("登录信息失效，请重新登录");
             mUserDao.queryBuilder()
                 .where(UserDao.Properties.Uid.eq(mUserStorage.getUid()))
                 .buildDelete()
@@ -103,11 +99,11 @@ import rx.schedulers.Schedulers;
 
   private void toLogin() {
     mMainView.showLoginUi();
-    ToastUtils.showToast("请先登录");
+    ToastUtil.showToast("请先登录");
   }
 
   @Override public void onNightModelClick() {
-    SettingPrefUtils.setNightModel(mContext, !SettingPrefUtils.getNightModel(mContext));
+    SettingPrefUtil.setNightModel(mContext, !SettingPrefUtil.getNightModel(mContext));
     mMainView.reload();
   }
 
@@ -235,7 +231,7 @@ import rx.schedulers.Schedulers;
 
   private boolean isCanExit() {
     if (System.currentTimeMillis() - mExitTime > 2000) {
-      ToastUtils.showToast("再按一次退出程序");
+      ToastUtil.showToast("再按一次退出程序");
       mExitTime = System.currentTimeMillis();
       return false;
     }

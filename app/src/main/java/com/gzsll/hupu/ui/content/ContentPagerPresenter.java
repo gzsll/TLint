@@ -15,10 +15,10 @@ import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.otto.UpdateContentPageEvent;
 import com.gzsll.hupu.provider.LocalImageProvider;
-import com.gzsll.hupu.util.ConfigUtils;
-import com.gzsll.hupu.util.FileUtils;
-import com.gzsll.hupu.util.FormatUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ConfigUtil;
+import com.gzsll.hupu.util.FileUtil;
+import com.gzsll.hupu.util.FormatUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import com.squareup.otto.Bus;
 import java.io.File;
 import java.util.ArrayList;
@@ -127,17 +127,17 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
               if (baseData.status == 200) {
                 AddLight light = new AddLight(baseData.result, reply.getPid());
                 mContentView.sendMessageToJS("addLight", light);
-                ToastUtils.showToast("点亮成功");
+                ToastUtil.showToast("点亮成功");
               } else if (baseData.error != null) {
-                ToastUtils.showToast(baseData.error.text);
+                ToastUtil.showToast(baseData.error.text);
               }
             } else {
-              ToastUtils.showToast("点亮失败，请检查网络后重试");
+              ToastUtil.showToast("点亮失败，请检查网络后重试");
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast("点亮失败，请检查网络后重试");
+            ToastUtil.showToast("点亮失败，请检查网络后重试");
           }
         });
   }
@@ -155,24 +155,24 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
               if (baseData.status == 200) {
                 AddLight light = new AddLight(baseData.result, reply.getPid());
                 mContentView.sendMessageToJS("addLight", light);
-                ToastUtils.showToast("点灭成功");
+                ToastUtil.showToast("点灭成功");
               } else if (baseData.error != null) {
-                ToastUtils.showToast(baseData.error.text);
+                ToastUtil.showToast(baseData.error.text);
               }
             } else {
-              ToastUtils.showToast("点灭失败，请检查网络后重试");
+              ToastUtil.showToast("点灭失败，请检查网络后重试");
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast("点灭失败，请检查网络后重试");
+            ToastUtil.showToast("点灭失败，请检查网络后重试");
           }
         });
   }
 
   private boolean isLogin() {
     if (!mUserStorage.isLogin()) {
-      ToastUtils.showToast("请先登录!!");
+      ToastUtil.showToast("请先登录!!");
       mContentView.showLoginUi();
       return false;
     }
@@ -301,7 +301,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
             .list();
         if (!imageCaches.isEmpty()) {
           String path = imageCaches.get(0).getPath();
-          if (!TextUtils.isEmpty(path) && FileUtils.exist(path)) {
+          if (!TextUtils.isEmpty(path) && FileUtil.exist(path)) {
             imageMap.put(imageUrl, path);
             return LocalImageProvider.constructUri(path);
           }
@@ -314,7 +314,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
               try {
                 // 下载图片
                 File imgFile = new File(
-                    ConfigUtils.getCachePath() + File.separator + FormatUtils.getFileNameFromUrl(
+                    ConfigUtil.getCachePath() + File.separator + FormatUtil.getFileNameFromUrl(
                         imageUrl));
 
                 if (!imgFile.exists()) {

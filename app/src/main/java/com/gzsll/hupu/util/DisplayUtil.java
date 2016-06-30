@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by sll on 2015/6/17.
  */
-public class DisplayUtils {
+public class DisplayUtil {
   /**
    * 将px值转换为dip或dp值，保证尺寸大小不变
    */

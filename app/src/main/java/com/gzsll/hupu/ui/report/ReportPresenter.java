@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ToastUtil;
 import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -33,15 +33,15 @@ import rx.functions.Action1;
             mReportView.hideLoading();
             if (result.status == 200) {
               mReportView.reportSuccess();
-              ToastUtils.showToast("举报成功~");
+              ToastUtil.showToast("举报成功~");
             } else {
-              ToastUtils.showToast("举报失败，请检查网络后重试");
+              ToastUtil.showToast("举报失败，请检查网络后重试");
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
             mReportView.hideLoading();
-            ToastUtils.showToast("举报失败，请检查网络后重试");
+            ToastUtil.showToast("举报失败，请检查网络后重试");
           }
         });
   }

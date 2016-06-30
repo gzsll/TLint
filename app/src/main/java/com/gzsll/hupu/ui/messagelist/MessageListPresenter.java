@@ -7,7 +7,7 @@ import com.gzsll.hupu.bean.Message;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.otto.MessageReadEvent;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ToastUtil;
 import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ import rx.functions.Func1;
     if (messages.isEmpty()) {
       mMessageListView.onError();
     } else {
-      ToastUtils.showToast("数据加载失败，请重试");
+      ToastUtil.showToast("数据加载失败，请重试");
       mMessageListView.hideLoading();
       mMessageListView.onRefreshCompleted();
       mMessageListView.onLoadCompleted(true);

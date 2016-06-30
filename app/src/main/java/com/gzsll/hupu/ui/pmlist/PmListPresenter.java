@@ -6,7 +6,7 @@ import com.gzsll.hupu.bean.Pm;
 import com.gzsll.hupu.bean.PmData;
 import com.gzsll.hupu.bean.PmResult;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -55,7 +55,7 @@ import rx.schedulers.Schedulers;
                 if (mPms.isEmpty()) {
                   mPmListView.onEmpty();
                 } else {
-                  ToastUtils.showToast("没有更多了");
+                  ToastUtil.showToast("没有更多了");
                 }
               } else {
                 addPmList(result.data);
@@ -70,7 +70,7 @@ import rx.schedulers.Schedulers;
             if (mPms.isEmpty()) {
               mPmListView.onError();
             } else {
-              ToastUtils.showToast("数据加载失败，请检查网络后重试");
+              ToastUtil.showToast("数据加载失败，请检查网络后重试");
               mPmListView.hideLoading();
               mPmListView.onRefreshCompleted();
               mPmListView.onLoadCompleted(true);
@@ -108,7 +108,7 @@ import rx.schedulers.Schedulers;
 
   @Override public void onLoadMore() {
     if (!hasNextPage) {
-      ToastUtils.showToast("没有更多了~");
+      ToastUtil.showToast("没有更多了~");
       mPmListView.onLoadCompleted(false);
       return;
     }

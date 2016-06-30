@@ -7,7 +7,7 @@ import com.gzsll.hupu.bean.ThreadListResult;
 import com.gzsll.hupu.data.ThreadRepository;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -82,7 +82,7 @@ public class ThreadRecommendPresenter implements RecommendThreadListContract.Pre
             } else {
               mRecommendView.onRefreshCompleted();
               mRecommendView.onLoadCompleted(hasNextPage);
-              ToastUtils.showToast("数据加载失败，请重试");
+              ToastUtil.showToast("数据加载失败，请重试");
             }
           }
         });
@@ -100,7 +100,7 @@ public class ThreadRecommendPresenter implements RecommendThreadListContract.Pre
 
   public void onLoadMore() {
     if (!hasNextPage) {
-      ToastUtils.showToast("没有更多了~");
+      ToastUtil.showToast("没有更多了~");
       mRecommendView.onLoadCompleted(false);
       return;
     }

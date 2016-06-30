@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Created by sll on 2015/11/26.
  */
-public class ConfigUtils {
+public class ConfigUtil {
 
   private static String cachePath;
 
@@ -55,8 +55,7 @@ public class ConfigUtils {
       return picSavePath;
     }
     picSavePath = Environment.getExternalStorageDirectory().getAbsolutePath()
-        + File.separator
-        + SettingPrefUtils.getPicSavePath(context)
+        + File.separator + SettingPrefUtil.getPicSavePath(context)
         + File.separator;
     File file = new File(picSavePath);
     if (!file.exists()) {

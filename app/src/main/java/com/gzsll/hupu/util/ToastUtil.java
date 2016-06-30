@@ -6,11 +6,11 @@ import android.widget.Toast;
 /**
  * Created by sll on 2016/1/11.
  */
-public class ToastUtils {
+public class ToastUtil {
 
   public static Context mContext;
 
-  private ToastUtils() {
+  private ToastUtil() {
   }
 
   public static void register(Context context) {

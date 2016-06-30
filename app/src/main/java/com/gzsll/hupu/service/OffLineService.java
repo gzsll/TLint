@@ -35,10 +35,10 @@ import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.db.ThreadReplyDao;
 import com.gzsll.hupu.injector.component.DaggerServiceComponent;
 import com.gzsll.hupu.injector.module.ServiceModule;
-import com.gzsll.hupu.util.ConfigUtils;
-import com.gzsll.hupu.util.FileUtils;
-import com.gzsll.hupu.util.NetWorkUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ConfigUtil;
+import com.gzsll.hupu.util.FileUtil;
+import com.gzsll.hupu.util.NetWorkUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,7 +156,7 @@ public class OffLineService extends Service {
       return;
     }
     Subscription mSubscription = mForumApi.getThreadsList(fid, lastTid, lastStm,
-        SettingPrefUtils.getThreadSort(OffLineService.this))
+        SettingPrefUtil.getThreadSort(OffLineService.this))
         .doOnNext(new Action1<ThreadListData>() {
           @Override public void call(ThreadListData threadListData) {
             if (threadListData != null && threadListData.result != null) {
@@ -297,7 +297,7 @@ public class OffLineService extends Service {
       return true;
     }
 
-    if (!NetWorkUtils.isWifiConnected(this)) {
+    if (!NetWorkUtil.isWifiConnected(this)) {
       Logger.d("isWiFi");
       mCurrentStatus = CANCEL;
       stopSelf();
@@ -360,8 +360,8 @@ public class OffLineService extends Service {
   private void cacheImage(String thumb, String original) {
     cacheImage(original);
     String localUrl = thumb.substring(thumb.lastIndexOf("/") + 1);
-    String localPath = ConfigUtils.getCachePath() + File.separator + localUrl;
-    if (!FileUtils.exist(localPath)) {
+    String localPath = ConfigUtil.getCachePath() + File.separator + localUrl;
+    if (!FileUtil.exist(localPath)) {
       try {
         mOkHttpHelper.httpDownload(thumb, new File(localPath));
       } catch (Exception e) {

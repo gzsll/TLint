@@ -7,7 +7,7 @@ import android.net.Uri;
 /**
  * Created by sll on 2016/3/29.
  */
-public class ShareUtils {
+public class ShareUtil {
 
   public static void shareImage(Context mContext, Uri uri, String title) {
     Intent shareIntent = new Intent();

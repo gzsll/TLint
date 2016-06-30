@@ -3,7 +3,7 @@ package com.gzsll.hupu.ui;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import com.gzsll.hupu.widget.swipeback.SwipeBackActivityBase;
 import com.gzsll.hupu.widget.swipeback.SwipeBackActivityHelper;
 import com.gzsll.hupu.widget.swipeback.SwipeBackLayout;
@@ -60,7 +60,7 @@ public abstract class BaseSwipeBackActivity extends BaseActivity implements Swip
 
   @Override protected void onResume() {
     super.onResume();
-    int mode = SettingPrefUtils.getSwipeBackEdgeMode(this);
+    int mode = SettingPrefUtil.getSwipeBackEdgeMode(this);
     SwipeBackLayout mSwipeBackLayout = mHelper.getSwipeBackLayout();
     switch (mode) {
       case 0:

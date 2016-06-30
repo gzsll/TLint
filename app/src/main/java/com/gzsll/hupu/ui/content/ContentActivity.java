@@ -24,8 +24,8 @@ import com.gzsll.hupu.ui.BaseSwipeBackActivity;
 import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.report.ReportActivity;
-import com.gzsll.hupu.util.DisplayUtils;
-import com.gzsll.hupu.util.ResourceUtils;
+import com.gzsll.hupu.util.DisplayUtil;
+import com.gzsll.hupu.util.ResourceUtil;
 import com.gzsll.hupu.widget.PagePicker;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.VerticalViewPager;
@@ -100,7 +100,7 @@ public class ContentActivity extends BaseSwipeBackActivity
     initPicker();
     initFloatingButton();
     viewPager.setOnPageChangeListener(this);
-    progressBar.setBackgroundColor(ResourceUtils.getThemeColor(this));
+    progressBar.setBackgroundColor(ResourceUtil.getThemeColor(this));
     mPresenter.onThreadInfoReceive(tid, fid, pid, page);
   }
 
@@ -110,11 +110,11 @@ public class ContentActivity extends BaseSwipeBackActivity
   }
 
   private void initFloatingButton() {
-    ResourceUtils.setFabMenuColor(this, floatingMenu);
-    ResourceUtils.setFabBtnColor(this, floatingComment);
-    ResourceUtils.setFabBtnColor(this, floatingCollect);
-    ResourceUtils.setFabBtnColor(this, floatingShare);
-    ResourceUtils.setFabBtnColor(this, floatingReport);
+    ResourceUtil.setFabMenuColor(this, floatingMenu);
+    ResourceUtil.setFabBtnColor(this, floatingComment);
+    ResourceUtil.setFabBtnColor(this, floatingCollect);
+    ResourceUtil.setFabBtnColor(this, floatingShare);
+    ResourceUtil.setFabBtnColor(this, floatingReport);
   }
 
   @Override protected boolean isApplyStatusBarTranslucency() {
@@ -265,7 +265,7 @@ public class ContentActivity extends BaseSwipeBackActivity
     if (mPagePicker.isShowing()) {
       mPagePicker.dismiss();
     } else {
-      mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, DisplayUtils.dip2px(this, 40));
+      mPagePicker.showAtLocation(frameLayout, Gravity.BOTTOM, 0, DisplayUtil.dip2px(this, 40));
     }
   }
 

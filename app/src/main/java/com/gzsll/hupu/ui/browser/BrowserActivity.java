@@ -12,8 +12,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
-import com.gzsll.hupu.util.StringUtils;
-import javax.inject.Inject;
+import com.gzsll.hupu.util.StringUtil;
 
 /**
  * Created by sll on 2016/3/11.
@@ -33,7 +32,6 @@ public class BrowserActivity extends BaseSwipeBackActivity {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
 
-  @Inject StringUtils mStringUtils;
 
   private String url;
   private BrowserFragment mFragment;
@@ -86,7 +84,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
         mFragment.reload();
       }
     } else if (item.getItemId() == R.id.copy) {
-      StringUtils.copy(this, url);
+      StringUtil.copy(this, url);
     } else if (item.getItemId() == R.id.to_browser) {
       try {
         Intent intent = new Intent();

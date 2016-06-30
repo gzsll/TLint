@@ -9,7 +9,7 @@ import com.gzsll.hupu.R;
 /**
  * Created by sll on 2015/5/16.
  */
-public class SettingPrefUtils {
+public class SettingPrefUtil {
 
   public static boolean getOffline(Context context) {
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

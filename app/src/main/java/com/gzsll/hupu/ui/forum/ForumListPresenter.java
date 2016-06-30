@@ -3,20 +3,16 @@ package com.gzsll.hupu.ui.forum;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-
 import com.gzsll.hupu.data.ForumRepository;
 import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.otto.DelForumAttentionEvent;
 import com.gzsll.hupu.service.OffLineService;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ToastUtil;
 import com.squareup.otto.Bus;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -63,14 +59,14 @@ import rx.functions.Action1;
         .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
       @Override public void call(Boolean aBoolean) {
         if (aBoolean != null && aBoolean) {
-              ToastUtils.showToast("取消关注成功");
+          ToastUtil.showToast("取消关注成功");
               mBus.post(new DelForumAttentionEvent(forum.getFid()));
               mForumListView.removeForum(forum);
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast("取消关注失败，请重试");
+            ToastUtil.showToast("取消关注失败，请重试");
           }
         });
   }

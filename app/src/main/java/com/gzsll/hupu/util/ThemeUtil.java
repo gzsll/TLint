@@ -6,7 +6,7 @@ import com.gzsll.hupu.R;
 /**
  * Created by sll on 2016/5/17.
  */
-public class ThemeUtils {
+public class ThemeUtil {
   public static int[][] themeArr = {
       { R.style.AppThemeLight_Red, R.style.AppThemeDark_Red },
       { R.style.AppThemeLight_Pink, R.style.AppThemeDark_Pink },
@@ -50,6 +50,6 @@ public class ThemeUtils {
 
   public static int getThemeColor(Context mContext) {
     return mContext.getResources()
-        .getColor(themeColorArr[SettingPrefUtils.getThemeIndex(mContext)][0]);
+        .getColor(themeColorArr[SettingPrefUtil.getThemeIndex(mContext)][0]);
   }
 }

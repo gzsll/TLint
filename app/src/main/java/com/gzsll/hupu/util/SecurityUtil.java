@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by sll on 2015/3/9.
  */
-public class SecurityUtils {
+public class SecurityUtil {
 
   public static String getMd5ByteByFile(File file) {
     FileInputStream in = null;

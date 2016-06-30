@@ -17,8 +17,8 @@ import com.gzsll.hupu.R;
 import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.otto.ChangeThemeEvent;
 import com.gzsll.hupu.ui.BaseActivity;
-import com.gzsll.hupu.util.SettingPrefUtils;
-import com.gzsll.hupu.util.ThemeUtils;
+import com.gzsll.hupu.util.SettingPrefUtil;
+import com.gzsll.hupu.util.ThemeUtil;
 import com.squareup.otto.Bus;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,11 +63,11 @@ public class ColorsDialogFragment extends DialogFragment
   class MDColorsAdapter extends BaseAdapter {
 
     @Override public int getCount() {
-      return ThemeUtils.themeColorArr.length;
+      return ThemeUtil.themeColorArr.length;
     }
 
     @Override public Object getItem(int position) {
-      return ThemeUtils.themeColorArr[position];
+      return ThemeUtil.themeColorArr[position];
     }
 
     @Override public long getItemId(int position) {
@@ -81,7 +81,7 @@ public class ColorsDialogFragment extends DialogFragment
 
       if (!colorMap.containsKey(String.valueOf(position))) {
         colorMap.put(String.valueOf(position),
-            new ColorDrawable(getResources().getColor(ThemeUtils.themeColorArr[position][0])));
+            new ColorDrawable(getResources().getColor(ThemeUtil.themeColorArr[position][0])));
       }
 
       ImageView imgColor = (ImageView) convertView.findViewById(R.id.ivColor);
@@ -90,18 +90,18 @@ public class ColorsDialogFragment extends DialogFragment
 
       View imgSelected = convertView.findViewById(R.id.ivSelected);
       imgSelected.setVisibility(
-          SettingPrefUtils.getThemeIndex(getActivity()) == position ? View.VISIBLE : View.GONE);
+          SettingPrefUtil.getThemeIndex(getActivity()) == position ? View.VISIBLE : View.GONE);
 
       return convertView;
     }
   }
 
   @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    if (position == SettingPrefUtils.getThemeIndex(getActivity())) {
+    if (position == SettingPrefUtil.getThemeIndex(getActivity())) {
       dismiss();
       return;
     }
-    SettingPrefUtils.setThemeIndex(getActivity(), position);
+    SettingPrefUtil.setThemeIndex(getActivity(), position);
     dismiss();
     mBus.post(new ChangeThemeEvent());
     if (getActivity() instanceof BaseActivity) ((BaseActivity) getActivity()).reload();

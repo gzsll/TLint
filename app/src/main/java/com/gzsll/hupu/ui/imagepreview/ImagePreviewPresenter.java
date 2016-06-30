@@ -10,10 +10,10 @@ import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ConfigUtils;
-import com.gzsll.hupu.util.FormatUtils;
-import com.gzsll.hupu.util.StringUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ConfigUtil;
+import com.gzsll.hupu.util.FormatUtil;
+import com.gzsll.hupu.util.StringUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import java.io.File;
 import java.io.InputStream;
 import javax.inject.Inject;
@@ -48,8 +48,8 @@ import rx.schedulers.Schedulers;
         .map(new Func1<InputStream, File>() {
           @Override public File call(InputStream in) {
             if (in != null) {
-              String fileName = FormatUtils.getFileNameFromUrl(url);
-              File target = new File(ConfigUtils.getPicSavePath(mContext), fileName);
+              String fileName = FormatUtil.getFileNameFromUrl(url);
+              File target = new File(ConfigUtil.getPicSavePath(mContext), fileName);
               if (target.exists()) {
                 return target;
               }
@@ -91,9 +91,9 @@ import rx.schedulers.Schedulers;
         .subscribe(new Action1<File>() {
           @Override public void call(File file) {
             if (file != null && file.exists()) {
-              ToastUtils.showToast("保存成功");
+              ToastUtil.showToast("保存成功");
             } else {
-              ToastUtils.showToast("保存失败，请重试");
+              ToastUtil.showToast("保存失败，请重试");
             }
           }
         });
@@ -132,7 +132,7 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void copyImagePath(String url) {
-    StringUtils.copy(mContext, url);
+    StringUtil.copy(mContext, url);
   }
 
   @Override public void attachView(@NonNull ImagePreviewContract.View view) {

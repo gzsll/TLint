@@ -17,7 +17,7 @@ import com.gzsll.hupu.db.Forum;
 import com.gzsll.hupu.db.ForumDao;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ToastUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -135,7 +135,7 @@ import rx.subjects.PublishSubject;
             } else {
               mThreadListView.onRefreshCompleted();
               mThreadListView.onLoadCompleted(hasNextPage);
-              ToastUtils.showToast("数据加载失败，请重试");
+              ToastUtil.showToast("数据加载失败，请重试");
             }
           }
         });

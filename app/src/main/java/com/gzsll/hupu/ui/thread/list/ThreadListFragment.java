@@ -39,8 +39,8 @@ import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.ui.login.LoginActivity;
 import com.gzsll.hupu.ui.post.PostActivity;
 import com.gzsll.hupu.ui.thread.ThreadListAdapter;
-import com.gzsll.hupu.util.ResourceUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ResourceUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import java.util.List;
 import javax.inject.Inject;
@@ -105,12 +105,12 @@ public class ThreadListFragment extends BaseFragment
   }
 
   private void initFloatingButton() {
-    ResourceUtils.setFabBtnColor(mActivity, floatingPost);
-    ResourceUtils.setFabBtnColor(mActivity, floatingSwitch);
-    ResourceUtils.setFabBtnColor(mActivity, floatingRefresh);
-    ResourceUtils.setFabBtnColor(mActivity, floatingAttention);
-    ResourceUtils.setFabMenuColor(mActivity, floatingMenu);
-    if (SettingPrefUtils.getThreadSort(mActivity).equals(Constants.THREAD_TYPE_HOT)) {
+    ResourceUtil.setFabBtnColor(mActivity, floatingPost);
+    ResourceUtil.setFabBtnColor(mActivity, floatingSwitch);
+    ResourceUtil.setFabBtnColor(mActivity, floatingRefresh);
+    ResourceUtil.setFabBtnColor(mActivity, floatingAttention);
+    ResourceUtil.setFabMenuColor(mActivity, floatingMenu);
+    if (SettingPrefUtil.getThreadSort(mActivity).equals(Constants.THREAD_TYPE_HOT)) {
       floatingSwitch.setLabelText("按发帖时间排序");
     } else {
       floatingSwitch.setLabelText("按回帖时间排序");
@@ -132,7 +132,7 @@ public class ThreadListFragment extends BaseFragment
   }
 
   @Override public void initData() {
-    mPresenter.onThreadReceive(SettingPrefUtils.getThreadSort(mActivity));
+    mPresenter.onThreadReceive(SettingPrefUtil.getThreadSort(mActivity));
   }
 
   @Override public void showLoading() {
@@ -281,7 +281,7 @@ public class ThreadListFragment extends BaseFragment
           }
 
           @Override public boolean onMenuItemActionCollapse(MenuItem item) {
-            mPresenter.onThreadReceive(SettingPrefUtils.getThreadSort(mActivity));
+            mPresenter.onThreadReceive(SettingPrefUtil.getThreadSort(mActivity));
             return true;
           }
         });

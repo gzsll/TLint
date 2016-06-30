@@ -5,7 +5,7 @@ import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadInfoDao;
 import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.db.ThreadReplyDao;
-import com.gzsll.hupu.util.HtmlUtils;
+import com.gzsll.hupu.util.HtmlUtil;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -34,7 +34,7 @@ public class ContentLocalDataSource implements ContentDataSource {
         if (!threadInfos.isEmpty()) {
           ThreadInfo threadInfo = threadInfos.get(0);
           String content = threadInfo.getContent();
-          threadInfo.setContent(HtmlUtils.transImgToLocal(content));
+          threadInfo.setContent(HtmlUtil.transImgToLocal(content));
           subscriber.onNext(threadInfo);
         } else {
           subscriber.onNext(null);

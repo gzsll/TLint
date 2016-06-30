@@ -12,7 +12,7 @@ import com.gzsll.hupu.bean.SendPm;
 import com.gzsll.hupu.bean.SendPmData;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -86,7 +86,7 @@ import rx.schedulers.Schedulers;
                 if (mPmDetails.isEmpty()) {
                   mPmDetailView.onEmpty();
                 } else {
-                  ToastUtils.showToast("没有更多了");
+                  ToastUtil.showToast("没有更多了");
                   mPmDetailView.onRefreshCompleted();
                 }
               }
@@ -97,7 +97,7 @@ import rx.schedulers.Schedulers;
             if (mPmDetails.isEmpty()) {
               mPmDetailView.onError();
             } else {
-              ToastUtils.showToast("数据加载失败，请检查网络后重试");
+              ToastUtil.showToast("数据加载失败，请检查网络后重试");
               mPmDetailView.hideLoading();
             }
           }
@@ -114,7 +114,7 @@ import rx.schedulers.Schedulers;
 
   @Override public void send(String content) {
     if (TextUtils.isEmpty(content)) {
-      ToastUtils.showToast("内容不能为空");
+      ToastUtil.showToast("内容不能为空");
       return;
     }
     mGameApi.pm(content, uid)
@@ -135,16 +135,16 @@ import rx.schedulers.Schedulers;
                 mPmDetailView.renderPmDetailList(mPmDetails);
                 mPmDetailView.scrollTo(mPmDetails.size() - 1);
                 mPmDetailView.onRefreshCompleted();
-                ToastUtils.showToast("发送成功");
+                ToastUtil.showToast("发送成功");
                 mPmDetailView.cleanEditText();
               } else {
-                ToastUtils.showToast(sendPmData.result.desc);
+                ToastUtil.showToast(sendPmData.result.desc);
               }
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast("发送失败，请检查您的网络后重试");
+            ToastUtil.showToast("发送失败，请检查您的网络后重试");
           }
         });
   }
@@ -155,11 +155,11 @@ import rx.schedulers.Schedulers;
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<BaseData>() {
           @Override public void call(BaseData baseData) {
-            ToastUtils.showToast("清空记录成功");
+            ToastUtil.showToast("清空记录成功");
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast("清空记录失败，请检查网络后重试");
+            ToastUtil.showToast("清空记录失败，请检查网络后重试");
           }
         });
   }
@@ -170,13 +170,13 @@ import rx.schedulers.Schedulers;
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<BaseData>() {
           @Override public void call(BaseData baseData) {
-            ToastUtils.showToast(isBlock ? "取消屏蔽成功" : "屏蔽成功");
+            ToastUtil.showToast(isBlock ? "取消屏蔽成功" : "屏蔽成功");
             isBlock = !isBlock;
             mPmDetailView.isBlock(isBlock);
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast(isBlock ? "取消屏蔽失败，请检查网络后重试" : "屏蔽失败，请检查网络后重试");
+            ToastUtil.showToast(isBlock ? "取消屏蔽失败，请检查网络后重试" : "屏蔽失败，请检查网络后重试");
           }
         });
   }

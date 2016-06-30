@@ -20,7 +20,7 @@ import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
 import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.db.ThreadInfo;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -159,7 +159,7 @@ public class ForumApi {
     if (!TextUtils.isEmpty(pid)) {
       params.put("pid", pid);
     }
-    params.put("nopic", SettingPrefUtils.getLoadPic(mContext) ? "0" : "1");
+    params.put("nopic", SettingPrefUtil.getLoadPic(mContext) ? "0" : "1");
     String sign = mRequestHelper.getRequestSign(params);
     return mForumService.getThreadSchemaInfo(sign, params).subscribeOn(Schedulers.io());
   }

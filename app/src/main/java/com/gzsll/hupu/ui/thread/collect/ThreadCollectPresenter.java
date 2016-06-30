@@ -1,19 +1,15 @@
 package com.gzsll.hupu.ui.thread.collect;
 
 import android.support.annotation.NonNull;
-
 import com.gzsll.hupu.api.game.GameApi;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadListResult;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.ToastUtils;
-
+import com.gzsll.hupu.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -85,7 +81,7 @@ public class ThreadCollectPresenter implements CollectThreadListContract.Present
       mSpecialView.hideLoading();
       mSpecialView.onLoadCompleted(true);
       mSpecialView.onRefreshCompleted();
-      ToastUtils.showToast("数据加载失败");
+      ToastUtil.showToast("数据加载失败");
     }
   }
 
@@ -101,7 +97,7 @@ public class ThreadCollectPresenter implements CollectThreadListContract.Present
 
   public void onLoadMore() {
     if (!hasNextPage) {
-      ToastUtils.showToast("没有更多了~");
+      ToastUtil.showToast("没有更多了~");
       mSpecialView.onLoadCompleted(false);
       return;
     }

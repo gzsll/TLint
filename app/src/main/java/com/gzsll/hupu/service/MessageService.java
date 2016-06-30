@@ -22,8 +22,8 @@ import com.gzsll.hupu.injector.component.DaggerServiceComponent;
 import com.gzsll.hupu.injector.module.ServiceModule;
 import com.gzsll.hupu.ui.messagelist.MessageActivity;
 import com.gzsll.hupu.ui.splash.SplashActivity;
-import com.gzsll.hupu.util.NetWorkUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.NetWorkUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import java.util.Calendar;
 import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
@@ -59,7 +59,7 @@ public class MessageService extends Service {
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    if (!mUserStorage.isLogin() || !SettingPrefUtils.getNotification(this)) {
+    if (!mUserStorage.isLogin() || !SettingPrefUtil.getNotification(this)) {
       stopSelf();
       return super.onStartCommand(intent, flags, startId);
     }
@@ -110,7 +110,7 @@ public class MessageService extends Service {
   }
 
   private void loadMessage() {
-    if (!NetWorkUtils.isWifiConnected(this)) {
+    if (!NetWorkUtil.isWifiConnected(this)) {
       return;
     }
     mForumApi.getMessageList("", 1)

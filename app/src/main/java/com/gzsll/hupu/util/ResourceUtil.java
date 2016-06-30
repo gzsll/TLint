@@ -12,7 +12,7 @@ import com.gzsll.hupu.R;
 /**
  * Created by sll on 2015/9/6 0006.
  */
-public class ResourceUtils {
+public class ResourceUtil {
 
   public static int getThemeColor(@NonNull Context context) {
     return getThemeAttrColor(context, R.attr.colorPrimary);

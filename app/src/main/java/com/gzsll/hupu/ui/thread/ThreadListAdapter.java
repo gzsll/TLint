@@ -20,8 +20,8 @@ import com.gzsll.hupu.db.ReadThread;
 import com.gzsll.hupu.db.ReadThreadDao;
 import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.ui.content.ContentActivity;
-import com.gzsll.hupu.util.ResourceUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.ResourceUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -61,8 +61,7 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
   @Override public void onBindViewHolder(final ViewHolder holder, int position) {
     final Thread thread = threads.get(position);
     holder.thread = thread;
-    holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-        SettingPrefUtils.getTitleSize(mActivity));
+    holder.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, SettingPrefUtil.getTitleSize(mActivity));
     holder.tvTitle.setText(Html.fromHtml(thread.getTitle()));
     if (thread.getLightReply() != null && thread.getLightReply() > 0) {
       holder.tvLight.setText(String.valueOf(thread.getLightReply()));
@@ -93,10 +92,10 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
           @Override public void call(Boolean aBoolean) {
             if (aBoolean) {
               holder.tvTitle.setTextColor(
-                  ResourceUtils.getThemeAttrColor(mActivity, android.R.attr.textColorSecondary));
+                  ResourceUtil.getThemeAttrColor(mActivity, android.R.attr.textColorSecondary));
             } else {
               holder.tvTitle.setTextColor(
-                  ResourceUtils.getThemeAttrColor(mActivity, android.R.attr.textColorPrimary));
+                  ResourceUtil.getThemeAttrColor(mActivity, android.R.attr.textColorPrimary));
             }
           }
         });

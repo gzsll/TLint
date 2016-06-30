@@ -7,7 +7,7 @@ import java.io.File;
 /**
  * Created by sll on 2015/5/16.
  */
-public class CacheUtils {
+public class CacheUtil {
 
   public static String getCacheSize(Context context) {
     // 计算缓存大小
@@ -17,10 +17,10 @@ public class CacheUtils {
     File cacheDir = context.getCacheDir();
     File ExternalCacheDir = context.getExternalCacheDir();
 
-    fileSize += FormatUtils.getDirSize(filesDir);
-    fileSize += FormatUtils.getDirSize(cacheDir);
-    fileSize += FormatUtils.getDirSize(ExternalCacheDir);
-    if (fileSize > 0) cacheSize = FormatUtils.formatFileSize(fileSize);
+    fileSize += FormatUtil.getDirSize(filesDir);
+    fileSize += FormatUtil.getDirSize(cacheDir);
+    fileSize += FormatUtil.getDirSize(ExternalCacheDir);
+    if (fileSize > 0) cacheSize = FormatUtil.formatFileSize(fileSize);
     return cacheSize;
   }
 

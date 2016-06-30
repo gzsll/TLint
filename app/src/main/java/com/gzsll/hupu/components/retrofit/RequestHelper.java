@@ -4,8 +4,8 @@ import android.content.Context;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import com.gzsll.hupu.components.storage.UserStorage;
-import com.gzsll.hupu.util.SecurityUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
+import com.gzsll.hupu.util.SecurityUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class RequestHelper {
   public Map<String, String> getHttpRequestMap() {
     HashMap<String, String> map = new HashMap<String, String>();
     map.put("client", getDeviceId());
-    map.put("night", SettingPrefUtils.getNightModel(mContext) ? "1" : "0");
+    map.put("night", SettingPrefUtil.getNightModel(mContext) ? "1" : "0");
     if (mUserStorage.isLogin()) {
       try {
         map.put("token", URLEncoder.encode(mUserStorage.getToken(), "UTF-8"));
@@ -71,7 +71,7 @@ public class RequestHelper {
       Map.Entry<String, String> map1 = list.get(i);
       builder.append(map1.getKey()).append("=").append(map1.getValue());
     }
-    builder.append(SettingPrefUtils.getHuPuSign(mContext));
-    return SecurityUtils.getMD5(builder.toString());
+    builder.append(SettingPrefUtil.getHuPuSign(mContext));
+    return SecurityUtil.getMD5(builder.toString());
   }
 }

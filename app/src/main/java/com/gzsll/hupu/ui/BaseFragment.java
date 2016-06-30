@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.injector.HasComponent;
-import com.gzsll.hupu.util.ResourceUtils;
+import com.gzsll.hupu.util.ResourceUtil;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.ProgressFragment;
 
@@ -78,7 +78,7 @@ public abstract class BaseFragment extends ProgressFragment {
     tvLoading = (TextView) loading.findViewById(R.id.tvLoading);
     ProgressBarCircularIndeterminate progressBar =
         (ProgressBarCircularIndeterminate) loading.findViewById(R.id.progress_view);
-    progressBar.setBackgroundColor(ResourceUtils.getThemeColor(getActivity()));
+    progressBar.setBackgroundColor(ResourceUtil.getThemeColor(getActivity()));
     return loading;
   }
 

@@ -13,8 +13,8 @@ import com.gzsll.hupu.db.User;
 import com.gzsll.hupu.db.UserDao;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.otto.LoginSuccessEvent;
-import com.gzsll.hupu.util.SecurityUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.SecurityUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import com.squareup.otto.Bus;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -58,7 +58,7 @@ import rx.functions.Func1;
       return;
     }
     mLoginView.showLoading();
-    mSubscription = mGameApi.login(userName, SecurityUtils.getMD5(passWord))
+    mSubscription = mGameApi.login(userName, SecurityUtil.getMD5(passWord))
         .flatMap(new Func1<LoginData, Observable<UserData>>() {
           @Override public Observable<UserData> call(LoginData loginData) {
             if (loginData != null && loginData.is_login == 1) {
@@ -93,19 +93,19 @@ import rx.functions.Func1;
               user.setLocation(data.location_str);
               mUserStorage.login(user);
               insertOrUpdateUser(user);
-              ToastUtils.showToast("登录成功");
+              ToastUtil.showToast("登录成功");
               mBus.post(new LoginSuccessEvent());
               mLoginView.loginSuccess();
             } else {
               mLoginView.hideLoading();
-              ToastUtils.showToast("登录失败，请检查您的网络");
+              ToastUtil.showToast("登录失败，请检查您的网络");
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
             throwable.printStackTrace();
             mLoginView.hideLoading();
-            ToastUtils.showToast("登录失败，请检查您的网络");
+            ToastUtil.showToast("登录失败，请检查您的网络");
           }
         });
   }

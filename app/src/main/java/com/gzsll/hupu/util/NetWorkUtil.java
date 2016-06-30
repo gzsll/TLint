@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 /**
  * by sll
  */
-public class NetWorkUtils {
+public class NetWorkUtil {
 
   public static boolean isNetworkConnected(Context context) {
     if (context != null) {

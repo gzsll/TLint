@@ -8,8 +8,8 @@ import com.gzsll.hupu.bean.CollectData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.otto.UpdateContentPageEvent;
-import com.gzsll.hupu.util.ShareUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.ShareUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
@@ -134,7 +134,7 @@ public class ContentPresenter implements ContentContract.Presenter {
 
   @Override public void onShareClick() {
     if (!TextUtils.isEmpty(shareText)) {
-      ShareUtils.share(mContext, shareText);
+      ShareUtil.share(mContext, shareText);
     }
     mContentView.onToggleFloatingMenu();
   }
@@ -168,14 +168,14 @@ public class ContentPresenter implements ContentContract.Presenter {
         .subscribe(new Action1<CollectData>() {
           @Override public void call(CollectData collectData) {
             if (collectData != null && collectData.result != null) {
-              ToastUtils.showToast(collectData.result.msg);
+              ToastUtil.showToast(collectData.result.msg);
               isCollected = collectData.result.status == 200;
               mContentView.isCollected(isCollected);
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast("收藏失败");
+            ToastUtil.showToast("收藏失败");
           }
         });
   }
@@ -186,14 +186,14 @@ public class ContentPresenter implements ContentContract.Presenter {
         .subscribe(new Action1<CollectData>() {
           @Override public void call(CollectData collectData) {
             if (collectData != null && collectData.result != null) {
-              ToastUtils.showToast(collectData.result.msg);
+              ToastUtil.showToast(collectData.result.msg);
               isCollected = collectData.result.status != 200;
               mContentView.isCollected(isCollected);
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            ToastUtils.showToast("取消收藏失败");
+            ToastUtil.showToast("取消收藏失败");
           }
         });
   }

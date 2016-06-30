@@ -12,7 +12,7 @@ import java.io.InputStream;
 /**
  * Created by sll on 2015/3/7.
  */
-public class FileUtils {
+public class FileUtil {
 
   public static boolean hasSDCard() {
     boolean mHasSDcard = false;

@@ -9,8 +9,8 @@ import com.gzsll.hupu.bean.PostData;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.bean.UploadInfo;
 import com.gzsll.hupu.injector.PerActivity;
-import com.gzsll.hupu.util.SettingPrefUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.SettingPrefUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -50,7 +50,7 @@ import rx.schedulers.Schedulers;
             if (permissionData != null) {
               if (permissionData.error != null) {
                 mPostView.renderError(permissionData.error);
-              } else if (SettingPrefUtils.isNeedExam(mContext)) {
+              } else if (SettingPrefUtil.isNeedExam(mContext)) {
                 mPostView.renderExam(permissionData.exam);
               }
             }
@@ -126,19 +126,19 @@ import rx.schedulers.Schedulers;
             mPostView.hideLoading();
             if (data != null) {
               if (data.error != null) {
-                ToastUtils.showToast(data.error.text);
+                ToastUtil.showToast(data.error.text);
               } else if (data.status == 200) {
-                ToastUtils.showToast("发送成功~");
+                ToastUtil.showToast("发送成功~");
                 mPostView.postSuccess();
               }
             } else {
-              ToastUtils.showToast("您的网络有问题，请检查后重试");
+              ToastUtil.showToast("您的网络有问题，请检查后重试");
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
             mPostView.hideLoading();
-            ToastUtils.showToast("您的网络有问题，请检查后重试");
+            ToastUtil.showToast("您的网络有问题，请检查后重试");
           }
         });
   }
@@ -201,19 +201,19 @@ import rx.schedulers.Schedulers;
             mPostView.hideLoading();
             if (data != null) {
               if (data.error != null) {
-                ToastUtils.showToast(data.error.text);
+                ToastUtil.showToast(data.error.text);
               } else if (data.status == 200) {
-                ToastUtils.showToast("发送成功~");
+                ToastUtil.showToast("发送成功~");
                 mPostView.postSuccess();
               }
             } else {
-              ToastUtils.showToast("您的网络有问题，请检查后重试");
+              ToastUtil.showToast("您的网络有问题，请检查后重试");
             }
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
             mPostView.hideLoading();
-            ToastUtils.showToast("您的网络有问题，请检查后重试");
+            ToastUtil.showToast("您的网络有问题，请检查后重试");
           }
         });
   }

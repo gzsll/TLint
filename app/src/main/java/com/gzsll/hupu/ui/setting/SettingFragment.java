@@ -13,10 +13,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.injector.HasComponent;
 import com.gzsll.hupu.ui.BaseActivity;
-import com.gzsll.hupu.util.CacheUtils;
-import com.gzsll.hupu.util.FileUtils;
-import com.gzsll.hupu.util.SettingPrefUtils;
-import com.gzsll.hupu.util.ToastUtils;
+import com.gzsll.hupu.util.CacheUtil;
+import com.gzsll.hupu.util.FileUtil;
+import com.gzsll.hupu.util.SettingPrefUtil;
+import com.gzsll.hupu.util.ToastUtil;
 import com.squareup.otto.Bus;
 import java.io.File;
 import javax.inject.Inject;
@@ -52,11 +52,11 @@ public class SettingFragment extends PreferenceFragment
     pPicSavePath = findPreference("pPicSavePath");
     pPicSavePath.setOnPreferenceClickListener(this);
     pPicSavePath.setSummary(
-        "/sdcard" + File.separator + SettingPrefUtils.getPicSavePath(mContext) + File.separator);
+        "/sdcard" + File.separator + SettingPrefUtil.getPicSavePath(mContext) + File.separator);
 
     pClearCache = findPreference("pClearCache");
     pClearCache.setOnPreferenceClickListener(this);
-    pClearCache.setSummary(CacheUtils.getCacheSize(mContext));
+    pClearCache.setSummary(CacheUtil.getCacheSize(mContext));
 
     pThreadSort = (ListPreference) findPreference("pThreadSort");
     pThreadSort.setOnPreferenceChangeListener(this);
@@ -71,7 +71,7 @@ public class SettingFragment extends PreferenceFragment
     pTheme = findPreference("pTheme");
     pTheme.setOnPreferenceClickListener(this);
     pTheme.setSummary(
-        getResources().getStringArray(R.array.mdColorNames)[SettingPrefUtils.getThemeIndex(
+        getResources().getStringArray(R.array.mdColorNames)[SettingPrefUtil.getThemeIndex(
             mContext)]);
 
     //        pOfflineCount = (ListPreference) findPreference("pOfflineCount");
@@ -108,9 +108,9 @@ public class SettingFragment extends PreferenceFragment
 
   private void cleanCache() {
     //        new MaterialDialog.Builder(getActivity()).title("提示").content("正在清空缓存...").progress(true,0).show();
-    CacheUtils.cleanApplicationCache(mContext);
+    CacheUtil.cleanApplicationCache(mContext);
     Toast.makeText(getActivity(), "缓存清理成功", Toast.LENGTH_SHORT);
-    pClearCache.setSummary(CacheUtils.getCacheSize(mContext));
+    pClearCache.setSummary(CacheUtil.getCacheSize(mContext));
   }
 
   private void setTextSize(int value) {
@@ -125,21 +125,20 @@ public class SettingFragment extends PreferenceFragment
 
   private void modifyImageSavePath() {
     new MaterialDialog.Builder(getActivity()).title("修改图片保存路径")
-        .input(null, SettingPrefUtils.getPicSavePath(mContext), new MaterialDialog.InputCallback() {
+        .input(null, SettingPrefUtil.getPicSavePath(mContext), new MaterialDialog.InputCallback() {
           @Override public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
             if (TextUtils.isEmpty(charSequence)) {
-              ToastUtils.showToast("路径不能为空");
+              ToastUtil.showToast("路径不能为空");
               return;
             }
-            String path =
-                FileUtils.getSdcardPath() + File.separator + charSequence + File.separator;
+            String path = FileUtil.getSdcardPath() + File.separator + charSequence + File.separator;
             File file = new File(path);
             if (file.exists() || file.mkdirs()) {
-              SettingPrefUtils.setPicSavePath(mContext, charSequence.toString());
+              SettingPrefUtil.setPicSavePath(mContext, charSequence.toString());
               pPicSavePath.setSummary("/sdcard" + File.separator + charSequence + File.separator);
-              ToastUtils.showToast("更新成功");
+              ToastUtil.showToast("更新成功");
             } else {
-              ToastUtils.showToast("更新失败");
+              ToastUtil.showToast("更新失败");
             }
           }
         })
