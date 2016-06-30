@@ -1,7 +1,6 @@
 package com.gzsll.hupu;
 
 import android.app.Application;
-import android.os.Environment;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
@@ -21,11 +20,9 @@ import com.gzsll.hupu.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.squareup.leakcanary.LeakCanary;
-import de.mindpipe.android.logging.log4j.LogConfigurator;
 import java.util.List;
 import javax.inject.Inject;
 import okhttp3.OkHttpClient;
-import org.apache.log4j.Level;
 
 /**
  * Created by sll on 2016/3/8.
@@ -41,7 +38,6 @@ public class MyApplication extends Application {
   @Override public void onCreate() {
     super.onCreate();
     initComponent();
-    initLogger();
     initUser();
     FileDownloader.init(this, new FileDownloadHelper.OkHttpClientCustomMaker() {
       @Override public OkHttpClient customMake() {
@@ -63,26 +59,7 @@ public class MyApplication extends Application {
     return mApplicationComponent;
   }
 
-  private void initLogger() {
-    String path = getLogPath();
-    try {
-      final LogConfigurator lc = new LogConfigurator();
-      lc.setFileName(path);
-      lc.setFilePattern("%d - [%-6p-%c] - %m%n");
-      lc.setMaxBackupSize(2);
-      lc.setMaxFileSize(1024 * 1024);
-      lc.setRootLevel(Level.DEBUG);
-      // Set log level of a specific logger
-      lc.setLevel("org.apache", Level.DEBUG);
-      lc.configure();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 
-  public String getLogPath() {
-    return Environment.getExternalStorageDirectory().getAbsolutePath() + "/gzsll/log.txt";
-  }
 
   private void initUser() {
     List<User> users = mUserDao.queryBuilder()

@@ -15,6 +15,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.gzsll.hupu.BuildConfig;
+import com.gzsll.hupu.Logger;
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.ThreadLightReplyData;
@@ -47,7 +48,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -60,7 +60,6 @@ import rx.subscriptions.CompositeSubscription;
  * Created by sll on 2016/5/30.
  */
 public class OffLineService extends Service {
-  Logger logger = Logger.getLogger("OffLineService");
   public static final String START_DOWNLOAD = BuildConfig.APPLICATION_ID + ".action.START_DOWNLOAD";
   public static final String EXTRA_FORUMS = "forums";
 
@@ -108,7 +107,7 @@ public class OffLineService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    logger.debug("服务初始化");
+    Logger.d("服务初始化");
     DaggerServiceComponent.builder()
         .serviceModule(new ServiceModule(this))
         .applicationComponent(((MyApplication) getApplication()).getApplicationComponent())
@@ -127,7 +126,7 @@ public class OffLineService extends Service {
         prepareOffline();
       } else {
         //ignore
-        logger.debug("服务已启动，忽略请求");
+        Logger.d("服务已启动，忽略请求");
       }
     }
     return super.onStartCommand(intent, flags, startId);
@@ -283,7 +282,7 @@ public class OffLineService extends Service {
     mOfflineNotifier.notifyReplies(thread, offlineRepliesLength);
     threadList.remove(thread);
     if (threadList.isEmpty()) {
-      logger.debug("mThreads.isEmpty():" + offlineRepliesCount);
+      Logger.d("mThreads.isEmpty():" + offlineRepliesCount);
       mOfflineNotifier.notifyRepliesSuccess(offlineThreadsCount, offlineRepliesCount,
           offlineRepliesLength);
       stopSelf();
@@ -293,13 +292,13 @@ public class OffLineService extends Service {
 
   private boolean stopSelfIfCan() {
     if (isCanceled()) {
-      logger.debug("isCanceled");
+      Logger.d("isCanceled");
       stopSelf();
       return true;
     }
 
     if (!NetWorkUtils.isWifiConnected(this)) {
-      logger.debug("isWiFi");
+      Logger.d("isWiFi");
       mCurrentStatus = CANCEL;
       stopSelf();
       return true;
@@ -395,7 +394,7 @@ public class OffLineService extends Service {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    logger.debug("onDestroy");
+    Logger.d("onDestroy");
     mOfflineNotifier.notifyPictureSuccess(offlinePictureCount, offlinePictureLength);
     mCurrentStatus = FINISHED;
     if (mCompositeSubscription != null && !mCompositeSubscription.isUnsubscribed()) {

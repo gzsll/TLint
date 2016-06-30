@@ -25,7 +25,6 @@ import com.gzsll.hupu.util.SettingPrefUtils;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -37,7 +36,6 @@ import rx.schedulers.Schedulers;
  */
 public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.ViewHolder> {
 
-  Logger logger = Logger.getLogger(ThreadListAdapter.class.getSimpleName());
 
   private Activity mActivity;
   private ReadThreadDao mReadThreadDao;

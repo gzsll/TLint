@@ -44,7 +44,6 @@ import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/9.
@@ -53,7 +52,6 @@ public class ThreadListFragment extends BaseFragment
     implements ThreadListContract.View, SwipeRefreshLayout.OnRefreshListener,
     AppBarLayout.OnOffsetChangedListener, LoadMoreRecyclerView.LoadMoreListener {
 
-  Logger logger = Logger.getLogger(ThreadListFragment.class.getSimpleName());
 
   @Inject ThreadListPresenter mPresenter;
   @Inject ThreadListAdapter mAdapter;

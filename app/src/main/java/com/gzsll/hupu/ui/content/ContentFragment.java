@@ -25,7 +25,6 @@ import com.gzsll.hupu.widget.H5Callback;
 import com.gzsll.hupu.widget.JockeyJsWebView;
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/9.
@@ -33,7 +32,6 @@ import org.apache.log4j.Logger;
 public class ContentFragment extends BaseFragment
     implements ContentPagerContract.View, H5Callback, JockeyJsWebView.OnScrollChangedCallback {
 
-  private Logger logger = Logger.getLogger(ContentFragment.class.getSimpleName());
 
   public static ContentFragment newInstance(String fid, String tid, String pid, int page) {
     ContentFragment mFragment = new ContentFragment();
@@ -150,7 +148,6 @@ public class ContentFragment extends BaseFragment
   }
 
   @Override public void onPageFinished(WebView webView, String str) {
-    logger.debug("onPageFinished:" + page);
     mContentPresenter.onThreadInfoReceive(tid, fid, pid, page);
   }
 
@@ -173,19 +170,16 @@ public class ContentFragment extends BaseFragment
     });
     webView.onJSEvent("showUrl", new JockeyHandler() {
       @Override protected void doPerform(Map<Object, Object> payload) {
-        logger.debug("showUrl:" + JSON.toJSON(payload));
         mContentPresenter.handlerUrl(((String) payload.get("url")));
       }
     });
     webView.onJSEvent("showUser", new JockeyHandler() {
       @Override protected void doPerform(Map<Object, Object> payload) {
-        logger.debug("showUser:" + JSON.toJSON(payload));
         UserProfileActivity.startActivity(getActivity(), ((String) payload.get("uid")));
       }
     });
     webView.onJSEvent("showMenu", new JockeyHandler() {
       @Override protected void doPerform(Map<Object, Object> payload) {
-        logger.debug("showMenu:" + JSON.toJSON(payload));
         int area = Integer.valueOf((String) payload.get("area"));
         int index = Integer.valueOf((String) payload.get("index"));
         String type = (String) payload.get("type");

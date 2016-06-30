@@ -25,14 +25,12 @@ import com.gzsll.hupu.widget.ImageLoadProgressBar;
 import com.gzsll.hupu.widget.photodraweeview.OnViewTapListener;
 import com.gzsll.hupu.widget.photodraweeview.PhotoDraweeView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/10.
  */
 public class ImageFragment extends BaseFragment {
 
-  private Logger logger = Logger.getLogger(ImageFragment.class.getSimpleName());
 
   @Bind(R.id.image) PhotoDraweeView image;
   @Bind(R.id.progress) SmoothProgressBar progress;

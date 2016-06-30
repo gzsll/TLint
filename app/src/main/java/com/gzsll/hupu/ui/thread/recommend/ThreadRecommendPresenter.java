@@ -11,7 +11,6 @@ import com.gzsll.hupu.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
@@ -22,7 +21,6 @@ import rx.subjects.PublishSubject;
 @PerActivity
 public class ThreadRecommendPresenter implements RecommendThreadListContract.Presenter {
 
-  Logger logger = Logger.getLogger(ThreadRecommendPresenter.class.getSimpleName());
 
   private ThreadRepository mThreadRepository;
 
@@ -46,7 +44,6 @@ public class ThreadRecommendPresenter implements RecommendThreadListContract.Pre
     mThreadRepository.getThreadListObservable(Constants.TYPE_RECOMMEND, mThreadSubject)
         .subscribe(new Action1<List<Thread>>() {
           @Override public void call(List<Thread> threads) {
-            logger.debug("getThreadListObservable call:" + threads.size());
             ThreadRecommendPresenter.this.threads = threads;
             if (threads.isEmpty()) {
               if (!isFirst) {
@@ -80,7 +77,6 @@ public class ThreadRecommendPresenter implements RecommendThreadListContract.Pre
           }
         }, new Action1<Throwable>() {
           @Override public void call(Throwable throwable) {
-            logger.debug("threads.size():" + threads.size());
             if (threads.isEmpty()) {
               mRecommendView.onError("数据加载失败，请重试");
             } else {

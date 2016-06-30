@@ -30,7 +30,6 @@ import com.gzsll.hupu.widget.PagePicker;
 import com.gzsll.hupu.widget.ProgressBarCircularIndeterminate;
 import com.gzsll.hupu.widget.VerticalViewPager;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/9.
@@ -39,7 +38,6 @@ public class ContentActivity extends BaseSwipeBackActivity
     implements ContentContract.View, PagePicker.OnJumpListener, ViewPager.OnPageChangeListener,
     HasComponent<ContentComponent> {
 
-  private Logger logger = Logger.getLogger(ContentActivity.class.getSimpleName());
 
   @Bind(R.id.viewPager) VerticalViewPager viewPager;
   @Bind(R.id.tvLoading) TextView tvLoading;

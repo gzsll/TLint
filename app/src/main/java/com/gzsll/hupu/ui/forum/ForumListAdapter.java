@@ -18,7 +18,6 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/11.
@@ -26,7 +25,6 @@ import org.apache.log4j.Logger;
 public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.ViewHolder>
     implements StickyRecyclerHeadersAdapter<ForumListAdapter.HeaderViewHolder> {
 
-  Logger logger = Logger.getLogger(ForumListAdapter.class.getSimpleName());
 
   public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
     this.onItemClickListener = onItemClickListener;

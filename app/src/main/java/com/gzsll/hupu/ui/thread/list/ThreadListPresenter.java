@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -38,7 +37,6 @@ import rx.subjects.PublishSubject;
  */
 @PerActivity public class ThreadListPresenter implements ThreadListContract.Presenter {
 
-  private Logger logger = Logger.getLogger(ThreadListPresenter.class.getSimpleName());
 
   private String fid;
   private ThreadRepository mThreadRepository;
@@ -86,7 +84,6 @@ import rx.subjects.PublishSubject;
     mThreadRepository.getThreadListObservable(Integer.valueOf(fid), mThreadSubject)
         .subscribe(new Action1<List<Thread>>() {
           @Override public void call(List<Thread> threads) {
-            logger.debug("getThreadListObservable:" + threads.size());
             ThreadListPresenter.this.threads = threads;
             if (threads.isEmpty()) {
               if (!isFirst) {

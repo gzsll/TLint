@@ -18,7 +18,6 @@ import com.gzsll.hupu.components.jockeyjs.JockeyImpl;
 import com.gzsll.hupu.util.NetWorkUtils;
 import java.net.URI;
 import java.util.Map;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2015/6/17.
@@ -28,7 +27,6 @@ public class JockeyJsWebView extends WebView {
   private JockeyAsyncHandler jockeyAsyncHandler;
   private H5Callback callback;
 
-  Logger logger = Logger.getLogger(JockeyJsWebView.class.getSimpleName());
 
   public JockeyJsWebView(Context context) {
     this(context, null);

@@ -12,13 +12,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 
 /**
  * Created by gzsll on 2014/9/23 0023.
  */
 public class RequestHelper {
-  Logger logger = Logger.getLogger("RequestUtil");
 
   private Context mContext;
   private UserStorage mUserStorage;

@@ -33,13 +33,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/5/6.
  */
 public class PmDetailAdapter extends RecyclerView.Adapter<PmDetailAdapter.ViewHolder> {
-  Logger logger = Logger.getLogger(PmDetailAdapter.class.getSimpleName());
 
   private UserStorage mUserStorage;
   private Activity mActivity;

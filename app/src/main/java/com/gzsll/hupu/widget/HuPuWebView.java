@@ -5,10 +5,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -34,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +41,6 @@ import org.json.JSONObject;
  */
 public class HuPuWebView extends WebView {
 
-  private Logger logger = Logger.getLogger(HuPuWebView.class.getSimpleName());
 
   private String basicUA;
   private Map<String, String> header;
@@ -66,14 +62,6 @@ public class HuPuWebView extends WebView {
     this.callBack = callBack;
   }
 
-  public class HuPuChromeClient extends WebChromeClient {
-
-    @Override public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-      logger.debug(
-          "onConsoleMessage:" + consoleMessage.message() + ":" + consoleMessage.lineNumber());
-      return true;
-    }
-  }
 
   private void init() {
     ((MyApplication) getContext().getApplicationContext()).getApplicationComponent().inject(this);
@@ -99,7 +87,6 @@ public class HuPuWebView extends WebView {
     this.basicUA = settings.getUserAgentString() + " kanqiu/7.05.6303/7059";
     setBackgroundColor(0);
     initWebViewClient();
-    setWebChromeClient(new HuPuChromeClient());
     try {
       if (mUserStorage.isLogin()) {
         String token = mUserStorage.getToken();
@@ -124,7 +111,6 @@ public class HuPuWebView extends WebView {
 
   private class HupuWebClient extends WebViewClient {
     @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-      logger.debug(Uri.decode(url));
       Uri uri = Uri.parse(url);
       String scheme = uri.getScheme();
       if (url.startsWith("hupu") || url.startsWith("kanqiu")) {
@@ -178,11 +164,8 @@ public class HuPuWebView extends WebView {
     if (url.contains("topic")) {
       Uri uri = Uri.parse(url);
       String tid = uri.getLastPathSegment();
-      logger.debug("tid:" + tid);
       String page = uri.getQueryParameter("page");
-      logger.debug("page:" + page);
       String pid = uri.getQueryParameter("pid");
-      logger.debug("pid:" + pid);
       ContentActivity.startActivity(getContext(), "", tid, pid,
           TextUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
     } else if (url.contains("board")) {
@@ -275,7 +258,6 @@ public class HuPuWebView extends WebView {
   }
 
   public void loadUrl(String url) {
-    logger.debug("loadUrl:" + url);
     setUA(-1);
     if (header == null) {
       header = new HashMap<>();

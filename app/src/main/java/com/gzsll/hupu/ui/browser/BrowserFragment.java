@@ -12,14 +12,12 @@ import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.ui.BaseFragment;
 import com.gzsll.hupu.widget.HuPuWebView;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/3/11.
  */
 public class BrowserFragment extends BaseFragment {
 
-  private Logger logger = Logger.getLogger(BrowserFragment.class.getSimpleName());
 
   public static BrowserFragment newInstance(String url, String title) {
     return newInstance(url, title, false);

@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,7 +30,6 @@ import rx.functions.Func1;
  * Created by sll on 2016/3/10.
  */
 @PerActivity public class LoginPresenter implements LoginContract.Presenter {
-  Logger logger = Logger.getLogger(LoginPresenter.class.getSimpleName());
 
   private GameApi mGameApi;
   private Bus mBus;
@@ -71,9 +69,7 @@ import rx.functions.Func1;
               } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
               }
-              logger.debug("cookie:" + cookie);
               String uid = cookie.split("\\|")[0];
-              logger.debug("uid:" + uid);
               user.setUid(uid);
               user.setToken(data.token);
               user.setCookie(cookie);

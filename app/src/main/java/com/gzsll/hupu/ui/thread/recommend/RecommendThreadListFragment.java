@@ -15,7 +15,6 @@ import com.gzsll.hupu.widget.LoadMoreRecyclerView;
 import com.yalantis.phoenix.PullToRefreshView;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 
 /**
  * Created by sll on 2016/5/11.
@@ -23,7 +22,6 @@ import org.apache.log4j.Logger;
 public class RecommendThreadListFragment extends BaseFragment
     implements RecommendThreadListContract.View, PullToRefreshView.OnRefreshListener,
     LoadMoreRecyclerView.LoadMoreListener {
-  Logger logger = Logger.getLogger(RecommendThreadListFragment.class.getSimpleName());
 
   @Inject ThreadListAdapter mAdapter;
   @Inject Activity mActivity;

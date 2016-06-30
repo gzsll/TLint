@@ -8,7 +8,6 @@ import com.gzsll.hupu.db.Thread;
 import com.gzsll.hupu.db.ThreadDao;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -21,7 +20,6 @@ import rx.subjects.PublishSubject;
  */
 public class ThreadRepository {
 
-  private Logger logger = Logger.getLogger(ThreadRepository.class.getSimpleName());
 
   private ThreadDao mThreadDao;
   private ForumApi mForumApi;

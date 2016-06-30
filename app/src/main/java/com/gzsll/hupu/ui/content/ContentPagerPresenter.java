@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -38,9 +37,6 @@ import rx.subscriptions.CompositeSubscription;
  * Created by sll on 2016/5/25.
  */
 public class ContentPagerPresenter implements ContentPagerContract.Presenter {
-
-  private static final Logger logger =
-      Logger.getLogger(ContentPagerPresenter.class.getSimpleName());
 
   private ContentRepository mContentRepository;
   private ForumApi mForumApi;
@@ -321,7 +317,6 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
                     ConfigUtils.getCachePath() + File.separator + FormatUtils.getFileNameFromUrl(
                         imageUrl));
 
-                logger.debug("imgFile:" + imgFile.getName());
                 if (!imgFile.exists()) {
                   mOkHttpHelper.httpDownload(imageUrl, imgFile);
                 }
