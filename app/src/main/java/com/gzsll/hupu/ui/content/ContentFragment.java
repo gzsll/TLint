@@ -6,8 +6,7 @@ import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import butterknife.Bind;
-import butterknife.ButterKnife;
+
 import com.alibaba.fastjson.JSON;
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.R;
@@ -23,9 +22,15 @@ import com.gzsll.hupu.ui.thread.list.ThreadListActivity;
 import com.gzsll.hupu.ui.userprofile.UserProfileActivity;
 import com.gzsll.hupu.widget.H5Callback;
 import com.gzsll.hupu.widget.JockeyJsWebView;
-import java.util.Map;
-import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
+
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by sll on 2016/3/9.
@@ -143,6 +148,11 @@ public class ContentFragment extends BaseFragment
 
   @Override public void showLoginUi() {
     LoginActivity.startActivity(getActivity());
+  }
+
+  @Override
+  public void onClose() {
+    getActivity().finish();
   }
 
   @Override public void doPerform(Map<Object, Object> map) {

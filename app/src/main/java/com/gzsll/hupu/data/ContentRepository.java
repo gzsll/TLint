@@ -1,14 +1,18 @@
 package com.gzsll.hupu.data;
 
 import android.text.TextUtils;
+
 import com.gzsll.hupu.bean.ThreadReplyQuote;
 import com.gzsll.hupu.data.local.ContentLocalDataSource;
 import com.gzsll.hupu.data.remote.ContentRemoteDataSource;
 import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
 import com.gzsll.hupu.util.HtmlUtils;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -33,7 +37,7 @@ public class ContentRepository implements ContentDataSource {
 
     Observable<ThreadInfo> remoteWithLocalUpdate = remote.doOnNext(new Action1<ThreadInfo>() {
       @Override public void call(ThreadInfo threadInfo) {
-        if (threadInfo != null) {
+        if (threadInfo != null && threadInfo.getError() == null) {
           threadInfo.setForumName(threadInfo.getForum().getName());
           mContentLocalDataSource.saveThreadInfo(threadInfo);
         }

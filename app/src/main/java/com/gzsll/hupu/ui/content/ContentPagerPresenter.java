@@ -4,8 +4,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
+
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
+import com.gzsll.hupu.bean.BaseError;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.data.ContentRepository;
@@ -20,12 +22,16 @@ import com.gzsll.hupu.util.FileUtils;
 import com.gzsll.hupu.util.FormatUtils;
 import com.gzsll.hupu.util.ToastUtils;
 import com.squareup.otto.Bus;
+
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
 import javax.inject.Inject;
-import org.apache.log4j.Logger;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -83,12 +89,18 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(new Action1<ThreadInfo>() {
             @Override public void call(ThreadInfo threadInfo) {
-              mContentView.sendMessageToJS("addThreadInfo", threadInfo);
-              loadLightReplies(tid, fid);
-              loadReplies(tid, fid, page);
-              mContentView.hideLoading();
-              mBus.post(
-                  new UpdateContentPageEvent(threadInfo.getPage(), threadInfo.getTotalPage()));
+              if (threadInfo.getError() != null) {
+                BaseError error = threadInfo.getError();
+                ToastUtils.showToast(error.text);
+                mContentView.onClose();
+              } else {
+                mContentView.sendMessageToJS("addThreadInfo", threadInfo);
+                loadLightReplies(tid, fid);
+                loadReplies(tid, fid, page);
+                mContentView.hideLoading();
+                mBus.post(
+                        new UpdateContentPageEvent(threadInfo.getPage(), threadInfo.getTotalPage()));
+              }
             }
           }, new Action1<Throwable>() {
             @Override public void call(Throwable throwable) {

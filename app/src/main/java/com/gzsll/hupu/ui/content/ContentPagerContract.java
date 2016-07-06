@@ -33,6 +33,8 @@ public interface ContentPagerContract {
     void showUserProfileUi(String uid);
 
     void showLoginUi();
+
+    void onClose();
   }
 
   interface Presenter extends BasePresenter<View> {
