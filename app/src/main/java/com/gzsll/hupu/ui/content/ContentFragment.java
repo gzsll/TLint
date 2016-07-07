@@ -145,6 +145,11 @@ public class ContentFragment extends BaseFragment
     LoginActivity.startActivity(getActivity());
   }
 
+  @Override
+  public void onClose() {
+    getActivity().finish();
+  }
+
   @Override public void doPerform(Map<Object, Object> map) {
 
   }

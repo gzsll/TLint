@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.bean.BaseData;
+import com.gzsll.hupu.bean.BaseError;
 import com.gzsll.hupu.components.okhttp.OkHttpHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.data.ContentRepository;
@@ -79,12 +80,18 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(new Action1<ThreadInfo>() {
             @Override public void call(ThreadInfo threadInfo) {
-              mContentView.sendMessageToJS("addThreadInfo", threadInfo);
-              loadLightReplies(tid, fid);
-              loadReplies(tid, fid, page);
-              mContentView.hideLoading();
-              mBus.post(
-                  new UpdateContentPageEvent(threadInfo.getPage(), threadInfo.getTotalPage()));
+              if (threadInfo.getError() != null) {
+                BaseError error = threadInfo.getError();
+                ToastUtils.showToast(error.text);
+                mContentView.onClose();
+              } else {
+                mContentView.sendMessageToJS("addThreadInfo", threadInfo);
+                loadLightReplies(tid, fid);
+                loadReplies(tid, fid, page);
+                mContentView.hideLoading();
+                mBus.post(
+                        new UpdateContentPageEvent(threadInfo.getPage(), threadInfo.getTotalPage()));
+              }
             }
           }, new Action1<Throwable>() {
             @Override public void call(Throwable throwable) {

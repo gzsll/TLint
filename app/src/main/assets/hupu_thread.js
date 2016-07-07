@@ -62,7 +62,8 @@ var reloadImage = function () {
                     origin = gif;
                 }
                 $images.push(origin);
-                if (inviewport(this) && $this.attr('data-src') && $this.attr('data-src').startsWith('http://')) {
+                var src = $this.attr('data-src');
+                if (inviewport(this) && src&&src.length>0 ) {
                     var src = $this.attr('data-src');
                     $this.attr('src', window.HuPuBridge.replaceImage(src, index));
                     $this.removeAttr('data-src');

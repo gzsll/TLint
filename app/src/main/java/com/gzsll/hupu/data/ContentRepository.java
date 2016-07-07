@@ -33,7 +33,7 @@ public class ContentRepository implements ContentDataSource {
 
     Observable<ThreadInfo> remoteWithLocalUpdate = remote.doOnNext(new Action1<ThreadInfo>() {
       @Override public void call(ThreadInfo threadInfo) {
-        if (threadInfo != null) {
+        if (threadInfo != null && threadInfo.getError() == null) {
           threadInfo.setForumName(threadInfo.getForum().getName());
           mContentLocalDataSource.saveThreadInfo(threadInfo);
         }
