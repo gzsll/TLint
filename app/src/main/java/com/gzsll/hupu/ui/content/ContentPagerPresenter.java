@@ -82,7 +82,7 @@ public class ContentPagerPresenter implements ContentPagerContract.Presenter {
             @Override public void call(ThreadInfo threadInfo) {
               if (threadInfo.getError() != null) {
                 BaseError error = threadInfo.getError();
-                ToastUtils.showToast(error.text);
+                ToastUtil.showToast(error.text);
                 mContentView.onClose();
               } else {
                 mContentView.sendMessageToJS("addThreadInfo", threadInfo);
