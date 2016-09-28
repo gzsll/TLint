@@ -1,32 +1,13 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
-apply plugin: 'com.droidtitan.lintcleaner'
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    // replace with the current version of the Android plugin
-    classpath 'com.android.tools.build:gradle:2.1.2'
-    // Since Android's Gradle plugin 0.11, you have to use android-apt >= 1.3
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-    classpath 'com.droidtitan:lint-cleaner-plugin:0.3.0'
-  }
-}
+apply plugin: 'com.neenbedankt.android-apt'
 
-apt {
-  arguments {
-    resourcePackageName "com.gzsll.hupu"
-    // androidManifestFile variant.outputs[0].processResources.manifestFile
-  }
-}
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
-  compileSdkVersion 23
-  buildToolsVersion "23.0.3"
+  compileSdkVersion 24
+  buildToolsVersion "24.0.1"
 
   defaultConfig {
     applicationId "com.gzsll.hupu"
@@ -67,11 +48,11 @@ android {
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   testCompile 'junit:junit:4.12'
-  compile 'com.android.support:design:23.3.0'
-  compile 'com.android.support:appcompat-v7:23.3.0'
-  compile 'com.android.support:cardview-v7:23.3.0'
-  compile 'com.android.support:recyclerview-v7:23.3.0'
-  compile 'com.android.support:support-v13:23.3.0'
+  compile 'com.android.support:design:24.2.0'
+  compile 'com.android.support:appcompat-v7:24.2.0'
+  compile 'com.android.support:cardview-v7:24.2.0'
+  compile 'com.android.support:recyclerview-v7:24.2.0'
+  compile 'com.android.support:support-v13:24.2.0'
 
   compile 'com.jakewharton:butterknife:7.0.1'
   //Dagger
