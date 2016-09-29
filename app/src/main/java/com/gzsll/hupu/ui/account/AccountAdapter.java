@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -64,9 +64,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
   class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind(R.id.tvName) TextView tvName;
-    @Bind(R.id.tvDesc) TextView tvDesc;
-    @Bind(R.id.ivIcon) SimpleDraweeView ivIcon;
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvDesc) TextView tvDesc;
+    @BindView(R.id.ivIcon) SimpleDraweeView ivIcon;
 
     User user;
 

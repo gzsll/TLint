@@ -16,7 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -35,16 +35,16 @@ import javax.inject.Inject;
 public class UserProfileActivity extends BaseSwipeBackActivity
     implements UserProfileContract.View, SwipeRefreshLayout.OnRefreshListener {
 
-  @Bind(R.id.ivCover) ImageView ivCover;
-  @Bind(R.id.ivPhoto) SimpleDraweeView ivPhoto;
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.tabs) TabLayout tabs;
-  @Bind(R.id.toolbarLayout) CollapsingToolbarLayout toolbarLayout;
-  @Bind(R.id.appbar) AppBarLayout appbar;
-  @Bind(R.id.viewPager) ViewPager viewPager;
-  @Bind(R.id.maincontent) CoordinatorLayout maincontent;
-  @Bind(R.id.ivGender) ImageView ivGender;
-  @Bind(R.id.tvRegisterTime) TextView tvRegisterTime;
+  @BindView(R.id.ivCover) ImageView ivCover;
+  @BindView(R.id.ivPhoto) SimpleDraweeView ivPhoto;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.tabs) TabLayout tabs;
+  @BindView(R.id.toolbarLayout) CollapsingToolbarLayout toolbarLayout;
+  @BindView(R.id.appbar) AppBarLayout appbar;
+  @BindView(R.id.viewPager) ViewPager viewPager;
+  @BindView(R.id.maincontent) CoordinatorLayout maincontent;
+  @BindView(R.id.ivGender) ImageView ivGender;
+  @BindView(R.id.tvRegisterTime) TextView tvRegisterTime;
 
   public static void startActivity(Context mContext, String uid) {
     Intent intent = new Intent(mContext, UserProfileActivity.class);

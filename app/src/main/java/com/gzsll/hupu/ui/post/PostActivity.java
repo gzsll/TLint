@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -46,11 +46,11 @@ public class PostActivity extends BaseSwipeBackActivity implements PostContract.
     mContext.startActivity(intent);
   }
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.etSubject) EditText etSubject;
-  @Bind(R.id.etContent) EditText etContent;
-  @Bind(R.id.llPics) LinearLayout llPics;
-  @Bind(R.id.scrollView) HorizontalScrollView scrollView;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.etSubject) EditText etSubject;
+  @BindView(R.id.etContent) EditText etContent;
+  @BindView(R.id.llPics) LinearLayout llPics;
+  @BindView(R.id.scrollView) HorizontalScrollView scrollView;
 
   private ArrayList<String> selectImages = new ArrayList<String>();
   private MaterialDialog mDialog;

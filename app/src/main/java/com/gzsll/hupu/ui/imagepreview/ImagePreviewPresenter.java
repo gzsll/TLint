@@ -103,8 +103,8 @@ import rx.schedulers.Schedulers;
     if (loadUri == null) {
       return null;
     }
-    CacheKey cacheKey =
-        DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(ImageRequest.fromUri(loadUri));
+    CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
+        .getEncodedCacheKey(ImageRequest.fromUri(loadUri), null);
     try {
       if (ImagePipelineFactory.getInstance().getMainDiskStorageCache().hasKey(cacheKey)) {
         return ImagePipelineFactory.getInstance()

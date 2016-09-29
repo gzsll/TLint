@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.daimajia.swipe.SwipeLayout;
@@ -88,7 +88,7 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
 
   class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind(R.id.tvCategoryName) TextView tvCategoryName;
+    @BindView(R.id.tvCategoryName) TextView tvCategoryName;
 
     public HeaderViewHolder(View itemView) {
       super(itemView);
@@ -98,9 +98,9 @@ public class ForumListAdapter extends RecyclerView.Adapter<ForumListAdapter.View
 
   class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind(R.id.ivIcon) SimpleDraweeView ivIcon;
-    @Bind(R.id.tvName) TextView tvName;
-    @Bind(R.id.swipeLayout) SwipeLayout swipeLayout;
+    @BindView(R.id.ivIcon) SimpleDraweeView ivIcon;
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.swipeLayout) SwipeLayout swipeLayout;
 
     Forum forum;
 

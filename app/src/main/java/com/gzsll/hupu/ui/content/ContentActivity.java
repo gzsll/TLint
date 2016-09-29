@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.clans.fab.FloatingActionButton;
@@ -38,24 +38,23 @@ public class ContentActivity extends BaseSwipeBackActivity
     implements ContentContract.View, PagePicker.OnJumpListener, ViewPager.OnPageChangeListener,
     HasComponent<ContentComponent> {
 
-
-  @Bind(R.id.viewPager) VerticalViewPager viewPager;
-  @Bind(R.id.tvLoading) TextView tvLoading;
-  @Bind(R.id.progress_container) LinearLayout progressContainer;
-  @Bind(R.id.rlProgress) RelativeLayout rlProgress;
-  @Bind(R.id.floatingComment) FloatingActionButton floatingComment;
-  @Bind(R.id.floatingReport) FloatingActionButton floatingReport;
-  @Bind(R.id.floatingCollect) FloatingActionButton floatingCollect;
-  @Bind(R.id.floatingShare) FloatingActionButton floatingShare;
-  @Bind(R.id.floatingMenu) FloatingActionMenu floatingMenu;
-  @Bind(R.id.tvPre) TextView tvPre;
-  @Bind(R.id.tvPageNum) TextView tvPageNum;
-  @Bind(R.id.tvNext) TextView tvNext;
-  @Bind(R.id.rlPage) RelativeLayout rlPage;
-  @Bind(R.id.rlError) RelativeLayout rlError;
-  @Bind(R.id.tvError) TextView tvError;
-  @Bind(R.id.frameLayout) FrameLayout frameLayout;
-  @Bind(R.id.progress_view) ProgressBarCircularIndeterminate progressBar;
+  @BindView(R.id.viewPager) VerticalViewPager viewPager;
+  @BindView(R.id.tvLoading) TextView tvLoading;
+  @BindView(R.id.progress_container) LinearLayout progressContainer;
+  @BindView(R.id.rlProgress) RelativeLayout rlProgress;
+  @BindView(R.id.floatingComment) FloatingActionButton floatingComment;
+  @BindView(R.id.floatingReport) FloatingActionButton floatingReport;
+  @BindView(R.id.floatingCollect) FloatingActionButton floatingCollect;
+  @BindView(R.id.floatingShare) FloatingActionButton floatingShare;
+  @BindView(R.id.floatingMenu) FloatingActionMenu floatingMenu;
+  @BindView(R.id.tvPre) TextView tvPre;
+  @BindView(R.id.tvPageNum) TextView tvPageNum;
+  @BindView(R.id.tvNext) TextView tvNext;
+  @BindView(R.id.rlPage) RelativeLayout rlPage;
+  @BindView(R.id.rlError) RelativeLayout rlError;
+  @BindView(R.id.tvError) TextView tvError;
+  @BindView(R.id.frameLayout) FrameLayout frameLayout;
+  @BindView(R.id.progress_view) ProgressBarCircularIndeterminate progressBar;
 
   public static void startActivity(Context mContext, String fid, String tid, String pid, int page) {
     Intent intent = new Intent(mContext, ContentActivity.class);

@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
@@ -36,8 +36,8 @@ public class ImagePreviewActivity extends BaseSwipeBackActivity
 
   @Inject ImagePreviewPresenter mPresenter;
 
-  @Bind(R.id.viewPager) ViewPager viewPager;
-  @Bind(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.viewPager) ViewPager viewPager;
+  @BindView(R.id.toolbar) Toolbar toolbar;
 
   private HashMap<Integer, ImageFragment> fragmentMap = new HashMap<>();
   private ImageViewAdapter mImageViewAdapter;

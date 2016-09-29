@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -57,19 +57,19 @@ public class ThreadListFragment extends BaseFragment
   @Inject ThreadListAdapter mAdapter;
   @Inject Activity mActivity;
 
-  @Bind(R.id.backdrop) SimpleDraweeView backdrop;
-  @Bind(R.id.tvSubTitle) TextView tvSubTitle;
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
-  @Bind(R.id.appbar) AppBarLayout appbar;
-  @Bind(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
-  @Bind(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
-  @Bind(R.id.floatingAttention) FloatingActionButton floatingAttention;
-  @Bind(R.id.floatingPost) FloatingActionButton floatingPost;
-  @Bind(R.id.floatingSwitch) FloatingActionButton floatingSwitch;
-  @Bind(R.id.floatingRefresh) FloatingActionButton floatingRefresh;
-  @Bind(R.id.floatingMenu) FloatingActionMenu floatingMenu;
-  @Bind(R.id.frameLayout) FrameLayout frameLayout;
+  @BindView(R.id.backdrop) SimpleDraweeView backdrop;
+  @BindView(R.id.tvSubTitle) TextView tvSubTitle;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+  @BindView(R.id.appbar) AppBarLayout appbar;
+  @BindView(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
+  @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+  @BindView(R.id.floatingAttention) FloatingActionButton floatingAttention;
+  @BindView(R.id.floatingPost) FloatingActionButton floatingPost;
+  @BindView(R.id.floatingSwitch) FloatingActionButton floatingSwitch;
+  @BindView(R.id.floatingRefresh) FloatingActionButton floatingRefresh;
+  @BindView(R.id.floatingMenu) FloatingActionMenu floatingMenu;
+  @BindView(R.id.frameLayout) FrameLayout frameLayout;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {

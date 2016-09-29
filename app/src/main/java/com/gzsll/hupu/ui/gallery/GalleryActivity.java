@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gzsll.hupu.R;
@@ -48,10 +48,10 @@ public class GalleryActivity extends BaseSwipeBackActivity
     mActivity.startActivityForResult(intent, REQUEST_IMAGE);
   }
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.recyclerView) RecyclerView recyclerView;
-  @Bind(R.id.tvFolder) TextView tvFolder;
-  @Bind(R.id.btCommit) Button btCommit;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.recyclerView) RecyclerView recyclerView;
+  @BindView(R.id.tvFolder) TextView tvFolder;
+  @BindView(R.id.btCommit) Button btCommit;
 
   @Inject GalleryPresenter mPresenter;
   @Inject ImageAdapter mImageAdapter;

@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -97,10 +97,10 @@ public class PmDetailAdapter extends RecyclerView.Adapter<PmDetailAdapter.ViewHo
 
     PmDetail detail;
 
-    @Bind(R.id.tvDate) TextView tvDate;
-    @Bind(R.id.ivUser) SimpleDraweeView ivUser;
-    @Bind(R.id.pbReply) ProgressBar pbReply;
-    @Bind(R.id.tvContent) TextView tvContent;
+    @BindView(R.id.tvDate) TextView tvDate;
+    @BindView(R.id.ivUser) SimpleDraweeView ivUser;
+    @BindView(R.id.pbReply) ProgressBar pbReply;
+    @BindView(R.id.tvContent) TextView tvContent;
 
     @OnClick(R.id.ivUser) void ivUserClick() {
       UserProfileActivity.startActivity(mActivity, detail.puid);

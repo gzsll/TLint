@@ -10,7 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gzsll.hupu.R;
@@ -34,9 +34,9 @@ public class PmDetailFragment extends BaseFragment
     return mFragment;
   }
 
-  @Bind(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
-  @Bind(R.id.recyclerView) RecyclerView recyclerView;
-  @Bind(R.id.etContent) EditText etContent;
+  @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+  @BindView(R.id.recyclerView) RecyclerView recyclerView;
+  @BindView(R.id.etContent) EditText etContent;
 
   @Inject PmDetailAdapter mAdapter;
   @Inject PmDetailPresenter mPresenter;

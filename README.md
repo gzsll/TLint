@@ -21,6 +21,9 @@
 - [X] MVP分层细节优化
 - [ ] 代码优化
 
+## Code Style ##
+
+[https://github.com/square/java-code-styles](https://github.com/square/java-code-styles)
 
 ## 应用截图
 ![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot1.png) 

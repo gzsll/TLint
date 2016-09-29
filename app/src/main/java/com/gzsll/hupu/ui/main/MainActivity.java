@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -53,9 +53,9 @@ public class MainActivity extends BaseActivity
     mContext.startActivity(intent);
   }
 
-  @Bind(R.id.navigationView) NavigationView navigationView;
-  @Bind(R.id.drawerLayout) DrawerLayout drawerLayout;
-  @Bind(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.navigationView) NavigationView navigationView;
+  @BindView(R.id.drawerLayout) DrawerLayout drawerLayout;
+  @BindView(R.id.toolbar) Toolbar toolbar;
   ImageView ivTheme;
   SimpleDraweeView ivIcon;
   TextView tvName;
@@ -197,7 +197,7 @@ public class MainActivity extends BaseActivity
       }
       tvName.setText(user.getUserName());
     } else {
-      ivIcon.setImageURI(null);
+      ivIcon.setImageURI("");
       tvName.setText(null);
     }
   }

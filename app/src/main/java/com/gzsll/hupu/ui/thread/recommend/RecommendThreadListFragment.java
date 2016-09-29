@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.db.Thread;
@@ -27,8 +27,8 @@ public class RecommendThreadListFragment extends BaseFragment
   @Inject Activity mActivity;
   @Inject ThreadRecommendPresenter mRecommendPresenter;
 
-  @Bind(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
-  @Bind(R.id.refreshLayout) PullToRefreshView refreshLayout;
+  @BindView(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
+  @BindView(R.id.refreshLayout) PullToRefreshView refreshLayout;
 
   @Override public void initInjector() {
     getComponent(MainComponent.class).inject(this);

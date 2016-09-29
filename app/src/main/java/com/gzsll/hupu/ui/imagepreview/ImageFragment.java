@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
@@ -31,11 +31,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  */
 public class ImageFragment extends BaseFragment {
 
-
-  @Bind(R.id.image) PhotoDraweeView image;
-  @Bind(R.id.progress) SmoothProgressBar progress;
-  @Bind(R.id.rlProgress) RelativeLayout rlProgress;
-  @Bind(R.id.tvInfo) TextView tvInfo;
+  @BindView(R.id.image) PhotoDraweeView image;
+  @BindView(R.id.progress) SmoothProgressBar progress;
+  @BindView(R.id.rlProgress) RelativeLayout rlProgress;
+  @BindView(R.id.tvInfo) TextView tvInfo;
 
   public static ImageFragment newInstance(String url) {
     ImageFragment mFragment = new ImageFragment();

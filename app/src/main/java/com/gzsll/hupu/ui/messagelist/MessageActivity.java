@@ -9,7 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.injector.HasComponent;
@@ -29,10 +29,10 @@ public class MessageActivity extends BaseSwipeBackActivity
     mContext.startActivity(intent);
   }
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.tabs) TabLayout tabs;
-  @Bind(R.id.appbar) AppBarLayout appbar;
-  @Bind(R.id.viewpager) ViewPager viewpager;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.tabs) TabLayout tabs;
+  @BindView(R.id.appbar) AppBarLayout appbar;
+  @BindView(R.id.viewpager) ViewPager viewpager;
 
   private MessageComponent mMessageComponent;
 

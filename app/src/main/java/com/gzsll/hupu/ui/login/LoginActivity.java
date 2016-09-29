@@ -10,7 +10,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzsll.hupu.R;
@@ -29,11 +29,11 @@ public class LoginActivity extends BaseSwipeBackActivity implements LoginContrac
 
   @Inject LoginPresenter mPresenter;
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.etUserName) EditText etUserName;
-  @Bind(R.id.textInputUserName) TextInputLayout textInputUserName;
-  @Bind(R.id.etPassWord) EditText etPassWord;
-  @Bind(R.id.textInputPassword) TextInputLayout textInputPassword;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.etUserName) EditText etUserName;
+  @BindView(R.id.textInputUserName) TextInputLayout textInputUserName;
+  @BindView(R.id.etPassWord) EditText etPassWord;
+  @BindView(R.id.textInputPassword) TextInputLayout textInputPassword;
 
   private MaterialDialog dialog;
 

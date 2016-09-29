@@ -8,7 +8,7 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.ui.BaseSwipeBackActivity;
@@ -30,7 +30,7 @@ public class BrowserActivity extends BaseSwipeBackActivity {
     startActivity(mContext, url, true);
   }
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.toolbar) Toolbar toolbar;
 
 
   private String url;

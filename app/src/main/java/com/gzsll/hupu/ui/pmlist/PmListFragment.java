@@ -3,7 +3,7 @@ package com.gzsll.hupu.ui.pmlist;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.bean.Pm;
@@ -22,8 +22,8 @@ public class PmListFragment extends BaseFragment
     implements PmListContract.View, PullToRefreshView.OnRefreshListener,
     LoadMoreRecyclerView.LoadMoreListener, PmListAdapter.OnItemClickListener {
 
-  @Bind(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
-  @Bind(R.id.refreshLayout) PullToRefreshView refreshLayout;
+  @BindView(R.id.recyclerView) LoadMoreRecyclerView recyclerView;
+  @BindView(R.id.refreshLayout) PullToRefreshView refreshLayout;
 
   @Inject PmListPresenter mPresenter;
   @Inject PmListAdapter mAdapter;

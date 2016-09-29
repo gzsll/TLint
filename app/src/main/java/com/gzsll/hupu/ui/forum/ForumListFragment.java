@@ -5,7 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.db.Forum;
@@ -30,8 +30,8 @@ public class ForumListFragment extends BaseFragment
     return mFragment;
   }
 
-  @Bind(R.id.recyclerView) RecyclerView recyclerView;
-  @Bind(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+  @BindView(R.id.recyclerView) RecyclerView recyclerView;
+  @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
 
   private String forumId;
 

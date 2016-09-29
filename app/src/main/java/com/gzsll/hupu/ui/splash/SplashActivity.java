@@ -2,7 +2,7 @@ package com.gzsll.hupu.ui.splash;
 
 import android.text.TextUtils;
 import android.widget.FrameLayout;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.ui.BaseActivity;
@@ -18,7 +18,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
   public static final String ACTION_NOTIFICATION_MESSAGE =
       "com.gzsll.hupu.ACTION_NOTIFICATION_MESSAGE";
 
-  @Bind(R.id.splash) FrameLayout splash;
+  @BindView(R.id.splash) FrameLayout splash;
 
   @Inject SplashPresenter mPresenter;
 

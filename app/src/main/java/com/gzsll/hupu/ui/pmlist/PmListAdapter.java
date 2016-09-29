@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -77,11 +77,11 @@ public class PmListAdapter extends RecyclerView.Adapter<PmListAdapter.ViewHolder
 
     Pm mPm;
 
-    @Bind(R.id.tvName) TextView tvName;
-    @Bind(R.id.tvContent) TextView tvContent;
-    @Bind(R.id.tvTime) TextView tvTime;
-    @Bind(R.id.ivIcon) SimpleDraweeView ivIcon;
-    @Bind(R.id.listItem) LabelCardView cardView;
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvContent) TextView tvContent;
+    @BindView(R.id.tvTime) TextView tvTime;
+    @BindView(R.id.ivIcon) SimpleDraweeView ivIcon;
+    @BindView(R.id.listItem) LabelCardView cardView;
 
     @OnClick(R.id.listItem) void listItemClick() {
       if (onItemClickListener != null) {

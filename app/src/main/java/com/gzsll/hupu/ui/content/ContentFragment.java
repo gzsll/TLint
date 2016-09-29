@@ -6,7 +6,7 @@ import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alibaba.fastjson.JSON;
 import com.gzsll.hupu.Constants;
@@ -44,7 +44,7 @@ public class ContentFragment extends BaseFragment
     return mFragment;
   }
 
-  @Bind(R.id.webView) JockeyJsWebView webView;
+  @BindView(R.id.webView) JockeyJsWebView webView;
 
   @Inject ContentPagerPresenter mContentPresenter;
 

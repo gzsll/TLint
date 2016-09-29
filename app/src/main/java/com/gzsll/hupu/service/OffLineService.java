@@ -386,8 +386,8 @@ public class OffLineService extends Service {
     if (loadUri == null) {
       return false;
     }
-    CacheKey cacheKey =
-        DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(ImageRequest.fromUri(loadUri));
+    CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
+        .getEncodedCacheKey(ImageRequest.fromUri(loadUri), null);
     return ImagePipelineFactory.getInstance().getMainFileCache().hasKey(cacheKey)
         || ImagePipelineFactory.getInstance().getSmallImageFileCache().hasKey(cacheKey);
   }

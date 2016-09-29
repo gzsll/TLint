@@ -12,7 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.GridLayout;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gzsll.hupu.R;
@@ -159,13 +159,13 @@ public class ThreadListAdapter extends RecyclerView.Adapter<ThreadListAdapter.Vi
 
   class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind(R.id.tvTitle) TextView tvTitle;
-    @Bind(R.id.tvSummary) TextView tvSummary;
-    @Bind(R.id.grid) GridLayout grid;
-    @Bind(R.id.tvSingleTime) TextView tvSingleTime;
-    @Bind(R.id.tvReply) TextView tvReply;
-    @Bind(R.id.tvLight) TextView tvLight;
-    @Bind(R.id.cardView) CardView cardView;
+    @BindView(R.id.tvTitle) TextView tvTitle;
+    @BindView(R.id.tvSummary) TextView tvSummary;
+    @BindView(R.id.grid) GridLayout grid;
+    @BindView(R.id.tvSingleTime) TextView tvSingleTime;
+    @BindView(R.id.tvReply) TextView tvReply;
+    @BindView(R.id.tvLight) TextView tvLight;
+    @BindView(R.id.cardView) CardView cardView;
 
     Thread thread;
 

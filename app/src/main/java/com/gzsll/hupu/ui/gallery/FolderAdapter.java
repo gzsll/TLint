@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.gzsll.hupu.R;
@@ -93,10 +93,10 @@ public class FolderAdapter extends BaseAdapter {
   }
 
   static class ViewHolder {
-    @Bind(R.id.ivCover) SimpleDraweeView ivCover;
-    @Bind(R.id.tvName) TextView tvName;
-    @Bind(R.id.tvSize) TextView tvSize;
-    @Bind(R.id.ivIndicator) ImageView ivIndicator;
+    @BindView(R.id.ivCover) SimpleDraweeView ivCover;
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvSize) TextView tvSize;
+    @BindView(R.id.ivIndicator) ImageView ivIndicator;
 
     ViewHolder(View view) {
       ButterKnife.bind(this, view);

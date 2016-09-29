@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -37,9 +37,9 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportContr
 
   @Inject ReportPresenter mPresenter;
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.lvTypes) ListView lvTypes;
-  @Bind(R.id.etContent) EditText etContent;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.lvTypes) ListView lvTypes;
+  @BindView(R.id.etContent) EditText etContent;
 
   private List<String> list = new ArrayList<>();
   private ReportAdapter adapter;
@@ -176,8 +176,8 @@ public class ReportActivity extends BaseSwipeBackActivity implements ReportContr
     }
 
     class ViewHolder {
-      @Bind(R.id.tvType) TextView tvType;
-      @Bind(R.id.ivCheck) ImageView ivCheck;
+      @BindView(R.id.tvType) TextView tvType;
+      @BindView(R.id.ivCheck) ImageView ivCheck;
 
       ViewHolder(View view) {
         ButterKnife.bind(this, view);

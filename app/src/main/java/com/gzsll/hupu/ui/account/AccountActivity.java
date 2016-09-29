@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.db.User;
@@ -30,8 +30,8 @@ public class AccountActivity extends BaseSwipeBackActivity
   @Inject AccountPresenter mPresenter;
   @Inject AccountAdapter mAdapter;
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.recyclerView) RecyclerView recyclerView;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.recyclerView) RecyclerView recyclerView;
 
   @Override public int initContentView() {
     return R.layout.activity_account;

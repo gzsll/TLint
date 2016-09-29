@@ -3,7 +3,7 @@ package com.gzsll.hupu.ui.setting;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.injector.HasComponent;
@@ -20,7 +20,7 @@ public class SettingActivity extends BaseSwipeBackActivity
     mContext.startActivity(intent);
   }
 
-  @Bind(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.toolbar) Toolbar toolbar;
 
   private SettingComponent mSettingComponent;
 

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -120,8 +120,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
   class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind(R.id.ivPhoto) SimpleDraweeView ivPhoto;
-    @Bind(R.id.ivCheck) ImageView ivCheck;
+    @BindView(R.id.ivPhoto) SimpleDraweeView ivPhoto;
+    @BindView(R.id.ivCheck) ImageView ivCheck;
     Image image;
 
     @OnClick(R.id.flItem) void flItemClick() {

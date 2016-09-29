@@ -7,7 +7,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.gzsll.hupu.R;
 import com.gzsll.hupu.ui.BaseFragment;
@@ -33,8 +33,8 @@ public class BrowserFragment extends BaseFragment {
     return mFragment;
   }
 
-  @Bind(R.id.webView) HuPuWebView webView;
-  @Bind(R.id.progress) ProgressBar progress;
+  @BindView(R.id.webView) HuPuWebView webView;
+  @BindView(R.id.progress) ProgressBar progress;
 
   private String url;
   private String title;

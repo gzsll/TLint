@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.gzsll.hupu.R;
@@ -62,9 +62,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
   class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind(R.id.tvCategory) TextView tvCategory;
-    @Bind(R.id.tvInfo) TextView tvInfo;
-    @Bind(R.id.tvTime) TextView tvTime;
+    @BindView(R.id.tvCategory) TextView tvCategory;
+    @BindView(R.id.tvInfo) TextView tvInfo;
+    @BindView(R.id.tvTime) TextView tvTime;
 
     Message message;
 
