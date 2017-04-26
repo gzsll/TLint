@@ -15,8 +15,8 @@
   -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-  <item
-      android:title="消息"
-      android:id="@+id/action_notification"
-      app:showAsAction="always"></item>
+    <item
+        android:id="@+id/action_notification"
+        android:title="消息"
+        app:showAsAction="always"></item>
 </menu>

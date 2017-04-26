@@ -16,15 +16,6 @@
 
 [本地下载](http://www.pursll.com/TLint_2.1.apk)
 
-## TODO ##
-- [X] 离线功能
-- [X] MVP分层细节优化
-- [ ] 代码优化
-
-## Code Style ##
-
-[https://github.com/square/java-code-styles](https://github.com/square/java-code-styles)
-
 ## 应用截图
 ![](https://github.com/gzsll/TLint/raw/master/resource/Screenshot1.png) 
 

@@ -23,6 +23,7 @@
 package com.gzsll.hupu.components.jockeyjs;
 
 import com.gzsll.hupu.components.jockeyjs.util.BackgroundExecutor;
+
 import java.util.Map;
 
 /**
@@ -32,12 +33,13 @@ import java.util.Map;
  */
 public abstract class JockeyAsyncHandler extends JockeyHandler {
 
-  @Override
-  public final void perform(final Map<Object, Object> payload, final OnCompletedListener listener) {
-    BackgroundExecutor.execute(new Runnable() {
-      @Override public void run() {
-        JockeyAsyncHandler.super.perform(payload, listener);
-      }
-    });
-  }
+    @Override
+    public final void perform(final Map<Object, Object> payload, final OnCompletedListener listener) {
+        BackgroundExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                JockeyAsyncHandler.super.perform(payload, listener);
+            }
+        });
+    }
 }

@@ -8,19 +8,19 @@ import com.gzsll.hupu.ui.BaseView;
  */
 public interface LoginContract {
 
-  interface View extends BaseView {
-    void showLoading();
+    interface View extends BaseView {
+        void showLoading();
 
-    void hideLoading();
+        void hideLoading();
 
-    void showUserNameError(String error);
+        void showUserNameError(String error);
 
-    void showPassWordError(String error);
+        void showPassWordError(String error);
 
-    void loginSuccess();
-  }
+        void loginSuccess();
+    }
 
-  interface Presenter extends BasePresenter<View> {
-    void login(String userName, String passWord);
-  }
+    interface Presenter extends BasePresenter<View> {
+        void login(String userName, String passWord);
+    }
 }

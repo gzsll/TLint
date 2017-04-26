@@ -21,59 +21,62 @@ import java.util.Map;
  */
 public class CompositeJockeyHandler extends JockeyHandler {
 
-  /**
-   * Accumulates all the "completed" calls from the contained Handlers
-   * Once all the handlers have completed this will signal completion
-   *
-   * @author Paul
-   */
-  private class AccumulatingListener implements OnCompletedListener {
+    /**
+     * Accumulates all the "completed" calls from the contained Handlers
+     * Once all the handlers have completed this will signal completion
+     *
+     * @author Paul
+     */
+    private class AccumulatingListener implements OnCompletedListener {
 
-    private int _size;
-    private int _accumulated;
+        private int _size;
+        private int _accumulated;
 
-    private AccumulatingListener() {
-      this._size = _handlers.size();
-      this._accumulated = 0;
+        private AccumulatingListener() {
+            this._size = _handlers.size();
+            this._accumulated = 0;
+        }
+
+        @Override
+        public void onCompleted() {
+            ++_accumulated;
+
+            if (_accumulated >= _size) completed(_listener);
+        }
     }
 
-    @Override public void onCompleted() {
-      ++_accumulated;
+    private OnCompletedListener _listener;
 
-      if (_accumulated >= _size) completed(_listener);
+    private List<JockeyHandler> _handlers = new ArrayList<JockeyHandler>();
+
+    private OnCompletedListener _accumulator;
+
+    public CompositeJockeyHandler(JockeyHandler... handlers) {
+        add(handlers);
     }
-  }
 
-  private OnCompletedListener _listener;
+    public void add(JockeyHandler... handler) {
+        _handlers.addAll(Arrays.asList(handler));
+    }
 
-  private List<JockeyHandler> _handlers = new ArrayList<JockeyHandler>();
+    public void clear(JockeyHandler handler) {
+        _handlers.clear();
+    }
 
-  private OnCompletedListener _accumulator;
+    @Override
+    public void perform(Map<Object, Object> payload, OnCompletedListener listener) {
+        this._listener = listener;
+        this._accumulator = new AccumulatingListener();
+        doPerform(payload);
+    }
 
-  public CompositeJockeyHandler(JockeyHandler... handlers) {
-    add(handlers);
-  }
+    @Override
+    protected void doPerform(Map<Object, Object> payload) {
+        for (JockeyHandler handler : _handlers)
+            handler.perform(payload, this._accumulator);
+    }
 
-  public void add(JockeyHandler... handler) {
-    _handlers.addAll(Arrays.asList(handler));
-  }
-
-  public void clear(JockeyHandler handler) {
-    _handlers.clear();
-  }
-
-  @Override public void perform(Map<Object, Object> payload, OnCompletedListener listener) {
-    this._listener = listener;
-    this._accumulator = new AccumulatingListener();
-    doPerform(payload);
-  }
-
-  @Override protected void doPerform(Map<Object, Object> payload) {
-    for (JockeyHandler handler : _handlers)
-      handler.perform(payload, this._accumulator);
-  }
-
-  public static JockeyHandler compose(JockeyHandler... handlers) {
-    return new CompositeJockeyHandler(handlers);
-  }
+    public static JockeyHandler compose(JockeyHandler... handlers) {
+        return new CompositeJockeyHandler(handlers);
+    }
 }

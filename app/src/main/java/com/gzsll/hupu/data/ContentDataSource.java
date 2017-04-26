@@ -2,7 +2,9 @@ package com.gzsll.hupu.data;
 
 import com.gzsll.hupu.db.ThreadInfo;
 import com.gzsll.hupu.db.ThreadReply;
+
 import java.util.List;
+
 import rx.Observable;
 
 /**
@@ -11,9 +13,9 @@ import rx.Observable;
  */
 public interface ContentDataSource {
 
-  Observable<ThreadInfo> getThreadInfo(String fid, String tid);
+    Observable<ThreadInfo> getThreadInfo(String fid, String tid);
 
-  Observable<List<ThreadReply>> getReplies(String fid, String tid, int page);
+    Observable<List<ThreadReply>> getReplies(String fid, String tid, int page);
 
-  Observable<List<ThreadReply>> getLightReplies(String fid, String tid);
+    Observable<List<ThreadReply>> getLightReplies(String fid, String tid);
 }

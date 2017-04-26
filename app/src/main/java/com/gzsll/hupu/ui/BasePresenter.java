@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  */
 public interface BasePresenter<T extends BaseView> {
 
-  void attachView(@NonNull T view);
+    void attachView(@NonNull T view);
 
-  void detachView();
+    void detachView();
 }

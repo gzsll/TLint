@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-  <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
-
-    <com.gzsll.hupu.widget.HuPuWebView
-        android:id="@+id/webView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/widgetBackground"
-        />
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="5dip"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="50"
-        android:progressDrawable="@drawable/ad_base_webview_load_progress_drawable"
-        />
-  </RelativeLayout>
+        <com.gzsll.hupu.widget.HuPuWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/widgetBackground" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dip"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/ad_base_webview_load_progress_drawable" />
+    </RelativeLayout>
 
 
 </android.support.v4.widget.NestedScrollView>

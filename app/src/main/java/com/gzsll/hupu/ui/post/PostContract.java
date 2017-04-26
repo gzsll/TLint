@@ -4,6 +4,7 @@ import com.gzsll.hupu.bean.BaseError;
 import com.gzsll.hupu.bean.Exam;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
+
 import java.util.ArrayList;
 
 /**
@@ -11,25 +12,25 @@ import java.util.ArrayList;
  */
 public interface PostContract {
 
-  interface View extends BaseView {
-    void renderError(BaseError error);
+    interface View extends BaseView {
+        void renderError(BaseError error);
 
-    void renderExam(Exam exam);
+        void renderExam(Exam exam);
 
-    void showLoading();
+        void showLoading();
 
-    void hideLoading();
+        void hideLoading();
 
-    void postSuccess();
-  }
+        void postSuccess();
+    }
 
-  interface Presenter extends BasePresenter<View> {
-    void checkPermission(int type, String fid, String tid);
+    interface Presenter extends BasePresenter<View> {
+        void checkPermission(int type, String fid, String tid);
 
-    void parse(ArrayList<String> paths);
+        void parse(ArrayList<String> paths);
 
-    void comment(String tid, String fid, String pid, String content);
+        void comment(String tid, String fid, String pid, String content);
 
-    void post(String fid, String content, String title);
-  }
+        void post(String fid, String content, String title);
+    }
 }

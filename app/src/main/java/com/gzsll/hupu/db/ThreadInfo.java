@@ -34,9 +34,9 @@ public class ThreadInfo {
     }
 
     public ThreadInfo(String tid, String pid, Integer page, String nopic, Integer postAuthorPuid,
-        String time, String userImg, String author_puid, String username, String fid, String visits,
-        String recommend_num, String via, String update_info, String content, String title,
-        Integer totalPage, String forumName) {
+                      String time, String userImg, String author_puid, String username, String fid, String visits,
+                      String recommend_num, String via, String update_info, String content, String title,
+                      Integer totalPage, String forumName) {
         this.tid = tid;
         this.pid = pid;
         this.page = page;

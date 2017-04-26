@@ -5,14 +5,12 @@
     android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingRight="10dp"
-    >
+    android:paddingRight="10dp">
 
-  <com.facebook.drawee.view.SimpleDraweeView
-      android:id="@+id/ivPic"
-      android:layout_width="70dip"
-      android:layout_height="70dip"
-      android:scaleType="centerCrop"
-      />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ivPic"
+        android:layout_width="70dip"
+        android:layout_height="70dip"
+        android:scaleType="centerCrop" />
 
 </LinearLayout>

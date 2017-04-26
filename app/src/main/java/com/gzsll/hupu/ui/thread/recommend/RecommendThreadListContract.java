@@ -10,30 +10,30 @@ import java.util.List;
  * Created by sll on 2016/5/11.
  */
 public interface RecommendThreadListContract {
-  interface View extends BaseView {
+    interface View extends BaseView {
 
-    void showLoading();
+        void showLoading();
 
-    void showContent();
+        void showContent();
 
-    void renderThreads(List<Thread> threads);
+        void renderThreads(List<Thread> threads);
 
-    void onError(String error);
+        void onError(String error);
 
-    void onEmpty();
+        void onEmpty();
 
-    void onLoadCompleted(boolean hasMore);
+        void onLoadCompleted(boolean hasMore);
 
-    void onRefreshCompleted();
-  }
+        void onRefreshCompleted();
+    }
 
-  interface Presenter extends BasePresenter<View> {
-    void onThreadReceive();
+    interface Presenter extends BasePresenter<View> {
+        void onThreadReceive();
 
-    void onRefresh();
+        void onRefresh();
 
-    void onReload();
+        void onReload();
 
-    void onLoadMore();
-  }
+        void onLoadMore();
+    }
 }

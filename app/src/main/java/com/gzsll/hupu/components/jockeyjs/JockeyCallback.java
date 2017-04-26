@@ -24,5 +24,5 @@ package com.gzsll.hupu.components.jockeyjs;
 
 public interface JockeyCallback {
 
-  public void call();
+    public void call();
 }

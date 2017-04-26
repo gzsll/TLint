@@ -20,35 +20,31 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
-      >
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <include layout="@layout/base_content_empty"/>
-  </LinearLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <include layout="@layout/base_content_empty" />
+    </LinearLayout>
 
 
-  <android.support.design.widget.NavigationView
-      android:id="@+id/navigationView"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_gravity="start"
-      app:headerLayout="@layout/nav_header"
-      app:menu="@menu/drawer_view"
-      />
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_view" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -3,6 +3,7 @@ package com.gzsll.hupu.db;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
 import de.greenrobot.dao.internal.DaoConfig;
@@ -36,22 +37,29 @@ public class ReadThreadDao extends AbstractDao<ReadThread, Long> {
         super(config, daoSession);
     }
 
-    /** Creates the underlying database table. */
+    /**
+     * Creates the underlying database table.
+     */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'READ_THREAD' (" + //
-            "'_id' INTEGER PRIMARY KEY ," + // 0: id
-            "'TID' TEXT);"); // 1: tid
+                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'TID' TEXT);"); // 1: tid
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'READ_THREAD'";
         db.execSQL(sql);
     }
 
-    /** @inheritdoc */
-    @Override protected void bindValues(SQLiteStatement stmt, ReadThread entity) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected void bindValues(SQLiteStatement stmt, ReadThread entity) {
         stmt.clearBindings();
 
         Long id = entity.getId();
@@ -65,34 +73,49 @@ public class ReadThreadDao extends AbstractDao<ReadThread, Long> {
         }
     }
 
-    /** @inheritdoc */
-    @Override public Long readKey(Cursor cursor, int offset) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    /** @inheritdoc */
-    @Override public ReadThread readEntity(Cursor cursor, int offset) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public ReadThread readEntity(Cursor cursor, int offset) {
         ReadThread entity = new ReadThread( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // tid
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+                cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // tid
         );
         return entity;
     }
 
-    /** @inheritdoc */
-    @Override public void readEntity(Cursor cursor, ReadThread entity, int offset) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public void readEntity(Cursor cursor, ReadThread entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
     }
 
-    /** @inheritdoc */
-    @Override protected Long updateKeyAfterInsert(ReadThread entity, long rowId) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected Long updateKeyAfterInsert(ReadThread entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
 
-    /** @inheritdoc */
-    @Override public Long getKey(ReadThread entity) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public Long getKey(ReadThread entity) {
         if (entity != null) {
             return entity.getId();
         } else {
@@ -100,8 +123,11 @@ public class ReadThreadDao extends AbstractDao<ReadThread, Long> {
         }
     }
 
-    /** @inheritdoc */
-    @Override protected boolean isEntityUpdateable() {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected boolean isEntityUpdateable() {
         return true;
     }
 }

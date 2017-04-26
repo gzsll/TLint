@@ -4,137 +4,128 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardCornerRadius="3dp"
-    card_view:cardUseCompatPadding="true"
     card_view:cardBackgroundColor="?attr/widgetBackground"
-    >
+    card_view:cardCornerRadius="3dp"
+    card_view:cardUseCompatPadding="true">
 
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/llThreadItem"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
-      >
-
-
-    <TextView
-        android:text="title"
-        android:id="@+id/tvTitle"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/llThreadItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip"
-        android:layout_marginTop="10dip"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textSize="15sp"
-        android:textColor="?android:attr/textColorPrimary"
-        />
-
-    <TextView
-        android:text="Summary"
-        android:id="@+id/tvSummary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip"
-        android:layout_marginTop="10dip"
-        android:ellipsize="end"
-        android:lineSpacingExtra="8dp"
-        android:maxLines="3"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="12sp"
-        />
-
-    <GridLayout
-        android:id="@+id/grid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:clickable="false"
-        android:columnCount="3"
-        android:orientation="horizontal"
-        android:rowCount="3"
-        android:useDefaultMargins="false"
-        >
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-      <ImageView style="@style/listViewMultiImageView"/>
-
-    </GridLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
-        android:layout_marginTop="10dip"
-        >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-      <TextView
-          android:id="@+id/tvSingleTime"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentLeft="true"
-          android:layout_marginLeft="15dp"
-          android:textColor="?android:attr/textColorSecondary"
-          />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginTop="10dip"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="title"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="15sp" />
 
-      <TextView
-          android:id="@+id/tvReply"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentRight="true"
-          android:layout_gravity="right|center"
-          android:layout_marginRight="15dip"
-          android:drawableLeft="@drawable/ic_list_comment"
-          android:drawablePadding="5.0dip"
-          android:text="111"
-          android:textColor="?android:attr/textColorSecondary"
-          />
+        <TextView
+            android:id="@+id/tvSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginTop="10dip"
+            android:ellipsize="end"
+            android:lineSpacingExtra="8dp"
+            android:maxLines="3"
+            android:text="Summary"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
+
+        <GridLayout
+            android:id="@+id/grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:clickable="false"
+            android:columnCount="3"
+            android:orientation="horizontal"
+            android:rowCount="3"
+            android:useDefaultMargins="false">
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+            <ImageView style="@style/listViewMultiImageView" />
+
+        </GridLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:layout_marginTop="10dip">
 
 
-      <TextView
-          android:id="@+id/tvLight"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="right|center"
-          android:layout_marginRight="25dp"
-          android:layout_toLeftOf="@+id/tvReply"
-          android:layout_toStartOf="@+id/tvReply"
-          android:drawableLeft="@drawable/ic_list_light"
-          android:drawablePadding="5.0dip"
-          android:text="0"
-          android:textColor="?android:attr/textColorSecondary"
-          />
+            <TextView
+                android:id="@+id/tvSingleTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="15dp"
+                android:textColor="?android:attr/textColorSecondary" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tvReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right|center"
+                android:layout_marginRight="15dip"
+                android:drawableLeft="@drawable/ic_list_comment"
+                android:drawablePadding="5.0dip"
+                android:text="111"
+                android:textColor="?android:attr/textColorSecondary" />
 
 
-  </LinearLayout>
+            <TextView
+                android:id="@+id/tvLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"
+                android:layout_marginRight="25dp"
+                android:layout_toLeftOf="@+id/tvReply"
+                android:layout_toStartOf="@+id/tvReply"
+                android:drawableLeft="@drawable/ic_list_light"
+                android:drawablePadding="5.0dip"
+                android:text="0"
+                android:textColor="?android:attr/textColorSecondary" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>
 

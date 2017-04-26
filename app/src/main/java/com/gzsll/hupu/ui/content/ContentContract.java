@@ -7,52 +7,52 @@ import com.gzsll.hupu.ui.BaseView;
  * Created by sll on 2016/5/11.
  */
 public interface ContentContract {
-  interface View extends BaseView {
-    void showLoading();
+    interface View extends BaseView {
+        void showLoading();
 
-    void hideLoading();
+        void hideLoading();
 
-    void renderContent(int page, int totalPage);
+        void renderContent(int page, int totalPage);
 
-    void onUpdatePager(int page, int totalPage);
+        void onUpdatePager(int page, int totalPage);
 
-    void setCurrentItem(int index);
+        void setCurrentItem(int index);
 
-    void isCollected(boolean isCollected);
+        void isCollected(boolean isCollected);
 
-    void onError(String error);
+        void onError(String error);
 
-    void onToggleFloatingMenu();
+        void onToggleFloatingMenu();
 
-    void showLoginUi();
+        void showLoginUi();
 
-    void showReportUi();
+        void showReportUi();
 
-    void showPostUi(String title);
-  }
+        void showPostUi(String title);
+    }
 
-  interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BasePresenter<View> {
 
-    void onThreadInfoReceive(String tid, String fid, String pid, int page);
+        void onThreadInfoReceive(String tid, String fid, String pid, int page);
 
-    void onReload();
+        void onReload();
 
-    void onRefresh();
+        void onRefresh();
 
-    void onPageNext();
+        void onPageNext();
 
-    void onPagePre();
+        void onPagePre();
 
-    void onPageSelected(int page);
+        void onPageSelected(int page);
 
-    void onCommendClick();
+        void onCommendClick();
 
-    void onShareClick();
+        void onShareClick();
 
-    void onReportClick();
+        void onReportClick();
 
-    void onCollectClick();
+        void onCollectClick();
 
-    void updatePage(int page);
-  }
+        void updatePage(int page);
+    }
 }

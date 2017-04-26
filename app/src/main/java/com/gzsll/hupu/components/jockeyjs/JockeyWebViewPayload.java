@@ -25,8 +25,8 @@ package com.gzsll.hupu.components.jockeyjs;
 import java.util.Map;
 
 public class JockeyWebViewPayload {
-  public int id;
-  public String type;
-  String host;
-  public Map<Object, Object> payload;
+    public int id;
+    public String type;
+    String host;
+    public Map<Object, Object> payload;
 }

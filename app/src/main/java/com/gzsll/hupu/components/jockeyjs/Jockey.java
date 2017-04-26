@@ -32,74 +32,74 @@ import android.webkit.WebViewClient;
  */
 public interface Jockey {
 
-  /**
-   * An interface for the app to check the incoming source of an event.
-   *
-   * @author Paul
-   */
-  public interface OnValidateListener {
-    boolean validate(String host);
-  }
+    /**
+     * An interface for the app to check the incoming source of an event.
+     *
+     * @author Paul
+     */
+    public interface OnValidateListener {
+        boolean validate(String host);
+    }
 
-  /**
-   * Attaches one or more handlers to this jockey instance so that is may receive events of the
-   * provided type
-   * from a webpage
-   */
-  public void on(String type, JockeyHandler... handler);
+    /**
+     * Attaches one or more handlers to this jockey instance so that is may receive events of the
+     * provided type
+     * from a webpage
+     */
+    public void on(String type, JockeyHandler... handler);
 
-  /**
-   * Removes all handlers of the specified name
-   */
-  public void off(String type);
+    /**
+     * Removes all handlers of the specified name
+     */
+    public void off(String type);
 
-  /**
-   * Sends a new event to the webview
-   *
-   * Equivalent to calling send(type, toWebView, null, null);
-   */
-  public void send(String type, WebView toWebView);
+    /**
+     * Sends a new event to the webview
+     * <p>
+     * Equivalent to calling send(type, toWebView, null, null);
+     */
+    public void send(String type, WebView toWebView);
 
-  /**
-   * Sends a new event to the webview with the included payload
-   *
-   * Equivalent to calling send(type, toWebView, payload, null)
-   */
-  public void send(String type, WebView toWebView, Object withPayload);
+    /**
+     * Sends a new event to the webview with the included payload
+     * <p>
+     * Equivalent to calling send(type, toWebView, payload, null)
+     */
+    public void send(String type, WebView toWebView, Object withPayload);
 
-  /**
-   * Sends the new event to the webview and registers a callback to listen for the returned value
-   *
-   * Equivalent to calling send(type, toWebView, null, complete)
-   */
-  public void send(String type, WebView toWebView, JockeyCallback complete);
+    /**
+     * Sends the new event to the webview and registers a callback to listen for the returned value
+     * <p>
+     * Equivalent to calling send(type, toWebView, null, complete)
+     */
+    public void send(String type, WebView toWebView, JockeyCallback complete);
 
-  /**
-   * Sends the new event to the webview with a payload and a callback to listen for the webpage
-   * response.
-   */
-  public void send(String type, WebView toWebView, Object withPayload, JockeyCallback complete);
+    /**
+     * Sends the new event to the webview with a payload and a callback to listen for the webpage
+     * response.
+     */
+    public void send(String type, WebView toWebView, Object withPayload, JockeyCallback complete);
 
-  /**
-   * Triggers the callback on the webview with the appropriate messageId
-   */
-  public void triggerCallbackOnWebView(WebView webView, int messageId);
+    /**
+     * Triggers the callback on the webview with the appropriate messageId
+     */
+    public void triggerCallbackOnWebView(WebView webView, int messageId);
 
-  /**
-   * Configures the WebView to be able to receive and send events with Jockey
-   */
-  public void configure(WebView webView);
+    /**
+     * Configures the WebView to be able to receive and send events with Jockey
+     */
+    public void configure(WebView webView);
 
-  /**
-   * Returns if the Jockey implementation handles the event
-   */
-  public boolean handles(String string);
+    /**
+     * Returns if the Jockey implementation handles the event
+     */
+    public boolean handles(String string);
 
-  /**
-   * Sets the listener that will be called when validation needs to be performed
-   * on the incoming host before a redirect
-   */
-  public void setOnValidateListener(OnValidateListener listener);
+    /**
+     * Sets the listener that will be called when validation needs to be performed
+     * on the incoming host before a redirect
+     */
+    public void setOnValidateListener(OnValidateListener listener);
 
-  public void setWebViewClient(WebViewClient client);
+    public void setWebViewClient(WebViewClient client);
 }

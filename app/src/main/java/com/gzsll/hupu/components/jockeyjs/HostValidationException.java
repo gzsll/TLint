@@ -24,8 +24,8 @@ package com.gzsll.hupu.components.jockeyjs;
 
 public class HostValidationException extends Exception {
 
-  /**
-   *
-   */
-  private static final long serialVersionUID = -8710370824869565715L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8710370824869565715L;
 }

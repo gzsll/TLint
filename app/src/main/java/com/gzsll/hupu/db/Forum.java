@@ -27,7 +27,7 @@ public class Forum implements Serializable {
     }
 
     public Forum(Long id, String fid, String name, String logo, String description, String backImg,
-        String forumId, String categoryName, Integer weight) {
+                 String forumId, String categoryName, Integer weight) {
         this.id = id;
         this.fid = fid;
         this.name = name;

@@ -8,51 +8,51 @@ import com.gzsll.hupu.ui.BaseView;
  */
 public interface ContentPagerContract {
 
-  interface View extends BaseView {
+    interface View extends BaseView {
 
-    void showLoading();
+        void showLoading();
 
-    void hideLoading();
+        void hideLoading();
 
-    void onError();
+        void onError();
 
-    void sendMessageToJS(String handlerName, Object object);
+        void sendMessageToJS(String handlerName, Object object);
 
-    void loadUrl(String url);
+        void loadUrl(String url);
 
-    void showReplyUi(String fid, String tid, String pid, String title);
+        void showReplyUi(String fid, String tid, String pid, String title);
 
-    void showReportUi(String tid, String pid);
+        void showReportUi(String tid, String pid);
 
-    void showBrowserUi(String url);
+        void showBrowserUi(String url);
 
-    void showContentUi(String tid, String pid, int page);
+        void showContentUi(String tid, String pid, int page);
 
-    void showThreadListUi(String fid);
+        void showThreadListUi(String fid);
 
-    void showUserProfileUi(String uid);
+        void showUserProfileUi(String uid);
 
-    void showLoginUi();
+        void showLoginUi();
 
-    void onClose();
-  }
+        void onClose();
+    }
 
-  interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BasePresenter<View> {
 
-    void onThreadInfoReceive(String tid, String fid, String pid, int page);
+        void onThreadInfoReceive(String tid, String fid, String pid, int page);
 
-    void onReply(int area, int index);
+        void onReply(int area, int index);
 
-    void onReport(int area, int index);
+        void onReport(int area, int index);
 
-    void addLight(int area, int index);
+        void addLight(int area, int index);
 
-    void addRuLight(int area, int index);
+        void addRuLight(int area, int index);
 
-    void handlerUrl(String url);
+        void handlerUrl(String url);
 
-    void onReload();
+        void onReload();
 
-    ContentPagerPresenter.HupuBridge getJavaScriptInterface();
-  }
+        ContentPagerPresenter.HupuBridge getJavaScriptInterface();
+    }
 }

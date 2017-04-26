@@ -7,13 +7,13 @@ import com.gzsll.hupu.ui.BaseView;
  * Created by sll on 2016/5/11.
  */
 public interface ImagePreviewContract {
-  interface View extends BaseView {
+    interface View extends BaseView {
 
-  }
+    }
 
-  interface Presenter extends BasePresenter<View> {
-    void saveImage(String url);
+    interface Presenter extends BasePresenter<View> {
+        void saveImage(String url);
 
-    void copyImagePath(String url);
-  }
+        void copyImagePath(String url);
+    }
 }

@@ -3,6 +3,7 @@ package com.gzsll.hupu.db;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
 import de.greenrobot.dao.internal.DaoConfig;
@@ -26,38 +27,38 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
         public final static Property Puid = new Property(2, String.class, "puid", false, "PUID");
         public final static Property Via = new Property(3, String.class, "via", false, "VIA");
         public final static Property Content =
-            new Property(4, String.class, "content", false, "CONTENT");
+                new Property(4, String.class, "content", false, "CONTENT");
         public final static Property Create_time =
-            new Property(5, String.class, "create_time", false, "CREATE_TIME");
+                new Property(5, String.class, "create_time", false, "CREATE_TIME");
         public final static Property Update_info =
-            new Property(6, String.class, "update_info", false, "UPDATE_INFO");
+                new Property(6, String.class, "update_info", false, "UPDATE_INFO");
         public final static Property Light_count =
-            new Property(7, Integer.class, "light_count", false, "LIGHT_COUNT");
+                new Property(7, Integer.class, "light_count", false, "LIGHT_COUNT");
         public final static Property User_banned =
-            new Property(8, Integer.class, "user_banned", false, "USER_BANNED");
+                new Property(8, Integer.class, "user_banned", false, "USER_BANNED");
         public final static Property Floor =
-            new Property(9, Integer.class, "floor", false, "FLOOR");
+                new Property(9, Integer.class, "floor", false, "FLOOR");
         public final static Property Time = new Property(10, String.class, "time", false, "TIME");
         public final static Property UserName =
-            new Property(11, String.class, "userName", false, "USER_NAME");
+                new Property(11, String.class, "userName", false, "USER_NAME");
         public final static Property UserImg =
-            new Property(12, String.class, "userImg", false, "USER_IMG");
+                new Property(12, String.class, "userImg", false, "USER_IMG");
         public final static Property Smallcontent =
-            new Property(13, String.class, "smallcontent", false, "SMALLCONTENT");
+                new Property(13, String.class, "smallcontent", false, "SMALLCONTENT");
         public final static Property Togglecontent =
-            new Property(14, String.class, "togglecontent", false, "TOGGLECONTENT");
+                new Property(14, String.class, "togglecontent", false, "TOGGLECONTENT");
         public final static Property Index =
-            new Property(15, Integer.class, "index", false, "INDEX");
+                new Property(15, Integer.class, "index", false, "INDEX");
         public final static Property IsLight =
-            new Property(16, Boolean.class, "isLight", false, "IS_LIGHT");
+                new Property(16, Boolean.class, "isLight", false, "IS_LIGHT");
         public final static Property QuoteHeader =
-            new Property(17, String.class, "quoteHeader", false, "QUOTE_HEADER");
+                new Property(17, String.class, "quoteHeader", false, "QUOTE_HEADER");
         public final static Property QuoteContent =
-            new Property(18, String.class, "quoteContent", false, "QUOTE_CONTENT");
+                new Property(18, String.class, "quoteContent", false, "QUOTE_CONTENT");
         public final static Property QuoteToggle =
-            new Property(19, String.class, "quoteToggle", false, "QUOTE_TOGGLE");
+                new Property(19, String.class, "quoteToggle", false, "QUOTE_TOGGLE");
         public final static Property PageIndex =
-            new Property(20, Integer.class, "pageIndex", false, "PAGE_INDEX");
+                new Property(20, Integer.class, "pageIndex", false, "PAGE_INDEX");
     }
 
     ;
@@ -71,41 +72,48 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
         super(config, daoSession);
     }
 
-    /** Creates the underlying database table. */
+    /**
+     * Creates the underlying database table.
+     */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'THREAD_REPLY' (" + //
-            "'TID' TEXT," + // 0: tid
-            "'PID' TEXT," + // 1: pid
-            "'PUID' TEXT," + // 2: puid
-            "'VIA' TEXT," + // 3: via
-            "'CONTENT' TEXT," + // 4: content
-            "'CREATE_TIME' TEXT," + // 5: create_time
-            "'UPDATE_INFO' TEXT," + // 6: update_info
-            "'LIGHT_COUNT' INTEGER," + // 7: light_count
-            "'USER_BANNED' INTEGER," + // 8: user_banned
-            "'FLOOR' INTEGER," + // 9: floor
-            "'TIME' TEXT," + // 10: time
-            "'USER_NAME' TEXT," + // 11: userName
-            "'USER_IMG' TEXT," + // 12: userImg
-            "'SMALLCONTENT' TEXT," + // 13: smallcontent
-            "'TOGGLECONTENT' TEXT," + // 14: togglecontent
-            "'INDEX' INTEGER," + // 15: index
-            "'IS_LIGHT' INTEGER," + // 16: isLight
-            "'QUOTE_HEADER' TEXT," + // 17: quoteHeader
-            "'QUOTE_CONTENT' TEXT," + // 18: quoteContent
-            "'QUOTE_TOGGLE' TEXT," + // 19: quoteToggle
-            "'PAGE_INDEX' INTEGER);"); // 20: pageIndex
+                "'TID' TEXT," + // 0: tid
+                "'PID' TEXT," + // 1: pid
+                "'PUID' TEXT," + // 2: puid
+                "'VIA' TEXT," + // 3: via
+                "'CONTENT' TEXT," + // 4: content
+                "'CREATE_TIME' TEXT," + // 5: create_time
+                "'UPDATE_INFO' TEXT," + // 6: update_info
+                "'LIGHT_COUNT' INTEGER," + // 7: light_count
+                "'USER_BANNED' INTEGER," + // 8: user_banned
+                "'FLOOR' INTEGER," + // 9: floor
+                "'TIME' TEXT," + // 10: time
+                "'USER_NAME' TEXT," + // 11: userName
+                "'USER_IMG' TEXT," + // 12: userImg
+                "'SMALLCONTENT' TEXT," + // 13: smallcontent
+                "'TOGGLECONTENT' TEXT," + // 14: togglecontent
+                "'INDEX' INTEGER," + // 15: index
+                "'IS_LIGHT' INTEGER," + // 16: isLight
+                "'QUOTE_HEADER' TEXT," + // 17: quoteHeader
+                "'QUOTE_CONTENT' TEXT," + // 18: quoteContent
+                "'QUOTE_TOGGLE' TEXT," + // 19: quoteToggle
+                "'PAGE_INDEX' INTEGER);"); // 20: pageIndex
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'THREAD_REPLY'";
         db.execSQL(sql);
     }
 
-    /** @inheritdoc */
-    @Override protected void bindValues(SQLiteStatement stmt, ThreadReply entity) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected void bindValues(SQLiteStatement stmt, ThreadReply entity) {
         stmt.clearBindings();
 
         String tid = entity.getTid();
@@ -214,41 +222,50 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
         }
     }
 
-    /** @inheritdoc */
-    @Override public Void readKey(Cursor cursor, int offset) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public Void readKey(Cursor cursor, int offset) {
         return null;
-    }    
+    }
 
-    /** @inheritdoc */
-    @Override public ThreadReply readEntity(Cursor cursor, int offset) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public ThreadReply readEntity(Cursor cursor, int offset) {
         ThreadReply entity = new ThreadReply( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // tid
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // pid
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // puid
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // via
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // content
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // create_time
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // update_info
-            cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // light_count
-            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // user_banned
-            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // floor
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // time
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // userName
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // userImg
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // smallcontent
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // togglecontent
-            cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15), // index
-            cursor.isNull(offset + 16) ? null : cursor.getShort(offset + 16) != 0, // isLight
-            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // quoteHeader
-            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // quoteContent
-            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // quoteToggle
-            cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20) // pageIndex
+                cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // tid
+                cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // pid
+                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // puid
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // via
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // content
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // create_time
+                cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // update_info
+                cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // light_count
+                cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // user_banned
+                cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // floor
+                cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // time
+                cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // userName
+                cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // userImg
+                cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // smallcontent
+                cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // togglecontent
+                cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15), // index
+                cursor.isNull(offset + 16) ? null : cursor.getShort(offset + 16) != 0, // isLight
+                cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // quoteHeader
+                cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // quoteContent
+                cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // quoteToggle
+                cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20) // pageIndex
         );
         return entity;
     }
 
-    /** @inheritdoc */
-    @Override public void readEntity(Cursor cursor, ThreadReply entity, int offset) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public void readEntity(Cursor cursor, ThreadReply entity, int offset) {
         entity.setTid(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setPid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setPuid(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
@@ -271,20 +288,29 @@ public class ThreadReplyDao extends AbstractDao<ThreadReply, Void> {
         entity.setQuoteToggle(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
         entity.setPageIndex(cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20));
     }
-    
-    /** @inheritdoc */
-    @Override protected Void updateKeyAfterInsert(ThreadReply entity, long rowId) {
+
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected Void updateKeyAfterInsert(ThreadReply entity, long rowId) {
         // Unsupported or missing PK type
         return null;
     }
 
-    /** @inheritdoc */
-    @Override public Void getKey(ThreadReply entity) {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public Void getKey(ThreadReply entity) {
         return null;
     }
 
-    /** @inheritdoc */
-    @Override protected boolean isEntityUpdateable() {
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected boolean isEntityUpdateable() {
         return true;
     }
 }

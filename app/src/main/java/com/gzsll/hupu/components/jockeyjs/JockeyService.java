@@ -33,74 +33,78 @@ import android.webkit.WebViewClient;
 
 public class JockeyService extends Service implements Jockey {
 
-  private final IBinder _binder = new JockeyBinder();
+    private final IBinder _binder = new JockeyBinder();
 
-  private Jockey _jockeyImpl = JockeyImpl.getDefault();
+    private Jockey _jockeyImpl = JockeyImpl.getDefault();
 
-  /**
-   * Convenience method for binding to the JockeyService
-   */
-  public static boolean bind(Context context, ServiceConnection connection) {
-    return context.bindService(new Intent(context, JockeyService.class), connection,
-        Context.BIND_AUTO_CREATE);
-  }
-
-  public static void unbind(Context context, ServiceConnection connection) {
-    context.unbindService(connection);
-  }
-
-  @Override public IBinder onBind(Intent arg0) {
-    return _binder;
-  }
-
-  public class JockeyBinder extends Binder {
-
-    public Jockey getService() {
-      return JockeyService.this;
+    /**
+     * Convenience method for binding to the JockeyService
+     */
+    public static boolean bind(Context context, ServiceConnection connection) {
+        return context.bindService(new Intent(context, JockeyService.class), connection,
+                Context.BIND_AUTO_CREATE);
     }
-  }
 
-  @Override public void setOnValidateListener(OnValidateListener listener) {
-    _jockeyImpl.setOnValidateListener(listener);
-  }
+    public static void unbind(Context context, ServiceConnection connection) {
+        context.unbindService(connection);
+    }
 
-  public void on(String type, JockeyHandler... handler) {
-    _jockeyImpl.on(type, handler);
-  }
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return _binder;
+    }
 
-  @Override public void off(String type) {
-    _jockeyImpl.off(type);
-  }
+    public class JockeyBinder extends Binder {
 
-  public void send(String type, WebView toWebView) {
-    send(type, toWebView, null);
-  }
+        public Jockey getService() {
+            return JockeyService.this;
+        }
+    }
 
-  public void send(String type, WebView toWebView, Object withPayload) {
-    send(type, toWebView, withPayload, null);
-  }
+    @Override
+    public void setOnValidateListener(OnValidateListener listener) {
+        _jockeyImpl.setOnValidateListener(listener);
+    }
 
-  public void send(String type, WebView toWebView, JockeyCallback complete) {
-    send(type, toWebView, null, complete);
-  }
+    public void on(String type, JockeyHandler... handler) {
+        _jockeyImpl.on(type, handler);
+    }
 
-  public void send(String type, WebView toWebView, Object withPayload, JockeyCallback complete) {
-    _jockeyImpl.send(type, toWebView, withPayload, complete);
-  }
+    @Override
+    public void off(String type) {
+        _jockeyImpl.off(type);
+    }
 
-  public void triggerCallbackOnWebView(WebView webView, int messageId) {
-    _jockeyImpl.triggerCallbackOnWebView(webView, messageId);
-  }
+    public void send(String type, WebView toWebView) {
+        send(type, toWebView, null);
+    }
 
-  public void configure(WebView webView) {
-    _jockeyImpl.configure(webView);
-  }
+    public void send(String type, WebView toWebView, Object withPayload) {
+        send(type, toWebView, withPayload, null);
+    }
 
-  @Override public boolean handles(String eventName) {
-    return _jockeyImpl.handles(eventName);
-  }
+    public void send(String type, WebView toWebView, JockeyCallback complete) {
+        send(type, toWebView, null, complete);
+    }
 
-  public void setWebViewClient(WebViewClient client) {
-    _jockeyImpl.setWebViewClient(client);
-  }
+    public void send(String type, WebView toWebView, Object withPayload, JockeyCallback complete) {
+        _jockeyImpl.send(type, toWebView, withPayload, complete);
+    }
+
+    public void triggerCallbackOnWebView(WebView webView, int messageId) {
+        _jockeyImpl.triggerCallbackOnWebView(webView, messageId);
+    }
+
+    public void configure(WebView webView) {
+        _jockeyImpl.configure(webView);
+    }
+
+    @Override
+    public boolean handles(String eventName) {
+        return _jockeyImpl.handles(eventName);
+    }
+
+    public void setWebViewClient(WebViewClient client) {
+        _jockeyImpl.setWebViewClient(client);
+    }
 }

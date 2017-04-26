@@ -4,92 +4,83 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
-  <include layout="@layout/base_toolbar_layout"/>
+    <include layout="@layout/base_toolbar_layout" />
 
-  <ScrollView
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_height="match_parent">
 
-      <TextView
-          android:id="@+id/tvTypes"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="10.0dip"
-          android:textSize="18sp"
-          android:text="请选择举报内容类型"
-          />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-      <ListView
-          android:id="@+id/lvTypes"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_alignParentLeft="true"
-          android:layout_alignParentStart="true"
-          android:layout_below="@id/tvTypes"
-          android:cacheColorHint="#00000000"
-          android:choiceMode="singleChoice"
-          android:divider="#d5d5d5"
-          android:dividerHeight="0.5dip"
-          />
-      />
+            <TextView
+                android:id="@+id/tvTypes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="请选择举报内容类型"
+                android:textSize="18sp" />
 
-
-      <View
-          android:id="@+id/deliver"
-          android:layout_width="fill_parent"
-          android:layout_height="1.0dip"
-          android:layout_below="@id/lvTypes"
-          android:background="#ffe0e0e0"
-          android:paddingBottom="3.0dip"
-          android:paddingTop="3.0dip"
-          />
-
-      <android.support.design.widget.TextInputLayout
-          android:id="@+id/textInputContent"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@+id/deliver"
-          >
-
-        <EditText
-            android:id="@+id/etContent"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:autoLink="web"
-            android:background="@null"
-            android:gravity="left|top"
-            android:hint="补充内容"
-            android:paddingBottom="8.0dip"
-            android:paddingLeft="5.0dip"
-            android:paddingTop="8.0dip"
-            android:textCursorDrawable="@null"
+            <ListView
+                android:id="@+id/lvTypes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tvTypes"
+                android:cacheColorHint="#00000000"
+                android:choiceMode="singleChoice"
+                android:divider="#d5d5d5"
+                android:dividerHeight="0.5dip" />
             />
 
-      </android.support.design.widget.TextInputLayout>
 
-      <Button
-          android:id="@+id/btCommit"
-          android:textColor="@color/md_white"
-          android:layout_margin="10dp"
-          android:layout_width="match_parent"
-          android:layout_height="50dp"
-          android:background="@color/colorPrimary"
-          android:text="举报"
-          />
+            <View
+                android:id="@+id/deliver"
+                android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:layout_below="@id/lvTypes"
+                android:background="#ffe0e0e0"
+                android:paddingBottom="3.0dip"
+                android:paddingTop="3.0dip" />
 
-    </LinearLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deliver">
 
-  </ScrollView>
+                <EditText
+                    android:id="@+id/etContent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="200dp"
+                    android:autoLink="web"
+                    android:background="@null"
+                    android:gravity="left|top"
+                    android:hint="补充内容"
+                    android:paddingBottom="8.0dip"
+                    android:paddingLeft="5.0dip"
+                    android:paddingTop="8.0dip"
+                    android:textCursorDrawable="@null" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btCommit"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@color/colorPrimary"
+                android:text="举报"
+                android:textColor="@color/md_white" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 
 </LinearLayout>

@@ -7,44 +7,44 @@ package com.gzsll.hupu.db;
  */
 public class ImageCache {
 
-  private Long id;
-  private String url;
-  private String path;
+    private Long id;
+    private String url;
+    private String path;
 
-  public ImageCache() {
-  }
+    public ImageCache() {
+    }
 
-  public ImageCache(Long id) {
-    this.id = id;
-  }
+    public ImageCache(Long id) {
+        this.id = id;
+    }
 
-  public ImageCache(Long id, String url, String path) {
-    this.id = id;
-    this.url = url;
-    this.path = path;
-  }
+    public ImageCache(Long id, String url, String path) {
+        this.id = id;
+        this.url = url;
+        this.path = path;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getUrl() {
-    return url;
-  }
+    public String getUrl() {
+        return url;
+    }
 
-  public void setUrl(String url) {
-    this.url = url;
-  }
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-  public String getPath() {
-    return path;
-  }
+    public String getPath() {
+        return path;
+    }
 
-  public void setPath(String path) {
-    this.path = path;
-  }
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

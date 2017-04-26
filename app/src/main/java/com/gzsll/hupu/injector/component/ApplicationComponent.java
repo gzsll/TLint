@@ -2,6 +2,7 @@ package com.gzsll.hupu.injector.component;
 
 import android.app.NotificationManager;
 import android.content.Context;
+
 import com.gzsll.hupu.MyApplication;
 import com.gzsll.hupu.api.forum.ForumApi;
 import com.gzsll.hupu.api.game.GameApi;
@@ -20,51 +21,54 @@ import com.gzsll.hupu.injector.module.DBModule;
 import com.gzsll.hupu.ui.BaseActivity;
 import com.gzsll.hupu.widget.HuPuWebView;
 import com.squareup.otto.Bus;
-import dagger.Component;
+
 import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
  * Created by sll on 2016/3/8.
  */
-@Singleton @Component(modules = {
-    ApplicationModule.class, ApiModule.class, DBModule.class
-}) public interface ApplicationComponent {
+@Singleton
+@Component(modules = {
+        ApplicationModule.class, ApiModule.class, DBModule.class
+})
+public interface ApplicationComponent {
 
-  Context getContext();
+    Context getContext();
 
-  Bus getBus();
+    Bus getBus();
 
-  ForumApi getForumApi();
+    ForumApi getForumApi();
 
-  GameApi getGameApi();
-
-
-  UserDao getUserDao();
-
-  ForumDao getForumDao();
-
-  ThreadDao getThreadDao();
-
-  ThreadInfoDao getThreadInfoDao();
-
-  ThreadReplyDao getThreadReplyDao();
-
-  ReadThreadDao getReadThreadDao();
-
-  ImageCacheDao getImageCacheDao();
-
-  OkHttpHelper getOkHttpHelper();
+    GameApi getGameApi();
 
 
-  UserStorage getUserStorage();
+    UserDao getUserDao();
 
-  NotificationManager getNotificationManager();
+    ForumDao getForumDao();
+
+    ThreadDao getThreadDao();
+
+    ThreadInfoDao getThreadInfoDao();
+
+    ThreadReplyDao getThreadReplyDao();
+
+    ReadThreadDao getReadThreadDao();
+
+    ImageCacheDao getImageCacheDao();
+
+    OkHttpHelper getOkHttpHelper();
 
 
+    UserStorage getUserStorage();
 
-  void inject(MyApplication mApplication);
+    NotificationManager getNotificationManager();
 
-  void inject(BaseActivity mBaseActivity);
 
-  void inject(HuPuWebView mHupuWebView);
+    void inject(MyApplication mApplication);
+
+    void inject(BaseActivity mBaseActivity);
+
+    void inject(HuPuWebView mHupuWebView);
 }
