@@ -2,18 +2,22 @@ package com.gzsll.hupu.ui.post;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+
 import com.gzsll.hupu.Constants;
 import com.gzsll.hupu.api.forum.ForumApi;
-import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.PermissionData;
+import com.gzsll.hupu.bean.PostData;
 import com.gzsll.hupu.bean.UploadData;
 import com.gzsll.hupu.bean.UploadInfo;
 import com.gzsll.hupu.injector.PerActivity;
 import com.gzsll.hupu.util.SettingPrefUtils;
 import com.gzsll.hupu.util.ToastUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -122,8 +126,9 @@ import rx.schedulers.Schedulers;
     System.out.println("buffer:" + buffer.toString());
     mSubscription = mForumApi.addReplyByApp(tid, fid, pid, buffer.toString())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<BaseData>() {
-          @Override public void call(BaseData result) {
+            .subscribe(new Action1<PostData>() {
+              @Override
+              public void call(PostData result) {
             mPostView.hideLoading();
             if (result != null) {
               if (result.error != null) {
@@ -198,8 +203,9 @@ import rx.schedulers.Schedulers;
     }
     mSubscription = mForumApi.addThread(title, buffer.toString(), fid)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<BaseData>() {
-          @Override public void call(BaseData result) {
+            .subscribe(new Action1<PostData>() {
+              @Override
+              public void call(PostData result) {
             mPostView.hideLoading();
             if (result != null) {
               if (result.error != null) {

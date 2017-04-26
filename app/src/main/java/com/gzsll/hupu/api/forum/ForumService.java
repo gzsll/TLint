@@ -7,10 +7,13 @@ import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.PermissionData;
+import com.gzsll.hupu.bean.PostData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.bean.UploadData;
+
 import java.util.Map;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Field;
@@ -52,11 +55,15 @@ public interface ForumService {
   @GET("threads/getThreadsSchemaInfo") Observable<ThreadSchemaInfo> getThreadInfo(
       @Query("sign") String sign, @QueryMap Map<String, String> params);
 
-  @POST("threads/threadPublish") @FormUrlEncoded Observable<BaseData> addThread(
-      @FieldMap Map<String, String> params);
+  @POST("threads/threadPublish")
+  @FormUrlEncoded
+  Observable<PostData> addThread(
+          @FieldMap Map<String, String> params);
 
-  @POST("threads/threadReply") @FormUrlEncoded Observable<BaseData> addReplyByApp(
-      @FieldMap Map<String, String> params);
+  @POST("threads/threadReply")
+  @FormUrlEncoded
+  Observable<PostData> addReplyByApp(
+          @FieldMap Map<String, String> params);
 
   @POST("threads/threadCollectAdd") @FormUrlEncoded Observable<CollectData> addCollect(
       @Field("sign") String sign, @FieldMap Map<String, String> params);

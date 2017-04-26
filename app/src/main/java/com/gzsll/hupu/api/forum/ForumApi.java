@@ -3,6 +3,7 @@ package com.gzsll.hupu.api.forum;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.gzsll.hupu.bean.AttendStatusData;
 import com.gzsll.hupu.bean.BaseData;
 import com.gzsll.hupu.bean.CollectData;
@@ -10,6 +11,7 @@ import com.gzsll.hupu.bean.ForumsData;
 import com.gzsll.hupu.bean.MessageData;
 import com.gzsll.hupu.bean.MyForumsData;
 import com.gzsll.hupu.bean.PermissionData;
+import com.gzsll.hupu.bean.PostData;
 import com.gzsll.hupu.bean.ThreadListData;
 import com.gzsll.hupu.bean.ThreadSchemaInfo;
 import com.gzsll.hupu.bean.UploadData;
@@ -17,15 +19,18 @@ import com.gzsll.hupu.components.retrofit.FastJsonConverterFactory;
 import com.gzsll.hupu.components.retrofit.RequestHelper;
 import com.gzsll.hupu.components.storage.UserStorage;
 import com.gzsll.hupu.util.SettingPrefUtils;
+
+import org.json.JSONArray;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import org.json.JSONArray;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Observable;
@@ -179,7 +184,7 @@ public class ForumApi {
    * @param content 内容
    * @param fid 论坛id
    */
-  public Observable<BaseData> addThread(String title, String content, String fid) {
+  public Observable<PostData> addThread(String title, String content, String fid) {
     Map<String, String> params = mRequestHelper.getHttpRequestMap();
     params.put("title", title);
     params.put("content", content);
@@ -197,7 +202,7 @@ public class ForumApi {
    * @param pid 回复id（评论时为空，回复某条回复的为回复的id）
    * @param content 内容
    */
-  public Observable<BaseData> addReplyByApp(String tid, String fid, String pid, String content) {
+  public Observable<PostData> addReplyByApp(String tid, String fid, String pid, String content) {
     Map<String, String> params = mRequestHelper.getHttpRequestMap();
     params.put("tid", tid);
     params.put("content", content);
