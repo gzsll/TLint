@@ -118,15 +118,15 @@ public class ImagePreviewPresenter implements ImagePreviewContract.Presenter {
         CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
                 .getEncodedCacheKey(ImageRequest.fromUri(loadUri), null);
         try {
-            if (ImagePipelineFactory.getInstance().getMainDiskStorageCache().hasKey(cacheKey)) {
+            if (ImagePipelineFactory.getInstance().getMainFileCache().hasKey(cacheKey)) {
                 return ImagePipelineFactory.getInstance()
-                        .getMainDiskStorageCache()
+                        .getMainFileCache()
                         .getResource(cacheKey)
                         .openStream();
             }
-            if (ImagePipelineFactory.getInstance().getSmallImageDiskStorageCache().hasKey(cacheKey)) {
+            if (ImagePipelineFactory.getInstance().getSmallImageFileCache().hasKey(cacheKey)) {
                 return ImagePipelineFactory.getInstance()
-                        .getSmallImageDiskStorageCache()
+                        .getSmallImageFileCache()
                         .getResource(cacheKey)
                         .openStream();
             }
