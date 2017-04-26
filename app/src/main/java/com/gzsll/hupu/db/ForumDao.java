@@ -3,6 +3,7 @@ package com.gzsll.hupu.db;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
 import de.greenrobot.dao.internal.DaoConfig;
@@ -14,178 +15,185 @@ import de.greenrobot.dao.internal.DaoConfig;
  */
 public class ForumDao extends AbstractDao<Forum, Long> {
 
-  public static final String TABLENAME = "FORUM";
+    public static final String TABLENAME = "FORUM";
 
-  /**
-   * Properties of entity Forum.<br/>
-   * Can be used for QueryBuilder and for referencing column names.
-   */
-  public static class Properties {
-    public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-    public final static Property Fid = new Property(1, String.class, "fid", false, "FID");
-    public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-    public final static Property Logo = new Property(3, String.class, "logo", false, "LOGO");
-    public final static Property Description =
-        new Property(4, String.class, "description", false, "DESCRIPTION");
-    public final static Property BackImg =
-        new Property(5, String.class, "backImg", false, "BACK_IMG");
-    public final static Property ForumId =
-        new Property(6, String.class, "forumId", false, "FORUM_ID");
-    public final static Property CategoryName =
-        new Property(7, String.class, "categoryName", false, "CATEGORY_NAME");
-    public final static Property Weight = new Property(8, Integer.class, "weight", false, "WEIGHT");
-  }
-
-  ;
-
-  public ForumDao(DaoConfig config) {
-    super(config);
-  }
-
-  public ForumDao(DaoConfig config, DaoSession daoSession) {
-    super(config, daoSession);
-  }
-
-  /**
-   * Creates the underlying database table.
-   */
-  public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-    String constraint = ifNotExists ? "IF NOT EXISTS " : "";
-    db.execSQL("CREATE TABLE " + constraint + "'FORUM' (" + //
-        "'_id' INTEGER PRIMARY KEY ," + // 0: id
-        "'FID' TEXT," + // 1: fid
-        "'NAME' TEXT," + // 2: name
-        "'LOGO' TEXT," + // 3: logo
-        "'DESCRIPTION' TEXT," + // 4: description
-        "'BACK_IMG' TEXT," + // 5: backImg
-        "'FORUM_ID' TEXT," + // 6: forumId
-        "'CATEGORY_NAME' TEXT," + // 7: categoryName
-        "'WEIGHT' INTEGER);"); // 8: weight
-  }
-
-  /**
-   * Drops the underlying database table.
-   */
-  public static void dropTable(SQLiteDatabase db, boolean ifExists) {
-    String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'FORUM'";
-    db.execSQL(sql);
-  }
-
-  /**
-   * @inheritdoc
-   */
-  @Override protected void bindValues(SQLiteStatement stmt, Forum entity) {
-    stmt.clearBindings();
-
-    Long id = entity.getId();
-    if (id != null) {
-      stmt.bindLong(1, id);
+    /**
+     * Properties of entity Forum.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Fid = new Property(1, String.class, "fid", false, "FID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Logo = new Property(3, String.class, "logo", false, "LOGO");
+        public final static Property Description =
+                new Property(4, String.class, "description", false, "DESCRIPTION");
+        public final static Property BackImg =
+                new Property(5, String.class, "backImg", false, "BACK_IMG");
+        public final static Property ForumId =
+                new Property(6, String.class, "forumId", false, "FORUM_ID");
+        public final static Property CategoryName =
+                new Property(7, String.class, "categoryName", false, "CATEGORY_NAME");
+        public final static Property Weight = new Property(8, Integer.class, "weight", false, "WEIGHT");
     }
 
-    String fid = entity.getFid();
-    if (fid != null) {
-      stmt.bindString(2, fid);
+    ;
+
+    public ForumDao(DaoConfig config) {
+        super(config);
     }
 
-    String name = entity.getName();
-    if (name != null) {
-      stmt.bindString(3, name);
+    public ForumDao(DaoConfig config, DaoSession daoSession) {
+        super(config, daoSession);
     }
 
-    String logo = entity.getLogo();
-    if (logo != null) {
-      stmt.bindString(4, logo);
+    /**
+     * Creates the underlying database table.
+     */
+    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        db.execSQL("CREATE TABLE " + constraint + "'FORUM' (" + //
+                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'FID' TEXT," + // 1: fid
+                "'NAME' TEXT," + // 2: name
+                "'LOGO' TEXT," + // 3: logo
+                "'DESCRIPTION' TEXT," + // 4: description
+                "'BACK_IMG' TEXT," + // 5: backImg
+                "'FORUM_ID' TEXT," + // 6: forumId
+                "'CATEGORY_NAME' TEXT," + // 7: categoryName
+                "'WEIGHT' INTEGER);"); // 8: weight
     }
 
-    String description = entity.getDescription();
-    if (description != null) {
-      stmt.bindString(5, description);
+    /**
+     * Drops the underlying database table.
+     */
+    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
+        String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "'FORUM'";
+        db.execSQL(sql);
     }
 
-    String backImg = entity.getBackImg();
-    if (backImg != null) {
-      stmt.bindString(6, backImg);
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected void bindValues(SQLiteStatement stmt, Forum entity) {
+        stmt.clearBindings();
+
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+
+        String fid = entity.getFid();
+        if (fid != null) {
+            stmt.bindString(2, fid);
+        }
+
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(3, name);
+        }
+
+        String logo = entity.getLogo();
+        if (logo != null) {
+            stmt.bindString(4, logo);
+        }
+
+        String description = entity.getDescription();
+        if (description != null) {
+            stmt.bindString(5, description);
+        }
+
+        String backImg = entity.getBackImg();
+        if (backImg != null) {
+            stmt.bindString(6, backImg);
+        }
+
+        String forumId = entity.getForumId();
+        if (forumId != null) {
+            stmt.bindString(7, forumId);
+        }
+
+        String categoryName = entity.getCategoryName();
+        if (categoryName != null) {
+            stmt.bindString(8, categoryName);
+        }
+
+        Integer weight = entity.getWeight();
+        if (weight != null) {
+            stmt.bindLong(9, weight);
+        }
     }
 
-    String forumId = entity.getForumId();
-    if (forumId != null) {
-      stmt.bindString(7, forumId);
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }
 
-    String categoryName = entity.getCategoryName();
-    if (categoryName != null) {
-      stmt.bindString(8, categoryName);
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public Forum readEntity(Cursor cursor, int offset) {
+        Forum entity = new Forum( //
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+                cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // fid
+                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // logo
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // description
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // backImg
+                cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // forumId
+                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // categoryName
+                cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8) // weight
+        );
+        return entity;
     }
 
-    Integer weight = entity.getWeight();
-    if (weight != null) {
-      stmt.bindLong(9, weight);
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public void readEntity(Cursor cursor, Forum entity, int offset) {
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setFid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setLogo(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setDescription(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setBackImg(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setForumId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setCategoryName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setWeight(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
     }
-  }
 
-  /**
-   * @inheritdoc
-   */
-  @Override public Long readKey(Cursor cursor, int offset) {
-    return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-  }
-
-  /**
-   * @inheritdoc
-   */
-  @Override public Forum readEntity(Cursor cursor, int offset) {
-    Forum entity = new Forum( //
-        cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-        cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // fid
-        cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-        cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // logo
-        cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // description
-        cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // backImg
-        cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // forumId
-        cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // categoryName
-        cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8) // weight
-    );
-    return entity;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  @Override public void readEntity(Cursor cursor, Forum entity, int offset) {
-    entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-    entity.setFid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-    entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-    entity.setLogo(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-    entity.setDescription(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-    entity.setBackImg(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-    entity.setForumId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-    entity.setCategoryName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-    entity.setWeight(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
-  }
-
-  /**
-   * @inheritdoc
-   */
-  @Override protected Long updateKeyAfterInsert(Forum entity, long rowId) {
-    entity.setId(rowId);
-    return rowId;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  @Override public Long getKey(Forum entity) {
-    if (entity != null) {
-      return entity.getId();
-    } else {
-      return null;
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected Long updateKeyAfterInsert(Forum entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
-  }
 
-  /**
-   * @inheritdoc
-   */
-  @Override protected boolean isEntityUpdateable() {
-    return true;
-  }
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public Long getKey(Forum entity) {
+        if (entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    @Override
+    protected boolean isEntityUpdateable() {
+        return true;
+    }
 }

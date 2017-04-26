@@ -3,36 +3,37 @@ package com.gzsll.hupu.ui.thread.special;
 import com.gzsll.hupu.bean.Thread;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
+
 import java.util.List;
 
 /**
  * Created by sll on 2016/5/11.
  */
 public interface SpecialThreadListContract {
-  interface View extends BaseView {
+    interface View extends BaseView {
 
-    void showLoading();
+        void showLoading();
 
-    void hideLoading();
+        void hideLoading();
 
-    void renderThreads(List<Thread> threads);
+        void renderThreads(List<Thread> threads);
 
-    void onError(String error);
+        void onError(String error);
 
-    void onEmpty();
+        void onEmpty();
 
-    void onLoadCompleted(boolean hasMore);
+        void onLoadCompleted(boolean hasMore);
 
-    void onRefreshCompleted();
-  }
+        void onRefreshCompleted();
+    }
 
-  interface Presenter extends BasePresenter<View> {
-    void onThreadReceive();
+    interface Presenter extends BasePresenter<View> {
+        void onThreadReceive();
 
-    void onRefresh();
+        void onRefresh();
 
-    void onReload();
+        void onReload();
 
-    void onLoadMore();
-  }
+        void onLoadMore();
+    }
 }

@@ -34,58 +34,80 @@ import rx.Observable;
  */
 public interface ForumService {
 
-  @GET("forums/getForums") Observable<ForumsData> getForums(@Query("sign") String sign,
-      @QueryMap Map<String, String> params);
+    @GET("forums/getForums")
+    Observable<ForumsData> getForums(@Query("sign") String sign,
+                                     @QueryMap Map<String, String> params);
 
-  @GET("forums/getUserForumsList") Observable<MyForumsData> getMyForums(@Query("sign") String sign,
-      @QueryMap Map<String, String> params);
+    @GET("forums/getUserForumsList")
+    Observable<MyForumsData> getMyForums(@Query("sign") String sign,
+                                         @QueryMap Map<String, String> params);
 
-  @GET("forums/getForumsInfoList") Observable<ThreadListData> getThreadsList(
-      @Query("sign") String sign, @QueryMap Map<String, String> params);
+    @GET("forums/getForumsInfoList")
+    Observable<ThreadListData> getThreadsList(
+            @Query("sign") String sign, @QueryMap Map<String, String> params);
 
-  @POST("forums/attentionForumAdd") @FormUrlEncoded Observable<AttendStatusData> addAttention(
-      @Query("sign") String sign, @FieldMap Map<String, String> params);
+    @POST("forums/attentionForumAdd")
+    @FormUrlEncoded
+    Observable<AttendStatusData> addAttention(
+            @Query("sign") String sign, @FieldMap Map<String, String> params);
 
-  @POST("forums/attentionForumRemove") @FormUrlEncoded Observable<AttendStatusData> delAttention(
-      @Query("sign") String sign, @FieldMap Map<String, String> params);
+    @POST("forums/attentionForumRemove")
+    @FormUrlEncoded
+    Observable<AttendStatusData> delAttention(
+            @Query("sign") String sign, @FieldMap Map<String, String> params);
 
-  @GET("forums/getForumsAttendStatus") Observable<AttendStatusData> getAttentionStatus(
-      @Query("sign") String sign, @QueryMap Map<String, String> params);
+    @GET("forums/getForumsAttendStatus")
+    Observable<AttendStatusData> getAttentionStatus(
+            @Query("sign") String sign, @QueryMap Map<String, String> params);
 
-  @GET("threads/getThreadsSchemaInfo") Observable<ThreadSchemaInfo> getThreadInfo(
-      @Query("sign") String sign, @QueryMap Map<String, String> params);
+    @GET("threads/getThreadsSchemaInfo")
+    Observable<ThreadSchemaInfo> getThreadInfo(
+            @Query("sign") String sign, @QueryMap Map<String, String> params);
 
-  @POST("threads/threadPublish")
-  @FormUrlEncoded
-  Observable<PostData> addThread(
-          @FieldMap Map<String, String> params);
+    @POST("threads/threadPublish")
+    @FormUrlEncoded
+    Observable<PostData> addThread(
+            @FieldMap Map<String, String> params);
 
-  @POST("threads/threadReply")
-  @FormUrlEncoded
-  Observable<PostData> addReplyByApp(
-          @FieldMap Map<String, String> params);
+    @POST("threads/threadReply")
+    @FormUrlEncoded
+    Observable<PostData> addReplyByApp(
+            @FieldMap Map<String, String> params);
 
-  @POST("threads/threadCollectAdd") @FormUrlEncoded Observable<CollectData> addCollect(
-      @Field("sign") String sign, @FieldMap Map<String, String> params);
+    @POST("threads/threadCollectAdd")
+    @FormUrlEncoded
+    Observable<CollectData> addCollect(
+            @Field("sign") String sign, @FieldMap Map<String, String> params);
 
-  @POST("threads/threadCollectRemove") @FormUrlEncoded Observable<CollectData> delCollect(
-      @Field("sign") String sign, @FieldMap Map<String, String> params);
+    @POST("threads/threadCollectRemove")
+    @FormUrlEncoded
+    Observable<CollectData> delCollect(
+            @Field("sign") String sign, @FieldMap Map<String, String> params);
 
-  @POST("threads/threadReport") @FormUrlEncoded Observable<BaseData> submitReports(
-      @Field("sign") String sign, @FieldMap Map<String, String> params);
+    @POST("threads/threadReport")
+    @FormUrlEncoded
+    Observable<BaseData> submitReports(
+            @Field("sign") String sign, @FieldMap Map<String, String> params);
 
-  @GET("recommend/getThreadsList") Observable<ThreadListData> getRecommendThreadList(
-      @Query("sign") String sign, @QueryMap Map<String, String> params);
+    @GET("recommend/getThreadsList")
+    Observable<ThreadListData> getRecommendThreadList(
+            @Query("sign") String sign, @QueryMap Map<String, String> params);
 
-  @GET("user/getUserMessageList") Observable<MessageData> getMessageList(@Query("sign") String sign,
-      @QueryMap Map<String, String> params);
+    @GET("user/getUserMessageList")
+    Observable<MessageData> getMessageList(@Query("sign") String sign,
+                                           @QueryMap Map<String, String> params);
 
-  @POST("user/delUserMessage") @FormUrlEncoded Observable<BaseData> delMessage(
-      @Field("sign") String sign, @FieldMap Map<String, String> params);
+    @POST("user/delUserMessage")
+    @FormUrlEncoded
+    Observable<BaseData> delMessage(
+            @Field("sign") String sign, @FieldMap Map<String, String> params);
 
-  @POST("img/Imgup") @Multipart Observable<UploadData> upload(@Part MultipartBody.Part file,
-      @PartMap Map<String, RequestBody> params);
+    @POST("img/Imgup")
+    @Multipart
+    Observable<UploadData> upload(@Part MultipartBody.Part file,
+                                  @PartMap Map<String, RequestBody> params);
 
-  @GET("permission/check") Observable<PermissionData> checkPermission(@Query("sign") String sign,
-      @QueryMap Map<String, String> params);
+    @GET("permission/check")
+    Observable<PermissionData> checkPermission(@Query("sign") String sign,
+                                               @QueryMap Map<String, String> params);
 }

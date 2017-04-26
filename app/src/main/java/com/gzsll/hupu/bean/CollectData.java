@@ -5,6 +5,6 @@ package com.gzsll.hupu.bean;
  */
 public class CollectData {
 
-  public int status;
-  public CollectResult result;
+    public int status;
+    public CollectResult result;
 }

@@ -7,13 +7,13 @@ import com.gzsll.hupu.ui.BaseView;
  * Created by sll on 2016/5/31.
  */
 public interface SplashContract {
-  interface View extends BaseView {
-    void showMainUi();
-  }
+    interface View extends BaseView {
+        void showMainUi();
+    }
 
-  interface Presenter extends BasePresenter<View> {
-    void initUmeng();
+    interface Presenter extends BasePresenter<View> {
+        void initUmeng();
 
-    void initHuPuSign();
-  }
+        void initHuPuSign();
+    }
 }

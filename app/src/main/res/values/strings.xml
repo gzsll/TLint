@@ -1,118 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">TLint</string>
-  <string name="action_edit">Settings</string>
-  <string name="copy">复制</string>
+    <string name="app_name">TLint</string>
+    <string name="action_edit">Settings</string>
+    <string name="copy">复制</string>
 
-  <string name="nav_fav">我的收藏</string>
-  <string name="nav_topic">我的帖子</string>
-  <string name="nav_my">我的论坛</string>
-  <string name="nav_nba">NBA论坛</string>
-  <string name="nav_cba">CBA论坛</string>
-  <string name="nav_equipment">运动&amp;装备</string>
-  <string name="nav_race">赛车论坛</string>
-  <string name="nav_gambia">甘比亚大陆</string>
-  <string name="nav_fitness">实战健身</string>
-  <string name="nav_sport">综合体育</string>
+    <string name="nav_fav">我的收藏</string>
+    <string name="nav_topic">我的帖子</string>
+    <string name="nav_my">我的论坛</string>
+    <string name="nav_nba">NBA论坛</string>
+    <string name="nav_cba">CBA论坛</string>
+    <string name="nav_equipment">运动&amp;装备</string>
+    <string name="nav_race">赛车论坛</string>
+    <string name="nav_gambia">甘比亚大陆</string>
+    <string name="nav_fitness">实战健身</string>
+    <string name="nav_sport">综合体育</string>
 
-  <string name="picker_cancel">取消</string>
-  <string name="picker_first">首页</string>
-  <string name="picker_end">末页</string>
-  <string name="picker_jump">跳转</string>
-  <string name="open">drawer_open</string>
-  <string name="close">drawer_close</string>
-  <string name="refresh">刷新</string>
-  <string name="save_pic">保存</string>
-  <string name="share">分享</string>
-  <string name="copy_url">复制链接</string>
-  <string name="download_again">重新下载</string>
+    <string name="picker_cancel">取消</string>
+    <string name="picker_first">首页</string>
+    <string name="picker_end">末页</string>
+    <string name="picker_jump">跳转</string>
+    <string name="open">drawer_open</string>
+    <string name="close">drawer_close</string>
+    <string name="refresh">刷新</string>
+    <string name="save_pic">保存</string>
+    <string name="share">分享</string>
+    <string name="copy_url">复制链接</string>
+    <string name="download_again">重新下载</string>
 
-  <string name="settings_thread_sort">帖子排序方式</string>
-  <string name="settings_text_size">字体大小</string>
-  <string name="settings_md_colors">主题颜色</string>
-  <string name="settings_auto_update">自动更新应用</string>
-  <string name="settings_swipeback_edgemode">手势返回</string>
-  <string name="settings_dt_swipeback_edgemode">设置手势方向</string>
-  <string name="settings_auto_notification">是否接受通知</string>
-  <string name="settings_general_settings">常规</string>
-  <string name="settings_notification_settings">通知</string>
-  <string name="category_read">阅读</string>
-  <string name="settings_load_pic">是否加载图片</string>
-  <string name="settings_load_pic_summary">默认加载列表和内容图片</string>
-  <string name="category_other">其他</string>
-  <string name="settings_pic_path">图片保存路径</string>
-  <string name="settings_clear_cache">清空缓存</string>
+    <string name="settings_thread_sort">帖子排序方式</string>
+    <string name="settings_text_size">字体大小</string>
+    <string name="settings_md_colors">主题颜色</string>
+    <string name="settings_auto_update">自动更新应用</string>
+    <string name="settings_swipeback_edgemode">手势返回</string>
+    <string name="settings_dt_swipeback_edgemode">设置手势方向</string>
+    <string name="settings_auto_notification">是否接受通知</string>
+    <string name="settings_general_settings">常规</string>
+    <string name="settings_notification_settings">通知</string>
+    <string name="category_read">阅读</string>
+    <string name="settings_load_pic">是否加载图片</string>
+    <string name="settings_load_pic_summary">默认加载列表和内容图片</string>
+    <string name="category_other">其他</string>
+    <string name="settings_pic_path">图片保存路径</string>
+    <string name="settings_clear_cache">清空缓存</string>
 
-  <string-array name="sortType">
-    <item>按发帖时间</item>
-    <item>按回帖时间</item>
-  </string-array>
+    <string-array name="sortType">
+        <item>按发帖时间</item>
+        <item>按回帖时间</item>
+    </string-array>
 
-  <string-array name="swipeBackEdgeMode">
-    <item>向左</item>
-    <item>向右</item>
-    <!--<item>全部</item>-->
-  </string-array>
+    <string-array name="swipeBackEdgeMode">
+        <item>向左</item>
+        <item>向右</item>
+        <!--<item>全部</item>-->
+    </string-array>
 
-  <string-array name="txtSizeNum">
-    <item>12</item>
-    <item>13</item>
-    <item>14</item>
-    <item>15</item>
-    <item>16</item>
-    <item>17</item>
-    <item>18</item>
-    <item>19</item>
-    <item>20</item>
-  </string-array>
+    <string-array name="txtSizeNum">
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+    </string-array>
 
 
-  <string-array name="prefValues">
-    <item>0</item>
-    <item>1</item>
-    <item>2</item>
-    <item>3</item>
-    <item>4</item>
-    <item>5</item>
-    <item>6</item>
-    <item>7</item>
-    <item>8</item>
-    <item>9</item>
-    <item>10</item>
-    <item>11</item>
-    <item>12</item>
-    <item>13</item>
-    <item>14</item>
-    <item>15</item>
-    <item>16</item>
-  </string-array>
+    <string-array name="prefValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+    </string-array>
 
-  <string-array name="mdColorNames">
-    <item>Red</item>
-    <item>Pink</item>
-    <item>Purple</item>
-    <item>Deep purple</item>
-    <item>Indigo</item>
-    <item>Blue</item>
-    <item>Light blue</item>
-    <item>Cyan</item>
-    <item>Teal</item>
-    <item>Green</item>
-    <item>Light green</item>
-    <item>Lime</item>
-    <item>Yellow</item>
-    <item>Amber</item>
-    <item>Orange</item>
-    <item>Deep orange</item>
-    <item>Brown</item>
-    <item>Grey</item>
-    <item>Blue grey</item>
-  </string-array>
+    <string-array name="mdColorNames">
+        <item>Red</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Deep purple</item>
+        <item>Indigo</item>
+        <item>Blue</item>
+        <item>Light blue</item>
+        <item>Cyan</item>
+        <item>Teal</item>
+        <item>Green</item>
+        <item>Light green</item>
+        <item>Lime</item>
+        <item>Yellow</item>
+        <item>Amber</item>
+        <item>Orange</item>
+        <item>Deep orange</item>
+        <item>Brown</item>
+        <item>Grey</item>
+        <item>Blue grey</item>
+    </string-array>
 
-  <string name="back_button_label">Back</string>
-  <string name="next_button_label">Next</string>
+    <string name="back_button_label">Back</string>
+    <string name="next_button_label">Next</string>
 
-  <!-- Optional button to Skip a PreferenceActivity [CHAR LIMIT=20] -->
-  <string name="skip_button_label">Skip</string>
+    <!-- Optional button to Skip a PreferenceActivity [CHAR LIMIT=20] -->
+    <string name="skip_button_label">Skip</string>
 </resources>

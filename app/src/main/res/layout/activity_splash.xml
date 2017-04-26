@@ -3,5 +3,4 @@
     android:id="@+id/splash"
     android:background="@drawable/bg_splash_home"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    />
+    android:layout_height="fill_parent" />

@@ -2,108 +2,98 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
-
-  <RelativeLayout
-      android:id="@+id/picker_container"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="bottom"
-      >
-
-    <View
-        android:id="@+id/picker_top_border"
-        style="@style/AppWidget.DeepLine"
-        android:layout_alignParentTop="true"
-        />
 
     <RelativeLayout
-        android:id="@+id/picker_opt_container"
+        android:id="@+id/picker_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/picker_top_border"
-        android:background="?attr/widgetBackground"
-        android:gravity="center_vertical"
-        android:paddingBottom="4.0dip"
-        android:paddingTop="4.0dip"
-        >
+        android:layout_gravity="bottom">
 
-      <Button
-          android:id="@+id/btCancel"
-          android:layout_width="48.0dip"
-          android:layout_height="30.0dip"
-          android:layout_alignParentLeft="true"
-          android:layout_marginLeft="10.0dip"
-          android:background="@drawable/red_btn"
-          android:gravity="center"
-          android:text="@string/picker_cancel"
-          android:textColor="?android:textColorSecondary"
-          android:textSize="15.0sp"
-          />
+        <View
+            android:id="@+id/picker_top_border"
+            style="@style/AppWidget.DeepLine"
+            android:layout_alignParentTop="true" />
 
-      <Button
-          android:id="@+id/btFirst"
-          android:layout_width="48.0dip"
-          android:layout_height="30.0dip"
-          android:layout_centerHorizontal="true"
-          android:layout_marginLeft="20dp"
-          android:layout_toRightOf="@+id/btCancel"
-          android:background="@drawable/purple_btn"
-          android:gravity="center"
-          android:text="@string/picker_first"
-          android:textColor="?android:textColorSecondary"
-          android:textSize="15.0sp"
-          />
+        <RelativeLayout
+            android:id="@+id/picker_opt_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/picker_top_border"
+            android:background="?attr/widgetBackground"
+            android:gravity="center_vertical"
+            android:paddingBottom="4.0dip"
+            android:paddingTop="4.0dip">
 
-      <Button
-          android:id="@+id/btLast"
-          android:layout_width="48.0dip"
-          android:layout_height="30.0dip"
-          android:layout_centerHorizontal="true"
-          android:layout_marginRight="20dp"
-          android:layout_toLeftOf="@+id/btJump"
-          android:background="@drawable/purple_btn"
-          android:gravity="center"
-          android:text="@string/picker_end"
-          android:textColor="?android:textColorSecondary"
-          android:textSize="15.0sp"
-          />
+            <Button
+                android:id="@+id/btCancel"
+                android:layout_width="48.0dip"
+                android:layout_height="30.0dip"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10.0dip"
+                android:background="@drawable/red_btn"
+                android:gravity="center"
+                android:text="@string/picker_cancel"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="15.0sp" />
 
-      <Button
-          android:id="@+id/btJump"
-          android:layout_width="48.0dip"
-          android:layout_height="30.0dip"
-          android:layout_alignParentRight="true"
-          android:layout_marginRight="10.0dip"
-          android:background="@drawable/real_blue_btn"
-          android:gravity="center"
-          android:text="@string/picker_jump"
-          android:textColor="?android:textColorSecondary"
-          android:textSize="15.0sp"
-          />
+            <Button
+                android:id="@+id/btFirst"
+                android:layout_width="48.0dip"
+                android:layout_height="30.0dip"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/btCancel"
+                android:background="@drawable/purple_btn"
+                android:gravity="center"
+                android:text="@string/picker_first"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="15.0sp" />
+
+            <Button
+                android:id="@+id/btLast"
+                android:layout_width="48.0dip"
+                android:layout_height="30.0dip"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/btJump"
+                android:background="@drawable/purple_btn"
+                android:gravity="center"
+                android:text="@string/picker_end"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="15.0sp" />
+
+            <Button
+                android:id="@+id/btJump"
+                android:layout_width="48.0dip"
+                android:layout_height="30.0dip"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10.0dip"
+                android:background="@drawable/real_blue_btn"
+                android:gravity="center"
+                android:text="@string/picker_jump"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="15.0sp" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/picker_bottom_border"
+            style="@style/AppWidget.DeepLine"
+            android:layout_below="@+id/picker_opt_container" />
+
+
+        <com.gzsll.hupu.widget.MaterialNumberPicker
+            android:id="@+id/picker"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/picker_bottom_border"
+            app:npBackground="?attr/widgetBackground"
+            app:npSeparatorColor="@color/colorAccent"
+            app:npTextColor="@color/colorPrimary"
+            app:npTextSize="16sp"
+            app:npWrapValue="true" />
+
+
     </RelativeLayout>
-
-    <View
-        android:id="@+id/picker_bottom_border"
-        style="@style/AppWidget.DeepLine"
-        android:layout_below="@+id/picker_opt_container"
-        />
-
-
-    <com.gzsll.hupu.widget.MaterialNumberPicker
-        android:id="@+id/picker"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/picker_bottom_border"
-        app:npBackground="?attr/widgetBackground"
-        app:npSeparatorColor="@color/colorAccent"
-        app:npTextColor="@color/colorPrimary"
-        app:npTextSize="16sp"
-        app:npWrapValue="true"
-        />
-
-
-  </RelativeLayout>
 </FrameLayout>

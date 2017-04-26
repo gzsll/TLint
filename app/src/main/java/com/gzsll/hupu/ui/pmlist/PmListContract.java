@@ -3,6 +3,7 @@ package com.gzsll.hupu.ui.pmlist;
 import com.gzsll.hupu.bean.Pm;
 import com.gzsll.hupu.ui.BasePresenter;
 import com.gzsll.hupu.ui.BaseView;
+
 import java.util.List;
 
 /**
@@ -10,33 +11,33 @@ import java.util.List;
  */
 public interface PmListContract {
 
-  interface View extends BaseView {
-    void showLoading();
+    interface View extends BaseView {
+        void showLoading();
 
-    void hideLoading();
+        void hideLoading();
 
-    void renderPmList(List<Pm> pms);
+        void renderPmList(List<Pm> pms);
 
-    void onRefreshCompleted();
+        void onRefreshCompleted();
 
-    void onLoadCompleted(boolean haMore);
+        void onLoadCompleted(boolean haMore);
 
-    void onError();
+        void onError();
 
-    void onEmpty();
+        void onEmpty();
 
-    void showPmDetailUi(String uid, String name);
-  }
+        void showPmDetailUi(String uid, String name);
+    }
 
-  interface Presenter extends BasePresenter<View> {
-    void onPmListReceive();
+    interface Presenter extends BasePresenter<View> {
+        void onPmListReceive();
 
-    void onRefresh();
+        void onRefresh();
 
-    void onReload();
+        void onReload();
 
-    void onLoadMore();
+        void onLoadMore();
 
-    void onPmListClick(Pm pm);
-  }
+        void onPmListClick(Pm pm);
+    }
 }

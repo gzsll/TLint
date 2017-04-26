@@ -23,48 +23,48 @@ import android.view.View;
 
 public interface IAttacher {
 
-  public static final float DEFAULT_MAX_SCALE = 3.0f;
-  public static final float DEFAULT_MID_SCALE = 1.75f;
-  public static final float DEFAULT_MIN_SCALE = 1.0f;
-  public static final long ZOOM_DURATION = 200L;
+    public static final float DEFAULT_MAX_SCALE = 3.0f;
+    public static final float DEFAULT_MID_SCALE = 1.75f;
+    public static final float DEFAULT_MIN_SCALE = 1.0f;
+    public static final long ZOOM_DURATION = 200L;
 
-  float getMinimumScale();
+    float getMinimumScale();
 
-  float getMediumScale();
+    float getMediumScale();
 
-  float getMaximumScale();
+    float getMaximumScale();
 
-  void setMaximumScale(float maximumScale);
+    void setMaximumScale(float maximumScale);
 
-  void setMediumScale(float mediumScale);
+    void setMediumScale(float mediumScale);
 
-  void setMinimumScale(float minimumScale);
+    void setMinimumScale(float minimumScale);
 
-  float getScale();
+    float getScale();
 
-  void setScale(float scale);
+    void setScale(float scale);
 
-  void setScale(float scale, boolean animate);
+    void setScale(float scale, boolean animate);
 
-  void setScale(float scale, float focalX, float focalY, boolean animate);
+    void setScale(float scale, float focalX, float focalY, boolean animate);
 
-  void setZoomTransitionDuration(long duration);
+    void setZoomTransitionDuration(long duration);
 
-  void setAllowParentInterceptOnEdge(boolean allow);
+    void setAllowParentInterceptOnEdge(boolean allow);
 
-  void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener listener);
+    void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener listener);
 
-  void setOnScaleChangeListener(OnScaleChangeListener listener);
+    void setOnScaleChangeListener(OnScaleChangeListener listener);
 
-  void setOnLongClickListener(View.OnLongClickListener listener);
+    void setOnLongClickListener(View.OnLongClickListener listener);
 
-  void setOnPhotoTapListener(OnPhotoTapListener listener);
+    void setOnPhotoTapListener(OnPhotoTapListener listener);
 
-  void setOnViewTapListener(OnViewTapListener listener);
+    void setOnViewTapListener(OnViewTapListener listener);
 
-  OnPhotoTapListener getOnPhotoTapListener();
+    OnPhotoTapListener getOnPhotoTapListener();
 
-  OnViewTapListener getOnViewTapListener();
+    OnViewTapListener getOnViewTapListener();
 
-  void update(int imageInfoWidth, int imageInfoHeight);
+    void update(int imageInfoWidth, int imageInfoHeight);
 }

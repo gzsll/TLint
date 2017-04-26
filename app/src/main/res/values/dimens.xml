@@ -1,23 +1,23 @@
 <resources>
-  <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Default screen margins, per the Android Design guidelines. -->
 
 
-  <dimen name="text_size_23">23.0sp</dimen>
-  <dimen name="text_size_22">22.0sp</dimen>
-  <dimen name="text_size_21">21.0sp</dimen>
-  <dimen name="text_size_20">20.0sp</dimen>
-  <dimen name="text_size_19">19.0sp</dimen>
-  <dimen name="text_size_18">18.0sp</dimen>
-  <dimen name="text_size_17">17.0sp</dimen>
-  <dimen name="text_size_16">16.0sp</dimen>
-  <dimen name="text_size_15">15.0sp</dimen>
-  <dimen name="text_size_14">14.0sp</dimen>
-  <dimen name="text_size_13">13.0sp</dimen>
-  <dimen name="text_size_12">12.0sp</dimen>
+    <dimen name="text_size_23">23.0sp</dimen>
+    <dimen name="text_size_22">22.0sp</dimen>
+    <dimen name="text_size_21">21.0sp</dimen>
+    <dimen name="text_size_20">20.0sp</dimen>
+    <dimen name="text_size_19">19.0sp</dimen>
+    <dimen name="text_size_18">18.0sp</dimen>
+    <dimen name="text_size_17">17.0sp</dimen>
+    <dimen name="text_size_16">16.0sp</dimen>
+    <dimen name="text_size_15">15.0sp</dimen>
+    <dimen name="text_size_14">14.0sp</dimen>
+    <dimen name="text_size_13">13.0sp</dimen>
+    <dimen name="text_size_12">12.0sp</dimen>
 
-  <dimen name="preference_fragment_padding_bottom">0dp</dimen>
-  <!-- Preference fragment padding, sides -->
-  <dimen name="preference_fragment_padding_side">16dp</dimen>
+    <dimen name="preference_fragment_padding_bottom">0dp</dimen>
+    <!-- Preference fragment padding, sides -->
+    <dimen name="preference_fragment_padding_side">16dp</dimen>
 
-  <integer name="preference_fragment_scrollbarStyle">0x02000000</integer>
+    <integer name="preference_fragment_scrollbarStyle">0x02000000</integer>
 </resources>

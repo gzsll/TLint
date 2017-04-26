@@ -5,94 +5,84 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="16dip"
-    android:paddingTop="16dip"
-    >
+    android:paddingTop="16dip">
 
-  <LinearLayout
-      android:id="@+id/llItem"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:paddingBottom="16dip"
-      android:paddingRight="16dip"
-      >
-
-    <RelativeLayout
-        android:layout_width="0dip"
+    <LinearLayout
+        android:id="@+id/llItem"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:orientation="horizontal"
-        >
+        android:paddingBottom="16dip"
+        android:paddingRight="16dip">
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
 
-      <com.facebook.drawee.view.SimpleDraweeView
-          android:id="@+id/ivIcon"
-          android:layout_width="48dp"
-          android:layout_height="48dp"
-          fresco:actualImageScaleType="centerCrop"
-          fresco:failureImage="@drawable/icon_def_head"
-          fresco:failureImageScaleType="fitCenter"
-          fresco:placeholderImage="@drawable/icon_def_head"
-          fresco:placeholderImageScaleType="fitCenter"
-          fresco:roundAsCircle="true"
-          />
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/ivIcon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                fresco:actualImageScaleType="centerCrop"
+                fresco:failureImage="@drawable/icon_def_head"
+                fresco:failureImageScaleType="fitCenter"
+                fresco:placeholderImage="@drawable/icon_def_head"
+                fresco:placeholderImageScaleType="fitCenter"
+                fresco:roundAsCircle="true" />
 
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="72dp"
-          android:orientation="vertical"
-          >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="72dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvName"
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dip"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="名字"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="我是一段很长的描述"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlDel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dip"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="名字"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
-            />
+            android:paddingLeft="16dp">
 
-        <TextView
-            android:id="@+id/tvDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="我是一段很长的描述"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="14sp"
-            />
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:duplicateParentState="true"
+                android:src="@drawable/ic_delete_dark" />
+        </RelativeLayout>
+    </LinearLayout>
 
-      </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rlDel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        >
-
-      <ImageView
-          android:layout_width="22dp"
-          android:layout_height="22dp"
-          android:duplicateParentState="true"
-          android:src="@drawable/ic_delete_dark"
-          />
-    </RelativeLayout>
-  </LinearLayout>
-
-  <View
-      android:id="@+id/divider"
-      android:layout_width="match_parent"
-      android:layout_height="1.0dip"
-      android:layout_marginLeft="72dip"
-      android:background="#D5d5d5"
-      />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1.0dip"
+        android:layout_marginLeft="72dip"
+        android:background="#D5d5d5" />
 
 </LinearLayout>
